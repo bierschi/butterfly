@@ -4,7 +4,7 @@ pipeline {
                  stage('Build') {
                      steps {
                          echo 'Build ransomware'
-                         sh 'echo pwd'
+                         sh 'pwd'
                          sh 'mkdir build'
                          sh 'cd build'
                          sh 'cmake ..'
