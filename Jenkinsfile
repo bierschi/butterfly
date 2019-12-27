@@ -6,9 +6,10 @@ pipeline {
                          echo 'Build ransomware'
                          sh 'pwd'
                          sh 'mkdir build'
-                         sh 'cd build'
-                         sh 'cmake ..'
-                         sh 'make'
+                         dir ('build') {
+                           sh 'cmake ..'
+                           sh 'make'
+                         }
                      }
                  }
                  stage('Test') {
