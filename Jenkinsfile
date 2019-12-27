@@ -2,10 +2,7 @@ pipeline {
          agent any
          stages {
                  stage('Build') {
-
                      steps {
-                         echo 'Clean workspace ransomware'
-                         cleanWs()
                          echo 'Build ransomware'
                          sh 'mkdir build'
                          dir ('build') {
