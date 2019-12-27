@@ -3,8 +3,11 @@ pipeline {
          stages {
                  stage('Build') {
                      steps {
+                        echo 'Clean workspace ransomware'
+                        cleanWs()
+                     }
+                     steps {
                          echo 'Build ransomware'
-                         sh 'pwd'
                          sh 'mkdir build'
                          dir ('build') {
                            sh 'cmake ..'
@@ -24,9 +27,5 @@ pipeline {
                     }
                 }
     }
-         post {
-            always {
-                cleanWs()
-            }
-        }
+
 }
