@@ -1,0 +1,5 @@
+- CradleCore (Cradle Ransomware)
+- WannaCry
+- NextCry
+- hidden tear
+- eda2
