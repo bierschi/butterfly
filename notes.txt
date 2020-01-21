@@ -1,0 +1,5 @@
+- add logging functionality
+- link libs pthread, sql
+- create class for rsa encryption
+- iterate through directory structure recursively and load all files
+- add data structure for holding file extension
