@@ -5,24 +5,57 @@
 #include "DirectoryIterator.h"
 
 
-DirectoryIterator::DirectoryIterator(std::string&  start) : _start(start){
-
-    boost::filesystem::directory_iterator end;
-
-    for (boost::filesystem::directory_iterator it(_start); it != end; it++) {
-        std::cout << *it << std::endl;
-        if (isDirectory(it->path())) {
-            std::cout << "Dir: " << it->path() << std::endl;
-        } else if (isFile(it->path())) {
-            std::cout << "File: " << it->path() << std::endl;
-        }
-        //std::cout << isDirectory(it->path()) << std::endl;
-    }
+DirectoryIterator::DirectoryIterator() {
 
 }
 
 DirectoryIterator::~DirectoryIterator() {
 
+}
+
+std::vector<boost::filesystem::path> DirectoryIterator::getFiles(const boost::filesystem::path& f) {
+
+    boost::system::error_code ec;
+
+    if (boost::filesystem::is_directory(f)) {
+        for (boost::filesystem::recursive_directory_iterator it{f, ec}, end; it != end; it.increment(ec)) {
+            if (!boost::filesystem::is_directory(it->path())) {
+                _files.push_back(it->path());
+            }
+        }
+    }
+    else {
+        _files.push_back(f);
+    }
+
+    return _files;
+}
+
+std::vector<boost::filesystem::path> DirectoryIterator::getDirectories(const boost::filesystem::path &f) {
+
+    boost::system::error_code ec;
+
+    if (boost::filesystem::is_directory(f)) {
+        for (boost::filesystem::recursive_directory_iterator it{f, ec}, end; it != end; it.increment(ec)) {
+            if (boost::filesystem::is_directory(it->path())) {
+                _directories.push_back(it->path());
+            }
+        }
+    }
+    return _directories;
+}
+
+std::vector<boost::filesystem::path> DirectoryIterator::getFilesFromDir(const boost::filesystem::path &dir) {
+
+    boost::system::error_code ec;
+    std::vector<boost::filesystem::path> filesFromDir;
+
+    for (boost::filesystem::directory_iterator it(dir, ec), end; it!= end; it.increment(ec)) {
+        if (!boost::filesystem::is_directory(it->path())) {
+            filesFromDir.push_back(it->path());
+        }
+    }
+    return filesFromDir;
 }
 
 bool DirectoryIterator::isDirectory(const boost::filesystem::path& path) {

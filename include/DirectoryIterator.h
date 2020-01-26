@@ -14,10 +14,17 @@ class DirectoryIterator {
 
 private:
     std::string _start;
+    std::vector<boost::filesystem::path> _files;
+    std::vector<boost::filesystem::path> _directories;
 
 public:
-    DirectoryIterator(std::string& start);
+    DirectoryIterator();
     ~DirectoryIterator();
+
+    std::vector<boost::filesystem::path> getFiles(const boost::filesystem::path& f);
+    std::vector<boost::filesystem::path> getDirectories(const boost::filesystem::path& f);
+
+    std::vector<boost::filesystem::path> getFilesFromDir(const boost::filesystem::path& dir);
 
 private:
     bool isDirectory(const boost::filesystem::path& path);
