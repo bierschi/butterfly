@@ -2,20 +2,21 @@
 // Created on 22.01.20.
 //
 
-#include "DirectoryIterator.h"
+#include "directory_iterator.h"
 
 
-DirectoryIterator::DirectoryIterator() {
-
-}
-
-DirectoryIterator::~DirectoryIterator() {
+DirectoryIiterator::DirectoryIiterator() : _directories({}), _files({}){
 
 }
 
-std::vector<boost::filesystem::path> DirectoryIterator::getFiles(const boost::filesystem::path& f) {
+DirectoryIiterator::~DirectoryIiterator() {
+
+}
+
+std::vector<boost::filesystem::path> DirectoryIiterator::getFiles(const boost::filesystem::path& f) {
 
     boost::system::error_code ec;
+    _files.clear();
 
     if (boost::filesystem::is_directory(f)) {
         for (boost::filesystem::recursive_directory_iterator it{f, ec}, end; it != end; it.increment(ec)) {
@@ -31,9 +32,10 @@ std::vector<boost::filesystem::path> DirectoryIterator::getFiles(const boost::fi
     return _files;
 }
 
-std::vector<boost::filesystem::path> DirectoryIterator::getDirectories(const boost::filesystem::path &f) {
+std::vector<boost::filesystem::path> DirectoryIiterator::getDirectories(const boost::filesystem::path &f) {
 
     boost::system::error_code ec;
+    _directories.clear();
 
     if (boost::filesystem::is_directory(f)) {
         for (boost::filesystem::recursive_directory_iterator it{f, ec}, end; it != end; it.increment(ec)) {
@@ -45,7 +47,7 @@ std::vector<boost::filesystem::path> DirectoryIterator::getDirectories(const boo
     return _directories;
 }
 
-std::vector<boost::filesystem::path> DirectoryIterator::getFilesFromDir(const boost::filesystem::path &dir) {
+std::vector<boost::filesystem::path> DirectoryIiterator::getFilesFromDir(const boost::filesystem::path &dir) {
 
     boost::system::error_code ec;
     std::vector<boost::filesystem::path> filesFromDir;
@@ -58,12 +60,20 @@ std::vector<boost::filesystem::path> DirectoryIterator::getFilesFromDir(const bo
     return filesFromDir;
 }
 
-bool DirectoryIterator::isDirectory(const boost::filesystem::path& path) {
+uintmax_t DirectoryIiterator::getFileSize(const boost::filesystem::path &file) {
+    if (isFile(file)) {
+        return boost::filesystem::file_size(file);
+    } else {
+        std::cout << "Not a regular file: " << file << std::endl;
+    }
+}
+
+bool DirectoryIiterator::isDirectory(const boost::filesystem::path& path) {
 
     return boost::filesystem::is_directory(path);
 }
 
-bool DirectoryIterator::isFile(const boost::filesystem::path &path) {
+bool DirectoryIiterator::isFile(const boost::filesystem::path &path) {
 
     return boost::filesystem::is_regular_file(path);
 }

