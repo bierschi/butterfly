@@ -86,7 +86,9 @@ int main(int argc, char** argv) {
     std::cout << "Start RANSOMWARE!" << std::endl;
     std::string path3 = "/home/christian/";
 
-    executor();
+    //executor();
+
+    RSAAlgorithm* algo = new RSAAlgorithm();
 
     return 0;
 }
