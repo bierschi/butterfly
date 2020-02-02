@@ -8,6 +8,7 @@
 #include <openssl/ssl.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
+#include <openssl/err.h>
 
 #define KEYSIZE 2048
 
@@ -17,12 +18,26 @@
 class Algorithm {
 
 public:
+    /**
+     * Constructor
+     */
     Algorithm() {};
+
+    /**
+     * Destructor
+     */
     virtual ~Algorithm() {
         CRYPTO_cleanup_all_ex_data();
     };
 
+    /**
+     * abstract method encrypt for subclasses
+     */
     virtual void encrypt(std::vector<boost::filesystem::path>&) = 0;
+
+    /**
+     * abstract method decrypt for subclasses
+     */
     virtual void decrypt() = 0;
 
 };

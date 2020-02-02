@@ -5,23 +5,37 @@
 #include "rsa_algo.h"
 
 RSA* RSAAlgorithm::_keypair = NULL;
+RSA* RSAAlgorithm::_privateKey = NULL;
+RSA* RSAAlgorithm::_publicKey = NULL;
 
 RSAAlgorithm::RSAAlgorithm() {
+    std::cout << "RSAAlgorithm" << std::endl;
 
     if (_keypair == NULL) {
-        generateKeyPair();
+        // generate rsa key pair
+        if (generateKeyPair()) {
+            // extract private and public rsa key
+            extractKeys();
+        }
+        createPrivateKeyStr(true);
+        createPublicKeyStr(true);
     }
-    createPrivateKey(true);
-    createPublicKey(true);
+
+
+    //readPublicKeyFile();
+
 }
 
 RSAAlgorithm::~RSAAlgorithm() {
     RSA_free(_keypair);
-    free(_privateKey);
-    free(_publicKey);
+    RSA_free(_privateKey);
+    RSA_free(_publicKey);
+    free(_privateKeyStr);
+    free(_publicKeyStr);
 }
 
 bool RSAAlgorithm::generateKeyPair() {
+    std::cout << "generate RSA key pairs" << std::endl;
 
     _keypair = RSA_new();
 
@@ -33,102 +47,178 @@ bool RSAAlgorithm::generateKeyPair() {
     }
 }
 
-void RSAAlgorithm::createPrivateKey(bool file) {
+bool RSAAlgorithm::extractKeys() {
 
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, _keypair);
-
+    // extract private key from keypair
     BIO *bioPrivate = BIO_new(BIO_s_mem());
     PEM_write_bio_RSAPrivateKey(bioPrivate, _keypair, NULL, NULL, 0, NULL, NULL);
+    PEM_read_bio_RSAPrivateKey(bioPrivate, &_privateKey, NULL, NULL);
 
-    size_t privateKeylen = BIO_pending(bioPrivate);
-    _privateKey = (char*) calloc(privateKeylen+1, 1);
-    BIO_read(bioPrivate, _privateKey, privateKeylen);
-
-    if (file) {
-
-        FILE *privateKeyFile = fopen("privatekey.pem", "wb");
-        if (!privateKeyFile) {
-            std::cerr << "Unable to open \"pkey.pem\" for writing" << std::endl;
-        } else {
-            bool ret = PEM_write_PrivateKey(privateKeyFile, pkey, NULL, NULL, 0, NULL, NULL);
-            //bool ret = PEM_write_RSAPrivateKey(privateKeyFile, _keypair, NULL, NULL, 0, NULL, NULL);
-            fclose(privateKeyFile);
-        }
-
-        std::cout << _privateKey << std::endl;
-        BIO_free_all(bioPrivate);
-    }
-}
-
-void RSAAlgorithm::createPublicKey(bool file) {
-
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, _keypair);
-
+    // extract public key from keypair
     BIO *bioPublic = BIO_new(BIO_s_mem());
     PEM_write_bio_RSAPublicKey(bioPublic, _keypair);
+    PEM_read_bio_RSAPublicKey(bioPublic, &_publicKey, NULL, NULL);
 
+}
+void RSAAlgorithm::createPrivateKeyStr(bool file) {
+    std::cout << "create private key string" << std::endl;
+
+    EVP_PKEY *pkey = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(pkey, _privateKey);
+
+    BIO *bioPrivate = BIO_new(BIO_s_mem());
+    PEM_write_bio_RSAPrivateKey(bioPrivate, _privateKey, NULL, NULL, 0, NULL, NULL);
+
+    size_t privateKeylen = BIO_pending(bioPrivate);
+    _privateKeyStr = (char*) calloc(privateKeylen+1, 1);
+    BIO_read(bioPrivate, _privateKeyStr, privateKeylen);
+
+    if (file) {
+        FILE *privateKeyFile = fopen("id_rsa", "wb");
+
+        if (privateKeyFile) {
+            //bool ret = PEM_write_PrivateKey(privateKeyFile, pkey, NULL, NULL, 0, NULL, NULL);
+            bool ret = PEM_write_RSAPrivateKey(privateKeyFile, _privateKey, NULL, NULL, 0, NULL, NULL);
+            fclose(privateKeyFile);
+            //std::cout << _privateKeyStr << std::endl;
+            BIO_free_all(bioPrivate);
+        } else {
+            std::cerr << "Unable to open \"id_rsa\" for writing private rsa key!" << std::endl;
+        }
+    }
+}
+
+void RSAAlgorithm::createPublicKeyStr(bool file) {
+    std::cout << "create public key string" << std::endl;
+
+    EVP_PKEY *pkey = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(pkey, _publicKey);
+
+    BIO *bioPublic = BIO_new(BIO_s_mem());
+    PEM_write_bio_RSAPublicKey(bioPublic, _publicKey);
     size_t publicKeylen = BIO_pending(bioPublic);
 
-    _publicKey = (char*) calloc(publicKeylen+1, 1);
-    BIO_read(bioPublic, _publicKey, publicKeylen);
+    _publicKeyStr = (char*) calloc(publicKeylen+1, 1);
+    BIO_read(bioPublic, _publicKeyStr, publicKeylen);
 
     if (file) {
 
-        FILE *publicKeyFile = fopen("publickey.pem", "wb");
-        if (!publicKeyFile) {
-            std::cerr << "Unable to open \"pkey.pem\" for writing" << std::endl;
-        } else {
-            bool ret = PEM_write_PUBKEY(publicKeyFile, pkey);
-            //bool ret = PEM_write_RSAPublicKey(publicKeyFile, _keypair);
-
+        FILE *publicKeyFile = fopen("id_rsa.pub", "wb");
+        if (publicKeyFile) {
+            //bool ret = PEM_write_PUBKEY(publicKeyFile, pkey);
+            bool ret = PEM_write_RSAPublicKey(publicKeyFile, _publicKey);
             fclose(publicKeyFile);
+            //std::cout << _publicKeyStr << std::endl;
+            BIO_free_all(bioPublic);
+        } else {
+            std::cerr << "Unable to open \"id_rsa.pub\" for writing public rsa key!" << std::endl;
         }
-
-        BIO_free_all(bioPublic);
     }
-
-    std::cout << _publicKey << std::endl;
 }
 
-char* RSAAlgorithm::getPrivateKey() {
+
+void RSAAlgorithm::encrypt(std::vector<boost::filesystem::path>& files) {
+
+}
+void RSAAlgorithm::encrypt() {
+
+}
+
+void RSAAlgorithm::encrypt(RSA *publicKey) {
+    char  msg[KEYSIZE/8];
+
+    fgets(msg, KEYSIZE-1, stdin);
+    msg[strlen(msg)-1] = '\0';
+
+    char* encrypt = static_cast<char *> (malloc(RSA_size(publicKey)));
+
+    char* err = static_cast<char *>(malloc(130));
+
+    if( (_encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
+                                           publicKey, RSA_PKCS1_OAEP_PADDING)) == -1) {
+        ERR_load_crypto_strings();
+        ERR_error_string(ERR_get_error(), err);
+        fprintf(stderr, "Error encrypting message: %s\n", err);
+    }
+    std::cout << encrypt << std::endl;
+    FILE* out = fopen("out.txt", "w");
+    fwrite(encrypt, sizeof(*encrypt), RSA_size(publicKey), out);
+    fclose(out);
+    std::cout<< "Encrypted message written to file" << std::endl;
+    free(encrypt);
+    encrypt = NULL;
+}
+void RSAAlgorithm::decrypt() {
+
+}
+
+void RSAAlgorithm::decrypt(RSA *privateKey) {
+
+    std::cout << "Reading encrypted file" << std::endl;
+
+    char* encrypt = static_cast<char *> (malloc(RSA_size(privateKey)));
+
+    FILE *out = fopen("out.txt", "r");
+
+    fread(encrypt, sizeof(encrypt), RSA_size(privateKey), out);
+
+    fclose(out);
+    char* err = static_cast<char *>(malloc(130));
+
+    char* decrypt = static_cast<char *> (malloc(256));
+
+    if(RSA_private_decrypt(256, (unsigned char*)encrypt, (unsigned char*)decrypt,
+                           privateKey, RSA_PKCS1_OAEP_PADDING) == -1) {
+        ERR_load_crypto_strings();
+        ERR_error_string(ERR_get_error(), err);
+        fprintf(stderr, "Error decrypting message: %s\n", err);
+    }
+    printf("Decrypted message: %s\n", decrypt);
+}
+
+RSA* RSAAlgorithm::readPublicKeyFile(const std::string& filepath) {
+
+    RSA *publicKey = NULL;
+    FILE *publicFile = fopen(filepath.c_str(), "rb");
+
+    if (publicFile) {
+        if (PEM_read_RSAPublicKey(publicFile, &publicKey, NULL, NULL) != NULL) {
+
+        }
+        fclose(publicFile);
+    } else {
+        std::cerr << "Error opening public key file" << std::endl;
+    }
+    return publicKey;
+}
+
+RSA* RSAAlgorithm::readPrivateKeyFile(const std::string& filepath) {
+
+    RSA *privateKey = NULL;
+    FILE *privateFile = fopen(filepath.c_str(), "rb");
+
+    if (privateFile) {
+        if (PEM_read_RSAPrivateKey(privateFile, &privateKey, NULL, NULL) != NULL) {
+        }
+        fclose(privateFile);
+    } else {
+        std::cerr << "Error opening private key file" << std::endl;
+    }
+    return privateKey;
+}
+
+char* RSAAlgorithm::getPrivateKeyStr() {
+    return _privateKeyStr;
+}
+
+char* RSAAlgorithm::getPublicKeyStr() {
+    return _publicKeyStr;
+}
+
+RSA* RSAAlgorithm::getPrivateKey() {
     return _privateKey;
 }
 
-char* RSAAlgorithm::getPublicKey() {
+RSA* RSAAlgorithm::getPublicKey() {
     return _publicKey;
 }
-
-void RSAAlgorithm::encrypt(std::vector<boost::filesystem::path>& files) {
-    _files = files;
-    for (auto& file: _files) {
-        std::cout << file << std::endl;
-    }
-    //run();
-    //join();
-}
-
-void RSAAlgorithm::decrypt() {
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    _keypair = RSA_generate_key(KEYSIZE, 3, NULL, NULL);
-    EVP_PKEY_assign_RSA(pkey, _keypair);
-    BIO *bio = BIO_new(BIO_s_mem());
-    PEM_write_bio_PrivateKey(bio, pkey, NULL, NULL, 0, 0, NULL);
-    PEM_write_bio_RSAPrivateKey(bio, _keypair, NULL, NULL, 0, NULL, NULL);
-    int pem_pkey_size = BIO_pending(bio);
-    char *pem_pkey = (char*) calloc((pem_pkey_size)+1, 1);
-    BIO_read(bio, pem_pkey, pem_pkey_size);
-    std::cout << _privateKey << std::endl;
-    FILE *pkey_file = fopen("key2.pem", "wb");
-    if (!pkey_file) {
-        std::cerr << "Unable to open \"key.pem\" for writing." << std::endl;
-        return ;
-    }
-    std::cout << pkey << std::endl;
-    bool ret = PEM_write_PrivateKey(pkey_file, pkey, NULL, NULL, 0, NULL, NULL);
-    fclose(pkey_file);
-
-
-}
-

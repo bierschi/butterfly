@@ -88,7 +88,12 @@ int main(int argc, char** argv) {
 
     //executor();
 
-    RSAAlgorithm* algo = new RSAAlgorithm();
-
+    RSAAlgorithm *encrypter = new RSAAlgorithm();
+    RSAAlgorithm *decryptor = new RSAAlgorithm();
+    RSA *pub = encrypter->readPublicKeyFile("id_rsa.pub");
+    encrypter->encrypt(pub);
+    sleep(3);
+    RSA* priv = decryptor->readPrivateKeyFile("id_rsa");
+    decryptor->decrypt(priv);
     return 0;
 }
