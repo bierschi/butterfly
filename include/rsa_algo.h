@@ -9,6 +9,7 @@
 #include <fstream>
 #include <boost/filesystem/path.hpp>
 #include <openssl/rsa.h>
+#include <cmath>
 
 #include "algorithm.h"
 
@@ -42,40 +43,94 @@ private:
     bool extractKeys();
 
 public:
+    RSA* getKeypair();
     /**
-     * Constructor
+     * Default Constructor
      */
     RSAAlgorithm();
+
+    /**
+     * Constructor with private and public RSA key
+     *
+     * @param privateKey: RSA*
+     * @param publicKey: RSA*
+     */
+    RSAAlgorithm(RSA* privateKey, RSA* publicKey);
 
     /**
      * Destructor
      */
     ~RSAAlgorithm();
-
-    void encrypt(std::vector<boost::filesystem::path>&);
     void encrypt();
     void decrypt();
 
-    void encrypt(RSA* publicKey);
-    void decrypt(RSA* privateKey);
+    char* encrypt(RSA *publicKey, const char *bytes);
+    char* decrypt(RSA *privateKey, const char *encrypt);
+
+    std::vector<std::string> messageChunks(const std::string& message);
+    void encryptMessage(RSA *publicKey, const std::string& message);
+    void encryptFile(RSA *publicKey, const std::string& filepath);
+    void decryptMessage(RSA *privateKey);
+    void decryptFile(RSA *privateKey, const std::string& filepath);
 
     /**
-     * creates the private key string
+     * creates the RSA private key file
      *
      * @param file: bool true or false
      */
-    void createPrivateKeyStr(bool file);
+    char* createRSAPrivateKeyStr();
 
     /**
-     * creates the public key string
+     * creates the RSA public key File
      *
      * @param file: bool true or false
      */
-    void createPublicKeyStr(bool file);
+    char* createRSAPublicKeyStr();
 
-    RSA* readPublicKeyFile(const std::string& filepath);
+    /**
+     * creates the RSA private key file
+     *
+     * @param filename: name of the private key file
+     */
+    void createRSAPrivateKeyFile(const std::string& filename);
 
-    RSA* readPrivateKeyFile(const std::string& filepath);
+    /**
+     * creates the RSA public key file
+     *
+     * @param filename: name of the public key file
+     */
+    void createRSAPublicKeyFile(const std::string& filename);
+
+    /**
+     *
+     * @param filepath: path to pem file
+     * @return RSA*
+     */
+    RSA* getPublicKeyFromFile(const std::string& filepath);
+
+    /**
+     * get the RSA private key from pem file
+     *
+     * @param filepath: path to pem file
+     * @return RSA*
+     */
+    RSA* getPrivateKeyFromFile(const std::string& filepath);
+
+    /**
+     * get the RSA public key from public key string
+     *
+     * @param publicKeyStr: string from rsa public key pem file
+     * @return RSA*
+     */
+    RSA* getPublicKeyFromStr(const std::string& publicKeyStr);
+
+    /**
+     * get the RSA private key from private key string
+     *
+     * @param privateKeyStr: string from rsa private key pem file
+     * @return RSA*
+     */
+    RSA* getPrivateKeyFromStr(const std::string& privateKeyStr);
 
     /**
      * get the private key string

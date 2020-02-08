@@ -33,7 +33,7 @@ public:
     /**
      * abstract method encrypt for subclasses
      */
-    virtual void encrypt(std::vector<boost::filesystem::path>&) = 0;
+    virtual void encrypt() = 0;
 
     /**
      * abstract method decrypt for subclasses

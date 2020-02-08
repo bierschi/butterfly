@@ -17,7 +17,7 @@ void Encryptor::execute() {
 
     for (auto & dir : _dirs) {
         std::vector<boost::filesystem::path> files = _directoryIt->getFilesFromDir(dir);
-        _rsaalgo->encrypt(files);
+        //_rsaalgo->encrypt(files);
     }
     std::cout << "SIZE: " << _dirs.size() << std::endl;
 }
