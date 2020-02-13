@@ -7,6 +7,8 @@
 #include <mutex>
 #include <cmath>
 #include "encryptor.h"
+#include "aes_algo.h"
+
 std::mutex tmp_mut;
 DirectoryIiterator* _directoryIt = new DirectoryIiterator();
 void test(std::vector<boost::filesystem::path> paths) {
@@ -107,6 +109,10 @@ int main(int argc, char** argv) {
     char* decrypt = encrypter->decrypt(privKey, ct);
 
     std::cout << "decrypt: " << decrypt << std::endl;
+
+    std::cout << "start aes encryption" << std::endl;
+    AESAlgorithm *aesalgo = new AESAlgorithm();
+    aesalgo->start();
 
     return 0;
 }
