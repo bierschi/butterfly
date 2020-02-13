@@ -8,7 +8,7 @@ RSA* RSAAlgorithm::_keypair = NULL;
 RSA* RSAAlgorithm::_privateKey = NULL;
 RSA* RSAAlgorithm::_publicKey = NULL;
 
-RSAAlgorithm::RSAAlgorithm() : _privateKeyStr(nullptr), _publicKeyStr(nullptr), _encrypt_len(0) {
+RSAAlgorithm::RSAAlgorithm() : _privateKeyStr(nullptr), _publicKeyStr(nullptr) {
     std::cout << "create class RSAAlgorithm" << std::endl;
 
     if (_keypair == NULL) {
@@ -21,7 +21,7 @@ RSAAlgorithm::RSAAlgorithm() : _privateKeyStr(nullptr), _publicKeyStr(nullptr), 
 
 }
 
-RSAAlgorithm::RSAAlgorithm(RSA *privateKey, RSA *publicKey) : _privateKeyStr(nullptr), _publicKeyStr(nullptr), _encrypt_len(0) {
+RSAAlgorithm::RSAAlgorithm(RSA *privateKey, RSA *publicKey) : _privateKeyStr(nullptr), _publicKeyStr(nullptr) {
     std::cout << "create class RSAAlgorithm" << std::endl;
 
     RSAAlgorithm::_privateKey = privateKey;
@@ -36,10 +36,7 @@ RSAAlgorithm::~RSAAlgorithm() {
     free(_privateKeyStr);
     free(_publicKeyStr);
 }
-RSA* RSAAlgorithm::getKeypair() {
-    return RSA_generate_key(KEYSIZE, 17, NULL, NULL);
 
-}
 bool RSAAlgorithm::generateKeyPair() {
     std::cout << "generate RSA key pairs" << std::endl;
 
@@ -197,11 +194,6 @@ RSA* RSAAlgorithm::getPublicKey() {
     return _publicKey;
 }
 
-void RSAAlgorithm::encrypt() {
-
-}
-
-
 std::vector<std::string> RSAAlgorithm::messageChunks(const std::string &message) {
 
     std::vector<std::string> chunks;
@@ -213,26 +205,25 @@ std::vector<std::string> RSAAlgorithm::messageChunks(const std::string &message)
     return chunks;
 }
 
-
-char* RSAAlgorithm::encrypt(RSA* publicKey, const char* bytes) {
+char* RSAAlgorithm::encrypt(RSA *publicKey, const char *pt) {
 
     // buffer for the modulus size n through RSA_size
     char* encrypt = static_cast<char*> (malloc(RSA_size(publicKey)));
+
     // buffer for the error message
     char* error = static_cast<char *>(malloc(130));
-
-    // RSA_size() - 42 = 214
-    if( (_encrypt_len = RSA_public_encrypt(RSA_size(publicKey)-42, (unsigned char*)bytes, (unsigned char*) encrypt,
+    int encryptLen;
+    if( (encryptLen = RSA_public_encrypt(strlen(pt), (unsigned char*)pt, (unsigned char*) encrypt,
                                            publicKey, RSA_PKCS1_OAEP_PADDING)) == -1) {
         ERR_load_crypto_strings();
         ERR_error_string(ERR_get_error(), error);
-        std::cerr << "Error encrypting bytes: " << error << std::endl;
+        std::cerr << "Error encrypting plaintext: " << error << std::endl;
     }
-    std::cout << "encrypt_len: " << strlen(encrypt) << std::endl;
+
     return encrypt;
 }
 
-char* RSAAlgorithm::decrypt(RSA *privateKey, const char *encrypt) {
+char* RSAAlgorithm::decrypt(RSA *privateKey, const char *ct) {
 
     // buffer for the decrypt chunks
     char* decrypt = static_cast<char *> (malloc(RSA_size(privateKey)));
@@ -240,173 +231,13 @@ char* RSAAlgorithm::decrypt(RSA *privateKey, const char *encrypt) {
     // buffer for the error message
     char* error = static_cast<char *>(malloc(130));
     int decryptLen;
-    if ( (decryptLen = RSA_private_decrypt(RSA_size(privateKey), (unsigned char*)encrypt, (unsigned char*)decrypt,
+    if ( (decryptLen = RSA_private_decrypt(RSA_size(privateKey), (unsigned char*)ct, (unsigned char*)decrypt,
                                   privateKey, RSA_PKCS1_OAEP_PADDING)) == -1) {
         ERR_load_crypto_strings();
         ERR_error_string(ERR_get_error(), error);
-        std::cerr << "Error decrypting bytes: " << error << std::endl;
+        std::cerr << "Error decrypting ciphertext: " << error << std::endl;
     }
 
-    std::cout << "decrypt_len: " << strlen(decrypt)+1 << std::endl;
     return decrypt;
 }
 
-void RSAAlgorithm::encryptFile(RSA *publicKey, const std::string &filepath) {
-
-    std::ifstream in(filepath, std::ios_base::in | std::ios_base::binary);
-    std::ofstream out(filepath + ".bin", std::ios_base::out | std::ios_base::binary | std::ios_base::app);
-    char buf[256];
-
-    while (!in.eof()) {
-
-        in.read(&buf[0], 256);      // Read at most n bytes into
-        std::cout << "bytes from encrypt file: " << in.gcount() << std::endl;
-        char* data = encrypt(publicKey, &buf[0]);
-        out.write(data, strlen(data)); // buf, then write the buf to
-    }
-    /*
-    do {
-        in.read(&buf[0], 256);      // Read at most n bytes into
-        std::cout << "bytes from encrypt file: " << in.gcount() << std::endl;
-        char* data = encrypt(publicKey, &buf[0]);
-        out.write(data, strlen(data)); // buf, then write the buf to
-        //writeFile(&buf[0], in.gcount());
-    } while (in.gcount() > 0);          // the output.
-     */
-    in.close();
-    out.close();
-}
-
-void RSAAlgorithm::decryptFile(RSA *privateKey, const std::string &filepath) {
-    std::string newFile = filepath;
-    std::ifstream in(filepath, std::ios_base::in | std::ios_base::binary);
-    //size_t index = 0;
-    //index = newFile.find(".bin", index);
-    FILE *decrypted_file = fopen("decrypted_file.txt", "w");
-    char buf[256];
-    in.read(&buf[0], 256);
-    std::cout << "bytes from decrypt file: " << in.gcount() << std::endl;
-    char* dec = decrypt(privateKey, &buf[0]);
-    fwrite(dec, 1, strlen(dec), decrypted_file);
-
-    return;
-    while (!in.eof()) {
-        in.read(&buf[0], 256);
-        std::cout << "bytes from decrypt file: " << in.gcount() << std::endl;
-        char* dec = decrypt(privateKey, &buf[0]);
-        fwrite(dec, 1, strlen(dec), decrypted_file);
-    }
-
-    fclose(decrypted_file);
-    /*
-    //newFile.replace(index, 4, "");
-    std::ofstream out("decrypt.txt", std::ios_base::out | std::ios_base::app);
-    char buf[256];
-
-    do {
-        in.read(&buf[0], 256);      // Read at most n bytes into
-        std::cout << "bytes from decrypt file: " <<  in.gcount() << std::endl;
-        char* data = decrypt(privateKey, &buf[0]);
-        out.write(data, strlen(data)); // buf, then write the buf to
-        //writeFile(&buf[0], in.gcount());
-    } while (in.gcount() > 0);          // the output.
-    in.close();
-    out.close();
-    */
-}
-
-
-
-
-
-
-
-
-
-
-
-
-void RSAAlgorithm::encryptMessage(RSA *publicKey, const std::string& message) {
-
-    std::vector<std::string> chunks = messageChunks(message);
-    FILE* out = fopen("out.txt", "a+");
-
-    for (auto& chunk: chunks) {
-
-        // buffer for the modulus size n through RSA_size
-        char* encrypt = static_cast<char *> (malloc(RSA_size(publicKey)));
-        // buffer for the error message
-        char* error = static_cast<char *>(malloc(130));
-
-        // RSA_size() - 42 = 214
-        if( (_encrypt_len = RSA_public_encrypt(214, (unsigned char*)chunk.c_str(), (unsigned char*)encrypt,
-                                               publicKey, RSA_PKCS1_OAEP_PADDING)) == -1) {
-            ERR_load_crypto_strings();
-            ERR_error_string(ERR_get_error(), error);
-            fprintf(stderr, "Error encrypting message: %s\n", error);
-        }
-        if (out) {
-            fwrite(encrypt, sizeof(*encrypt), RSA_size(publicKey), out);
-            std::cout << "enc_to_file: " << sizeof(encrypt) << std::endl;
-            std::cout<< "Encrypted message written to file" << std::endl;
-            free(encrypt);
-            encrypt = NULL;
-        }
-    }
-
-    fclose(out);
-}
-
-void RSAAlgorithm::decrypt() {
-
-}
-
-void RSAAlgorithm::decryptMessage(RSA *privateKey) {
-
-    std::cout << "Reading encrypted file" << std::endl;
-
-    size_t  nread;
-    char* encrypt = static_cast<char *> (malloc(RSA_size(privateKey)));
-    char* decrypt = static_cast<char *> (malloc(RSA_size(privateKey)));
-
-    FILE *in = fopen("out.txt", "rb");
-
-    if (!in) {
-        std::cerr << "error open decrpyt file" << std::endl;
-    }
-    while (!feof(in)) {
-        while ( (nread = fread(encrypt,  1, RSA_size(privateKey), in)) > 0) {
-            std::cout << "test"<< std::endl;
-            //decrypt=NULL;
-            //encrypt=NULL;
-            //free(decrypt);
-            //decrypt=NULL;
-            int len = RSA_private_decrypt(256, (unsigned char*)encrypt, (unsigned char*)decrypt,
-                                          privateKey, RSA_PKCS1_OAEP_PADDING);
-            printf("Decrypted message: %s\n", decrypt);
-        }
-
-    }
-
-
-    /*
-    fread(encrypt, sizeof(encrypt), RSA_size(privateKey), in);
-    std::cout << "size: " << sizeof(encrypt) << std::endl;
-    fclose(in);
-    char* err = static_cast<char *>(malloc(130));
-
-    char* decrypt = static_cast<char *> (malloc(RSA_size(privateKey)));
-    std::cout << "DDDD: " << sizeof(decrypt) << std::endl;
-
-    int len = RSA_private_decrypt(256, (unsigned char*)encrypt, (unsigned char*)decrypt,
-                        privateKey, RSA_PKCS1_OAEP_PADDING);
-    std::cout << "len: " << len << std::endl;
-    if(RSA_private_decrypt(256, (unsigned char*)encrypt, (unsigned char*)decrypt,
-                           privateKey, RSA_PKCS1_OAEP_PADDING) == -1) {
-        ERR_load_crypto_strings();
-        ERR_error_string(ERR_get_error(), err);
-        fprintf(stderr, "Error decrypting message: %s\n", err);
-    }*/
-    fclose(in);
-    //printf("Decrypted message: %s\n", decrypt);
-}

@@ -82,27 +82,6 @@ void old() {
     std::cout << "DIR Size: " << dirs.size() << std::endl;
 }
 
-void working() {
-    RSAAlgorithm *encrypter = new RSAAlgorithm();
-    //RSAAlgorithm *decryptor = new RSAAlgorithm();
-
-    RSA* key = encrypter->getKeypair();
-    char* message = "Test - OpenSSL_RSA demo - AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBB"
-                    "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
-                    "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
-
-    char* ct = encrypter->encrypt(key, message);
-
-    FILE* encrypted_file = fopen("encrypted_file.bin", "w");
-    fwrite(ct, sizeof(*ct), strlen(ct), encrypted_file);
-    fclose(encrypted_file);
-
-    char* decrypt = encrypter->decrypt(key, ct);
-
-    FILE *decrypted_file = fopen("decrypted_file.txt", "w");
-    fwrite(decrypt, 1, strlen(decrypt), decrypted_file);
-    fclose(decrypted_file);
-}
 
 int main(int argc, char** argv) {
 
@@ -112,31 +91,22 @@ int main(int argc, char** argv) {
     RSAAlgorithm *encrypter = new RSAAlgorithm();
     //RSAAlgorithm *decryptor = new RSAAlgorithm();
 
-    //RSA* pub = encrypter->getPublicKeyFromFile("id_rsa.pub");
-    //encrypter->encryptFile(pub, "test.txt");
+    //encrypter->createRSAPublicKeyFile("id_rsa.pub");
+    //encrypter->createRSAPrivateKeyFile("id_rsa");
+    //RSA *pubKey = encrypter->getPublicKey();
 
-    RSA* key = encrypter->getKeypair();
+    char* message = "AES Key test 828252052052";
 
-    encrypter->encryptFile(key, "test.txt");
-    sleep(2);
-    encrypter->decryptFile(key, "test.txt.bin");
+    RSA *pubKey = encrypter->getPublicKeyFromFile("id_rsa.pub");
+    char* ct = encrypter->encrypt(pubKey, message);
+    std::cout << "Cipher text: " << ct << std::endl;
+    sleep(3);
 
-    /*
-    char* message = "Test - OpenSSL_RSA demo - AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBB"
-                             "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
-                             "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+    //RSA *privKey = encrypter->getPrivateKey();
+    RSA *privKey = encrypter->getPrivateKeyFromFile("id_rsa");
+    char* decrypt = encrypter->decrypt(privKey, ct);
 
-    char* ct = encrypter->encrypt(key, message);
+    std::cout << "decrypt: " << decrypt << std::endl;
 
-    FILE* encrypted_file = fopen("encrypted_file.bin", "w");
-    fwrite(ct, sizeof(*ct), strlen(ct), encrypted_file);
-    fclose(encrypted_file);
-
-    char* decrypt = encrypter->decrypt(key, ct);
-
-    FILE *decrypted_file = fopen("decrypted_file.txt", "w");
-    fwrite(decrypt, 1, strlen(decrypt), decrypted_file);
-    fclose(decrypted_file);
-     */
     return 0;
 }

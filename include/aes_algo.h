@@ -7,9 +7,9 @@
 
 #include <openssl/aes.h>
 
-#include "algorithm.h"
+#include "crypto.h"
 
-class AESAlgorithm : public Algorithm {
+class AESAlgorithm : public Crypto {
 
 public:
     AESAlgorithm();

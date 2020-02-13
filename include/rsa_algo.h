@@ -11,18 +11,16 @@
 #include <openssl/rsa.h>
 #include <cmath>
 
-#include "algorithm.h"
+#include "crypto.h"
 
 /**
  * Class RSAAlgorithm
  */
-class RSAAlgorithm : public Algorithm {
+class RSAAlgorithm : public Crypto {
 
 private:
-    std::vector<boost::filesystem::path> _files;
     char *_privateKeyStr;
     char *_publicKeyStr;
-    int _encrypt_len;
 
     static RSA *_keypair;
     static RSA *_privateKey;
@@ -43,7 +41,7 @@ private:
     bool extractKeys();
 
 public:
-    RSA* getKeypair();
+
     /**
      * Default Constructor
      */
@@ -61,17 +59,11 @@ public:
      * Destructor
      */
     ~RSAAlgorithm();
-    void encrypt();
-    void decrypt();
 
-    char* encrypt(RSA *publicKey, const char *bytes);
-    char* decrypt(RSA *privateKey, const char *encrypt);
+    char* encrypt(RSA *publicKey, const char *pt);
+    char* decrypt(RSA *privateKey, const char *ct);
 
     std::vector<std::string> messageChunks(const std::string& message);
-    void encryptMessage(RSA *publicKey, const std::string& message);
-    void encryptFile(RSA *publicKey, const std::string& filepath);
-    void decryptMessage(RSA *privateKey);
-    void decryptFile(RSA *privateKey, const std::string& filepath);
 
     /**
      * creates the RSA private key file
