@@ -6,18 +6,29 @@
 #define RANSOMWARE_AES_ALGO_H
 
 #include <openssl/aes.h>
-
+#include <openssl/rand.h>
 #include "crypto.h"
 
 class AESAlgorithm : public Crypto {
+private:
+    EVP_CIPHER_CTX *_encCTX;
+    EVP_CIPHER_CTX *_decCTX;
+    unsigned char _key[32], _iv[32];
+    int _initRounds;
 
+    void init(unsigned char *keyData, unsigned char *salt);
 public:
-    AESAlgorithm();
+    AESAlgorithm(int initRounds=5);
     ~AESAlgorithm();
 
     void start();
-    int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, unsigned char *iv, unsigned char *ciphertext);
-    int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, unsigned char *iv, unsigned char *plaintext);
+    unsigned char *getKey();
+    int encrypt(unsigned char *plaintext, int plaintextLen, unsigned char *ciphertext);
+    int decrypt(unsigned char *ciphertext, int ciphertextLen, unsigned char *plaintext);
+
+    void encryptFile();
+    void decryptFile();
+    void print_hex(unsigned char *str, int len);
 
 };
 

