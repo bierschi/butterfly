@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10.2)
-project(ransomware)
+project(ransomware VERSION "1.0")
+
+# add app specific macros
+configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
 
 # set c++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -21,6 +24,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 # add the header files
 include_directories(include)
+include_directories(${PROJECT_BINARY_DIR})
 
 # add the source files
 file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
