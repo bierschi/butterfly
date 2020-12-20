@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "aes_algo.h"
+#include "../include/aes_algo.h"
 
 #define BYTES_PER_GROUP 4
 #define GROUPS_PER_LINE 4

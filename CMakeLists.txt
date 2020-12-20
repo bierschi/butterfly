@@ -35,7 +35,7 @@ add_subdirectory(test)
 
 # build the executable
 if(Boost_FOUND)
-    add_executable(ransomware main.cpp ${SOURCE_FILES})
+    add_executable(ransomware src/main.cpp ${SOURCE_FILES})
     target_link_libraries(ransomware Boost::filesystem Boost::regex Boost::log OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT})
 endif()
 

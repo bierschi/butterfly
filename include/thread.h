@@ -1,7 +1,3 @@
-//
-// Created on 27.01.20.
-//
-
 #ifndef RANSOMWARE_THREAD_H
 #define RANSOMWARE_THREAD_H
 
@@ -17,43 +13,40 @@ private:
 
 public:
     /**
-     * Constructor
-     *
-     * Usage: new Thread()
-     *
+     * Thread Constructor
      */
     Thread();
 
     /**
-     * Destructor
+     * Virtual Destructor
      */
     virtual ~Thread();
 
     /**
-     * start method creates a new pthread object
+     * Start method creates a new pthread object
      */
     void start();
 
     /**
-     * joins the executed thread safely
+     * Joins the executed thread safely
      */
     void join();
 
     /**
-     * detached the current thread from the caller thread
+     * Detach the current thread from the caller thread
      */
     void detach();
 
 protected:
 
     /**
-     *  virtual execute method for subclasses
+     *  Virtual execute method for subclasses
      */
     virtual void execute() = 0;
 
 private:
     /**
-     * static executorFunc method
+     * Static executorFunc method
      */
     static void *executorFunc(void *exec);
 

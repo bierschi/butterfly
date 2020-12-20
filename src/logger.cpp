@@ -1,7 +1,3 @@
-//
-// Created on 05.09.20.
-//
-
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/log/core.hpp>

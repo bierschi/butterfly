@@ -1,7 +1,3 @@
-//
-// Created on 05.09.20.
-//
-
 #ifndef RANSOMWARE_LOGGER_H
 #define RANSOMWARE_LOGGER_H
 
