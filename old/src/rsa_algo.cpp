@@ -2,7 +2,7 @@
 // Created on 22.01.20.
 //
 
-#include "rsa_algo.h"
+#include "../include/rsa_algo.h"
 
 RSA* RSAAlgorithm::_keypair = NULL;
 RSA* RSAAlgorithm::_privateKey = NULL;

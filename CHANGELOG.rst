@@ -1,1 +1,2 @@
-27.12.2019: Development start
+- 27.12.2019: Development start
+- 05.09.2020: Added GTest as unittest framework

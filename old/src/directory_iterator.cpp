@@ -2,7 +2,7 @@
 // Created on 22.01.20.
 //
 
-#include "directory_iterator.h"
+#include "../include/directory_iterator.h"
 
 
 DirectoryIiterator::DirectoryIiterator() : _directories({}), _files({}){

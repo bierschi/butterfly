@@ -2,7 +2,7 @@
 // Created on 28.01.20.
 //
 
-#include "encryptor.h"
+#include "../include/encryptor.h"
 
 Encryptor::Encryptor(std::vector<boost::filesystem::path>& dirs) : _dirs(dirs), _directoryIt(new DirectoryIiterator), _rsaalgo(new RSAAlgorithm){
     std::cout << "Create Encryptor" << std::endl;

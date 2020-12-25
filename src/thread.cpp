@@ -1,7 +1,3 @@
-//
-// Created on 27.01.20.
-//
-
 #include "thread.h"
 
 Thread::Thread() {
