@@ -25,6 +25,14 @@ private:
     void printVersion();
 
 public:
+
+    struct Arguments {
+        std::string _config;
+        std::string _dir;
+        const std::string _version;
+        Arguments(): _config(""), _dir(""), _version(PROJECT_VER) {}
+    };
+
     /**
      * ArgumentParser default constructor
      */
@@ -38,7 +46,7 @@ public:
     /**
      * Parses the given application arguments
      */
-    void parseArgs(const int &argc, char *argv[]);
+    Arguments parseArgs(const int &argc, char *argv[]);
 
 };
 

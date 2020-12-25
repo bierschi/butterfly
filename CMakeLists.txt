@@ -4,9 +4,11 @@ project(butterfly VERSION "1.0")
 # add app specific macros
 configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
 
-# set c++ standard
+# set c++11 as standard
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+# set compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
 
 # set boost library settings
 set(Boost_USE_STATIC_LIBS OFF)
@@ -36,7 +38,7 @@ add_subdirectory(test)
 
 # build the executable
 if(Boost_FOUND)
-    add_executable(butterfly src/main.cpp ${SOURCE_FILES})
-    target_link_libraries(butterfly Boost::filesystem Boost::regex Boost::log OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT})
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+    target_link_libraries(${CMAKE_PROJECT_NAME} Boost::filesystem Boost::regex Boost::log OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT})
 endif()
 

@@ -2,6 +2,26 @@
 
 
 ## Installation
+
+### Prerequisites
+Download and install GTest
+<pre><code>
+sudo apt-get install libgtest-dev
+sudo apt-get install cmake # install cmake
+cd /usr/src/gtest
+sudo cmake CMakeLists.txt
+sudo make
+
+#copy or symlink libgtest.a and libgtest_main.a to your /usr/lib folder
+sudo cp *.a /usr/lib
+</code></pre>
+
+Download and install boost libraries
+<pre><code>
+sudo apt-get install -y libboost-filesystem-dev libboost-regex-dev libboost-log-dev
+</code></pre>
+
+Build butterfly
 <pre><code>
 git clone https://github.com/bierschi/ransomware.git
 cd ransomware
@@ -9,7 +29,6 @@ mkdir build
 cmake ..
 make
 </code></pre>
-
 
 ## Usage and Examples
 

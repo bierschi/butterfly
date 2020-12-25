@@ -5,21 +5,22 @@ namespace butterfly {
 
 ArgumentParser::ArgumentParser() {
 
-    _usage = "Usage: \n \t\t ransomware --path --logging\n\n";
-    _options = "Options\n";
+    // Logger is disabled as default setting
+    Logger::disable();
+
+    _usage = "Usage: \n \t\t" + std::string(PROJECT_NAME) + " --dir /home/christian/test/ --config /path/to/config\n\nOptions\n";
     _help = "-h, --help\t\tPrint help message\n";
     _version = "-v, --version\tPrint current version";
 
-    // Logger is disabled as default setting
-    Logger::disable();
 }
 
 ArgumentParser::~ArgumentParser() {
 
 }
 
-void ArgumentParser::parseArgs(const int &argc, char *argv[]) {
+ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[]) {
 
+    Arguments args;
     if (argc > 1) {
 
         for (int i = 1; i < argc; i++) {
@@ -44,24 +45,24 @@ void ArgumentParser::parseArgs(const int &argc, char *argv[]) {
                     break;
                 }
             } else if (arg == "-d" || arg == "--dir") {
-                
+                args._dir = argv[i + 1];
             }
         }
     } else {
         printHelp();
     }
-
+    return args;
 }
 
 void ArgumentParser::printHelp() {
 
     std::string output;
-    output += _usage + _options + _help + _version;
+    output += _usage + _help + _version;
     std::cout << output << std::endl;
 }
 
 void ArgumentParser::printVersion() {
-    std::cout << "Version: " << PROJECT_VER << std::endl;
+    std::cout << PROJECT_NAME << " version " << PROJECT_VER << std::endl;
 }
 
 } // namespace butterfly
