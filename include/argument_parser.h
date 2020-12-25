@@ -13,11 +13,6 @@ class ArgumentParser {
 
 private:
     std::string _help, _version, _options, _usage;
-    struct Args {
-        std::string config;
-        std::string dir;
-        std::string version;
-    };
 
     /**
      * Prints the help message
@@ -30,6 +25,14 @@ private:
     void printVersion();
 
 public:
+
+    struct Arguments {
+        std::string _config;
+        std::string _dir;
+        const std::string _version;
+        Arguments(): _config(""), _dir(""), _version(PROJECT_VER) {}
+    };
+
     /**
      * ArgumentParser default constructor
      */
@@ -43,7 +46,7 @@ public:
     /**
      * Parses the given application arguments
      */
-    void parseArgs(const int &argc, char *argv[]);
+    Arguments parseArgs(const int &argc, char *argv[]);
 
 };
 
