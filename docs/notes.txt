@@ -1,6 +1,7 @@
 - add logging functionality
 - create class for argument parser
-- link libs pthread, sql
+- link libs sql
 - create class for rsa, aes encryption -> Use hybrid encryption
 - iterate through directory structure recursively and load all files
 - add data structure for holding file extension
+- change project to support multiple os (windows, macos)

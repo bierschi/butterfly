@@ -4,9 +4,11 @@ project(butterfly VERSION "1.0")
 # add app specific macros
 configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
 
-# set c++ standard
+# set c++11 standard
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+# set compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
 
 # set boost library settings
 set(Boost_USE_STATIC_LIBS OFF)

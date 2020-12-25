@@ -13,6 +13,11 @@ class ArgumentParser {
 
 private:
     std::string _help, _version, _options, _usage;
+    struct Args {
+        std::string config;
+        std::string dir;
+        std::string version;
+    };
 
     /**
      * Prints the help message

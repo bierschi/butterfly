@@ -5,13 +5,14 @@ namespace butterfly {
 
 ArgumentParser::ArgumentParser() {
 
+    // Logger is disabled as default setting
+    Logger::disable();
+
     _usage = "Usage: \n \t\t ransomware --path --logging\n\n";
     _options = "Options\n";
     _help = "-h, --help\t\tPrint help message\n";
     _version = "-v, --version\tPrint current version";
 
-    // Logger is disabled as default setting
-    Logger::disable();
 }
 
 ArgumentParser::~ArgumentParser() {
@@ -38,13 +39,15 @@ void ArgumentParser::parseArgs(const int &argc, char *argv[]) {
 
                     // init logger instance
                     Logger::initFromConfig(configPath);
+                    LOG_INFO("Start application "<< PROJECT_NAME << " with version " << PROJECT_VER);
 
                 } else {
                     std::cout << "--config option requires one argument!" << std::endl;
                     break;
                 }
             } else if (arg == "-d" || arg == "--dir") {
-                
+                std::string dirPath = argv[i + 1];
+                LOG_TRACE("Start iteration from directory: " << dirPath);
             }
         }
     } else {
