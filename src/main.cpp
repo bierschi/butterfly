@@ -1,7 +1,8 @@
 
 #include <memory>
 
-#include "argument_parser.h"
+#include "argumentParser.h"
+#include "directoryIterator.h"
 
 int main(int argc, char* argv[]) {
 
@@ -11,5 +12,10 @@ int main(int argc, char* argv[]) {
 
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
 
+    std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
+    std::vector<boost::filesystem::path> files = dirIterator->getFilesFromDir("/home/christian/PycharmProjects/comunio_brute");
+    for (auto &file: files) {
+        LOG_TRACE(file);
+    }
     return 0;
 }
