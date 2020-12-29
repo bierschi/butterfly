@@ -1,5 +1,5 @@
-#ifndef RANSOMWARE_LOGGER_H
-#define RANSOMWARE_LOGGER_H
+#ifndef BUTTERFLY_LOGGER_H
+#define BUTTERFLY_LOGGER_H
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
@@ -63,4 +63,4 @@ public:
     static void disable();
 
 };
-#endif //RANSOMWARE_LOGGER_H
+#endif //BUTTERFLY_LOGGER_H

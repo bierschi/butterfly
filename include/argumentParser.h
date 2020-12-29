@@ -1,6 +1,6 @@
 
-#ifndef RANSOMWARE_ARGUMENT_PARSER_H
-#define RANSOMWARE_ARGUMENT_PARSER_H
+#ifndef BUTTERFLY_ARGUMENT_PARSER_H
+#define BUTTERFLY_ARGUMENT_PARSER_H
 
 #include <iostream>
 
@@ -52,4 +52,4 @@ public:
 
 } // namespace butterfly
 
-#endif //RANSOMWARE_ARGUMENT_PARSER_H
+#endif //BUTTERFLY_ARGUMENT_PARSER_H

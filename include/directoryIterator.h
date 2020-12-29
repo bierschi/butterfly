@@ -4,8 +4,13 @@
 
 #include <boost/filesystem.hpp>
 
+#include "logger.h"
+
 namespace butterfly {
 
+/**
+ * Class DirectoryIterator to iterate recursively through directories
+ */
 class DirectoryIterator {
 
 private:
@@ -39,18 +44,36 @@ public:
     bool isFile(const boost::filesystem::path &path);
 
     /**
+     * Get recursively all files from given path
      *
-     * @param f
-     * @return
+     * @param p: const reference filesystem path
+     * @return std::vector including all file paths
      */
-    std::vector<boost::filesystem::path> getAllFiles(const boost::filesystem::path &f);
+    std::vector<boost::filesystem::path> getAllFiles(const boost::filesystem::path &p);
 
     /**
+     * Get recursively all directories from given path
      *
-     * @param f
-     * @return
+     * @param p: const reference filesystem path
+     * @return std::vector<boost::filesystem::path> including all directory paths
      */
-    std::vector<boost::filesystem::path> getFilesFromDir(const boost::filesystem::path &f);
+    std::vector<boost::filesystem::path> getAllDirectories(const boost::filesystem::path &p);
+
+    /**
+     * Get only files from given directory path
+     *
+     * @param p: filesytem path
+     * @return std::vector including the file paths
+     */
+    std::vector<boost::filesystem::path> getFilesFromDir(const boost::filesystem::path &p);
+
+    /**
+    * Get the file size from given file path
+    *
+    * @param file: const boost::filesystem::path&
+    * @return size of file in bytes
+    */
+    uintmax_t getFileSize(const boost::filesystem::path &file);
 };
 
 } // namespace butterfly

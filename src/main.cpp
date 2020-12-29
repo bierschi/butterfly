@@ -13,9 +13,15 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
 
     std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
-    std::vector<boost::filesystem::path> files = dirIterator->getFilesFromDir("/home/christian/PycharmProjects/comunio_brute");
-    for (auto &file: files) {
-        LOG_TRACE(file);
+    std::vector<boost::filesystem::path> dirs = dirIterator->getAllDirectories("/home/christian/PycharmProjects/comunio_brute");
+    std::vector<boost::filesystem::path> files;
+    for (auto &dir: dirs) {
+        //LOG_TRACE(dirIterator->getFileSize(file));
+        LOG_TRACE(dir);
+        files = dirIterator->getFilesFromDir(dir);
+        for (auto &file: files) {
+            LOG_TRACE(file)
+        }
     }
     return 0;
 }
