@@ -24,6 +24,7 @@ private:
     static RSA *_rsa;
     char *_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr;
 
+protected:
     /**
      * Generates the RSA key
      *
@@ -42,6 +43,8 @@ public:
      * Destructor CryptoRSA
      */
     ~CryptoRSA();
+
+    static RSA* getRSAKey();
 
     /**
      * Get the EVP_PKEY from the rsa keypair

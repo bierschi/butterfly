@@ -1,0 +1,8 @@
+- encrypt all user files with AES-256-CBC.
+- Random AES key and IV for each file.
+- encrypt AES keys with Cpub.key RSA-2048.
+- encrypt Cpriv.key with RSA-2048 Spub.key.
+- Works without internet.
+- Communicate with the server to get Spriv.key.
+- Change computer wallpaper.
+- A Python webserver

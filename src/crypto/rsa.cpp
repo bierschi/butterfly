@@ -7,12 +7,6 @@ RSA* CryptoRSA::_rsa = nullptr;
 
 CryptoRSA::CryptoRSA() {
     LOG_TRACE("Create class CryptoRSA")
-    /*
-    if (CryptoRSA::_rsa == nullptr) {
-        if ( !generateRSAKey() ) {
-            throw std::runtime_error("Could not generate the RSA key!");
-        }
-    }*/
 
 }
 
@@ -33,6 +27,10 @@ bool CryptoRSA::generateRSAKey() {
     } else {
         return false;
     }
+}
+
+RSA* CryptoRSA::getRSAKey() {
+    return CryptoRSA::_rsa;
 }
 
 EVP_PKEY* CryptoRSA::getEvpPkey() {
@@ -174,19 +172,19 @@ size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t 
     ctx = EVP_PKEY_CTX_new(key, nullptr);
 
     if (!ctx) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during context init in RSA encrypt" << stderr);
         return 0;
     }
     if (EVP_PKEY_encrypt_init(ctx) <= 0) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during EVP_PKEY_encrypt_init(ctx) in RSA encrypt" << stderr);
         return 0;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA encrypt" << stderr);
         return 0;
     }
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during EVP_PKEY_encrypt" << stderr);
         return 0;
     }
 
@@ -201,25 +199,23 @@ size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphe
     ctx = EVP_PKEY_CTX_new(key, nullptr);
 
     if (!ctx) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during context init in RSA decrypt" << stderr);
         return 0;
     }
     if (EVP_PKEY_decrypt_init(ctx) <= 0) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during EVP_PKEY_decrypt_init(ctx) in RSA decrypt" << stderr);
         return 0;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA decrypt" << stderr);
         return 0;
     }
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0) {
-        LOG_ERROR(stderr);
+        LOG_ERROR("Error during EVP_PKEY_decrypt" << stderr);
         return 0;
     }
 
     return plaintextLength;
 }
-
-
 
 } // namespace butterfly

@@ -3,7 +3,7 @@
 
 #include "argumentParser.h"
 #include "directoryIterator.h"
-#include "crypto/rsa.h"
+#include "crypto/rsaEncryptor.h"
 
 
 void encrypt() {
@@ -58,13 +58,14 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
     //encrypt();
-    decrypt();
+    //decrypt();
 
-    //std::unique_ptr<butterfly::CryptoRSA> rsa(new butterfly::CryptoRSA());
+    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor());
 
-    //rsa->createRSAPrivateKeyFile("rsaprivate.key");
-    //rsa->createRSAPublicKeyFile("rsapublic.pem");
-    //rsa->createPublicKeyFile("public.pem");
+    rsaEncryptor->generateKeypairFiles();
+    sleep(5);
+    rsaEncryptor->encrypt("12345");
+
 
 
     return 0;
