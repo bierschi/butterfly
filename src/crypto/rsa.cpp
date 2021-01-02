@@ -125,89 +125,93 @@ void CryptoRSA::createPublicKeyFile(const std::string &filename) {
     }
 }
 
+EVP_PKEY* CryptoRSA::getPkeyFromPrivateKeyFile(const std::string &filepath) {
 
-
-RSA* CryptoRSA::getPublicKeyFromFile(const std::string& filepath) {
-
-    RSA *publicKey = NULL;
-    FILE *publicFile = fopen(filepath.c_str(), "rb");
-
-    if (publicFile) {
-        /*
-        EVP_PKEY *pkey = EVP_PKEY_new();
-        EVP_PKEY_assign_RSA(pkey, publicKey);
-
-        if (PEM_read_PUBKEY(publicFile, &pkey, NULL, NULL) != NULL) {
-            LOG_ERROR("TESTERROR")
-        }
-        publicKey = EVP_PKEY_get1_RSA(pkey);
-        */
-
-        if (PEM_read_RSAPublicKey(publicFile, &publicKey, NULL, NULL) != NULL) {
-            LOG_ERROR("TESTERROR")
-        }
-        fclose(publicFile);
-    } else {
-        LOG_ERROR("PUBLIC KEY ERROR")
-        //std::cerr << "Error opening public key file" << std::endl;
-    }
-
-    return publicKey;
-}
-
-RSA* CryptoRSA::getPrivateKeyFromFile(const std::string& filepath) {
-
-    RSA *privateKey = NULL;
+    EVP_PKEY *pkey = nullptr;
     FILE *privateFile = fopen(filepath.c_str(), "rb");
 
     if (privateFile) {
-        if (PEM_read_RSAPrivateKey(privateFile, &privateKey, NULL, NULL) != NULL) {
-        }
+
+        pkey = PEM_read_PrivateKey(privateFile, nullptr, nullptr, nullptr);
+
         fclose(privateFile);
     } else {
-        //std::cerr << "Error opening private key file" << std::endl;
+        LOG_ERROR("Could not open private key file " << filepath);
     }
-    return privateKey;
+
+    return pkey;
+}
+
+EVP_PKEY* CryptoRSA::getPkeyFromPublicKeyFile(const std::string &filepath) {
+
+    EVP_PKEY *pkey = nullptr;
+    FILE *publicKeyFile = fopen(filepath.c_str(), "rb");
+
+    if (publicKeyFile) {
+
+        pkey = PEM_read_PUBKEY(publicKeyFile, nullptr, nullptr, nullptr);
+        if (pkey == NULL) {
+            LOG_ERROR("EVP_PKEY could not be initialized!")
+        }
+    } else {
+        LOG_ERROR("Could not open public key file " << filepath);
+    }
+
+    return pkey;
 }
 
 
+size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext) {
 
-char* CryptoRSA::encrypt(RSA *publicKey, const char *plaintext) {
+    EVP_PKEY_CTX *ctx;
+    size_t ciphertextLength;
+    ctx = EVP_PKEY_CTX_new(key, NULL);
 
-    // buffer for the modulus size n through RSA_size
-    char* encrypt = static_cast<char*> (malloc(static_cast<size_t>(RSA_size(publicKey))));
-
-    // buffer for the error message
-    char* error = static_cast<char *>(malloc(130));
-    int encryptLen;
-    if( (encryptLen = RSA_public_encrypt(static_cast<int>(strlen(plaintext)), (unsigned char*)plaintext, (unsigned char*) encrypt,
-                                         publicKey, RSA_PKCS1_OAEP_PADDING)) == -1) {
-        ERR_load_crypto_strings();
-        ERR_error_string(ERR_get_error(), error);
-        LOG_ERROR("ERROR: " << error);
-        //std::cerr << "Error encrypting plaintext: " << error << std::endl;
+    if (!ctx) {
+        LOG_ERROR(stderr);
+        return 0;
     }
-    LOG_INFO("ENCRYPT: " << encrypt);
-    LOG_INFO("LEN: " <<encryptLen);
-    return encrypt;
+    if (EVP_PKEY_encrypt_init(ctx) <= 0) {
+        LOG_ERROR(stderr);
+        return 0;
+    }
+    if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING) <= 0) {
+        LOG_ERROR(stderr);
+        return 0;
+    }
+    if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0) {
+        LOG_ERROR(stderr);
+        return 0;
+    }
+
+    return ciphertextLength;
+
 }
 
-char* CryptoRSA::decrypt(RSA *privateKey, const char *ciphertext) {
+size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext) {
 
-    // buffer for the decrypt chunks
-    char* decrypt = static_cast<char *> (malloc(static_cast<size_t>(RSA_size(privateKey))));
+    EVP_PKEY_CTX *ctx;
+    size_t plaintextLength;
+    ctx = EVP_PKEY_CTX_new(key,NULL);
 
-    // buffer for the error message
-    char* error = static_cast<char *>(malloc(130));
-    int decryptLen;
-    if ( (decryptLen = RSA_private_decrypt(RSA_size(privateKey), (unsigned char*)ciphertext, (unsigned char*)decrypt,
-                                           privateKey, RSA_PKCS1_OAEP_PADDING)) == -1) {
-        ERR_load_crypto_strings();
-        ERR_error_string(ERR_get_error(), error);
-        LOG_ERROR("ERROR decrypt: " << error);
+    if (!ctx) {
+        LOG_ERROR(stderr);
+        return 0;
+    }
+    if (EVP_PKEY_decrypt_init(ctx) <= 0) {
+        LOG_ERROR(stderr);
+        return 0;
+    }
+    if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING) <= 0) {
+        LOG_ERROR(stderr);
+        return 0;
+    }
+    if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0) {
+        LOG_ERROR(stderr);
+        return 0;
     }
 
-    return decrypt;
+    return plaintextLength;
 }
 
 } // namespace butterfly
