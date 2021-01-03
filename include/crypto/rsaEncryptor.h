@@ -14,7 +14,8 @@ namespace butterfly {
 class RSAEncryptor : public CryptoRSA {
 
 private:
-    const std::string _cPrivateRsaKeyFileName;
+    const std::string _cPrivateRsaKeyFilename, _encryptedKeyFilename;
+
     unsigned char *_ciphertextKey;
 
 public:
@@ -27,8 +28,6 @@ public:
      *
      */
     ~RSAEncryptor();
-
-    void generateKeypairFiles();
 
     void saveClientPrivateRSAKeyFile();
     void saveEncryptedKeyFile(unsigned char *ciphertextKey, int ciphertextLength);

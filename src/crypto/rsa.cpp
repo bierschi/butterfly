@@ -12,9 +12,19 @@ CryptoRSA::CryptoRSA() {
 
 CryptoRSA::~CryptoRSA() {
     RSA_free(CryptoRSA::_rsa);
-    free(_rsaPrivateKeyStr);
-    free(_rsaPublicKeyStr);
-    free(_publicKeyStr);
+}
+
+std::string CryptoRSA::getOpenSSLError() {
+
+    char *buf;
+    BIO *bio = BIO_new(BIO_s_mem());
+    ERR_print_errors(bio);
+
+    size_t len = static_cast<size_t >(BIO_get_mem_data(bio, &buf));
+    std::string err(buf, len);
+    BIO_free(bio);
+
+    return err;
 }
 
 bool CryptoRSA::generateRSAKey() {
@@ -27,6 +37,10 @@ bool CryptoRSA::generateRSAKey() {
     } else {
         return false;
     }
+}
+
+int CryptoRSA::getRSASize() {
+    return RSA_size(CryptoRSA::_rsa);
 }
 
 RSA* CryptoRSA::getRSAKey() {
@@ -89,7 +103,7 @@ char* CryptoRSA::getPublicKey() {
     return _publicKeyStr;
 }
 
-void CryptoRSA::createRSAPrivateKeyFile(const std::string &filename) {
+bool CryptoRSA::createRSAPrivateKeyFile(const std::string &filename) {
 
     FILE *privateKeyFile = fopen(filename.c_str(), "wb");
 
@@ -99,10 +113,12 @@ void CryptoRSA::createRSAPrivateKeyFile(const std::string &filename) {
         fclose(privateKeyFile);
     } else {
         LOG_ERROR("Unable to open file " << filename << " for writing private rsa key!")
+        return false;
     }
+    return true;
 }
 
-void CryptoRSA::createRSAPublicKeyFile(const std::string &filename) {
+bool CryptoRSA::createRSAPublicKeyFile(const std::string &filename) {
 
     FILE *publicKeyFile = fopen(filename.c_str(), "wb");
 
@@ -112,10 +128,12 @@ void CryptoRSA::createRSAPublicKeyFile(const std::string &filename) {
         fclose(publicKeyFile);
     } else {
         LOG_ERROR("Unable to open file " << filename << " for writing public rsa key!")
+        return false;
     }
+    return true;
 }
 
-void CryptoRSA::createPublicKeyFile(const std::string &filename) {
+bool CryptoRSA::createPublicKeyFile(const std::string &filename) {
 
     FILE *publicKeyFile = fopen(filename.c_str(), "wb");
 
@@ -128,7 +146,9 @@ void CryptoRSA::createPublicKeyFile(const std::string &filename) {
         fclose(publicKeyFile);
     } else {
         LOG_ERROR("Unable to open file " << filename << " for writing public key!")
+        return false;
     }
+    return true;
 }
 
 EVP_PKEY* CryptoRSA::getPkeyFromPrivateKeyFile(const std::string &filepath) {
@@ -172,19 +192,20 @@ size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t 
     ctx = EVP_PKEY_CTX_new(key, nullptr);
 
     if (!ctx) {
-        LOG_ERROR("Error during context init in RSA encrypt" << stderr);
+        LOG_ERROR("Error during context init in RSA encrypt: " << getOpenSSLError());
         return 0;
     }
     if (EVP_PKEY_encrypt_init(ctx) <= 0) {
-        LOG_ERROR("Error during EVP_PKEY_encrypt_init(ctx) in RSA encrypt" << stderr);
+        LOG_ERROR("Error during EVP_PKEY_encrypt_init(ctx) in RSA encrypt: " << getOpenSSLError());
         return 0;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0) {
-        LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA encrypt" << stderr);
+        LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA encrypt: " << getOpenSSLError());
         return 0;
     }
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0) {
-        LOG_ERROR("Error during EVP_PKEY_encrypt" << stderr);
+
+        LOG_ERROR("Error during EVP_PKEY_encrypt: " << getOpenSSLError());
         return 0;
     }
 
@@ -199,19 +220,19 @@ size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphe
     ctx = EVP_PKEY_CTX_new(key, nullptr);
 
     if (!ctx) {
-        LOG_ERROR("Error during context init in RSA decrypt" << stderr);
+        LOG_ERROR("Error during context init in RSA decrypt: " << getOpenSSLError());
         return 0;
     }
     if (EVP_PKEY_decrypt_init(ctx) <= 0) {
-        LOG_ERROR("Error during EVP_PKEY_decrypt_init(ctx) in RSA decrypt" << stderr);
+        LOG_ERROR("Error during EVP_PKEY_decrypt_init(ctx) in RSA decrypt: " << getOpenSSLError());
         return 0;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0) {
-        LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA decrypt" << stderr);
+        LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA decrypt: " << getOpenSSLError());
         return 0;
     }
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0) {
-        LOG_ERROR("Error during EVP_PKEY_decrypt" << stderr);
+        LOG_ERROR("Error during EVP_PKEY_decrypt: " << getOpenSSLError());
         return 0;
     }
 

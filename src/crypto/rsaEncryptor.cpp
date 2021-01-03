@@ -3,7 +3,7 @@
 
 namespace butterfly {
 
-RSAEncryptor::RSAEncryptor() : CryptoRSA() ,_cPrivateRsaKeyFileName("CPrivateRSA.pem"){
+RSAEncryptor::RSAEncryptor() : CryptoRSA() ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _encryptedKeyFilename("key.bin"){
 
     if (getRSAKey() == nullptr) {
         if ( !generateRSAKey() ) {
@@ -19,25 +19,22 @@ RSAEncryptor::~RSAEncryptor() {
 
 void RSAEncryptor::saveEncryptedKeyFile(unsigned char *ciphertextKey, int ciphertextLength) {
 
-    //TODO change to fstream
-    FILE *out = fopen("key.bin","wb");
-    fwrite(ciphertextKey, sizeof(char), static_cast<size_t>(ciphertextLength), out);
-}
-
-void RSAEncryptor::generateKeypairFiles() {
-
-    createRSAPrivateKeyFile("CPrivateRSA.pem");
-
-    createPublicKeyFile("CPublic.pem");
-
+    std::fstream out(_encryptedKeyFilename, std::ios::out | std::ios::binary);
+    if ( out.is_open() ) {
+        out.write(reinterpret_cast<char*>(&ciphertextKey[0]), ciphertextLength);
+    } else {
+        LOG_ERROR("Could not open file " << _encryptedKeyFilename <<" to save the encrypted key");
+    }
 }
 
 void RSAEncryptor::saveClientPrivateRSAKeyFile() {
 
-    createRSAPrivateKeyFile(_cPrivateRsaKeyFileName);
+    if ( !createRSAPrivateKeyFile(_cPrivateRsaKeyFilename) ) {
+        LOG_ERROR("Client private rsa key file could not been saved")
+    }
 
 }
-
+// TODO check size of std::string and make message chunks for encryption
 void RSAEncryptor::encrypt(const std::string &key) {
     LOG_TRACE("Encrypting the plaintext key: " << key);
 

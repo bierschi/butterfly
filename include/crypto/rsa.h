@@ -11,7 +11,7 @@
 #include "logger.h"
 
 #define KEYSIZE 4096
-#define PADDING RSA_PKCS1_OAEP_PADDING
+#define PADDING RSA_PKCS1_OAEP_PADDING  // length < RSA_SIZE(rsa) - 42 bytes
 
 namespace butterfly {
 
@@ -25,6 +25,13 @@ private:
     char *_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr;
 
 protected:
+    /**
+     * Get the openssl error as a std::string
+     *
+     * @return std::string: error
+     */
+    static std::string getOpenSSLError();
+
     /**
      * Generates the RSA key
      *
@@ -44,6 +51,18 @@ public:
      */
     ~CryptoRSA();
 
+    /**
+     * Get the RSA size in bytes
+     *
+     * @return int: size in bytes
+     */
+    static int getRSASize();
+
+    /**
+     * Get the RSA* key
+     *
+     * @return RSA*
+     */
     static RSA* getRSAKey();
 
     /**
@@ -78,22 +97,28 @@ public:
      * Creates the RSA private key file. Starts with -----BEGIN RSA PRIVATE KEY-----
      *
      * @param filename: std::string const reference
+     *
+     * @return boolean, true if creation was successful
      */
-    static void createRSAPrivateKeyFile(const std::string &filename);
+    static bool createRSAPrivateKeyFile(const std::string &filename);
 
     /**
      * Creates the RSA public key file. Starts with -----BEGIN RSA PUBLIC KEY-----
      *
      * @param filename: std::string const reference
+     *
+     * @return boolean, true if creation was successful
      */
-    static void createRSAPublicKeyFile(const std::string &filename);
+    static bool createRSAPublicKeyFile(const std::string &filename);
 
     /**
      * Creates the public key file. Starts with -----BEGIN PUBLIC KEY-----
      *
      * @param filename: std::string const reference
+     *
+     * @return boolean, true if creation was successful
      */
-    static void createPublicKeyFile(const std::string &filename);
+    static bool createPublicKeyFile(const std::string &filename);
 
     /**
      * Get the EVP_PKEY from RSA private key file
@@ -123,7 +148,7 @@ public:
      *
      * @return ciphertext length
      */
-    static size_t encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext);
+    size_t encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext);
 
     /**
      * Decrypt the ciphertext with the EVP PKEY
@@ -135,7 +160,7 @@ public:
      *
      * @return plaintext length
      */
-    static size_t decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext);
+    size_t decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext);
 
 };
 

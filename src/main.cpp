@@ -62,9 +62,14 @@ int main(int argc, char* argv[]) {
 
     std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor());
 
-    rsaEncryptor->generateKeypairFiles();
-    sleep(5);
-    rsaEncryptor->encrypt("12345");
+    rsaEncryptor->saveClientPrivateRSAKeyFile();
+    LOG_TRACE("RSA size: " << rsaEncryptor->getRSASize());
+    std::string rsapriv = rsaEncryptor->getRSAPrivateKey();
+
+    sleep(1);
+    std::string s = "012345";
+
+    rsaEncryptor->encrypt(s);
 
 
 
