@@ -5,13 +5,27 @@ namespace butterfly {
 
 RSA* CryptoRSA::_rsa = nullptr;
 
-CryptoRSA::CryptoRSA() {
-    LOG_TRACE("Create class CryptoRSA")
+CryptoRSA::CryptoRSA(int keySize) : _keySize(keySize){
+    LOG_TRACE("Create class CryptoRSA with key size of " << keySize)
 
+    initPaddingSize();
 }
 
 CryptoRSA::~CryptoRSA() {
     RSA_free(CryptoRSA::_rsa);
+}
+
+void CryptoRSA::initPaddingSize() {
+
+    if (PADDING == RSA_NO_PADDING) {
+        _paddingSize = 0; // bytes
+    } else if (PADDING == RSA_PKCS1_PADDING) {
+        _paddingSize = 11; // bytes
+    } else if (PADDING == RSA_PKCS1_OAEP_PADDING) {
+        _paddingSize = 42; // bytes
+    } else {
+        throw std::runtime_error("Padding mode is not supported!");
+    }
 }
 
 std::string CryptoRSA::getOpenSSLError() {
@@ -33,18 +47,10 @@ bool CryptoRSA::generateRSAKey() {
 
     if (CryptoRSA::_rsa != nullptr) {
         BIGNUM *e = BN_new();
-        return e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(CryptoRSA::_rsa, KEYSIZE, e, nullptr);
+        return e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(CryptoRSA::_rsa, _keySize, e, nullptr);
     } else {
         return false;
     }
-}
-
-int CryptoRSA::getRSASize() {
-    return RSA_size(CryptoRSA::_rsa);
-}
-
-RSA* CryptoRSA::getRSAKey() {
-    return CryptoRSA::_rsa;
 }
 
 EVP_PKEY* CryptoRSA::getEvpPkey() {
@@ -103,6 +109,7 @@ char* CryptoRSA::getPublicKey() {
     return _publicKeyStr;
 }
 
+//TODO handle file not found exceptions
 bool CryptoRSA::createRSAPrivateKeyFile(const std::string &filename) {
 
     FILE *privateKeyFile = fopen(filename.c_str(), "wb");
@@ -152,7 +159,7 @@ bool CryptoRSA::createPublicKeyFile(const std::string &filename) {
 }
 
 EVP_PKEY* CryptoRSA::getPkeyFromPrivateKeyFile(const std::string &filepath) {
-    LOG_TRACE("Get EVP_PKEY from private key file")
+
     EVP_PKEY *pkey = nullptr;
     FILE *privateFile = fopen(filepath.c_str(), "rb");
 
@@ -169,7 +176,7 @@ EVP_PKEY* CryptoRSA::getPkeyFromPrivateKeyFile(const std::string &filepath) {
 }
 
 EVP_PKEY* CryptoRSA::getPkeyFromPublicKeyFile(const std::string &filepath) {
-    LOG_TRACE("Get EVP_PKEY from public key file")
+
     EVP_PKEY *pkey = nullptr;
     FILE *publicKeyFile = fopen(filepath.c_str(), "rb");
 

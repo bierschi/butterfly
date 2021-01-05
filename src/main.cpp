@@ -29,16 +29,16 @@ void encrypt() {
 }
 
 void decrypt() {
-    std::unique_ptr<butterfly::CryptoRSA> rsa(new butterfly::CryptoRSA());
+    std::unique_ptr<butterfly::CryptoRSA> rsa(new butterfly::CryptoRSA(2048));
 
-    EVP_PKEY *pkey = rsa->getPkeyFromPrivateKeyFile("rsaprivate.key");
+    EVP_PKEY *pkey = rsa->getPkeyFromPrivateKeyFile("CPrivateRSA.pem");
 
     int keysize = EVP_PKEY_size(pkey);
 
     unsigned char buffer[keysize];
     unsigned char rsa_out[keysize] = {0};
 
-    FILE *out = fopen("file.bin", "rb");
+    FILE *out = fopen("key.bin", "rb");
     fread(buffer, sizeof(buffer), 1, out);
 
     LOG_TRACE("Keysize: " << keysize)
@@ -57,22 +57,21 @@ int main(int argc, char* argv[]) {
 
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
-    //encrypt();
+
+    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor(4096));
+
     //decrypt();
 
-    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor());
+    sleep(2);
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
     rsaEncryptor->saveClientPublicKeyFile();
-    LOG_TRACE("RSA size: " << rsaEncryptor->getRSASize());
-    std::string rsapriv = rsaEncryptor->getRSAPrivateKey();
 
-    sleep(1);
-    std::string s_long = "";
-    std::string s_short = "012345";
+    std::string s_short = "0123456789abcdefghijk";
 
     rsaEncryptor->encrypt(s_short);
 
+    //rsaEncryptor->decrypt()
 
 
     return 0;
