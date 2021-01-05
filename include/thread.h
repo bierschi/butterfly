@@ -1,5 +1,5 @@
-#ifndef RANSOMWARE_THREAD_H
-#define RANSOMWARE_THREAD_H
+#ifndef BUTTERFLY_THREAD_H
+#define BUTTERFLY_THREAD_H
 
 #include <pthread.h>
 
@@ -53,4 +53,4 @@ private:
 };
 
 
-#endif //RANSOMWARE_THREAD_H
+#endif //BUTTERFLY_THREAD_H

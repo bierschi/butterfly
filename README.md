@@ -1,13 +1,25 @@
-# Ransomware that makes you cry
+# Butterfly
+Butterfly is a ransomware that makes you cry
+
+- Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption)
+- Supports multiple operating systems
+- Offline Encryption
+- Supports over .. file extensions
+- Connection to the TOR network
+- Python Webserver
+- Bitcoin payments
 
 
-## Installation
+## Prerequisites
 
-### Prerequisites
+Ensure that git and cmake are installed
+<pre><code>
+sudo apt-get install git cmake
+</code></pre>
+
 Download and install GTest
 <pre><code>
 sudo apt-get install libgtest-dev
-sudo apt-get install cmake # install cmake
 cd /usr/src/gtest
 sudo cmake CMakeLists.txt
 sudo make
@@ -21,6 +33,8 @@ Download and install boost libraries
 sudo apt-get install -y libboost-filesystem-dev libboost-regex-dev libboost-log-dev
 </code></pre>
 
+## Build Butterfly
+
 Build butterfly
 <pre><code>
 git clone https://github.com/bierschi/ransomware.git
@@ -32,9 +46,9 @@ make
 
 ## Usage and Examples
 
-Print the available arguments for Ransomware
+Print the available arguments for Butterfly
 <pre><code>
-ransomware --help
+butterfly --help
 </code></pre>
 
 
