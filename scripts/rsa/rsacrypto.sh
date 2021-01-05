@@ -35,21 +35,21 @@ main() {
 }
 
 generate_rsa_key() {
-  openssl genrsa -out key.pem 4096
+  openssl genrsa -out CPrivateRSA.pem 2048
 }
 
 generate_public_key() {
-   openssl rsa -in key.pem -pubout -out pub.pem
+   openssl rsa -in CPrivateRSA.pem -pubout -out CPublic.pem
 }
 
 encrypt_data() {
   echo "Start encrypting "$1
-  openssl rsautl -encrypt -inkey pub.pem -pubin -in $1 -out file.bin
+  openssl rsautl -encrypt -oaep -inkey CPublic.pem -pubin -in $1 -out secret.bin
 }
 
 decrypt_data() {
   echo "Start decrypting "$1
-  openssl rsautl -decrypt -inkey key.pem -in $1
+  openssl rsautl -decrypt -oaep -inkey CPrivateRSA.pem -in $1
 }
 
 main "$@"

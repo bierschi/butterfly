@@ -1,5 +1,5 @@
-- add logging functionality
-- create class for argument parser
+- add logging functionality (done)
+- create class for argument parser (done)
 - link libs sql
 - create class for rsa, aes encryption -> Use hybrid encryption
 - iterate through directory structure recursively and load all files
