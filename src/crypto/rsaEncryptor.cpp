@@ -6,7 +6,7 @@ namespace butterfly {
 RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _cPublicKeyFilename("CPublic.pem"),
                                           _encKeyFilename("key.bin")
 {
-
+    LOG_TRACE("Create class RSAEncryptor")
     if (CryptoRSA::getRSAKey() == nullptr) {
         if ( !CryptoRSA::generateRSAKey() ) {
             LOG_ERROR("Could not generate the RSA key!");

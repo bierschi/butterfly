@@ -4,7 +4,7 @@
 #include "argumentParser.h"
 #include "directoryIterator.h"
 #include "crypto/rsaEncryptor.h"
-
+#include "crypto/rsaDecryptor.h"
 
 void encrypt() {
 
@@ -58,11 +58,8 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
+    /*
     std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor(4096));
-
-    //decrypt();
-
-    sleep(2);
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
     rsaEncryptor->saveClientPublicKeyFile();
@@ -70,8 +67,10 @@ int main(int argc, char* argv[]) {
     std::string s_short = "0123456789abcdefghijk";
 
     rsaEncryptor->encrypt(s_short);
+    */
+    std::unique_ptr<butterfly::RSADecryptor> rsaDecryptor(new butterfly::RSADecryptor());
 
-    //rsaEncryptor->decrypt()
+    rsaDecryptor->decrypt("test");
 
 
     return 0;
