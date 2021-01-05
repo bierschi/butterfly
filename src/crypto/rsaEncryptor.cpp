@@ -34,6 +34,15 @@ void RSAEncryptor::saveClientPrivateRSAKeyFile() {
     }
 
 }
+
+void RSAEncryptor::saveClientPublicKeyFile() {
+
+    if ( !createPublicKeyFile("CPublic.pem") ) {
+        LOG_ERROR("Client public key file could not been saved")
+    }
+
+}
+
 // TODO check size of std::string and make message chunks for encryption
 void RSAEncryptor::encrypt(const std::string &key) {
     LOG_TRACE("Encrypting the plaintext key: " << key);
