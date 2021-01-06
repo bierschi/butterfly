@@ -51,7 +51,6 @@ protected:
      */
      bool generateRSAKey(); // TODO takes some time to generate the key
 
-
 public:
 
     /**
@@ -59,7 +58,7 @@ public:
      *
      * @param keySize: size of the key
      */
-    explicit CryptoRSA(int keySize=4096);
+    explicit CryptoRSA(int keySize=2048);
 
     /**
      * Destructor CryptoRSA
@@ -107,21 +106,21 @@ public:
      *
      * @return rsa private key string as char*
      */
-    char* getRSAPrivateKey();
+    char* getRSAPrivateKeyStr();
 
     /**
     * Get the RSA public key string. Starts with -----BEGIN RSA PUBLIC KEY-----
     *
     * @return rsa public key string as char*
     */
-    char* getRSAPublicKey();
+    char* getRSAPublicKeyStr();
 
     /**
      * Get the public key string. Starts with -----BEGIN PUBLIC KEY-----
      *
      * @return public key string as char*
      */
-    char* getPublicKey();
+    char* getPublicKeyStr();
 
     /**
      * Creates the RSA private key file. Starts with -----BEGIN RSA PRIVATE KEY-----

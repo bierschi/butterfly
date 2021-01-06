@@ -58,20 +58,26 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
-    /*
-    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor(4096));
+
+    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor("AESKey.bin", 2048));
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
-    rsaEncryptor->saveClientPublicKeyFile();
 
-    std::string s_short = "0123456789abcdefghijk";
+    std::string aesKey = "0123456789abcdefghijk";
 
-    rsaEncryptor->encrypt(s_short);
-    */
+    rsaEncryptor->encrypt(aesKey);
+
+
+    /*
     std::unique_ptr<butterfly::RSADecryptor> rsaDecryptor(new butterfly::RSADecryptor());
 
-    rsaDecryptor->decrypt("test");
+    std::string encKey = rsaDecryptor->getBinKeyFileContents("AESKey.bin");
+    EVP_PKEY *pkey = rsaDecryptor->getEvpPkeyFromFile("CPrivateRSA.pem");
 
+    if (rsaDecryptor->decrypt(pkey, encKey) ) {
+        LOG_TRACE(rsaDecryptor->getDecryptedKey())
+    }
+    */
 
     return 0;
 }

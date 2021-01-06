@@ -61,7 +61,7 @@ EVP_PKEY* CryptoRSA::getEvpPkey() {
     return pkey;
 }
 
-char* CryptoRSA::getRSAPrivateKey() {
+char* CryptoRSA::getRSAPrivateKeyStr() {
     LOG_TRACE("Generating the rsa private key string")
 
     EVP_PKEY *pkey = EVP_PKEY_new();
@@ -77,7 +77,7 @@ char* CryptoRSA::getRSAPrivateKey() {
     return _rsaPrivateKeyStr;
 }
 
-char* CryptoRSA::getRSAPublicKey() {
+char* CryptoRSA::getRSAPublicKeyStr() {
     LOG_TRACE("Generating the rsa public key string")
 
     EVP_PKEY *pkey = EVP_PKEY_new();
@@ -93,7 +93,7 @@ char* CryptoRSA::getRSAPublicKey() {
     return _rsaPublicKeyStr;
 }
 
-char* CryptoRSA::getPublicKey() {
+char* CryptoRSA::getPublicKeyStr() {
     LOG_TRACE("Generating the public key string")
 
     EVP_PKEY *pkey = EVP_PKEY_new();
@@ -109,7 +109,6 @@ char* CryptoRSA::getPublicKey() {
     return _publicKeyStr;
 }
 
-//TODO handle file not found exceptions
 bool CryptoRSA::createRSAPrivateKeyFile(const std::string &filename) {
 
     FILE *privateKeyFile = fopen(filename.c_str(), "wb");

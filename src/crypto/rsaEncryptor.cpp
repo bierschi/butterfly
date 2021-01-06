@@ -3,8 +3,8 @@
 
 namespace butterfly {
 
-RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _cPublicKeyFilename("CPublic.pem"),
-                                          _encKeyFilename("key.bin")
+RSAEncryptor::RSAEncryptor(const std::string &AESKeyFile, int keySize) : CryptoRSA(keySize) ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _cPublicKeyFilename("CPublic.pem"),
+                                                                         _encAESKeyFilename(AESKeyFile)
 {
     LOG_TRACE("Create class RSAEncryptor")
     if (CryptoRSA::getRSAKey() == nullptr) {
@@ -35,11 +35,11 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg) {
 
 void RSAEncryptor::saveEncryptedKeyFile(unsigned char *ciphertextKey, int ciphertextLength) {
 
-    std::fstream out(_encKeyFilename, std::ios::out | std::ios::binary);
+    std::fstream out(_encAESKeyFilename, std::ios::out | std::ios::binary);
     if ( out.is_open() ) {
         out.write(reinterpret_cast<char*>(&ciphertextKey[0]), ciphertextLength);
     } else {
-        LOG_ERROR("Could not open file " << _encKeyFilename <<" to save the encrypted key");
+        LOG_ERROR("Could not open file " << _encAESKeyFilename <<" to save the encrypted key");
     }
 }
 

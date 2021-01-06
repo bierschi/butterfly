@@ -14,7 +14,7 @@ namespace butterfly {
 class RSAEncryptor : public CryptoRSA {
 
 private:
-    const std::string _cPrivateRsaKeyFilename, _cPublicKeyFilename, _encKeyFilename;
+    const std::string _cPrivateRsaKeyFilename, _cPublicKeyFilename, _encAESKeyFilename;
 
     unsigned char *_ciphertextKey;
 
@@ -37,7 +37,7 @@ public:
      *
      * @param keySize: size of the key
      */
-    explicit RSAEncryptor(int keySize=4096);
+    explicit RSAEncryptor(const std::string &AESKeyFile, int keySize=2048);
 
     /**
      * Destructor RSAEncryptor
