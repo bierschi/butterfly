@@ -32,11 +32,11 @@ EVP_PKEY* RSADecryptor::getEvpPkeyFromFile(const std::string &filepath) {
         std::string fLine;
         std::getline(in, fLine);
 
-        if (fLine.compare("-----BEGIN RSA PRIVATE KEY-----") == 0) {
+        if (fLine =="-----BEGIN RSA PRIVATE KEY-----") {
 
             pkey = CryptoRSA::getPkeyFromPrivateKeyFile(filepath);
 
-        } else if (fLine.compare("-----BEGIN PUBLIC KEY-----") == 0) {
+        } else if (fLine == "-----BEGIN PUBLIC KEY-----") {
 
             pkey = CryptoRSA::getPkeyFromPublicKeyFile(filepath);
 
@@ -57,7 +57,9 @@ std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath) {
     std::string encKey;
 
     if (in.is_open()) {
-        encKey = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+        std::stringstream strStream;
+        strStream << in.rdbuf();
+        encKey = strStream.str();
         return encKey;
     } else {
         LOG_ERROR("Failed to open file " << filepath);

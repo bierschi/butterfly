@@ -3,6 +3,7 @@
 #define BUTTERFLY_RSADECRYPTOR_H
 
 #include <fstream>
+#include <sstream>
 
 #include "rsa.h"
 
