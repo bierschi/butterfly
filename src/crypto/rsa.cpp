@@ -12,7 +12,10 @@ CryptoRSA::CryptoRSA(int keySize) : _keySize(keySize){
 }
 
 CryptoRSA::~CryptoRSA() {
+
     RSA_free(CryptoRSA::_rsa);
+    CryptoRSA::_rsa = nullptr;
+
 }
 
 void CryptoRSA::initPaddingSize() {

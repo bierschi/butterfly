@@ -63,12 +63,12 @@ int main(int argc, char* argv[]) {
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
 
-    std::string aesKey = "0123456789abcdefghijk";
+    std::string aesKey = "0123456789abcdefghijkl";
 
     rsaEncryptor->encrypt(aesKey);
 
+    sleep(5);
 
-    /*
     std::unique_ptr<butterfly::RSADecryptor> rsaDecryptor(new butterfly::RSADecryptor());
 
     std::string encKey = rsaDecryptor->getBinKeyFileContents("AESKey.bin");
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     if (rsaDecryptor->decrypt(pkey, encKey) ) {
         LOG_TRACE(rsaDecryptor->getDecryptedKey())
     }
-    */
+
 
     return 0;
 }
