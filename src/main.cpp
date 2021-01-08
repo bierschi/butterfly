@@ -4,7 +4,7 @@
 #include "argumentParser.h"
 #include "directoryIterator.h"
 #include "crypto/rsaEncryptor.h"
-
+#include "crypto/rsaDecryptor.h"
 
 void encrypt() {
 
@@ -58,20 +58,25 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
-    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor(4096));
 
-    //decrypt();
-
-    sleep(2);
+    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor("AESKey.bin", 2048));
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
-    rsaEncryptor->saveClientPublicKeyFile();
 
-    std::string s_short = "0123456789abcdefghijk";
+    std::string aesKey = "0123456789abcdefghijkl";
 
-    rsaEncryptor->encrypt(s_short);
+    rsaEncryptor->encrypt(aesKey);
 
-    //rsaEncryptor->decrypt()
+    sleep(5);
+
+    std::unique_ptr<butterfly::RSADecryptor> rsaDecryptor(new butterfly::RSADecryptor());
+
+    std::string encKey = rsaDecryptor->getBinKeyFileContents("AESKey.bin");
+    EVP_PKEY *pkey = rsaDecryptor->getEvpPkeyFromFile("CPrivateRSA.pem");
+
+    if (rsaDecryptor->decrypt(pkey, encKey) ) {
+        LOG_TRACE(rsaDecryptor->getDecryptedKey())
+    }
 
 
     return 0;

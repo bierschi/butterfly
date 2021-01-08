@@ -1,8 +1,17 @@
-- encrypt all user files with AES-256-CBC.
-- Random AES key and IV for each file.
-- encrypt AES keys with Cpub.key RSA-2048.
-- encrypt Cpriv.key with RSA-2048 Spub.key.
-- Works without internet.
-- Communicate with the server to get Spriv.key.
+# Encryption
+- Create random aes key and iv for data encryption
+- Encrypt all user files with AES-256-CBC  => files.txt.butterfly (Binary data)
+- Encrypt aes key with CPublic.pem (RSA-2048) => AESKey.bin
+- Encrypt CPrivateRSA.pem (RSA-2048) with SPublic.pem (RSA-13768) => CPrivateRSA.bin
+- Until this step no internet access is necessary!
+
+# Decryption (After ransom payment)
+- Get SPrivateRSA.pem (RSA-13768) from hidden server in the tor network
+- Decrypt CPrivateRSA.bin (RSA-2048) with SPrivateRSA.pem (RSA-13768) => CPrivateRSA.pem
+- Decrypt AESKey.bin with CPrivateRSA.pem => AESKey.txt
+- Decrypt files.txt.butterfly with AESKey.txt => file.txt
+
+
+# Others
 - Change computer wallpaper.
 - A Python webserver
