@@ -3,16 +3,14 @@
 
 namespace butterfly {
 
-RSAEncryptor::RSAEncryptor(const std::string &AESKeyFile, int keySize) : CryptoRSA(keySize) ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _cPublicKeyFilename("CPublic.pem"),
-                                                                         _encAESKeyFilename(AESKeyFile)
+RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _cPublicKeyFilename("CPublic.pem")
 {
     LOG_TRACE("Create class RSAEncryptor")
-    if (CryptoRSA::getRSAKey() == nullptr) {
-        if ( !CryptoRSA::generateRSAKey() ) {
-            LOG_ERROR("Could not generate the RSA key!");
-            throw std::runtime_error("Could not generate the RSA key!");
-        }
-    }
+
+}
+
+RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key) {
+    LOG_TRACE("Create class RSAEncryptor")
 }
 
 RSAEncryptor::~RSAEncryptor() {
@@ -33,13 +31,23 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg) {
     }
 }
 
-void RSAEncryptor::saveEncryptedKeyFile(unsigned char *ciphertextKey, int ciphertextLength) {
+void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, unsigned char *ciphertextKey, int ciphertextLength) {
 
-    std::fstream out(_encAESKeyFilename, std::ios::out | std::ios::binary);
+    std::fstream out(filename, std::ios::out | std::ios::binary);
     if ( out.is_open() ) {
         out.write(reinterpret_cast<char*>(&ciphertextKey[0]), ciphertextLength);
     } else {
-        LOG_ERROR("Could not open file " << _encAESKeyFilename <<" to save the encrypted key");
+        LOG_ERROR("Could not open file " << filename <<" to save the encrypted key");
+    }
+}
+
+void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength) {
+
+    std::fstream out(filename, std::ios::out | std::ios::binary);
+    if ( out.is_open() ) {
+        out.write(ciphertextKey.c_str(), keyLength);
+    } else {
+        LOG_ERROR("Could not open file " << filename <<" to save the encrypted key");
     }
 }
 
@@ -59,23 +67,28 @@ void RSAEncryptor::saveClientPublicKeyFile() {
 
 }
 
-bool RSAEncryptor::encrypt(const std::string &msg) {
+bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg) {
 
-    // first validate the string length with block size length
-    if ( !validateStringLengthForRSA(msg) ) {
+    // first check message size
+    if ( msg.empty() ) {
         return false;
     }
+    // validate the string length with block size length
 
-    EVP_PKEY *key = CryptoRSA::getEvpPkey();
+    if ( !validateStringLengthForRSA(msg) ) {
+        return false; // TODO exception handling
+    }
 
-    int keysize = CryptoRSA::getEvpPkeySize(key);
+    int keysize = CryptoRSA::getEvpPkeySize(pkey);
+    LOG_TRACE("KEYSIZE: " << keysize)
     unsigned char ciphertextKey[keysize];
 
-    size_t ciphertextLength = CryptoRSA::encrypt(key, (unsigned char*)msg.c_str(), strlen(msg.c_str())+1, ciphertextKey);
+    CryptoRSA::encrypt(pkey, (unsigned char*)msg.c_str(), strlen(msg.c_str())+1, ciphertextKey);
 
-    saveEncryptedKeyFile(ciphertextKey, static_cast<int>(ciphertextLength));
+    _encryptedKey.resize(static_cast<size_t >(keysize));
+    std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedKey.begin());
 
-    LOG_TRACE("Ciphertext: " << reinterpret_cast<char*>(ciphertextKey));
+    LOG_TRACE("Ciphertext: " << _encryptedKey);
 
     return true;
 }

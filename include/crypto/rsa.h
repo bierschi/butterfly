@@ -3,6 +3,8 @@
 #define BUTTERFLY_RSA_H
 
 #include <string>
+#include <fstream>
+#include <sstream>
 #include <openssl/rsa.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
@@ -26,17 +28,32 @@ namespace butterfly {
 class CryptoRSA {
 
 private:
-    char *_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr;
+    RSA *_rsa;
+    EVP_PKEY *_pkey;
     int _keySize, _paddingSize;
-
-    static RSA *_rsa;
+    char *_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr;
 
     /**
      * Inits the correct padding size
      */
     void initPaddingSize();
 
-protected:
+    /**
+     * Loads the rsa key from a file
+     *
+     * @param filename: std::string to the file path
+     * @return boolean: true if key data was successfully loaded from filename, else false
+     */
+    bool loadKeyFromFile(const std::string &filepath);
+
+    /**
+     * Loads the rsa key from a rsa string
+     *
+     * @param: str: std::string of the key
+     * @return boolean: true if key data was successfully loaded from given string, else false
+     */
+    bool loadKeyFromStr(const std::string &str);
+
     /**
      * Get the openssl error as a std::string
      *
@@ -54,11 +71,23 @@ protected:
 public:
 
     /**
-     * Constructor CryptoRSA
+     * Default Constructor CryptoRSA
+     */
+    CryptoRSA();
+
+    /**
+     * Constructor CryptoRSA  to create new rsa key with keySize
      *
      * @param keySize: size of the key
      */
-    explicit CryptoRSA(int keySize=2048);
+    explicit CryptoRSA(int keySize);
+
+    /**
+     * Constructor CryptoRSA to init rsa key from key string or file
+     *
+     * @param key: key string or filepath to key
+     */
+    explicit CryptoRSA(const std::string &key);
 
     /**
      * Destructor CryptoRSA
@@ -70,14 +99,14 @@ public:
      *
      * @return RSA*
      */
-    inline static RSA* getRSAKey() { return CryptoRSA::_rsa; }
+    inline RSA* getRSAKey() { return _rsa; }
 
     /**
      * Get the RSA size in bytes. RSA key size => (4096/8) = 512
      *
      * @return int: size in bytes
      */
-    inline static int getRSAKeySize() { return RSA_size(CryptoRSA::_rsa); }
+    inline int getRSAKeySize() { return RSA_size(_rsa); }
 
     /**
      * Get the padding size
@@ -91,7 +120,7 @@ public:
      *
      * @return EVP_PKEY
      */
-    static EVP_PKEY* getEvpPkey();
+     EVP_PKEY* getEvpPkey();
 
     /**
      * Get the EVP_PKEY size
@@ -129,7 +158,7 @@ public:
      *
      * @return boolean, true if creation was successful
      */
-    static bool createRSAPrivateKeyFile(const std::string &filename);
+    bool createRSAPrivateKeyFile(const std::string &filename);
 
     /**
      * Creates the RSA public key file. Starts with -----BEGIN RSA PUBLIC KEY-----
@@ -138,7 +167,7 @@ public:
      *
      * @return boolean, true if creation was successful
      */
-    static bool createRSAPublicKeyFile(const std::string &filename);
+    bool createRSAPublicKeyFile(const std::string &filename);
 
     /**
      * Creates the public key file. Starts with -----BEGIN PUBLIC KEY-----
@@ -147,7 +176,7 @@ public:
      *
      * @return boolean, true if creation was successful
      */
-    static bool createPublicKeyFile(const std::string &filename);
+    bool createPublicKeyFile(const std::string &filename);
 
     /**
      * Get the EVP_PKEY from RSA private key file

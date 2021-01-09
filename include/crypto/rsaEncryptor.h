@@ -3,6 +3,7 @@
 #define BUTTERFLY_RSAENCRYPTOR_H
 
 #include <fstream>
+#include <string>
 
 #include "rsa.h"
 
@@ -14,9 +15,8 @@ namespace butterfly {
 class RSAEncryptor : public CryptoRSA {
 
 private:
-    const std::string _cPrivateRsaKeyFilename, _cPublicKeyFilename, _encAESKeyFilename;
-
-    unsigned char *_ciphertextKey;
+    std::string _encryptedKey;
+    const std::string _cPrivateRsaKeyFilename, _cPublicKeyFilename;
 
     /**
      * Validates the length of given string with the max rsa block size
@@ -24,25 +24,43 @@ private:
     bool validateStringLengthForRSA(const std::string &msg);
 
     /**
-     * Saves the encrypted key file
-     *
-     * @param ciphertextKey: key as ciphertext
-     * @param ciphertextLength: length of the ciphertext
-     */
-    void saveEncryptedKeyFile(unsigned char *ciphertextKey, int ciphertextLength);
+    * Saves the encrypted key file
+    *
+    * @param ciphertextKey: key as ciphertext
+    * @param ciphertextLength: length of the ciphertext
+    */
+    void saveEncryptedKeyFile(const std::string &filename, unsigned char *ciphertextKey, int ciphertextLength);
 
 public:
+
     /**
      * Constructor RSAEncryptor
      *
      * @param keySize: size of the key
      */
-    explicit RSAEncryptor(const std::string &AESKeyFile, int keySize=2048);
+    explicit RSAEncryptor(int keySize);
+
+    explicit RSAEncryptor(const std::string &key);
 
     /**
      * Destructor RSAEncryptor
      */
     ~RSAEncryptor();
+
+    /**
+     * Get the encrypted key
+     *
+     * @return: encrypted key as std::string
+     */
+    inline std::string getEncryptedKey() const { return _encryptedKey; }
+
+    /**
+     * Saves the encrypted key file
+     *
+     * @param ciphertextKey: key as ciphertext
+     * @param ciphertextLength: length of the ciphertext
+     */
+    void saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength);
 
     /**
      * Saves the private rsa key file for the client machine
@@ -60,7 +78,7 @@ public:
      * @param msg: message as std::string
      * @return boolean, true if encryption was successful else false
      */
-    bool encrypt(const std::string &msg);
+    bool encrypt(EVP_PKEY *pkey, const std::string &msg);
 
 };
 
