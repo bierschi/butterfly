@@ -7,6 +7,10 @@ RSADecryptor::RSADecryptor() : CryptoRSA() {
     LOG_TRACE("Create class RSADecryptor")
 }
 
+RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key) {
+    LOG_TRACE("Create class RSADecryptor")
+}
+
 RSADecryptor::~RSADecryptor() {
 
 }
@@ -84,7 +88,7 @@ bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg) {
     CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(msg.c_str())), static_cast<size_t >(keysize), plaintextKey);
 
     _decryptedKey = reinterpret_cast<char*>(plaintextKey);
-    LOG_INFO("Decrypted plaintext key: " << _decryptedKey);
+    //LOG_INFO("Decrypted plaintext key: " << _decryptedKey);
 
     return true;
 }

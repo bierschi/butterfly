@@ -2,9 +2,6 @@
 #ifndef BUTTERFLY_RSADECRYPTOR_H
 #define BUTTERFLY_RSADECRYPTOR_H
 
-#include <fstream>
-#include <sstream>
-
 #include "rsa.h"
 
 namespace butterfly {
@@ -30,6 +27,13 @@ public:
     RSADecryptor();
 
     /**
+     * Constructor RSADecryptor to init rsa key from key string or file
+     *
+     * @param key: key string or filepath to key
+     */
+    RSADecryptor(const std::string &key);
+
+    /**
      * Destructor RSADecryptor
      */
     ~RSADecryptor();
@@ -47,15 +51,15 @@ public:
      * @param filepath: path to the rsa file
      * @return EVP_PKEY
      */
-    EVP_PKEY* getEvpPkeyFromFile(const std::string &filepath);
+    EVP_PKEY* getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
 
     /**
-     * Get the binary content from the encrypted AES key file
+     * Get the binary content from the encrypted key file
      *
-     * @param filepath: path to the encrypted aes key file
-     * @return std::string encrypted aes key content
+     * @param filepath: path to the encrypted key file
+     * @return std::string encrypted key content
      */
-    std::string  getBinKeyFileContents(const std::string &filepath);
+    std::string getBinKeyFileContents(const std::string &filepath);
 
     /**
      * Decrypts the given message string

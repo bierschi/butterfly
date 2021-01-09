@@ -2,9 +2,6 @@
 #ifndef BUTTERFLY_RSAENCRYPTOR_H
 #define BUTTERFLY_RSAENCRYPTOR_H
 
-#include <fstream>
-#include <string>
-
 #include "rsa.h"
 
 namespace butterfly {
@@ -16,20 +13,12 @@ class RSAEncryptor : public CryptoRSA {
 
 private:
     std::string _encryptedKey;
-    const std::string _cPrivateRsaKeyFilename, _cPublicKeyFilename;
+    const std::string _cPrivateRSAKeyFilename, _cPublicKeyFilename;
 
     /**
      * Validates the length of given string with the max rsa block size
      */
     bool validateStringLengthForRSA(const std::string &msg);
-
-    /**
-    * Saves the encrypted key file
-    *
-    * @param ciphertextKey: key as ciphertext
-    * @param ciphertextLength: length of the ciphertext
-    */
-    void saveEncryptedKeyFile(const std::string &filename, unsigned char *ciphertextKey, int ciphertextLength);
 
 public:
 
@@ -40,6 +29,11 @@ public:
      */
     explicit RSAEncryptor(int keySize);
 
+    /**
+     * Constructor RSAEncryptor to init rsa key from key string or file
+     *
+     * @param key: key string or filepath to key
+     */
     explicit RSAEncryptor(const std::string &key);
 
     /**
@@ -63,6 +57,14 @@ public:
     void saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength);
 
     /**
+     * Encrypts the given message string
+     *
+     * @param msg: message as std::string
+     * @return boolean, true if encryption was successful else false
+     */
+    bool encrypt(EVP_PKEY *pkey, const std::string &msg);
+
+    /**
      * Saves the private rsa key file for the client machine
      */
     void saveClientPrivateRSAKeyFile();
@@ -71,14 +73,6 @@ public:
      * Saves the public key file for the client machine
      */
     void saveClientPublicKeyFile();
-    
-    /**
-     * Encrypts the given message string
-     *
-     * @param msg: message as std::string
-     * @return boolean, true if encryption was successful else false
-     */
-    bool encrypt(EVP_PKEY *pkey, const std::string &msg);
 
 };
 

@@ -82,12 +82,12 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str) {
 
     if (fLine =="-----BEGIN RSA PRIVATE KEY-----") {
 
-        _rsa = PEM_read_bio_RSAPrivateKey(bioPrivate, NULL, NULL, NULL);
-        EVP_PKEY_assign_RSA(_pkey, _rsa);
+        _pkey = PEM_read_bio_PrivateKey(bioPrivate, nullptr, nullptr, nullptr);
+        _rsa = EVP_PKEY_get1_RSA(_pkey);
 
     } else if (fLine == "-----BEGIN PUBLIC KEY-----") {
 
-        _pkey = PEM_read_bio_PUBKEY(bioPrivate, NULL, NULL, NULL);
+        _pkey = PEM_read_bio_PUBKEY(bioPrivate, nullptr, nullptr, nullptr);
         _rsa = EVP_PKEY_get1_RSA(_pkey);
 
     } else {

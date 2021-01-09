@@ -47,7 +47,7 @@ private:
     bool loadKeyFromFile(const std::string &filepath);
 
     /**
-     * Loads the rsa key from a rsa string
+     * Loads the rsa key from a string
      *
      * @param: str: std::string of the key
      * @return boolean: true if key data was successfully loaded from given string, else false
@@ -66,7 +66,7 @@ private:
      *
      * @return: boolean, true if generation was successful else false
      */
-     bool generateRSAKey(); // TODO takes some time to generate the key
+     bool generateRSAKey();
 
 public:
 
