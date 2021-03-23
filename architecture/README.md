@@ -1,4 +1,13 @@
 # Architecture
 
+### Installation
+<pre><code>
+sudo apt-get install plantuml
+plantuml -tsvg file
+</code></pre>
 
-![](firstDiagram.svg)
+## RSA
+<br>
+
+![](rsaEncryptor.svg)
+

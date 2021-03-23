@@ -1,5 +1,8 @@
 - CradleCore (Cradle Ransomware)
 - WannaCry
 - NextCry
+- Petya
+- CryptoLocker
+- TeslaCrypt
 - hidden tear
 - eda2

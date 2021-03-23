@@ -2,6 +2,8 @@
 - create class for argument parser (done)
 - create classes for rsa, aes encryption -> Use hybrid encryption
 - iterate through directory structure recursively and load all files
+- add exception handling
+- add unit tests for all classes
 - add data structure for holding file extension, mainly user data files
 - change project to support multiple os (linux, windows, macos)
 - add classes to access the tor network

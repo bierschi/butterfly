@@ -15,3 +15,4 @@
 # Others
 - Change computer wallpaper.
 - A Python webserver
+- Use user data file extension (.xlsx,.docx,.jpg,.pptx)
