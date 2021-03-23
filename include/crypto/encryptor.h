@@ -4,6 +4,7 @@
 
 #include "crypto/rsaEncryptor.h"
 #include "crypto/serverPublicKey.h"
+#include "params.h"
 
 namespace butterfly {
 
@@ -13,6 +14,7 @@ namespace butterfly {
 class Encryptor {
 
 private:
+    int _keySize;
     std::string _aesKey = "0123456789abcdefghijklabcdefg";
     std::unique_ptr<RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
 
@@ -20,7 +22,7 @@ public:
     /**
      * Constructor Encryptor
      */
-    Encryptor();
+    explicit Encryptor(int keySize=2048);
 
     /**
      * Destructor Encryptor

@@ -3,6 +3,7 @@
 #define BUTTERFLY_DECRYPTOR_H
 
 #include "crypto/rsaDecryptor.h"
+#include "params.h"
 
 namespace butterfly {
 
@@ -14,6 +15,7 @@ class Decryptor {
 private:
     std::unique_ptr<RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
     std::string _decryptedCPrivateRSA, _decryptedAESKey;
+
 public:
     /**
      * Constructor Decryptor
@@ -25,8 +27,8 @@ public:
      */
     ~Decryptor();
 
-    void decryptCPrivateRSA();
-    void decryptAESKey();
+    std::string decryptCPrivateRSA(const std::string &keyFromServer);
+    std::string decryptAESKey(const std::string &decryptedCPrivateRSA);
 };
 
 } // namespace butterfly

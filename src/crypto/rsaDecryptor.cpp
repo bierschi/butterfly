@@ -36,7 +36,7 @@ EVP_PKEY* RSADecryptor::getEvpPkeyFromFile(const std::string &filepath) {
         std::string fLine;
         std::getline(in, fLine);
 
-        if (fLine =="-----BEGIN RSA PRIVATE KEY-----") {
+        if (fLine == "-----BEGIN RSA PRIVATE KEY-----") {
 
             pkey = CryptoRSA::getPkeyFromPrivateKeyFile(filepath);
 
