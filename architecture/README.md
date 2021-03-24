@@ -6,8 +6,12 @@ sudo apt-get install plantuml
 plantuml -tsvg file
 </code></pre>
 
-## RSA
+## Ransomware Encryption
 <br>
 
-![](rsaEncryptor.svg)
+![](encryption.svg)
 
+## Ransomware Decryption
+<br>
+
+![](decryption.svg)

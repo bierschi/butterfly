@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+actor attacker
+participant SPrivateRSA.pem as SPrivate
+actor target
+participant "SPublic.pem\n(embedded)" as SPublic
+participant CPrivateRSA.pem as CPrivate
+participant CPublic.pem as CPublic
+participant AESKey
+participant File
+autonumber
+
+attacker -> attacker: generate the RSA\n server key pair
+attacker -> target: compromise the target host machine
+
+target -> target: generate an infection specific\n client RSA key pair
+target -> CPrivate: encrypt the CPrivateRSA.pem with the\n embedded SPublic.pem in the ransomware
+CPrivate -> target: save CPrivateRSA.bin on host machine
+loop
+target -> AESKey: generate for each file a new 128 Bit AESKey
+AESKey -> File: encrypt file with 128 Bit AESKey
+File -> AESKey: save encrypted File.butterfly
+end
+AESKey -> CPublic: encrypt AESKey with CPublic.pem
+CPublic -> target: save AESKey.bin
+target -> target: display ransom note
+@enduml
