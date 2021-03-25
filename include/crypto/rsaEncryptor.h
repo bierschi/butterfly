@@ -13,7 +13,6 @@ class RSAEncryptor : public CryptoRSA {
 
 private:
     std::string _encryptedKey;
-    const std::string _cPrivateRSAKeyFilename, _cPublicKeyFilename;
 
     /**
      * Validates the length of given string with the max rsa block size
@@ -39,7 +38,7 @@ public:
     /**
      * Destructor RSAEncryptor
      */
-    ~RSAEncryptor();
+    ~RSAEncryptor() = default;
 
     /**
      * Get the encrypted key
@@ -54,7 +53,7 @@ public:
      * @param ciphertextKey: key as ciphertext
      * @param ciphertextLength: length of the ciphertext
      */
-    void saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength);
+    static void saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength);
 
     /**
      * Encrypts the given message string
@@ -63,16 +62,6 @@ public:
      * @return boolean, true if encryption was successful else false
      */
     bool encrypt(EVP_PKEY *pkey, const std::string &msg);
-
-    /**
-     * Saves the private rsa key file for the client machine
-     */
-    void saveClientPrivateRSAKeyFile();
-
-    /**
-     * Saves the public key file for the client machine
-     */
-    void saveClientPublicKeyFile();
 
 };
 

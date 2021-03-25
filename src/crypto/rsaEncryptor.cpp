@@ -3,19 +3,12 @@
 
 namespace butterfly {
 
-RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) ,_cPrivateRSAKeyFilename("CPrivateRSA.pem"),
-                                                              _cPublicKeyFilename("CPublic.pem")
-{
+RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) {
     LOG_TRACE("Create class RSAEncryptor with key size of " << keySize)
-
 }
 
 RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key) {
     LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
-}
-
-RSAEncryptor::~RSAEncryptor() {
-
 }
 
 bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg) {
@@ -44,8 +37,9 @@ void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::
 
 bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg) {
 
-    // first check message size
+    // first check the message size
     if ( msg.empty() ) {
+        LOG_ERROR("Can not encrypt message because it is empty!")
         return false;
     }
     // validate the string length with block size length
@@ -58,26 +52,10 @@ bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg) {
 
     CryptoRSA::encrypt(pkey, (unsigned char*)msg.c_str(), strlen(msg.c_str())+1, ciphertextKey);
 
-    _encryptedKey.resize(static_cast<size_t >(keysize));
+    _encryptedKey.resize(static_cast<size_t>(keysize));
     std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedKey.begin());
 
-    //LOG_TRACE("Ciphertext: " << _encryptedKey);
-
     return true;
-}
-
-void RSAEncryptor::saveClientPrivateRSAKeyFile() {
-
-    if ( !createRSAPrivateKeyFile(_cPrivateRSAKeyFilename) ) {
-        LOG_ERROR("Client private rsa key file could not been saved")
-    }
-}
-
-void RSAEncryptor::saveClientPublicKeyFile() {
-
-    if ( !createPublicKeyFile(_cPublicKeyFilename) ) {
-        LOG_ERROR("Client public key file could not been saved")
-    }
 }
 
 } // namespace butterfly
