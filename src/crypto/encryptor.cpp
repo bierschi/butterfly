@@ -12,16 +12,6 @@ Encryptor::~Encryptor() {
 
 }
 
-void Encryptor::encryptAESKey() {
-
-    if ( _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), _aesKey) ) {
-        std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedKey();
-        _rsaEncryptorAESKey->saveEncryptedKeyFile(AES_KEY_ENC_FILENAME, aesKeyEnc, _rsaEncryptorAESKey->getRSAKeySize());
-    } else {
-        LOG_ERROR("Could not encrypt the AES key!");
-    }
-}
-
 void Encryptor::encryptCPrivateRSA() {
 
     std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
@@ -31,7 +21,17 @@ void Encryptor::encryptCPrivateRSA() {
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedKey();
         _rsaEncryptorCPrivateRSA->saveEncryptedKeyFile(CPRIVATERSA_FILENAME, cPrivateRSAEnc, _rsaEncryptorCPrivateRSA->getEvpPkeySize(cPrivateRSAPKey));
     } else {
-        LOG_ERROR("Could not encrypt the cPrivateRSA key");
+        LOG_ERROR("Could not encrypt the " << CPRIVATERSA_FILENAME);
+    }
+}
+
+void Encryptor::encryptAESKey() {
+
+    if ( _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), _aesKey) ) {
+        std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedKey();
+        _rsaEncryptorAESKey->saveEncryptedKeyFile(AES_KEY_ENC_FILENAME, aesKeyEnc, _rsaEncryptorAESKey->getRSAKeySize());
+    } else {
+        LOG_ERROR("Could not encrypt the " << AES_KEY_ENC_FILENAME);
     }
 }
 

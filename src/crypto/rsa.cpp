@@ -23,19 +23,19 @@ CryptoRSA::CryptoRSA(int keySize) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySi
 }
 
 CryptoRSA::CryptoRSA(const std::string &key) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(-1) {
-    LOG_TRACE("Create class CryptoRSA from key");
+    LOG_TRACE("Create class CryptoRSA from rsa key string");
 
     // init padding size
     initPaddingSize();
 
     if ( !loadKeyFromFile(key) ) {
         if ( !loadKeyFromStr(key) ) {
-            LOG_ERROR("Could not load key data from " << key);
+            LOG_ERROR("Could not load rsa key data from " << key);
         } else {
-            LOG_TRACE("Loaded key from str");
+            LOG_TRACE("Loaded successfully rsa key from given string");
         }
     } else {
-        LOG_TRACE("Loaded key from file")
+        LOG_TRACE("Loaded successfully rsa key from file")
     }
 }
 
@@ -113,7 +113,7 @@ std::string CryptoRSA::getOpenSSLError() {
 }
 
 bool CryptoRSA::generateRSAKey() {
-    LOG_TRACE("Generating the RSA key")
+    LOG_TRACE("Generating the RSA key with key size of " << _keySize)
     _rsa = RSA_new();
 
     if (_rsa != nullptr) {

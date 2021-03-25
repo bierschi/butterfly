@@ -6,12 +6,12 @@ namespace butterfly {
 RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) ,_cPrivateRSAKeyFilename("CPrivateRSA.pem"),
                                                               _cPublicKeyFilename("CPublic.pem")
 {
-    LOG_TRACE("Create class RSAEncryptor with key size: " << keySize)
+    LOG_TRACE("Create class RSAEncryptor with key size of " << keySize)
 
 }
 
 RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key) {
-    LOG_TRACE("Create class RSAEncryptor with key string")
+    LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
 }
 
 RSAEncryptor::~RSAEncryptor() {

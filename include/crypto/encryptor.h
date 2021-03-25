@@ -15,7 +15,7 @@ class Encryptor {
 
 private:
     int _keySize;
-    std::string _aesKey = "0123456789abcdefghijklabcdefg";
+    std::string _aesKey = "0123456789abcdefghijklabcdefg"; // TODO: get the string from the aes encryption class
     std::unique_ptr<RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
 
 public:
@@ -29,9 +29,16 @@ public:
      */
     ~Encryptor();
 
+    /**
+     * Encrypts the CPrivateRSA.pem and saves the bin file on the host machine
+     */
+    void encryptCPrivateRSA();
+
+    /**
+     * Encrypts the AESKey and saves the bin file
+     */
     void encryptAESKey();
 
-    void encryptCPrivateRSA();
 };
 
 } // namespace butterfly
