@@ -3,79 +3,59 @@
 
 namespace butterfly {
 
-RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) ,_cPrivateRsaKeyFilename("CPrivateRSA.pem"), _cPublicKeyFilename("CPublic.pem"),
-                                          _encKeyFilename("key.bin")
-{
-
-    if (CryptoRSA::getRSAKey() == nullptr) {
-        if ( !CryptoRSA::generateRSAKey() ) {
-            LOG_ERROR("Could not generate the RSA key!");
-            throw std::runtime_error("Could not generate the RSA key!");
-        }
-    }
+RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize) {
+    LOG_TRACE("Create class RSAEncryptor with key size of " << keySize)
 }
 
-RSAEncryptor::~RSAEncryptor() {
-
+RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key) {
+    LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
 }
 
-bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg) {
+bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize) {
 
     int msgLength = static_cast<int>(msg.length());
-    int maxBlockSize = (CryptoRSA::getRSAKeySize() - CryptoRSA::getPaddingSize());
+    int maxBlockSize = (keysize - CryptoRSA::getPaddingSize());
 
     if (msgLength < maxBlockSize) {
-        LOG_INFO("Message string " << msg << " with length of " << msgLength << " bytes is less than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << CryptoRSA::getRSAKeySize() << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
+        LOG_INFO("Message string " << msg << " with length of " << msgLength << " bytes is less than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << keysize << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
         return true;
     } else {
-        LOG_ERROR("Message string " << msg << " with length of " << msgLength << " bytes is greater/equal than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << CryptoRSA::getRSAKeySize() << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
+        LOG_ERROR("Message string " << msg << " with length of " << msgLength << " bytes is greater/equal than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << keysize << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
         return false;
     }
 }
 
-void RSAEncryptor::saveEncryptedKeyFile(unsigned char *ciphertextKey, int ciphertextLength) {
+void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength) {
 
-    std::fstream out(_encKeyFilename, std::ios::out | std::ios::binary);
+    std::fstream out(filename, std::ios::out | std::ios::binary);
     if ( out.is_open() ) {
-        out.write(reinterpret_cast<char*>(&ciphertextKey[0]), ciphertextLength);
+        out.write(ciphertextKey.c_str(), keyLength);
     } else {
-        LOG_ERROR("Could not open file " << _encKeyFilename <<" to save the encrypted key");
+        LOG_ERROR("Could not open file " << filename <<" to save the encrypted key");
     }
 }
 
-void RSAEncryptor::saveClientPrivateRSAKeyFile() {
+bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg) {
 
-    if ( !createRSAPrivateKeyFile(_cPrivateRsaKeyFilename) ) {
-        LOG_ERROR("Client private rsa key file could not been saved")
-    }
-
-}
-
-void RSAEncryptor::saveClientPublicKeyFile() {
-
-    if ( !createPublicKeyFile(_cPublicKeyFilename) ) {
-        LOG_ERROR("Client public key file could not been saved")
-    }
-
-}
-
-bool RSAEncryptor::encrypt(const std::string &msg) {
-
-    // first validate the string length with block size length
-    if ( !validateStringLengthForRSA(msg) ) {
+    // first check the message size
+    if ( msg.empty() ) {
+        LOG_ERROR("Can not encrypt message because it is empty!")
         return false;
     }
 
-    EVP_PKEY *key = CryptoRSA::getEvpPkey();
+    int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
-    int keysize = CryptoRSA::getEvpPkeySize(key);
+    // validate the string length with block size length
+    if ( !validateStringLengthForRSA(msg, keysize) ) {
+        return false; // TODO exception handling
+    }
+
     unsigned char ciphertextKey[keysize];
 
-    size_t ciphertextLength = CryptoRSA::encrypt(key, (unsigned char*)msg.c_str(), strlen(msg.c_str())+1, ciphertextKey);
+    CryptoRSA::encrypt(pkey, (unsigned char*)msg.c_str(), strlen(msg.c_str())+1, ciphertextKey);
 
-    saveEncryptedKeyFile(ciphertextKey, static_cast<int>(ciphertextLength));
-
-    LOG_TRACE("Ciphertext: " << reinterpret_cast<char*>(ciphertextKey));
+    _encryptedKey.resize(static_cast<size_t>(keysize));
+    std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedKey.begin());
 
     return true;
 }

@@ -3,16 +3,46 @@
 
 namespace butterfly {
 
-RSA* CryptoRSA::_rsa = nullptr;
+CryptoRSA::CryptoRSA() :_rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(-1) {
+    LOG_TRACE("Create class CryptoRSA")
+}
 
-CryptoRSA::CryptoRSA(int keySize) : _keySize(keySize){
+CryptoRSA::CryptoRSA(int keySize) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(keySize) {
     LOG_TRACE("Create class CryptoRSA with key size of " << keySize)
 
+    // init padding size
     initPaddingSize();
+
+    // generate the rsa key
+    if ( _rsa == nullptr ) {
+        if ( !generateRSAKey() ) {
+            LOG_ERROR("Could not generate the RSA key!");
+            throw std::runtime_error("Could not generate the RSA key!");
+        }
+    }
+}
+
+CryptoRSA::CryptoRSA(const std::string &key) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(-1) {
+    LOG_TRACE("Create class CryptoRSA from rsa key string");
+
+    // init padding size
+    initPaddingSize();
+
+    if ( !loadKeyFromFile(key) ) {
+        if ( !loadKeyFromStr(key) ) {
+            LOG_ERROR("Could not load rsa key data from " << key);
+        } else {
+            LOG_TRACE("Loaded successfully rsa key from given string");
+        }
+    } else {
+        LOG_TRACE("Loaded successfully rsa key from file")
+    }
 }
 
 CryptoRSA::~CryptoRSA() {
-    RSA_free(CryptoRSA::_rsa);
+
+    RSA_free(_rsa);
+
 }
 
 void CryptoRSA::initPaddingSize() {
@@ -26,6 +56,47 @@ void CryptoRSA::initPaddingSize() {
     } else {
         throw std::runtime_error("Padding mode is not supported!");
     }
+}
+
+bool CryptoRSA::loadKeyFromFile(const std::string &filepath) {
+
+    std::fstream in(filepath, std::ios::in);
+
+    if (in.is_open()) {
+        std::stringstream strStream;
+        strStream << in.rdbuf();
+        return loadKeyFromStr(strStream.str());
+    } else {
+        return false;
+    }
+}
+
+bool CryptoRSA::loadKeyFromStr(const std::string &str) {
+
+    std::string fLine;
+    std::istringstream f(str);
+    std::getline(f, fLine);
+
+    BIO *bioPrivate = BIO_new(BIO_s_mem());
+    BIO_write(bioPrivate, str.c_str(), static_cast<int>(str.length()));
+
+    if (fLine =="-----BEGIN RSA PRIVATE KEY-----") {
+
+        _pkey = PEM_read_bio_PrivateKey(bioPrivate, nullptr, nullptr, nullptr);
+        _rsa = EVP_PKEY_get1_RSA(_pkey);
+
+    } else if (fLine == "-----BEGIN PUBLIC KEY-----") {
+
+        _pkey = PEM_read_bio_PUBKEY(bioPrivate, nullptr, nullptr, nullptr);
+        _rsa = EVP_PKEY_get1_RSA(_pkey);
+
+    } else {
+        LOG_ERROR("Unsupported file provided with file header: " << fLine);
+        BIO_free(bioPrivate);
+        return false;
+    }
+    BIO_free(bioPrivate);
+    return true;
 }
 
 std::string CryptoRSA::getOpenSSLError() {
@@ -42,33 +113,30 @@ std::string CryptoRSA::getOpenSSLError() {
 }
 
 bool CryptoRSA::generateRSAKey() {
-    LOG_TRACE("Generating the RSA key")
-    CryptoRSA::_rsa = RSA_new();
+    LOG_TRACE("Generating the RSA key with key size of " << _keySize)
+    _rsa = RSA_new();
 
-    if (CryptoRSA::_rsa != nullptr) {
+    if (_rsa != nullptr) {
         BIGNUM *e = BN_new();
-        return e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(CryptoRSA::_rsa, _keySize, e, nullptr);
+        return e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(_rsa, _keySize, e, nullptr);
     } else {
         return false;
     }
 }
 
 EVP_PKEY* CryptoRSA::getEvpPkey() {
-
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, CryptoRSA::_rsa);
-
-    return pkey;
+    EVP_PKEY_assign_RSA(_pkey, _rsa);
+    return _pkey;
 }
 
-char* CryptoRSA::getRSAPrivateKey() {
+char* CryptoRSA::getRSAPrivateKeyStr() {
     LOG_TRACE("Generating the rsa private key string")
 
     EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, CryptoRSA::_rsa);
+    EVP_PKEY_assign_RSA(pkey, _rsa);
 
     BIO *bioPrivate = BIO_new(BIO_s_mem());
-    PEM_write_bio_RSAPrivateKey(bioPrivate, CryptoRSA::_rsa, nullptr, nullptr, 0, nullptr, nullptr);
+    PEM_write_bio_RSAPrivateKey(bioPrivate, _rsa, nullptr, nullptr, 0, nullptr, nullptr);
 
     int privateKeylen = BIO_pending(bioPrivate);
     _rsaPrivateKeyStr = static_cast<char*>( calloc(static_cast<size_t>(privateKeylen+1), 1) );
@@ -77,14 +145,14 @@ char* CryptoRSA::getRSAPrivateKey() {
     return _rsaPrivateKeyStr;
 }
 
-char* CryptoRSA::getRSAPublicKey() {
+char* CryptoRSA::getRSAPublicKeyStr() {
     LOG_TRACE("Generating the rsa public key string")
 
     EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, CryptoRSA::_rsa);
+    EVP_PKEY_assign_RSA(pkey, _rsa);
 
     BIO *bioPublic = BIO_new(BIO_s_mem());
-    PEM_write_bio_RSAPublicKey(bioPublic, CryptoRSA::_rsa);
+    PEM_write_bio_RSAPublicKey(bioPublic, _rsa);
 
     int publicKeylen = BIO_pending(bioPublic);
     _rsaPublicKeyStr =  static_cast<char*>( calloc(static_cast<size_t>( publicKeylen+1 ), 1) );
@@ -93,11 +161,11 @@ char* CryptoRSA::getRSAPublicKey() {
     return _rsaPublicKeyStr;
 }
 
-char* CryptoRSA::getPublicKey() {
+char* CryptoRSA::getPublicKeyStr() {
     LOG_TRACE("Generating the public key string")
 
     EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, CryptoRSA::_rsa);
+    EVP_PKEY_assign_RSA(pkey, _rsa);
 
     BIO *bioPublic = BIO_new(BIO_s_mem());
     PEM_write_bio_PUBKEY(bioPublic, pkey);
@@ -109,14 +177,13 @@ char* CryptoRSA::getPublicKey() {
     return _publicKeyStr;
 }
 
-//TODO handle file not found exceptions
 bool CryptoRSA::createRSAPrivateKeyFile(const std::string &filename) {
 
     FILE *privateKeyFile = fopen(filename.c_str(), "wb");
 
     if (privateKeyFile) {
         LOG_TRACE("Creating the rsa private key file " << filename);
-        PEM_write_RSAPrivateKey(privateKeyFile, CryptoRSA::_rsa, nullptr, nullptr, 0, nullptr, nullptr);
+        PEM_write_RSAPrivateKey(privateKeyFile, _rsa, nullptr, nullptr, 0, nullptr, nullptr);
         fclose(privateKeyFile);
     } else {
         LOG_ERROR("Unable to open file " << filename << " for writing private rsa key!")
@@ -131,7 +198,7 @@ bool CryptoRSA::createRSAPublicKeyFile(const std::string &filename) {
 
     if (publicKeyFile) {
         LOG_TRACE("Creating the rsa public key file " << filename);
-        PEM_write_RSAPublicKey(publicKeyFile, CryptoRSA::_rsa);
+        PEM_write_RSAPublicKey(publicKeyFile, _rsa);
         fclose(publicKeyFile);
     } else {
         LOG_ERROR("Unable to open file " << filename << " for writing public rsa key!")
@@ -147,7 +214,7 @@ bool CryptoRSA::createPublicKeyFile(const std::string &filename) {
     if (publicKeyFile) {
         LOG_TRACE("Creating the public key file " << filename);
         EVP_PKEY *pkey = EVP_PKEY_new();
-        EVP_PKEY_assign_RSA(pkey, CryptoRSA::_rsa);
+        EVP_PKEY_assign_RSA(pkey, _rsa);
         PEM_write_PUBKEY(publicKeyFile, pkey);
 
         fclose(publicKeyFile);
@@ -182,7 +249,7 @@ EVP_PKEY* CryptoRSA::getPkeyFromPublicKeyFile(const std::string &filepath) {
 
     if (publicKeyFile) {
 
-        pkey = PEM_read_PUBKEY(publicKeyFile, nullptr, nullptr, nullptr);
+        pkey = PEM_read_PUBKEY(publicKeyFile,nullptr, nullptr, nullptr);
 
     } else {
         LOG_ERROR("Could not open public key file " << filepath);
@@ -190,7 +257,6 @@ EVP_PKEY* CryptoRSA::getPkeyFromPublicKeyFile(const std::string &filepath) {
 
     return pkey;
 }
-
 
 size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext) {
 
