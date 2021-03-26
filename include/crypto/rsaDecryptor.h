@@ -17,7 +17,7 @@ private:
     /**
      * Validates the length of given string with the RSA key size
      */
-    int validateStringLengthForRSA(const std::string &msg, const int &keysize);
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
 public:
 
@@ -31,12 +31,12 @@ public:
      *
      * @param key: key string or filepath to key
      */
-    RSADecryptor(const std::string &key);
+    explicit RSADecryptor(const std::string &key);
 
     /**
      * Destructor RSADecryptor
      */
-    ~RSADecryptor();
+    ~RSADecryptor() = default;
 
     /**
      * Get the decrypted key
@@ -51,7 +51,7 @@ public:
      * @param filepath: path to the rsa file
      * @return EVP_PKEY
      */
-    EVP_PKEY* getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
+    static EVP_PKEY* getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
 
     /**
      * Get the binary content from the encrypted key file
@@ -59,7 +59,7 @@ public:
      * @param filepath: path to the encrypted key file
      * @return std::string encrypted key content
      */
-    std::string getBinKeyFileContents(const std::string &filepath);
+    static std::string getBinKeyFileContents(const std::string &filepath);
 
     /**
      * Decrypts the given message string

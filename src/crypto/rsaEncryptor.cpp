@@ -11,16 +11,16 @@ RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key) {
     LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
 }
 
-bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg) {
+bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize) {
 
     int msgLength = static_cast<int>(msg.length());
-    int maxBlockSize = (CryptoRSA::getRSAKeySize() - CryptoRSA::getPaddingSize());
+    int maxBlockSize = (keysize - CryptoRSA::getPaddingSize());
 
     if (msgLength < maxBlockSize) {
-        LOG_INFO("Message string " << msg << " with length of " << msgLength << " bytes is less than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << CryptoRSA::getRSAKeySize() << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
+        LOG_INFO("Message string " << msg << " with length of " << msgLength << " bytes is less than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << keysize << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
         return true;
     } else {
-        LOG_ERROR("Message string " << msg << " with length of " << msgLength << " bytes is greater/equal than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << CryptoRSA::getRSAKeySize() << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
+        LOG_ERROR("Message string " << msg << " with length of " << msgLength << " bytes is greater/equal than RSA block size of max " << maxBlockSize << " bytes (RSA key size: " << keysize << " - padding size: " << CryptoRSA::getPaddingSize() << ")");
         return false;
     }
 }
@@ -42,12 +42,14 @@ bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg) {
         LOG_ERROR("Can not encrypt message because it is empty!")
         return false;
     }
+
+    int keysize = CryptoRSA::getEvpPkeySize(pkey);
+
     // validate the string length with block size length
-    if ( !validateStringLengthForRSA(msg) ) {
+    if ( !validateStringLengthForRSA(msg, keysize) ) {
         return false; // TODO exception handling
     }
 
-    int keysize = CryptoRSA::getEvpPkeySize(pkey);
     unsigned char ciphertextKey[keysize];
 
     CryptoRSA::encrypt(pkey, (unsigned char*)msg.c_str(), strlen(msg.c_str())+1, ciphertextKey);

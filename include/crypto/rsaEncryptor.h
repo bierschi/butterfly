@@ -17,7 +17,7 @@ private:
     /**
      * Validates the length of given string with the max rsa block size
      */
-    bool validateStringLengthForRSA(const std::string &msg);
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
 public:
 

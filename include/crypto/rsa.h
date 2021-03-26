@@ -68,6 +68,15 @@ private:
      */
      bool generateRSAKey();
 
+     /**
+      * Validates the length of given message string with the RSA key size
+      *
+      * @param msg: message as std::string
+      * @param keysize: rsa key size  as int
+      * @return boolean
+      */
+    virtual bool validateStringLengthForRSA(const std::string &msg, const int &keysize) = 0;
+
 public:
 
     /**

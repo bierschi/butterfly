@@ -1,13 +1,59 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 class CryptoRSA {
-    String test
-    void initPaddingSize()
+    -_rsa: RSA*
+    -_pkey: EVP_PKEY*
+    -_keySize, _paddingSize: Int
+    -_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr: Char*
+
+    -initPaddingSize(): Void
+    -loadKeyFromFile(const std::string &filepath): Void
+    -loadKeyFromStr(const std::string &str): Void
+    -getOpenSSLError(): String
+    -generateRSAKey(): Boolean
+    -validateStringLengthForRSA(const std::string &msg, const int &keysize): Boolean
+
+    +CryptoRSA()
+    +CryptoRSA(int keySize)
+    +CryptoRSA(const std::string &key)
+    +getRSAKey(): RSA*
+    +getRSAKeySize(): Int
+    +getPaddingSize(): Int
+    +getEvpPkey(): EVP_PKEY*
+    +getEvpPkeySize(EVP_PKEY *key): Int
+    +getRSAPrivateKeyStr(): Char*
+    +getRSAPublicKeyStr(): Char*
+    +getPublicKeyStr(): Char*
+    +createRSAPrivateKeyFile(const std::string &filename):Boolean
+    +createRSAPublicKeyFile(const std::string &filename): Boolean
+    +createPublicKeyFile(const std::string &filename): Boolean
+    +getPkeyFromPrivateKeyFile(const std::string &filepath): EVP_PKEY*
+    +getPkeyFromPublicKeyFile(const std::string &filepath): EVP_PKEY*
+    +encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): Size_t
+    +decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): Size_t
 }
 
 class RSAEncryptor {
+    -_encryptedKey: String
+
+    -validateStringLengthForRSA(const std::string &msg, const int &keysize): Boolean
+
+    +RSAEncryptor(int keySize)
+    +RSAEncryptor(const std::string &key)
+    +getEncryptedKey(): String
+    +saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength): Void
+    +encrypt(EVP_PKEY *pkey, const std::string &msg): Boolean
 }
+
 class RSADecryptor {
+    -_decryptedKey: String
+    -validateStringLengthForRSA(const std::string &msg, const int &keysize): Boolean
+
+    +RSADecryptor()
+    +RSADecryptor(const std::string &key)
+    +getDecryptedKey(): String
+    +getBinKeyFileContents(const std::string &filepath): String
+    +decrypt(EVP_PKEY *pkey, const std::string &msg): Boolean
 }
 
 CryptoRSA <-- RSAEncryptor

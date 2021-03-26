@@ -4,26 +4,20 @@
 namespace butterfly {
 
 RSADecryptor::RSADecryptor() : CryptoRSA() {
-    LOG_TRACE("Create class RSADecryptor")
+    LOG_TRACE("Create class RSADecryptor as default constructor")
 }
 
 RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key) {
-    LOG_TRACE("Create class RSADecryptor")
+    LOG_TRACE("Create class RSADecryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
 }
 
-RSADecryptor::~RSADecryptor() {
-
-}
-
-int RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize) {
+bool RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize) {
     LOG_TRACE("Validating message length " << msg.length() << " with key size " << keysize);
 
-    if (msg.length() <= 0) {
-        return -1;
-    } else if (static_cast<int>(msg.length()) > keysize) {
-        return -2;
+    if (static_cast<int>(msg.length()) > keysize) {
+        return false;
     }
-    return 0;
+    return true;
 }
 
 EVP_PKEY* RSADecryptor::getEvpPkeyFromFile(const std::string &filepath) {
@@ -73,12 +67,16 @@ std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath) {
 
 bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg) {
 
-    int keysize = CryptoRSA::getEvpPkeySize(pkey);
-    int rc = validateStringLengthForRSA(msg, keysize);
-    if ( rc == -1 ) {
-        LOG_ERROR("Encrypted message string length is empty!")
+    // first check the message size
+    if ( msg.empty() ) {
+        LOG_ERROR("Can not decrypt message because it is empty!")
         return false;
-    } else if (rc == -2 ) {
+    }
+
+    int keysize = CryptoRSA::getEvpPkeySize(pkey);
+
+    // validate the string length with block size length
+    if ( !validateStringLengthForRSA(msg, keysize) ) {
         LOG_ERROR("Encrypted message string to big for RSA key length!")
         return false;
     }
@@ -88,7 +86,6 @@ bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg) {
     CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(msg.c_str())), static_cast<size_t >(keysize), plaintextKey);
 
     _decryptedKey = reinterpret_cast<char*>(plaintextKey);
-    //LOG_INFO("Decrypted plaintext key: " << _decryptedKey);
 
     return true;
 }
