@@ -13,8 +13,8 @@ namespace butterfly {
 class Decryptor {
 
 private:
-    std::unique_ptr<RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
     std::string _decryptedCPrivateRSA, _decryptedAESKey;
+    std::unique_ptr<RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
 
 public:
     /**

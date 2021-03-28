@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+package hybrid {
+
+class Encryptor {
+    - _keySize: Int
+    - _rsaEncryptorCPrivateRSA: RSAEncryptor
+    - _rsaEncryptorAESKey: RSAEncryptor
+}
+
+class Decryptor {
+
+    -_rsaDecryptorAESKey: RSADecryptor
+    -_rsaDecryptorCPrivateRSA: RSADecryptor
+}
+
+}
+@enduml

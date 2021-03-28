@@ -1,11 +1,19 @@
 @startuml
 'https://plantuml.com/sequence-diagram
+package AES #DDDDDD {
 
-autonumber
+class CryptoAES {
+}
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+class AESEncryptor {
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+}
+
+class AESDecryptor {
+
+}
+
+CryptoAES <-- AESEncryptor
+CryptoAES <-- AESDecryptor
+}
 @enduml
