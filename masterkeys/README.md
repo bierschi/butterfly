@@ -47,5 +47,3 @@ Create private master key
 
 Create public master key
 <pre><code>openssl rsa -in SPrivateRSA.pem -pubout -out SPublic.pem</code></pre>
-
-<

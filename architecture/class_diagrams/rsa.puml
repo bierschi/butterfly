@@ -1,5 +1,7 @@
 @startuml
 'https://plantuml.com/sequence-diagram
+package RSA #DDDDDD {
+
 class CryptoRSA {
     -_rsa: RSA*
     -_pkey: EVP_PKEY*
@@ -58,4 +60,6 @@ class RSADecryptor {
 
 CryptoRSA <-- RSAEncryptor
 CryptoRSA <-- RSADecryptor
+
+}
 @enduml

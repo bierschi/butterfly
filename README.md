@@ -1,12 +1,11 @@
 # Butterfly
-Butterfly is a ransomware that makes you cry
+Butterfly is a cryptographic ransomware that includes the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption)
-- Supports multiple operating systems
+- Supports multiple operating systems (Linux, Windows, MacOS)
 - Offline Encryption
 - Supports over .. file extensions
 - Connection to the TOR network
-- Python Webserver
 - Bitcoin payments
 
 
