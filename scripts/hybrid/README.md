@@ -1,38 +1,55 @@
 ## Hybrid (RSA & AES) Encryption and Decryption
 
-Get RSA Public Key
-<pre><cocde>
-openssl rsa -in id_rsa -outform pem > id_rsa.pem
-openssl rsa -in id_rsa -pubout -outform pem > id_rsa.pub.pem
-</cocde></pre>
+### Encryption
+Generate private master key
+<pre><code>openssl genrsa -out SPrivateRSA.pem 13768</code></pre>
 
-Generate random key
-<pre><cocde>
-openssl rand -base64 32 > key.bin
-</cocde></pre>
+Generate public master key
+<pre><code>openssl rsa -in SPrivateRSA.pem -pubout -out SPublic.pem</code></pre>
 
-Encrypt the key
-<pre><cocde>
-openssl rsautl -encrypt -inkey id_rsa.pub.pem -pubin -in key.bin -out key.bin.enc
-</cocde></pre>
+Generate RSA private key
+<pre><code>openssl genrsa -out CPrivateRSA.pem 2048</code></pre>
 
-Actually encrypt the large data file
-<pre><cocde>
-openssl enc -aes-256-cbc -salt -in SECRET_FILE -out SECRET_FILE.enc -pass file:./key.bin
-</cocde></pre>
+Generate public key from RSA private key
+<pre><code>openssl rsa -in CPrivateRSA.pem -pubout -out CPublic.pem</code></pre>
 
-----------SEND DATA--------------
+Encrypt the CPrivateRSA.pem with the embedded SPublic.pem
+<pre><code>openssl rsautl -encrypt -oaep -inkey SPublic.pem -pubin -in CPrivateRSA.pem -out CPrivateRSA.bin</code></pre>
 
-Decrypt the random key
-<pre><cocde>
-openssl rsautl -decrypt -inkey id_rsa.pem -in key.bin.enc -out key.bin
-</cocde></pre>
+Generate random AES key
+<pre><code>
+openssl rand -base64 128 > AESKey.txt
+</code></pre>
 
-Decrypt large data file with the decrypted random key
-<pre><cocde>
-openssl enc -d -aes-256-cbc -in SECRET_FILE.enc -out SECRET_FILE -pass file:./key.bin
-</cocde></pre>
+Encrypt 5357083.pdf with AES-256-CBC
+<pre><code>openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -kfile AESKey.txt -in ../../docs/5357083.pdf -out 5357083.bin</code></pre>
 
+Encrypt AESKey.txt with CPublic.pem
+<pre><code>openssl rsautl -encrypt -oaep -inkey CPublic.pem -pubin -in AESKey.txt -out AESKey.bin</code></pre>
+
+
+### Decryption
+
+Decrypt the CPrivateRSA.bin with the SPrivateRSA.pem file
+<pre><code>openssl rsautl -decrypt -oaep -inkey SPrivateRSA.pem -in CPrivateRSA.bin -out CPrivateRSA.pem.dec</code></pre>
+
+Decrypt AESKey.bin with CPrivateRSA.pem.dec
+<pre><code>openssl rsautl -decrypt -oaep -inkey CPrivateRSA.pem.dec -in AESKey.bin -out AESKey.txt.dec</code></pre>
+
+Decrypt 5357083.bin with AES-256-CBC
+<pre><code>openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -d -kfile AESKey.txt.dec -in 5357083.bin -out 5357083.pdf.dec</code></pre>
+
+
+### Validation
+
+Check md5sum from CPrivateRSA.pem and CPrivateRSA.pem.dec
+<pre><code>md5sum CPrivateRSA.pem CPrivateRSA.pem.dec</code></pre>
+
+Check md5sum from AESKey.txt and AESKey.txt.dec
+<pre><code>md5sum AESKey.txt AESKey.txt.dec</code></pre>
+
+Check md5sum from 5357083.pdf and 5357083.pdf.dec
+<pre><code>md5sum ../../docs/5357083.pdf 5357083.pdf.dec</code></pre>
 
 
 ## Block Diagram
