@@ -32,44 +32,53 @@ BOOST_LOG_GLOBAL_LOGGER_CTOR_ARGS(dataLogger,
                                   (boost::log::keywords::channel = "DATALF"));
 
 // Custom formatter factory to add timestamp format support in config ini file.
-class TimestampFormatterFactory : public boost::log::basic_formatter_factory<char, boost::posix_time::ptime> {
+class TimestampFormatterFactory : public boost::log::basic_formatter_factory<char, boost::posix_time::ptime>
+{
 
 public:
-    formatter_type create_formatter(const boost::log::attribute_name &name, const args_map &args) {
+    formatter_type create_formatter(const boost::log::attribute_name &name, const args_map &args)
+    {
         args_map::const_iterator it = args.find("format");
-        if (it != args.end()) {
+        if (it != args.end())
+        {
             return boost::log::expressions::stream
-            << boost::log::expressions::format_date_time<boost::posix_time::ptime>(
-                    boost::log::expressions::attr<boost::posix_time::ptime>(name), it->second);
-        } else {
+                    << boost::log::expressions::format_date_time<boost::posix_time::ptime>(
+                            boost::log::expressions::attr<boost::posix_time::ptime>(name), it->second);
+        } else
+        {
             return boost::log::expressions::stream << boost::log::expressions::attr<boost::posix_time::ptime>(name);
         }
     }
 };
 
 // Custom formatter factory to add uptime format support in config ini file.
-class UptimeFormatterFactory : public boost::log::basic_formatter_factory<char, boost::posix_time::time_duration> {
+class UptimeFormatterFactory : public boost::log::basic_formatter_factory<char, boost::posix_time::time_duration>
+{
 
 public:
-    formatter_type create_formatter(const boost::log::attribute_name& name, const args_map& args)
+    formatter_type create_formatter(const boost::log::attribute_name &name, const args_map &args)
     {
         args_map::const_iterator it = args.find("format");
-        if (it != args.end()) {
+        if (it != args.end())
+        {
             return boost::log::expressions::stream
                     << boost::log::expressions::format_date_time<boost::posix_time::time_duration>(
                             boost::log::expressions::attr<boost::posix_time::time_duration>(name), it->second);
-        } else {
+        } else
+        {
             return boost::log::expressions::stream
                     << boost::log::expressions::attr<boost::posix_time::time_duration>(name);
         }
     }
 };
 
-void Logger::init() {
+void Logger::init()
+{
     initFromConfig("");
 }
 
-void Logger::initFromConfig(const std::string &configFileName) {
+void Logger::initFromConfig(const std::string &configFileName)
+{
 
     boost::log::core::get()->set_exception_handler(boost::log::make_exception_suppressor());
 
@@ -86,17 +95,23 @@ void Logger::initFromConfig(const std::string &configFileName) {
     // Allows %Uptime(format=\"%O:%M:%S.%f\")% to be used in ini config file for property Format.
     boost::log::register_formatter_factory("Uptime", boost::make_shared<UptimeFormatterFactory>());
 
-    if (configFileName.empty()) {
+    if (configFileName.empty())
+    {
         //config file empty. Log only to console
-    } else {
+    } else
+    {
         std::ifstream ifs(configFileName);
-        if (!ifs.is_open()) {
+        if (!ifs.is_open())
+        {
             LOG_WARN("Unable to open logging config file: " << configFileName);
-        } else {
+        } else
+        {
 
-            try {
+            try
+            {
                 boost::log::init_from_stream(ifs);
-            } catch (std::exception &e) {
+            } catch (std::exception &e)
+            {
                 std::string err = "Caught exception initializing boost logging: ";
                 err += e.what();
                 std::cerr << "ERROR: " << err << std::endl;
@@ -107,7 +122,8 @@ void Logger::initFromConfig(const std::string &configFileName) {
     }
 }
 
-void Logger::addDataFileLog(const std::string &logFileName) {
+void Logger::addDataFileLog(const std::string &logFileName)
+{
 
     // create a text file sink
     boost::shared_ptr<boost::log::sinks::text_ostream_backend> backend(new boost::log::sinks::text_ostream_backend());
@@ -137,6 +153,7 @@ void Logger::addDataFileLog(const std::string &logFileName) {
     boost::log::core::get()->add_sink(sink);
 }
 
-void Logger::disable() {
+void Logger::disable()
+{
     boost::log::core::get()->set_logging_enabled(false);
 }

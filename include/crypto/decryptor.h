@@ -5,12 +5,14 @@
 #include "crypto/rsaDecryptor.h"
 #include "params.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
 /**
  * Class Decryptor to decrypt the AES and the CPrivateRSA key
  */
-class Decryptor {
+class Decryptor
+{
 
 private:
     std::string _decryptedCPrivateRSA, _decryptedAESKey;
@@ -28,6 +30,7 @@ public:
     ~Decryptor();
 
     std::string decryptCPrivateRSA(const std::string &keyFromServer);
+
     std::string decryptAESKey(const std::string &decryptedCPrivateRSA);
 };
 

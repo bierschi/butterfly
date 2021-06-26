@@ -7,9 +7,11 @@
 #include "app.h"
 #include "logger.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
-class ArgumentParser {
+class ArgumentParser
+{
 
 private:
     std::string _help, _version, _options, _usage;
@@ -26,11 +28,14 @@ private:
 
 public:
 
-    struct Arguments {
+    struct Arguments
+    {
         std::string _config;
         std::string _dir;
         const std::string _version;
-        Arguments(): _config(""), _dir(""), _version(PROJECT_VER) {}
+
+        Arguments() : _config(""), _dir(""), _version(PROJECT_VER)
+        {}
     };
 
     /**
@@ -41,7 +46,7 @@ public:
     /**
      * ArgumentParser Destructor
      */
-    ~ArgumentParser();
+    ~ArgumentParser() = default;
 
     /**
      * Parses the given application arguments

@@ -8,26 +8,9 @@ Butterfly is a cryptographic ransomware that includes the following features
 - Connection to the TOR network
 - Bitcoin payments
 
+## Dependencies
 
-## Prerequisites
-
-Ensure that git and cmake are installed
-<pre><code>
-sudo apt-get install git cmake
-</code></pre>
-
-Download and install GTest
-<pre><code>
-sudo apt-get install libgtest-dev
-cd /usr/src/gtest
-sudo cmake CMakeLists.txt
-sudo make
-
-#copy or symlink libgtest.a and libgtest_main.a to your /usr/lib folder
-sudo cp *.a /usr/lib
-</code></pre>
-
-Download and install boost libraries
+Install boost libraries
 <pre><code>
 sudo apt-get install -y libboost-filesystem-dev libboost-regex-dev libboost-log-dev
 </code></pre>
@@ -43,6 +26,11 @@ cmake ..
 make
 </code></pre>
 
+CMake Arguments 
+<pre><code>
+-DUNITTESTS=ON   # Enables the Unit Tests
+</code></pre>
+
 ## Usage and Examples
 
 Print the available arguments for Butterfly
@@ -50,13 +38,22 @@ Print the available arguments for Butterfly
 butterfly --help
 </code></pre>
 
+## Unit Tests
+
+Install GTest
+<pre><code>
+sudo apt-get install libgtest-dev
+cd /usr/src/gtest
+sudo cmake CMakeLists.txt
+sudo make
+
+#copy or symlink libgtest.a and libgtest_main.a to your /usr/lib folder
+sudo cp *.a /usr/lib
+</code></pre>
 
 ## Logs
 
 logs can be found in `/var/log/ransomware`
-
-## Troubleshooting
-
 
 ## Changelog
 All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/ransomware/CHANGELOG.rst)
