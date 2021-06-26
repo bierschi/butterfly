@@ -2,7 +2,8 @@
 #ifndef BUTTERFLY_SERVERPUBLICKEY_H
 #define BUTTERFLY_SERVERPUBLICKEY_H
 
-namespace butterfly {
+namespace butterfly
+{
 
 const std::string SPUBLIC_PEM = "-----BEGIN PUBLIC KEY-----\n"
                                 "MIIG2zANBgkqhkiG9w0BAQEFAAOCBsgAMIIGwwKCBroAxQFe2Pr4j4r3qO/XXjGO\n"
