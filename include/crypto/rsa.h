@@ -20,12 +20,14 @@
 // Keysize of 2048
 // (2048/8) - 42 = 214 Bytes
 
-namespace butterfly {
+namespace butterfly
+{
 
 /**
  * Class CryptoRSA to provide low level RSA cryptography tasks
  */
-class CryptoRSA {
+class CryptoRSA
+{
 
 private:
     RSA *_rsa;
@@ -66,15 +68,15 @@ private:
      *
      * @return: boolean, true if generation was successful else false
      */
-     bool generateRSAKey();
+    bool generateRSAKey();
 
-     /**
-      * Validates the length of given message string with the RSA key size
-      *
-      * @param msg: message as std::string
-      * @param keysize: rsa key size  as int
-      * @return boolean
-      */
+    /**
+     * Validates the length of given message string with the RSA key size
+     *
+     * @param msg: message as std::string
+     * @param keysize: rsa key size  as int
+     * @return boolean
+     */
     virtual bool validateStringLengthForRSA(const std::string &msg, const int &keysize) = 0;
 
 public:
@@ -108,28 +110,31 @@ public:
      *
      * @return RSA*
      */
-    inline RSA* getRSAKey() { return _rsa; }
+    inline RSA *getRSAKey()
+    { return _rsa; }
 
     /**
      * Get the RSA size in bytes. RSA key size => (4096/8) = 512
      *
      * @return int: size in bytes
      */
-    inline int getRSAKeySize() { return RSA_size(_rsa); }
+    inline int getRSAKeySize()
+    { return RSA_size(_rsa); }
 
     /**
      * Get the padding size
      *
      * @return int: padding size
      */
-    inline int getPaddingSize() const { return _paddingSize; }
+    inline int getPaddingSize() const
+    { return _paddingSize; }
 
     /**
      * Get the EVP_PKEY from the rsa keypair
      *
      * @return EVP_PKEY
      */
-     EVP_PKEY* getEvpPkey();
+    EVP_PKEY *getEvpPkey();
 
     /**
      * Get the EVP_PKEY size
@@ -137,34 +142,34 @@ public:
      * @param key: EVP_PKEY
      * @return size as int
      */
-    inline static int getEvpPkeySize(EVP_PKEY *key) { return EVP_PKEY_size(key); }
+    inline static int getEvpPkeySize(EVP_PKEY *key)
+    { return EVP_PKEY_size(key); }
 
     /**
      * Get the RSA private key string. Starts with -----BEGIN RSA PRIVATE KEY-----
      *
      * @return rsa private key string as char*
      */
-    char* getRSAPrivateKeyStr();
+    char *getRSAPrivateKeyStr();
 
     /**
     * Get the RSA public key string. Starts with -----BEGIN RSA PUBLIC KEY-----
     *
     * @return rsa public key string as char*
     */
-    char* getRSAPublicKeyStr();
+    char *getRSAPublicKeyStr();
 
     /**
      * Get the public key string. Starts with -----BEGIN PUBLIC KEY-----
      *
      * @return public key string as char*
      */
-    char* getPublicKeyStr();
+    char *getPublicKeyStr();
 
     /**
      * Creates the RSA private key file. Starts with -----BEGIN RSA PRIVATE KEY-----
      *
      * @param filename: std::string const reference
-     *
      * @return boolean, true if creation was successful
      */
     bool createRSAPrivateKeyFile(const std::string &filename);
@@ -173,7 +178,6 @@ public:
      * Creates the RSA public key file. Starts with -----BEGIN RSA PUBLIC KEY-----
      *
      * @param filename: std::string const reference
-     *
      * @return boolean, true if creation was successful
      */
     bool createRSAPublicKeyFile(const std::string &filename);
@@ -182,7 +186,6 @@ public:
      * Creates the public key file. Starts with -----BEGIN PUBLIC KEY-----
      *
      * @param filename: std::string const reference
-     *
      * @return boolean, true if creation was successful
      */
     bool createPublicKeyFile(const std::string &filename);
@@ -191,19 +194,17 @@ public:
      * Get the EVP_PKEY from RSA private key file
      *
      * @param filepath: path to private key file
-     *
      * @return EVP_PKEY from private key file
      */
-    static EVP_PKEY* getPkeyFromPrivateKeyFile(const std::string &filepath);
+    static EVP_PKEY *getPkeyFromPrivateKeyFile(const std::string &filepath);
 
     /**
     * Get the EVP_PKEY from public key file
      *
     * @param filepath: path to public key file
-     *
     * @return EVP_PKEY from public key file
     */
-    static EVP_PKEY* getPkeyFromPublicKeyFile(const std::string &filepath);
+    static EVP_PKEY *getPkeyFromPublicKeyFile(const std::string &filepath);
 
     /**
      * Encrypt the plaintext with the EVP PKEY
@@ -212,7 +213,6 @@ public:
      * @param plaintext: plaintext to encrypt
      * @param plaintextLength: length of the plaintext
      * @param ciphertext: encrypted ciphertext
-     *
      * @return ciphertext length
      */
     static size_t encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext);
@@ -224,10 +224,9 @@ public:
      * @param ciphertext: ciphertext to decrypt
      * @param ciphertextLength: length of the ciphertext
      * @param plaintext: decrypted plaintext
-     *
      * @return plaintext length
      */
-    static size_t decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext);
+    static size_t decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext);
 
 };
 

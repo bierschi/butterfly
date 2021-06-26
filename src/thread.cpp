@@ -1,26 +1,32 @@
 #include "thread.h"
 
-Thread::Thread() {
+Thread::Thread()
+{
 
 }
 
-Thread::~Thread() {
+Thread::~Thread()
+{
 
 }
 
-void Thread::start() {
+void Thread::start()
+{
     pthread_create(&_self, NULL, executorFunc, this);
 }
 
-void Thread::join() {
+void Thread::join()
+{
     pthread_join(_self, NULL);
 }
 
-void Thread::detach() {
+void Thread::detach()
+{
     pthread_detach(_self);
 }
 
-void* Thread::executorFunc(void *exec) {
-    ((Thread*)exec)->execute();
+void *Thread::executorFunc(void *exec)
+{
+    ((Thread *) exec)->execute();
     return NULL;
 }

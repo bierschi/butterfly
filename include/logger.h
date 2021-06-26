@@ -9,6 +9,7 @@
 #include <string>
 
 BOOST_LOG_GLOBAL_LOGGER(sysLogger, boost::log::sources::severity_channel_logger_mt<boost::log::trivial::severity_level>);
+
 BOOST_LOG_GLOBAL_LOGGER(dataLogger, boost::log::sources::severity_channel_logger_mt<boost::log::trivial::severity_level>);
 
 #define LOG_LOG_LOCATION(LOGGER, LEVEL, ARG)            \
@@ -34,9 +35,10 @@ BOOST_LOG_GLOBAL_LOGGER(dataLogger, boost::log::sources::severity_channel_logger
 #define LOG_DATA_FATAL(ARG) BOOST_LOG_SEV(dataLogger::get(), boost::log::trivial::fatal) << ARG
 
 /**
- * class Logger
+ * class Logger to log important statements to console or file
  */
-class Logger {
+class Logger
+{
 
 public:
 
@@ -63,4 +65,5 @@ public:
     static void disable();
 
 };
+
 #endif //BUTTERFLY_LOGGER_H

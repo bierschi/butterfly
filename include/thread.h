@@ -6,12 +6,14 @@
 /**
  * Base Class Thread to provide basic methods for handling thread execution
  */
-class Thread {
+class Thread
+{
 
 private:
     pthread_t _self;
 
 public:
+
     /**
      * Thread Constructor
      */
@@ -51,6 +53,5 @@ private:
     static void *executorFunc(void *exec);
 
 };
-
 
 #endif //BUTTERFLY_THREAD_H

@@ -6,12 +6,14 @@
 #include "crypto/serverPublicKey.h"
 #include "params.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
 /**
  * Class Encryptor to encrypt the AES and the CPrivateRSA key
  */
-class Encryptor {
+class Encryptor
+{
 
 private:
     int _keySize;
@@ -22,7 +24,7 @@ public:
     /**
      * Constructor Encryptor
      */
-    explicit Encryptor(int keySize=2048);
+    explicit Encryptor(int keySize = 2048);
 
     /**
      * Destructor Encryptor

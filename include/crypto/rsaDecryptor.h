@@ -4,12 +4,14 @@
 
 #include "rsa.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
 /**
  * Class RSADecryptor to provide methods for simple rsa decryption
  */
-class RSADecryptor : public CryptoRSA {
+class RSADecryptor : public CryptoRSA
+{
 
 private:
     std::string _decryptedKey;
@@ -36,14 +38,15 @@ public:
     /**
      * Destructor RSADecryptor
      */
-    ~RSADecryptor() = default;
+    virtual ~RSADecryptor() = default;
 
     /**
      * Get the decrypted key
      *
      * @return std::string decrypted key
      */
-    inline std::string getDecryptedKey() const { return _decryptedKey; }
+    inline std::string getDecryptedKey() const
+    { return _decryptedKey; }
 
     /**
      * Get the pkey from given rsa file
@@ -51,7 +54,7 @@ public:
      * @param filepath: path to the rsa file
      * @return EVP_PKEY
      */
-    static EVP_PKEY* getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
+    static EVP_PKEY *getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
 
     /**
      * Get the binary content from the encrypted key file
@@ -70,7 +73,6 @@ public:
      */
     bool decrypt(EVP_PKEY *pkey, const std::string &msg);
 };
-
 
 } // namespace butterfly
 

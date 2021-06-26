@@ -4,12 +4,14 @@
 
 #include "rsa.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
 /**
  * Class RSAEncryptor to provide methods for simple rsa encryption
  */
-class RSAEncryptor : public CryptoRSA {
+class RSAEncryptor : public CryptoRSA
+{
 
 private:
     std::string _encryptedKey;
@@ -38,14 +40,15 @@ public:
     /**
      * Destructor RSAEncryptor
      */
-    ~RSAEncryptor() = default;
+    virtual ~RSAEncryptor() = default;
 
     /**
      * Get the encrypted key
      *
      * @return: encrypted key as std::string
      */
-    inline std::string getEncryptedKey() const { return _encryptedKey; }
+    inline std::string getEncryptedKey() const
+    { return _encryptedKey; }
 
     /**
      * Saves the encrypted key file

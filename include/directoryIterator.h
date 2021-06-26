@@ -6,12 +6,14 @@
 
 #include "logger.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
 /**
  * Class DirectoryIterator to iterate recursively through directories
  */
-class DirectoryIterator {
+class DirectoryIterator
+{
 
 private:
 
@@ -77,4 +79,5 @@ public:
 };
 
 } // namespace butterfly
+
 #endif //BUTTERFLY_DIRECTORYITERATOR_H

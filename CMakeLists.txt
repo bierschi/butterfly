@@ -16,8 +16,8 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 # find required Boost, OpenSSL and Threads packages
-ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
-find_package(Boost 1.45.0 COMPONENTS filesystem regex log REQUIRED)
+#ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+find_package(Boost 1.45.0 COMPONENTS filesystem regex log log_setup REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(Threads)
 
@@ -39,6 +39,6 @@ add_subdirectory(test)
 # build the executable
 if(Boost_FOUND)
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
-    target_link_libraries(${CMAKE_PROJECT_NAME} Boost::filesystem Boost::regex Boost::log OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
 endif()
 
