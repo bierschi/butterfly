@@ -50,6 +50,6 @@ if(Boost_FOUND)
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
     target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
 else()
-    message("abc")
+    message("Bosst Libraries not found!")
 endif()
 
