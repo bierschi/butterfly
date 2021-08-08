@@ -4,10 +4,11 @@
 
 #include "logger.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
-class CryptoAES {
-
+class CryptoAES
+{
 
 private:
 
