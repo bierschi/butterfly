@@ -21,7 +21,7 @@ Build butterfly
 <pre><code>
 git clone https://github.com/bierschi/ransomware.git
 cd ransomware
-mkdir build
+mkdir build && cd build
 cmake ..
 make
 </code></pre>
@@ -57,3 +57,7 @@ logs can be found in `/var/log/ransomware`
 
 ## Changelog
 All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/ransomware/CHANGELOG.rst)
+
+## License
+Copyright (c) 2021 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/ransomware/blob/master/LICENSE)
+for details
