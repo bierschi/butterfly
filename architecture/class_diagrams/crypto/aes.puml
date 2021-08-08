@@ -1,15 +1,19 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-package AES #DDDDDD {
+package AES #DDDDDD
+{
 
-class CryptoAES {
+class CryptoAES
+{
 }
 
-class AESEncryptor {
+class AESEncryptor
+{
 
 }
 
-class AESDecryptor {
+class AESDecryptor
+{
 
 }
 

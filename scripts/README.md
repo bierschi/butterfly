@@ -1,2 +1,2 @@
 # Scripts 
-Scripts to manully work through the encryption/decryption process
+Scripts to work manully through the encryption/decryption process (AES, RSA, Hybrid)
