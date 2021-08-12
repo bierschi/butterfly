@@ -1,15 +1,17 @@
 
 #include "crypto/aes.h"
 
-namespace butterfly {
+namespace butterfly
+{
 
-CryptoAES::CryptoAES() {
-
-}
-
-CryptoAES::~CryptoAES() {
+CryptoAES::CryptoAES()
+{
 
 }
 
+CryptoAES::~CryptoAES()
+{
+
+}
 
 } // namespace butterfly

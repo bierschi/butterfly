@@ -1,8 +1,10 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-package RSA #DDDDDD {
+package RSA #DDDDDD
+{
 
-class CryptoRSA {
+class CryptoRSA
+{
     -_rsa: RSA*
     -_pkey: EVP_PKEY*
     -_keySize, _paddingSize: Int
@@ -35,7 +37,8 @@ class CryptoRSA {
     +decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): Size_t
 }
 
-class RSAEncryptor {
+class RSAEncryptor
+{
     -_encryptedKey: String
 
     -validateStringLengthForRSA(const std::string &msg, const int &keysize): Boolean
@@ -47,7 +50,8 @@ class RSAEncryptor {
     +encrypt(EVP_PKEY *pkey, const std::string &msg): Boolean
 }
 
-class RSADecryptor {
+class RSADecryptor
+{
     -_decryptedKey: String
     -validateStringLengthForRSA(const std::string &msg, const int &keysize): Boolean
 
