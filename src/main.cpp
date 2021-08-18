@@ -6,6 +6,9 @@
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
 
+#include "crypto/aesEncryptor.h"
+#include "crypto/aesDecryptor.h"
+
 int main(int argc, char *argv[])
 {
 
@@ -16,6 +19,7 @@ int main(int argc, char *argv[])
     LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
+    /*
     // start encryption
     std::unique_ptr<butterfly::Encryptor> encryptor(new butterfly::Encryptor(2048));
     encryptor->encryptCPrivateRSA();
@@ -29,7 +33,20 @@ int main(int argc, char *argv[])
     std::string cprivate = decryptor->decryptCPrivateRSA(
             "/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
     decryptor->decryptAESKey(cprivate);
+    */
+
+    /*
+    std::unique_ptr<butterfly::AESEncryptor> aesEncryptor(new butterfly::AESEncryptor());
+    //aesEncryptor->generateAESKey();
+    std::string s = "/home/christian/projects/butterfly/bin/test.pdf";
+    aesEncryptor->encryptFile(&s[0]);
+    */
 
 
-    return 0;
+    std::unique_ptr<butterfly::AESDecryptor> aesDecryptor(new butterfly::AESDecryptor());
+    std::string s = "/home/christian/projects/butterfly/bin/test.pdf.enc";
+    std::string sa = "test.pdf.dec";
+    aesDecryptor->decryptFile(&sa[0], &s[0]);
+
+     return 0;
 }

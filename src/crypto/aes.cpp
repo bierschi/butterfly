@@ -4,14 +4,191 @@
 namespace butterfly
 {
 
-CryptoAES::CryptoAES()
+CryptoAES::CryptoAES()//: _aesKey(nullptr), _aesIv(nullptr)
 {
+    _aesEncryptContext = EVP_CIPHER_CTX_new();
+    _aesDecryptContext = EVP_CIPHER_CTX_new();
+
+    EVP_CIPHER_CTX_init(_aesEncryptContext);
+    EVP_CIPHER_CTX_init(_aesDecryptContext);
+
+    EVP_CipherInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, NULL, NULL, 1);
+
+    _aesKeyLength = EVP_CIPHER_CTX_key_length(_aesEncryptContext);
+    _aesIvLength = EVP_CIPHER_CTX_iv_length(_aesEncryptContext);
 
 }
 
 CryptoAES::~CryptoAES()
 {
+    EVP_CIPHER_CTX_free(_aesEncryptContext);
+    EVP_CIPHER_CTX_free(_aesDecryptContext);
+}
 
+bool CryptoAES::generateAESKey()
+{
+    _aesKey = (unsigned char*)malloc(static_cast<size_t>(_aesKeyLength));
+    _aesIv = (unsigned char*)malloc(static_cast<size_t>(_aesIvLength));
+
+    if(RAND_bytes(_aesKey, _aesKeyLength) == 0) {
+        return false;
+    }
+
+    if(RAND_bytes(_aesIv, _aesIvLength) == 0) {
+        return false;
+    }
+
+    return true;
+}
+
+void CryptoAES::setAESKey(const std::string &aesKey)
+{
+    _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
+}
+
+void CryptoAES::setAESIv(const std::string &aesIv)
+{
+    _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
+}
+
+std::string CryptoAES::getAESKey() const
+{
+    std::string str(reinterpret_cast<const char *>(_aesKey));
+    return str;
+}
+
+std::string CryptoAES::getAESIv() const
+{
+    std::string str(reinterpret_cast<const char *>(_aesIv));
+    return str;
+}
+
+size_t CryptoAES::encrypt(const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage)
+{
+    if (_aesKey == nullptr || _aesIv == nullptr)
+    {
+        LOG_ERROR("ER")
+        return 0;
+    }
+
+    size_t blockLength = 0;
+    size_t encryptedMessageLength = 0;
+
+    *encryptedMessage = (unsigned char*)malloc(messageLength + AES_BLOCK_SIZE);
+
+    if(!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv)) {
+        return 0;
+    }
+
+    if(!EVP_EncryptUpdate(_aesEncryptContext, *encryptedMessage, (int*)&blockLength, (unsigned char*)message, static_cast<int>(messageLength))) {
+        return 0;
+    }
+
+    encryptedMessageLength += blockLength;
+
+    if(!EVP_EncryptFinal_ex(_aesEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength)) {
+        return 0;
+    }
+
+    return encryptedMessageLength + blockLength;
+}
+
+size_t CryptoAES::decrypt(unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char **decryptedMessage)
+{
+    if (_aesKey == nullptr || _aesIv == nullptr)
+    {
+        LOG_ERROR("ER")
+        return 0;
+    }
+
+    size_t decryptedMessageLength = 0;
+    size_t blockLength = 0;
+
+    *decryptedMessage = (unsigned char*)malloc(encryptedMessageLength);
+
+    if(!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv)) {
+        return 0;
+    }
+
+    if(!EVP_DecryptUpdate(_aesDecryptContext, (unsigned char*)*decryptedMessage, (int*)&blockLength, encryptedMessage, (int)encryptedMessageLength)) {
+        return 0;
+    }
+
+    decryptedMessageLength += blockLength;
+
+    if(!EVP_DecryptFinal_ex(_aesDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength)) {
+        return 0;
+    }
+
+    decryptedMessageLength += blockLength;
+
+    return decryptedMessageLength;
+}
+
+
+int CryptoAES::readFile(char *filename, unsigned char **file)
+{
+    FILE *fd = fopen(filename, "rb");
+    if(fd == NULL) {
+        fprintf(stderr, "Failed to open file: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    // Determine size of the file
+    fseek(fd, 0, SEEK_END);
+    size_t fileLength = static_cast<size_t>(ftell(fd));
+    fseek(fd, 0, SEEK_SET);
+
+    // Allocate space for the file
+    *file = (unsigned char*)malloc(fileLength);
+    if(*file == NULL) {
+        fprintf(stderr, "Failed to allocate memory\n");
+        exit(1);
+    }
+
+    // Read the file into the buffer
+    size_t bytesRead = fread(*file, 1, fileLength, fd);
+
+    if(bytesRead != fileLength) {
+        fprintf(stderr, "Error reading file\n");
+        exit(1);
+    }
+
+    fclose(fd);
+
+    return static_cast<int>(fileLength);
+}
+
+
+void CryptoAES::writeFile(char *filename, unsigned char *file, size_t fileLength)
+{
+    FILE *fd = fopen(filename, "wb");
+    if(fd == NULL) {
+        fprintf(stderr, "Failed to open file: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    size_t bytesWritten = fwrite(file, 1, fileLength, fd);
+
+    if(bytesWritten != fileLength) {
+        fprintf(stderr, "Failed to write file\n");
+        exit(1);
+    }
+
+    fclose(fd);
+}
+
+
+char* CryptoAES::appendToString(char *string, char *suffix) {
+    char *appenedString = (char*)malloc(strlen(string) + strlen(suffix) + 1);
+
+    if(appenedString == NULL) {
+        fprintf(stderr, "Failed to allocate memory\n");
+        exit(1);
+    }
+
+    sprintf(appenedString, "%s%s", string, suffix);
+    return appenedString;
 }
 
 } // namespace butterfly
