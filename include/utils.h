@@ -25,6 +25,12 @@ inline long getFileSize(const std::string &filepath)
     return rc == 0 ? stat_buf.st_size : -1;
 }
 
+/**
+ * Read a binary file
+ *
+ * @param filepath: path to the file
+ * @return content as std::string
+ */
 inline std::string readBinFile(const std::string &filepath)
 {
     std::ifstream in(filepath, std::ios::in | std::ios::binary);
@@ -43,16 +49,23 @@ inline std::string readBinFile(const std::string &filepath)
     }
 }
 
-inline void writeBinFile(const std::string &filename, const char* content, long fileLength)
+/**
+ * Write to a binary file
+ *
+ * @param filepath: path to the file
+ * @param content: content to write to file
+ * @param contentLength: length of the content
+ */
+inline void writeBinFile(const std::string &filepath, const char* content, long contentLength)
 {
 
-    std::fstream out(filename, std::ios::out | std::ios::binary);
+    std::fstream out(filepath, std::ios::out | std::ios::binary);
     if (out.is_open())
     {
-        out.write(content, fileLength);
+        out.write(content, contentLength);
     } else
     {
-        LOG_ERROR("Failed to open file " << filename);
+        LOG_ERROR("Failed to open file " << filepath);
     }
 }
 
