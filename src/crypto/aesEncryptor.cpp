@@ -28,9 +28,9 @@ void AESEncryptor::encryptFile(const std::string &filename)
     LOG_TRACE(fileData.length() << " bytes to encrypt for file " << filename);
 
     unsigned char *encryptedFile;
-    long encryptedFileLength = CryptoAES::encrypt(reinterpret_cast<const unsigned char *>(fileData.c_str()), fileData.length(), &encryptedFile);
+    size_t encryptedFileLength = CryptoAES::encrypt(reinterpret_cast<const unsigned char *>(fileData.c_str()), fileData.length(), &encryptedFile);
 
-    if (encryptedFileLength == -1)
+    if (encryptedFileLength == 0)
     {
         LOG_TRACE("AES Encryption failed with file " << filename);
         throw AESEncryptionException("AES Encryption failed with file " + filename);
@@ -39,7 +39,7 @@ void AESEncryptor::encryptFile(const std::string &filename)
     LOG_TRACE("Encrypted successfully" << encryptedFileLength << " bytes from file " << filename);
 
     std::string outFile = filename + butterfly::encryptedFileEnding;
-    butterfly::writeBinFile(outFile, reinterpret_cast<const char *>(encryptedFile), encryptedFileLength);
+    butterfly::writeBinFile(outFile, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
     LOG_INFO("Encrypted file written to " << outFile);
 
 }
