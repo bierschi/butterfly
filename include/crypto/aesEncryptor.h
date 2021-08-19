@@ -10,11 +10,15 @@
 namespace butterfly
 {
 
+namespace aes
+{
+
 /**
  * Class AESEncryptor to encrypt files with AES
  */
 class AESEncryptor : public CryptoAES
 {
+
 private:
 
 public:
@@ -51,6 +55,8 @@ public:
     void encryptFile(const std::string &filename);
 
 };
+
+} // namespace aes
 
 } // namespace butterfly
 

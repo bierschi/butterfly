@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace aes
+{
+
 AESDecryptor::AESDecryptor() : CryptoAES()
 {
 
@@ -42,5 +45,6 @@ void AESDecryptor::decryptFile(const std::string &filename)
 
 }
 
-} // namespace butterfly
+} // namespace aes
 
+} // namespace butterfly

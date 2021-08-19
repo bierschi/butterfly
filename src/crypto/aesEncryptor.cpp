@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace aes
+{
+
 AESEncryptor::AESEncryptor() : CryptoAES()
 {
 
@@ -36,12 +39,14 @@ void AESEncryptor::encryptFile(const std::string &filename)
         throw AESEncryptionException("AES Encryption failed with file " + filename);
     }
 
-    LOG_TRACE("Encrypted successfully" << encryptedFileLength << " bytes from file " << filename);
+    LOG_TRACE("Encrypted successfully " << encryptedFileLength << " bytes from file " << filename);
 
     std::string outFile = filename + butterfly::encryptedFileEnding;
     butterfly::writeBinFile(outFile, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
     LOG_INFO("Encrypted file written to " << outFile);
 
 }
+
+} // namespace aes
 
 } // namespace butterfly

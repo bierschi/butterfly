@@ -8,7 +8,12 @@
 
 #include "logger.h"
 
+#define AES_ROUNDS 6
+
 namespace butterfly
+{
+
+namespace aes
 {
 
 /**
@@ -19,14 +24,12 @@ class CryptoAES
 
 private:
     EVP_CIPHER_CTX *_aesEncryptContext, *_aesDecryptContext;
-
-    //unsigned char *_aesKey, *_aesIv;
-    //std::string _aesKey, _aesIv;
     int _aesKeyLength, _aesIvLength;
 
 protected:
-    unsigned char *_aesKey= (unsigned char *)"01234567890123456789012345678901";
-    unsigned char *_aesIv=(unsigned char *)"0123456789012345";
+    unsigned char *_aesKey, *_aesIv;
+    //unsigned char *_aesKey= (unsigned char *)"01234567890123456789012345678901";
+    //unsigned char *_aesIv=(unsigned char *)"0123456789012345";
 
 public:
 
@@ -68,6 +71,8 @@ public:
     size_t decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext);
 
 };
+
+} // namespace aes
 
 } // namespace butterfly
 
