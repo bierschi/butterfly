@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+package butterfly #DDDDDD
+{
+
+class ArgumentParser
+{
+
+
+    +ArgumentParser()
+
+}
+
+}
+@enduml
