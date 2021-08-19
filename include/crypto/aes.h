@@ -11,6 +11,9 @@
 namespace butterfly
 {
 
+/**
+ * Class CryptoAES to provide low level AES cryptography tasks
+ */
 class CryptoAES
 {
 
@@ -26,17 +29,44 @@ protected:
     unsigned char *_aesIv=(unsigned char *)"0123456789012345";
 
 public:
+
+    /**
+     * Constructor CryptoAES
+     */
     CryptoAES();
+
+    /**
+     * Destructor CryptoAES
+     */
     ~CryptoAES();
 
+    /**
+     * Generates the AES Key and the AES IV
+     *
+     * @return True if generation was successful
+     */
     bool generateAESKey();
 
-    size_t encrypt(const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage);
-    size_t decrypt(unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char **decryptedMessage);
+    /**
+     * Encrypts the plaintext
+     *
+     * @param plaintext: plaintext to encrypt
+     * @param plaintextLength: length of the plaintext
+     * @param ciphertext: encrypted ciphertext
+     * @return ciphertext length
+     */
+    size_t encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext);
 
-    int readFile(char *filename, unsigned char **file);
-    void writeFile(char *filename, unsigned char *file, size_t fileLength);
-    char* appendToString(char *string, char *suffix);
+    /**
+     * Decrypts the ciphertext
+     *
+     * @param ciphertext: ciphertext to decrypt
+     * @param ciphertextLength: length of the ciphertext
+     * @param plaintext: decrypted plaintext
+     * @return plaintext length
+     */
+    size_t decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext);
+
 };
 
 } // namespace butterfly

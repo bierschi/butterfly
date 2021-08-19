@@ -1,11 +1,10 @@
 
-#include <iostream>
 #include "crypto/aesDecryptor.h"
 
 namespace butterfly
 {
 
-AESDecryptor::AESDecryptor()
+AESDecryptor::AESDecryptor() : CryptoAES()
 {
 
 }
@@ -20,37 +19,27 @@ void AESDecryptor::setAESIv(const std::string &aesIv)
     _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
 }
 
-void AESDecryptor::decryptFile2(const std::string &filename)
+void AESDecryptor::decryptFile(const std::string &filename)
 {
-    std::cout << filename << std::endl;
-}
 
-void AESDecryptor::decryptFile(char *filename, char *encryptedFilename)
-{
-    // Read the encrypted file back
-    unsigned char *file;
-    size_t fileLength = static_cast<size_t>(CryptoAES::readFile(encryptedFilename, &file));
+    std::string fileData = butterfly::readBinFile(filename);
+    LOG_TRACE(fileData.length() << " bytes to decrypt for file " << filename);
 
-    // Decrypt the encrypted file
     unsigned char *decryptedFile;
-    int decryptedFileLength = static_cast<int>(CryptoAES::decrypt(file, fileLength, &decryptedFile));
+    int decryptedFileLength = CryptoAES::decrypt((unsigned char *) fileData.c_str(), fileData.length(), &decryptedFile);
 
-    if(decryptedFileLength == -1) {
-        fprintf(stderr, "Decryption failed\n");
-        exit(1);
+    if (decryptedFileLength == -1)
+    {
+        LOG_TRACE("AES Decryption failed with file " << filename);
+        throw AESDecryptionException("AES Decryption failed with file " + filename);
     }
-    printf("%d bytes decrypted\n", (int)decryptedFileLength);
 
-    // Append .dec to the filename
-    char *decryptedFilename = CryptoAES::appendToString(filename, (char*)".dec");
+    LOG_TRACE("Decrypted successfully " << decryptedFileLength << " bytes from file " << filename);
 
-    // Write the decrypted file to its own file
-    writeFile(decryptedFilename, decryptedFile, static_cast<size_t>(decryptedFileLength));
-    printf("Decrypted file written to \"%s\"\n", decryptedFilename);
+    std::string outFile = filename + ".dec";
+    butterfly::writeBinFile(outFile, reinterpret_cast<const char *>(decryptedFile), decryptedFileLength);
+    LOG_INFO("Decrypted file written to " << outFile);
 
-    free(decryptedFile);
-    free(decryptedFilename);
-    free(file);
 }
 
 } // namespace butterfly

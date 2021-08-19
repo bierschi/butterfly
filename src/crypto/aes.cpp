@@ -42,7 +42,7 @@ bool CryptoAES::generateAESKey()
     return true;
 }
 
-size_t CryptoAES::encrypt(const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage)
+size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
 
     if (_aesKey == nullptr || _aesIv == nullptr)
@@ -52,123 +52,57 @@ size_t CryptoAES::encrypt(const unsigned char *message, size_t messageLength, un
     }
 
     size_t blockLength = 0;
-    size_t encryptedMessageLength = 0;
+    size_t ciphertextLength = 0;
 
-    *encryptedMessage = static_cast<unsigned char*>(malloc(messageLength + AES_BLOCK_SIZE));
+    *ciphertext = static_cast<unsigned char*>(malloc(plaintextLength + AES_BLOCK_SIZE));
 
     if(!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv)) {
         return -1;
     }
 
-    if(!EVP_EncryptUpdate(_aesEncryptContext, *encryptedMessage, (int*)&blockLength, message, static_cast<int>(messageLength))) {
+    if(!EVP_EncryptUpdate(_aesEncryptContext, *ciphertext, (int*)&blockLength, plaintext, static_cast<int>(plaintextLength))) {
         return -1;
     }
 
-    encryptedMessageLength += blockLength;
+    ciphertextLength += blockLength;
 
-    if(!EVP_EncryptFinal_ex(_aesEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength)) {
+    if(!EVP_EncryptFinal_ex(_aesEncryptContext, *ciphertext + ciphertextLength, (int*)&blockLength)) {
         return -1;
     }
 
-    return encryptedMessageLength + blockLength;
+    return ciphertextLength + blockLength;
 }
 
-size_t CryptoAES::decrypt(unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char **decryptedMessage)
+size_t CryptoAES::decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext)
 {
     if (_aesKey == nullptr || _aesIv == nullptr)
     {
-        LOG_ERROR("ER")
+        LOG_ERROR("AESKey or AESIv is not initialized!")
         return -1;
     }
 
-    size_t decryptedMessageLength = 0;
+    size_t plaintextLength = 0;
     size_t blockLength = 0;
 
-    *decryptedMessage = (unsigned char*)malloc(encryptedMessageLength);
+    *plaintext = static_cast<unsigned char*>(malloc(ciphertextLength));
 
     if(!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv)) {
         return -1;
     }
 
-    if(!EVP_DecryptUpdate(_aesDecryptContext, (unsigned char*)*decryptedMessage, (int*)&blockLength, encryptedMessage, (int)encryptedMessageLength)) {
+    if(!EVP_DecryptUpdate(_aesDecryptContext, static_cast<unsigned char*>(*plaintext), (int*)&blockLength, ciphertext, static_cast<int>(ciphertextLength))) {
         return -1;
     }
 
-    decryptedMessageLength += blockLength;
+    plaintextLength += blockLength;
 
-    if(!EVP_DecryptFinal_ex(_aesDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength)) {
+    if(!EVP_DecryptFinal_ex(_aesDecryptContext, static_cast<unsigned char*>(*plaintext) + plaintextLength, (int*)&blockLength)) {
         return -1;
     }
 
-    decryptedMessageLength += blockLength;
+    plaintextLength += blockLength;
 
-    return decryptedMessageLength;
-}
-
-
-int CryptoAES::readFile(char *filename, unsigned char **file)
-{
-    FILE *fd = fopen(filename, "rb");
-    if(fd == NULL) {
-        fprintf(stderr, "Failed to open file: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    // Determine size of the file
-    fseek(fd, 0, SEEK_END);
-    size_t fileLength = static_cast<size_t>(ftell(fd));
-    fseek(fd, 0, SEEK_SET);
-
-    // Allocate space for the file
-    *file = (unsigned char*)malloc(fileLength);
-    if(*file == NULL) {
-        fprintf(stderr, "Failed to allocate memory\n");
-        exit(1);
-    }
-
-    // Read the file into the buffer
-    size_t bytesRead = fread(*file, 1, fileLength, fd);
-
-    if(bytesRead != fileLength) {
-        fprintf(stderr, "Error reading file\n");
-        exit(1);
-    }
-
-    fclose(fd);
-
-    return static_cast<int>(fileLength);
-}
-
-
-void CryptoAES::writeFile(char *filename, unsigned char *file, size_t fileLength)
-{
-    FILE *fd = fopen(filename, "wb");
-    if(fd == NULL) {
-        fprintf(stderr, "Failed to open file: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    size_t bytesWritten = fwrite(file, 1, fileLength, fd);
-
-    if(bytesWritten != fileLength) {
-        fprintf(stderr, "Failed to write file\n");
-        exit(1);
-    }
-
-    fclose(fd);
-}
-
-
-char* CryptoAES::appendToString(char *string, char *suffix) {
-    char *appenedString = (char*)malloc(strlen(string) + strlen(suffix) + 1);
-
-    if(appenedString == NULL) {
-        fprintf(stderr, "Failed to allocate memory\n");
-        exit(1);
-    }
-
-    sprintf(appenedString, "%s%s", string, suffix);
-    return appenedString;
+    return plaintextLength;
 }
 
 } // namespace butterfly

@@ -2,6 +2,9 @@
 #ifndef BUTTERFLY_EXCEPTIONS_H
 #define BUTTERFLY_EXCEPTIONS_H
 
+#include <exception>
+#include <iostream>
+
 namespace butterfly
 {
 
