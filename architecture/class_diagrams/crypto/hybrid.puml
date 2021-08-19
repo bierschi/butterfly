@@ -1,6 +1,10 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-package hybrid
+
+package butterfly #AAAAAA
+{
+
+package hybrid #DDDDDD
 {
 
 class Encryptor
@@ -15,6 +19,8 @@ class Decryptor
 
     -_rsaDecryptorAESKey: RSADecryptor
     -_rsaDecryptorCPrivateRSA: RSADecryptor
+}
+
 }
 
 }
