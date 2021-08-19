@@ -16,6 +16,11 @@ public:
     AESDecryptor();
     ~AESDecryptor() = default;
 
+    void setAESKey(const std::string &aesKey);
+    void setAESIv(const std::string &aesIv);
+
+    void decryptFile2(const std::string &filename);
+
     void decryptFile(char *filename, char *encryptedFilename);
 };
 

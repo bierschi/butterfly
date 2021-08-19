@@ -4,6 +4,9 @@
 
 #include "aes.h"
 #include "utils.h"
+#include "params.h"
+#include "exceptions.h"
+
 namespace butterfly
 {
 
@@ -15,7 +18,12 @@ public:
     AESEncryptor();
     ~AESEncryptor() = default;
 
-    void encryptFile(char *filename);
+    std::string getAESKey() const;
+    std::string getAESIv() const;
+
+    void encryptFile(const std::string &filename);
+
+    void encryptFile_old(char *filename);
 
 };
 

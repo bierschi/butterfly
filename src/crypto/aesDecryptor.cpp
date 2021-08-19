@@ -10,6 +10,20 @@ AESDecryptor::AESDecryptor()
 
 }
 
+void AESDecryptor::setAESKey(const std::string &aesKey)
+{
+    _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
+}
+
+void AESDecryptor::setAESIv(const std::string &aesIv)
+{
+    _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
+}
+
+void AESDecryptor::decryptFile2(const std::string &filename)
+{
+    std::cout << filename << std::endl;
+}
 
 void AESDecryptor::decryptFile(char *filename, char *encryptedFilename)
 {

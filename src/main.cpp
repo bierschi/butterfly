@@ -35,18 +35,18 @@ int main(int argc, char *argv[])
     decryptor->decryptAESKey(cprivate);
     */
 
-    /*
+    
     std::unique_ptr<butterfly::AESEncryptor> aesEncryptor(new butterfly::AESEncryptor());
     //aesEncryptor->generateAESKey();
     std::string s = "/home/christian/projects/butterfly/bin/test.pdf";
-    aesEncryptor->encryptFile(&s[0]);
-    */
+    aesEncryptor->encryptFile(s);
 
 
+    /*
     std::unique_ptr<butterfly::AESDecryptor> aesDecryptor(new butterfly::AESDecryptor());
-    std::string s = "/home/christian/projects/butterfly/bin/test.pdf.enc";
+    std::string s = "/home/christian/projects/butterfly/bin/test.pdf.bfly";
     std::string sa = "test.pdf.dec";
     aesDecryptor->decryptFile(&sa[0], &s[0]);
-
+    */
      return 0;
 }

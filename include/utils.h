@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 namespace butterfly
 {
@@ -24,7 +25,7 @@ inline long getFileSize(const std::string &filepath)
     return rc == 0 ? stat_buf.st_size : -1;
 }
 
-inline std::string readFile(const std::string &filepath)
+inline std::string readBinFile(const std::string &filepath)
 {
     std::ifstream in(filepath, std::ios::in | std::ios::binary);
     std::string s;
@@ -42,16 +43,16 @@ inline std::string readFile(const std::string &filepath)
     }
 }
 
-inline void writeFile(const std::string &filename, const std::string &content, long fileLength)
+inline void writeBinFile(const std::string &filename, const char* content, long fileLength)
 {
 
     std::fstream out(filename, std::ios::out | std::ios::binary);
     if (out.is_open())
     {
-        out.write(content.c_str(), fileLength);
+        out.write(content, fileLength);
     } else
     {
-        LOG_ERROR("Could not open file " << filename);
+        LOG_ERROR("Failed to open file " << filename);
     }
 }
 

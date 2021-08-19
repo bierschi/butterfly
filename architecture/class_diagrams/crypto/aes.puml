@@ -5,16 +5,26 @@ package AES #DDDDDD
 
 class CryptoAES
 {
+    -_aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
+
+    +CryptoAES()
+    +generateAESKey(): bool
+    +encrypt(const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage): size_t
+    +decrypt(unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char **decryptedMessage): size_t
 }
 
 class AESEncryptor
 {
 
+    +AESEncryptor()
+    +encryptFile(const std::string &filename): void
+
 }
 
 class AESDecryptor
 {
-
+    +AESDecryptor()
+    +decryptFile(): void
 }
 
 CryptoAES <-- AESEncryptor

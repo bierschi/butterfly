@@ -6,6 +6,7 @@ namespace butterfly
 
 CryptoAES::CryptoAES()//: _aesKey(nullptr), _aesIv(nullptr)
 {
+
     _aesEncryptContext = EVP_CIPHER_CTX_new();
     _aesDecryptContext = EVP_CIPHER_CTX_new();
 
@@ -41,53 +42,32 @@ bool CryptoAES::generateAESKey()
     return true;
 }
 
-void CryptoAES::setAESKey(const std::string &aesKey)
-{
-    _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
-}
-
-void CryptoAES::setAESIv(const std::string &aesIv)
-{
-    _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
-}
-
-std::string CryptoAES::getAESKey() const
-{
-    std::string str(reinterpret_cast<const char *>(_aesKey));
-    return str;
-}
-
-std::string CryptoAES::getAESIv() const
-{
-    std::string str(reinterpret_cast<const char *>(_aesIv));
-    return str;
-}
-
 size_t CryptoAES::encrypt(const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage)
 {
+
     if (_aesKey == nullptr || _aesIv == nullptr)
     {
-        LOG_ERROR("ER")
-        return 0;
+        LOG_ERROR("AESKey or AESIv is not initialized!")
+        return -1;
     }
 
     size_t blockLength = 0;
     size_t encryptedMessageLength = 0;
 
-    *encryptedMessage = (unsigned char*)malloc(messageLength + AES_BLOCK_SIZE);
+    *encryptedMessage = static_cast<unsigned char*>(malloc(messageLength + AES_BLOCK_SIZE));
 
     if(!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv)) {
-        return 0;
+        return -1;
     }
 
-    if(!EVP_EncryptUpdate(_aesEncryptContext, *encryptedMessage, (int*)&blockLength, (unsigned char*)message, static_cast<int>(messageLength))) {
-        return 0;
+    if(!EVP_EncryptUpdate(_aesEncryptContext, *encryptedMessage, (int*)&blockLength, message, static_cast<int>(messageLength))) {
+        return -1;
     }
 
     encryptedMessageLength += blockLength;
 
     if(!EVP_EncryptFinal_ex(_aesEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength)) {
-        return 0;
+        return -1;
     }
 
     return encryptedMessageLength + blockLength;
@@ -98,7 +78,7 @@ size_t CryptoAES::decrypt(unsigned char *encryptedMessage, size_t encryptedMessa
     if (_aesKey == nullptr || _aesIv == nullptr)
     {
         LOG_ERROR("ER")
-        return 0;
+        return -1;
     }
 
     size_t decryptedMessageLength = 0;
@@ -107,17 +87,17 @@ size_t CryptoAES::decrypt(unsigned char *encryptedMessage, size_t encryptedMessa
     *decryptedMessage = (unsigned char*)malloc(encryptedMessageLength);
 
     if(!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv)) {
-        return 0;
+        return -1;
     }
 
     if(!EVP_DecryptUpdate(_aesDecryptContext, (unsigned char*)*decryptedMessage, (int*)&blockLength, encryptedMessage, (int)encryptedMessageLength)) {
-        return 0;
+        return -1;
     }
 
     decryptedMessageLength += blockLength;
 
     if(!EVP_DecryptFinal_ex(_aesDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength)) {
-        return 0;
+        return -1;
     }
 
     decryptedMessageLength += blockLength;
