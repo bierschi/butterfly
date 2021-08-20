@@ -9,7 +9,7 @@ namespace aes
 
 AESDecryptor::AESDecryptor() : CryptoAES()
 {
-
+    LOG_TRACE("Create class AESDecryptor")
 }
 
 void AESDecryptor::setAESKey(const std::string &aesKey)

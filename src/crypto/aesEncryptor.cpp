@@ -9,7 +9,7 @@ namespace aes
 
 AESEncryptor::AESEncryptor() : CryptoAES()
 {
-
+    LOG_TRACE("Create class AESEncryptor")
 }
 
 std::string AESEncryptor::getAESKey() const

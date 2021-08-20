@@ -5,6 +5,7 @@
 #include "openssl/evp.h"
 #include "openssl/aes.h"
 #include "openssl/rand.h"
+#include <openssl/err.h>
 
 #include "logger.h"
 
@@ -25,6 +26,13 @@ class CryptoAES
 private:
     EVP_CIPHER_CTX *_aesEncryptContext, *_aesDecryptContext;
     int _aesKeyLength, _aesIvLength;
+
+    /**
+     * Get the openssl error as a std::string
+     *
+     * @return std::string: openssl error
+     */
+    static std::string getOpenSSLError();
 
 protected:
     unsigned char *_aesKey, *_aesIv;

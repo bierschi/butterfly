@@ -10,6 +10,7 @@ namespace aes
 CryptoAES::CryptoAES() : _aesKey(nullptr), _aesIv(nullptr)
 {
 
+    LOG_TRACE("Create class CryptoAES")
     _aesEncryptContext = EVP_CIPHER_CTX_new();
     _aesDecryptContext = EVP_CIPHER_CTX_new();
 
@@ -29,8 +30,23 @@ CryptoAES::~CryptoAES()
     EVP_CIPHER_CTX_free(_aesDecryptContext);
 }
 
+std::string CryptoAES::getOpenSSLError()
+{
+
+    char *buf;
+    BIO *bio = BIO_new(BIO_s_mem());
+    ERR_print_errors(bio);
+
+    size_t len = static_cast<size_t >(BIO_get_mem_data(bio, &buf));
+    std::string err(buf, len);
+    BIO_free(bio);
+
+    return err;
+}
+
 bool CryptoAES::generateAESKey()
 {
+    LOG_INFO("Create the AES Key and the AES IV")
     _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     _aesIv = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
 
@@ -52,8 +68,7 @@ bool CryptoAES::generateAESKey()
         return false;
     }
 
-    if (EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), aesSalt, aesPass, _aesKeyLength, AES_ROUNDS, _aesKey, _aesIv) ==
-        0)
+    if (EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), aesSalt, aesPass, _aesKeyLength, AES_ROUNDS, _aesKey, _aesIv) == 0)
     {
         return false;
     }
@@ -80,12 +95,14 @@ size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength
 
     if (!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv))
     {
+        LOG_ERROR("Error during EVP_EncryptInit_ex in CryptoAES encrypt: " << getOpenSSLError());
         return 0;
     }
 
     if (!EVP_EncryptUpdate(_aesEncryptContext, *ciphertext, (int *) &blockLength, plaintext,
                            static_cast<int>(plaintextLength)))
     {
+        LOG_ERROR("Error during EVP_EncryptUpdate in CryptoAES encrypt: " << getOpenSSLError());
         return 0;
     }
 
@@ -93,6 +110,7 @@ size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength
 
     if (!EVP_EncryptFinal_ex(_aesEncryptContext, *ciphertext + ciphertextLength, (int *) &blockLength))
     {
+        LOG_ERROR("Error during EVP_EncryptFinal_ex in CryptoAES encrypt: " << getOpenSSLError());
         return 0;
     }
 
@@ -114,12 +132,14 @@ size_t CryptoAES::decrypt(unsigned char *ciphertext, size_t ciphertextLength, un
 
     if (!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv))
     {
+        LOG_ERROR("Error during EVP_DecryptInit_ex in CryptoAES decrypt: " << getOpenSSLError());
         return 0;
     }
 
     if (!EVP_DecryptUpdate(_aesDecryptContext, static_cast<unsigned char *>(*plaintext), (int *) &blockLength,
                            ciphertext, static_cast<int>(ciphertextLength)))
     {
+        LOG_ERROR("Error during EVP_DecryptUpdate in CryptoAES decrypt: " << getOpenSSLError());
         return 0;
     }
 
@@ -128,6 +148,7 @@ size_t CryptoAES::decrypt(unsigned char *ciphertext, size_t ciphertextLength, un
     if (!EVP_DecryptFinal_ex(_aesDecryptContext, static_cast<unsigned char *>(*plaintext) + plaintextLength,
                              (int *) &blockLength))
     {
+        LOG_ERROR("Error during EVP_DecryptFinal_ex in CryptoAES decrypt: " << getOpenSSLError());
         return 0;
     }
 
