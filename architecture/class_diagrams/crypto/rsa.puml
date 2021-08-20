@@ -29,11 +29,11 @@ class CryptoRSA
     +getEvpPkey(): EVP_PKEY*
     +getEvpPkeySize(EVP_PKEY *key): int
     +getRSAPrivateKeyStr(): char*
-    +getRSAPublicKeyStr(): char*
-    +getPublicKeyStr(): char*
-    +createRSAPrivateKeyFile(const std::string &filename):bool
-    +createRSAPublicKeyFile(const std::string &filename): bool
-    +createPublicKeyFile(const std::string &filename): bool
+    '+getRSAPublicKeyStr(): char*
+    '+getPublicKeyStr(): char*
+    '+createRSAPrivateKeyFile(const std::string &filename):bool
+    '+createRSAPublicKeyFile(const std::string &filename): bool
+    '+createPublicKeyFile(const std::string &filename): bool
     +getPkeyFromPrivateKeyFile(const std::string &filepath): EVP_PKEY*
     +getPkeyFromPublicKeyFile(const std::string &filepath): EVP_PKEY*
     +encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): size_t
