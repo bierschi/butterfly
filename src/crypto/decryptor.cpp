@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace hybrid
+{
+
 Decryptor::Decryptor()
 {
 
@@ -17,7 +20,7 @@ Decryptor::~Decryptor()
 std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer)
 {
 
-    _rsaDecryptorCPrivateRSA = std::unique_ptr<RSADecryptor>(new RSADecryptor(keyFromServer));
+    _rsaDecryptorCPrivateRSA = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(keyFromServer));
 
     std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->getBinKeyFileContents(CPRIVATERSA_FILENAME);
     EVP_PKEY *cPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
@@ -34,7 +37,7 @@ std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer)
 std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA)
 {
 
-    _rsaDecryptorAESKey = std::unique_ptr<RSADecryptor>(new RSADecryptor(decryptedCPrivateRSA));
+    _rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(decryptedCPrivateRSA));
 
     std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(AES_KEY_ENC_FILENAME);
     EVP_PKEY *aesKeyPKey = _rsaDecryptorAESKey->getEvpPkey();
@@ -52,5 +55,7 @@ std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA)
 
     return _decryptedAESKey;
 }
+
+} // namespace hybrid
 
 } // namespace butterfly

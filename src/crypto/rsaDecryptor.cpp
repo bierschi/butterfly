@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 RSADecryptor::RSADecryptor() : CryptoRSA()
 {
     LOG_TRACE("Create class RSADecryptor as default constructor")
@@ -107,5 +110,7 @@ bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 
     return true;
 }
+
+} // namespace rsa
 
 } // namespace butterfly

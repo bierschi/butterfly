@@ -7,6 +7,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 /**
  * Class RSAEncryptor to provide methods for simple rsa encryption
  */
@@ -67,6 +70,8 @@ public:
     bool encrypt(EVP_PKEY *pkey, const std::string &msg);
 
 };
+
+} //namespace rsa
 
 } //namespace butterfly
 

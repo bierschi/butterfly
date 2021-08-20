@@ -4,8 +4,11 @@
 namespace butterfly
 {
 
-Encryptor::Encryptor(int keySize) : _keySize(keySize), _rsaEncryptorAESKey(new RSAEncryptor(_keySize)),
-                                                       _rsaEncryptorCPrivateRSA(new RSAEncryptor(SPUBLIC_PEM))
+namespace hybrid
+{
+
+Encryptor::Encryptor(int keySize) : _keySize(keySize), _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
+                                                       _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM))
 {
 
 }
@@ -45,5 +48,7 @@ void Encryptor::encryptAESKey()
         LOG_ERROR("Could not encrypt the " << AES_KEY_ENC_FILENAME);
     }
 }
+
+} // namespace hybrid
 
 } // namespace butterfly

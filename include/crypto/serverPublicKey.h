@@ -5,6 +5,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 const std::string SPUBLIC_PEM = "-----BEGIN PUBLIC KEY-----\n"
                                 "MIIG2zANBgkqhkiG9w0BAQEFAAOCBsgAMIIGwwKCBroAxQFe2Pr4j4r3qO/XXjGO\n"
                                 "nZuLXVIp/N6TtP1/+IXMxW3B1oqOJdWLzRqpM4wYKT1l0yLpsjA848eOi3cHoADz\n"
@@ -44,6 +47,8 @@ const std::string SPUBLIC_PEM = "-----BEGIN PUBLIC KEY-----\n"
                                 "rIy5++4Qepv7X0Y42R/wSiakfiG2AKfG1Sa44YJjtnoLW5outGmKwykQmlN7AIsM\n"
                                 "dIDz+R9xLchfwlVQQsdZqHZlnlFL23L5UusCAwEAAQ==\n"
                                 "-----END PUBLIC KEY-----";
+} // namespace rsa
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_SERVERPUBLICKEY_H

@@ -9,6 +9,9 @@
 namespace butterfly
 {
 
+namespace hybrid
+{
+
 /**
  * Class Encryptor to encrypt the AES and the CPrivateRSA key
  */
@@ -18,7 +21,7 @@ class Encryptor
 private:
     int _keySize;
     std::string _aesKey = "0123456789abcdefghijklabcdefg"; // TODO: get the string from the aes encryption class
-    std::unique_ptr<RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
+    std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
 
 public:
     /**
@@ -42,6 +45,8 @@ public:
     void encryptAESKey();
 
 };
+
+} // namespace hybrid
 
 } // namespace butterfly
 

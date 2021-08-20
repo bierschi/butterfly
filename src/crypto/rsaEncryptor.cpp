@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize)
 {
     LOG_TRACE("Create class RSAEncryptor with key size of " << keySize)
@@ -77,5 +80,7 @@ bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
     return true;
 }
+
+} // namespace rsa
 
 } // namespace butterfly

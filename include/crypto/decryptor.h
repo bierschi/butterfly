@@ -8,6 +8,9 @@
 namespace butterfly
 {
 
+namespace hybrid
+{
+
 /**
  * Class Decryptor to decrypt the AES and the CPrivateRSA key
  */
@@ -16,7 +19,7 @@ class Decryptor
 
 private:
     std::string _decryptedCPrivateRSA, _decryptedAESKey;
-    std::unique_ptr<RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
+    std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
 
 public:
     /**
@@ -33,6 +36,8 @@ public:
 
     std::string decryptAESKey(const std::string &decryptedCPrivateRSA);
 };
+
+} // namespace hybrid
 
 } // namespace butterfly
 
