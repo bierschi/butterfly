@@ -6,11 +6,6 @@
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
 
-#include "crypto/aesEncryptor.h"
-#include "crypto/aesDecryptor.h"
-
-#include "utils.h"
-
 int main(int argc, char *argv[])
 {
 
@@ -22,22 +17,23 @@ int main(int argc, char *argv[])
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
 
-    /////// RSA Part ////////
+    /////// Hybrid Part ////////
 
     // start encryption
     std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
     encryptor->encryptCPrivateRSA();
+    encryptor->encryptFileWithAES("/home/christian/projects/butterfly/bin/data/test.pdf");
 
     encryptor->encryptAESKeyFile("AESKey.txt");
 
-    sleep(2);
+
+    sleep(5);
 
     // start decryption
     std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-    std::string cprivate = decryptor->decryptCPrivateRSA(
-            "/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
-    decryptor->decryptAESKey(cprivate);
-
+    std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
+    std::string aesKey = decryptor->decryptAESKey(cprivate, "AESKey.bin");
+    decryptor->decryptFileWithAES("/home/christian/projects/butterfly/bin/data/test.pdf", aesKey);
 
 
     ////// AES PART ///////

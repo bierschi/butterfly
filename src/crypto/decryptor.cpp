@@ -7,9 +7,9 @@ namespace butterfly
 namespace hybrid
 {
 
-Decryptor::Decryptor()
+Decryptor::Decryptor() : _aesDecryptor(new aes::AESDecryptor())
 {
-
+    LOG_TRACE("Create class Decryptor");
 }
 
 Decryptor::~Decryptor()
@@ -41,12 +41,12 @@ std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer)
     return _decryptedCPrivateRSA;
 }
 
-std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA)
+std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA, const std::string &aesKeyFile)
 {
 
     _rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(decryptedCPrivateRSA));
 
-    std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(AES_KEY_ENC_FILENAME);
+    std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(aesKeyFile);
     EVP_PKEY *aesKeyPKey = _rsaDecryptorAESKey->getEvpPkey();
 
     try
@@ -61,6 +61,24 @@ std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA)
     }
 
     return _decryptedAESKey;
+}
+
+void Decryptor::decryptFileWithAES(const std::string &filepath, const std::string &aesKey)
+{
+    //std::string aeskey = butterfly::readBinFile("AESKey.txt");
+    std::string aesiv = butterfly::readBinFile("AESIv.txt");
+
+    _aesDecryptor->setAESKey(aesKey);
+    _aesDecryptor->setAESIv(aesiv);
+    try
+    {
+        _aesDecryptor->decryptFile(filepath);
+
+    } catch (AESDecryptionException &e)
+    {
+        LOG_ERROR(e.what());
+    }
+
 }
 
 } // namespace hybrid

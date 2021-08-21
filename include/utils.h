@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <cstdio>
 
 namespace butterfly
 {
@@ -69,6 +70,27 @@ inline bool writeBinFile(const std::string &filepath, const char* content, long 
     {
         return false;
     }
+}
+
+/**
+ * Remove file from given filepath
+ *
+ * @param filepath: path to the file
+ * @return True if removing was succesful
+ */
+inline bool removeFile(const std::string &filepath)
+{
+
+    int rc = std::remove(filepath.c_str());
+
+    if (rc == 0)
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+
 }
 
 } // namespace butterfly

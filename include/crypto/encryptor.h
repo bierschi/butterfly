@@ -46,6 +46,7 @@ public:
      */
     void encryptAESKeyFile(const std::string &filepath);
 
+    void encryptFileWithAES(const std::string &filepath);
 };
 
 } // namespace hybrid

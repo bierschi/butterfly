@@ -9,7 +9,7 @@ namespace aes
 
 AESEncryptor::AESEncryptor() : CryptoAES()
 {
-    LOG_TRACE("Create class AESEncryptor")
+    LOG_TRACE("Create class AESEncryptor");
 }
 
 std::string AESEncryptor::getAESKey() const
@@ -41,9 +41,14 @@ void AESEncryptor::encryptFile(const std::string &filename)
 
     LOG_TRACE("Encrypted successfully " << encryptedFileLength << " bytes from file " << filename);
 
-    std::string outFile = filename + butterfly::encryptedFileEnding;
+    std::string outFile = filename + butterfly::ENCRYPTED_FILE_ENDING;
     butterfly::writeBinFile(outFile, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
     LOG_INFO("Encrypted file written to " << outFile);
+
+    if ( !butterfly::removeFile(filename) )
+    {
+        throw AESEncryptionException("Failed to remove file " + filename);
+    }
 
 }
 
