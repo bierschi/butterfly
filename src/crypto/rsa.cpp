@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 CryptoRSA::CryptoRSA() : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(-1)
 {
     LOG_TRACE("Create class CryptoRSA")
@@ -21,8 +24,8 @@ CryptoRSA::CryptoRSA(int keySize) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySi
     {
         if (!generateRSAKey())
         {
-            LOG_ERROR("Could not generate the RSA key!");
-            throw std::runtime_error("Could not generate the RSA key!");
+            LOG_ERROR("Error at generating the RSA key!");
+            throw std::runtime_error("Error at generating the RSA key!");
         }
     }
 }
@@ -118,7 +121,9 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
         BIO_free(bioPrivate);
         return false;
     }
+
     BIO_free(bioPrivate);
+
     return true;
 }
 
@@ -138,7 +143,7 @@ std::string CryptoRSA::getOpenSSLError()
 
 bool CryptoRSA::generateRSAKey()
 {
-    LOG_TRACE("Generating the RSA key with key size of " << _keySize)
+    LOG_INFO("Generating the RSA key with key size of " << _keySize)
     _rsa = RSA_new();
 
     if (_rsa != nullptr)
@@ -220,7 +225,7 @@ bool CryptoRSA::createRSAPrivateKeyFile(const std::string &filename)
         fclose(privateKeyFile);
     } else
     {
-        LOG_ERROR("Unable to open file " << filename << " for writing private rsa key!")
+        LOG_ERROR("Failed to open file " << filename << " for writing private rsa key!")
         return false;
     }
     return true;
@@ -238,7 +243,7 @@ bool CryptoRSA::createRSAPublicKeyFile(const std::string &filename)
         fclose(publicKeyFile);
     } else
     {
-        LOG_ERROR("Unable to open file " << filename << " for writing public rsa key!")
+        LOG_ERROR("Failed to open file " << filename << " for writing public rsa key!")
         return false;
     }
     return true;
@@ -259,7 +264,7 @@ bool CryptoRSA::createPublicKeyFile(const std::string &filename)
         fclose(publicKeyFile);
     } else
     {
-        LOG_ERROR("Unable to open file " << filename << " for writing public key!")
+        LOG_ERROR("Failed to open file " << filename << " for writing public key!")
         return false;
     }
     return true;
@@ -279,7 +284,7 @@ EVP_PKEY *CryptoRSA::getPkeyFromPrivateKeyFile(const std::string &filepath)
         fclose(privateFile);
     } else
     {
-        LOG_ERROR("Could not open private key file " << filepath);
+        LOG_ERROR("Failed to open private key file " << filepath);
     }
 
     return pkey;
@@ -298,7 +303,7 @@ EVP_PKEY *CryptoRSA::getPkeyFromPublicKeyFile(const std::string &filepath)
 
     } else
     {
-        LOG_ERROR("Could not open public key file " << filepath);
+        LOG_ERROR("Failed to open public key file " << filepath);
     }
 
     return pkey;
@@ -367,5 +372,7 @@ size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphe
 
     return plaintextLength;
 }
+
+} // namespace rsa
 
 } // namespace butterfly

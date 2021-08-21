@@ -3,8 +3,13 @@
 #define BUTTERFLY_RSADECRYPTOR_H
 
 #include "rsa.h"
+#include "utils.h"
+#include "exceptions.h"
 
 namespace butterfly
+{
+
+namespace rsa
 {
 
 /**
@@ -69,10 +74,11 @@ public:
      *
      * @param pkey: EVP_PKEY to decrypt the cipher message string
      * @param msg: message as std::string
-     * @return boolean, true if decryption was successful else false
      */
-    bool decrypt(EVP_PKEY *pkey, const std::string &msg);
+    void decrypt(EVP_PKEY *pkey, const std::string &msg);
 };
+
+} // namespace rsa
 
 } // namespace butterfly
 

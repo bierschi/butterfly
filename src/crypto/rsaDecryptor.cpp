@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 RSADecryptor::RSADecryptor() : CryptoRSA()
 {
     LOG_TRACE("Create class RSADecryptor as default constructor")
@@ -63,30 +66,26 @@ EVP_PKEY *RSADecryptor::getEvpPkeyFromFile(const std::string &filepath)
 std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath)
 {
 
-    std::ifstream in(filepath, std::ios::in | std::ios::binary);
-    std::string encKey;
-
-    if (in.is_open())
+    std::string binFile = butterfly::readBinFile(filepath);
+    if ( binFile.empty() )
     {
-        std::stringstream strStream;
-        strStream << in.rdbuf();
-        encKey = strStream.str();
-        return encKey;
+        LOG_ERROR("Content of binary file " + filepath + " is empty!")
+        throw RSADecryptionException("Content of binary file " + filepath + " is empty!");
     } else
     {
-        LOG_ERROR("Failed to open file " << filepath);
-        return encKey;
+        return binFile;
     }
+
 }
 
-bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
+void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
     // first check the message size
     if (msg.empty())
     {
-        LOG_ERROR("Can not decrypt message because it is empty!")
-        return false;
+        LOG_ERROR("Empty messages can not be decrypted!")
+        throw RSADecryptionException("Empty messages can not be decrypted!");
     }
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
@@ -94,8 +93,8 @@ bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
     // validate the string length with block size length
     if (!validateStringLengthForRSA(msg, keysize))
     {
-        LOG_ERROR("Encrypted message string to big for RSA key length!")
-        return false;
+        LOG_ERROR("Error on validateStringLengthForRSA()!")
+        throw RSADecryptionException("Error on validateStringLengthForRSA()!");
     }
 
     unsigned char plaintextKey[keysize];
@@ -105,7 +104,8 @@ bool RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 
     _decryptedKey = reinterpret_cast<char *>(plaintextKey);
 
-    return true;
 }
+
+} // namespace rsa
 
 } // namespace butterfly

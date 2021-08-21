@@ -23,6 +23,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 /**
  * Class CryptoRSA to provide low level RSA cryptography tasks
  */
@@ -229,6 +232,8 @@ public:
     static size_t decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext);
 
 };
+
+} // namespace rsa
 
 } // namespace butterfly
 

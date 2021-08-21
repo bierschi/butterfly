@@ -4,6 +4,9 @@
 namespace butterfly
 {
 
+namespace rsa
+{
+
 RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize)
 {
     LOG_TRACE("Create class RSAEncryptor with key size of " << keySize)
@@ -40,24 +43,22 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
 void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength)
 {
 
-    std::fstream out(filename, std::ios::out | std::ios::binary);
-    if (out.is_open())
+    if ( !butterfly::writeBinFile(filename, ciphertextKey.c_str(), keyLength))
     {
-        out.write(ciphertextKey.c_str(), keyLength);
-    } else
-    {
-        LOG_ERROR("Could not open file " << filename << " to save the encrypted key");
+        LOG_ERROR("Error at writing to binary file " + filename)
+        throw RSAEncryptionException("Error at writing to binary file " + filename);
     }
+
 }
 
-bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
+void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
     // first check the message size
     if (msg.empty())
     {
-        LOG_ERROR("Can not encrypt message because it is empty!")
-        return false;
+        LOG_ERROR("Empty messages can not be encrypted")
+        throw RSAEncryptionException("Empty messages can not be encrypted!");
     }
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
@@ -65,7 +66,8 @@ bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     // validate the string length with block size length
     if (!validateStringLengthForRSA(msg, keysize))
     {
-        return false; // TODO exception handling
+        LOG_ERROR("Error on validateStringLengthForRSA()!")
+        throw RSAEncryptionException("Error on validateStringLengthForRSA()!");
     }
 
     unsigned char ciphertextKey[keysize];
@@ -75,7 +77,8 @@ bool RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     _encryptedKey.resize(static_cast<size_t>(keysize));
     std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedKey.begin());
 
-    return true;
 }
+
+} // namespace rsa
 
 } // namespace butterfly

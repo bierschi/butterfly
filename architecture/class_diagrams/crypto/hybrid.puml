@@ -4,24 +4,150 @@
 package butterfly #AAAAAA
 {
 
+package aes #DDDDDD
+{
+    class CryptoAES {
+        -_aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
+        -_aesKeyLength, _aesIvLength: int
+
+        #_aesKey, _aesIv: unsigned char*
+
+        +CryptoAES()
+
+        +generateAESKey(): bool
+        +encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
+        +decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
+    }
+
+    class AESEncryptor {
+
+        +AESEncryptor()
+
+        +getAESKey() const: std::string
+        +getAESIv() const: std::string
+
+        +encryptFile(const std::string &filename): void
+    }
+
+    class AESDecryptor {
+
+        +AESDecryptor()
+
+        +setAESKey(const std::string &aesKey): void
+        +setAESIv(const std::string &aesIv): void
+
+        +decryptFile(const std::string &filename): void
+    }
+
+}
+
+package rsa #DDDDDD
+{
+    class CryptoRSA {
+        -_rsa: RSA*
+        -_pkey: EVP_PKEY*
+        -_keySize, _paddingSize: int
+        -_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr: char*
+
+        -initPaddingSize(): void
+        -loadKeyFromFile(const std::string &filepath): void
+        -loadKeyFromStr(const std::string &str): void
+        -getOpenSSLError(): string
+        -generateRSAKey(): bool
+        -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+
+        +CryptoRSA()
+        +CryptoRSA(int keySize)
+        +CryptoRSA(const std::string &key)
+
+        +getRSAKey(): RSA*
+        +getRSAKeySize(): int
+        +getPaddingSize(): int
+        +getEvpPkey(): EVP_PKEY*
+        +getEvpPkeySize(EVP_PKEY *key): int
+        +getRSAPrivateKeyStr(): char*
+        '+getRSAPublicKeyStr(): char*
+        '+getPublicKeyStr(): char*
+        '+createRSAPrivateKeyFile(const std::string &filename):bool
+        '+createRSAPublicKeyFile(const std::string &filename): bool
+        '+createPublicKeyFile(const std::string &filename): bool
+        +getPkeyFromPrivateKeyFile(const std::string &filepath): EVP_PKEY*
+        +getPkeyFromPublicKeyFile(const std::string &filepath): EVP_PKEY*
+
+        +encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): size_t
+        +decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): size_t
+    }
+    class RSAEncryptor {
+        -_encryptedKey: std::string
+
+        -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+
+        +RSAEncryptor(int keySize)
+        +RSAEncryptor(const std::string &key)
+
+        +getEncryptedKey(): std::string
+        +saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength): void
+        +encrypt(EVP_PKEY *pkey, const std::string &msg): bool
+    }
+    class RSADecryptor {
+
+        -_decryptedKey: std::string
+        -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+
+        +RSADecryptor()
+        +RSADecryptor(const std::string &key)
+
+        +getDecryptedKey(): std::string
+        +getBinKeyFileContents(const std::string &filepath): std::string
+        +decrypt(EVP_PKEY *pkey, const std::string &msg): bool
+    }
+}
+
 package hybrid #DDDDDD
 {
+    class Encryptor {
+        - _keySize: int
+        - _rsaEncryptorCPrivateRSA, _rsaEncryptorAESKey: RSAEncryptor
 
-class Encryptor
-{
-    - _keySize: Int
-    - _rsaEncryptorCPrivateRSA: RSAEncryptor
-    - _rsaEncryptorAESKey: RSAEncryptor
+        +Encryptor()
+
+    }
+    class Decryptor {
+        -_rsaDecryptorAESKey, rsaDecryptorCPrivateRSA: RSADecryptor
+
+        +Decryptor()
+    }
 }
 
-class Decryptor
-{
-
-    -_rsaDecryptorAESKey: RSADecryptor
-    -_rsaDecryptorCPrivateRSA: RSADecryptor
+together {
+  class CryptoRSA
+  class CryptoAES
 }
 
+together {
+class RSAEncryptor
+class RSADecryptor
+class AESEncryptor
+class AESDecryptor
 }
 
+together {
+  class Encryptor
+  class Decryptor
 }
+
+CryptoRSA <|-- RSAEncryptor
+CryptoRSA <|-- RSADecryptor
+
+CryptoAES <|-- AESEncryptor
+CryptoAES <|-- AESDecryptor
+
+RSAEncryptor *-- Encryptor
+AESEncryptor *-- Encryptor
+
+RSADecryptor *-- Decryptor
+AESDecryptor *-- Decryptor
+
+}
+@enduml
 @enduml

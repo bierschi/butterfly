@@ -4,9 +4,12 @@
 namespace butterfly
 {
 
-Decryptor::Decryptor()
+namespace hybrid
 {
 
+Decryptor::Decryptor() : _aesDecryptor(new aes::AESDecryptor())
+{
+    LOG_TRACE("Create class Decryptor");
 }
 
 Decryptor::~Decryptor()
@@ -17,40 +20,67 @@ Decryptor::~Decryptor()
 std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer)
 {
 
-    _rsaDecryptorCPrivateRSA = std::unique_ptr<RSADecryptor>(new RSADecryptor(keyFromServer));
+    _rsaDecryptorCPrivateRSA = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(keyFromServer));
 
     std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->getBinKeyFileContents(CPRIVATERSA_FILENAME);
     EVP_PKEY *cPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
 
-    if (_rsaDecryptorCPrivateRSA->decrypt(cPrivateRSAPKey, encCPrivateRSA))
+    try
     {
+        _rsaDecryptorCPrivateRSA->decrypt(cPrivateRSAPKey, encCPrivateRSA);
         _decryptedCPrivateRSA = _rsaDecryptorCPrivateRSA->getDecryptedKey();
-    }
-    LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
-    return _decryptedCPrivateRSA;
 
+        LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
+
+
+    } catch (RSADecryptionException &e)
+    {
+        LOG_ERROR(e.what());
+    }
+
+    return _decryptedCPrivateRSA;
 }
 
-std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA)
+std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA, const std::string &aesKeyFile)
 {
 
-    _rsaDecryptorAESKey = std::unique_ptr<RSADecryptor>(new RSADecryptor(decryptedCPrivateRSA));
+    _rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(decryptedCPrivateRSA));
 
-    std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(AES_KEY_ENC_FILENAME);
+    std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(aesKeyFile);
     EVP_PKEY *aesKeyPKey = _rsaDecryptorAESKey->getEvpPkey();
 
-    if (_rsaDecryptorAESKey->decrypt(aesKeyPKey, encAESKey))
+    try
     {
-
+        _rsaDecryptorAESKey->decrypt(aesKeyPKey, encAESKey);
         _decryptedAESKey = _rsaDecryptorAESKey->getDecryptedKey();
         LOG_TRACE("Decrypted AES Key: " << _decryptedAESKey);
 
-    } else
+    } catch (RSADecryptionException &e)
     {
-        LOG_ERROR("Could not decrypt the AESKey!")
+        LOG_ERROR(e.what());
     }
 
     return _decryptedAESKey;
 }
+
+void Decryptor::decryptFileWithAES(const std::string &filepath, const std::string &aesKey)
+{
+    //std::string aeskey = butterfly::readBinFile("AESKey.txt");
+    std::string aesiv = butterfly::readBinFile("AESIv.txt");
+
+    _aesDecryptor->setAESKey(aesKey);
+    _aesDecryptor->setAESIv(aesiv);
+    try
+    {
+        _aesDecryptor->decryptFile(filepath);
+
+    } catch (AESDecryptionException &e)
+    {
+        LOG_ERROR(e.what());
+    }
+
+}
+
+} // namespace hybrid
 
 } // namespace butterfly
