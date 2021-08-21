@@ -5,9 +5,13 @@
 #include "directoryIterator.h"
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
+#include "sqlDatabase.h"
 
 int main(int argc, char *argv[])
 {
+
+    std::unique_ptr<butterfly::SQLDatabase> _database(new butterfly::SQLDatabase());
+    _database->open("Test.db");
 
     // parse args with the argument parser
     std::unique_ptr<butterfly::ArgumentParser> argparse(new butterfly::ArgumentParser());

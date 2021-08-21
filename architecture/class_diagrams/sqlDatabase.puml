@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+package butterfly #DDDDDD
+{
+
+class SQLDatabase
+{
+    -_db: sqlite3*
+    -_dbname: std::string
+
+    +SQLDatabase()
+
+    +open(): bool
+    +close(): void
+    +query(const std::string &query): bool
+    +print() const: void
+}
+
+}
+@enduml

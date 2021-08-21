@@ -16,9 +16,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
 # Add build options
 option(UNITTESTS "Enable Unittests" OFF)
 
-# Find required Boost, OpenSSL and Threads packages
+# Find required Threads, OpenSSL, SQLite3 and Boost packages
 find_package(Threads)
 find_package(OpenSSL REQUIRED)
+find_package(SQLite3 REQUIRED)
 find_package(Boost 1.45.0 COMPONENTS filesystem regex log log_setup REQUIRED)
 
 # Set boost library settings
@@ -49,8 +50,8 @@ endif()
 # Build the executable
 if(Boost_FOUND)
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
-    target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+    target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT}  ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})
 else()
-    message("Bosst Libraries not found!")
+    message("Boost Libraries not found!")
 endif()
 
