@@ -7,13 +7,14 @@ actor target
 participant "SPublic.pem\n(embedded)" as SPublic
 participant CPrivateRSA.pem as CPrivate
 participant CPublic.pem as CPublic
-participant AESKey
+participant "AESKey/AESIv" as AESKey
 participant File
+participant AESKeySQL.sql as AESKeySQL
 
 autonumber
 hnote over SPrivate, SPublic: server rsa key pair (keysize: 13768)
 hnote over CPrivate, CPublic: client rsa key pair (keysize: 2048)
-
+hnote over AESKey: 256-Bit-AESKey/128-Bit-AESIv
 attacker -> attacker: generate the RSA\n server key pair
 ...
 attacker -> target: compromise the target host machine
@@ -22,14 +23,15 @@ target -> CPrivate: encrypt the **CPrivateRSA.pem** with the\n embedded **SPubli
 CPrivate -> target: save CPrivateRSA.bin on the host machine
 note left: **CPrivateRSA.bin**
 loop
-target -> AESKey: generate for each file a new 128 Bit AESKey
-AESKey -> File: encrypt file with 128 Bit AESKey
-File -> AESKey: save encrypted files with butterfly endings
-note right: ~*.butterfly
+target -> AESKey: generate for each file a new 256-Bit-AESKey and 128-Bit-AESIv
+AESKey -> File: encrypt file with 256-Bit-AESKey and save with butterfly ending
+note right: ~*.bfly
+File -> AESKeySQL: save filepath, file hash and AESKey/AESIv pair in sql database
+
 end
-AESKey -> CPublic: encrypt AESKey with **CPublic.pem**
-CPublic -> target: save AESKey.bin
-note left: **AESKey.bin**
-target -> target: display ransom note
+AESKeySQL -> CPublic: encrypt AESKeySQL.sql with **CPublic.pem**
+CPublic -> target: save AESKeySQL.bin on the host machine
+note left: **AESKeySQL.bin**
+target -> target: display ransom payment note
 
 @enduml

@@ -34,7 +34,7 @@ EVP_PKEY *RSADecryptor::getEvpPkeyFromFile(const std::string &filepath)
     EVP_PKEY *pkey = nullptr;
     std::ifstream in(filepath, std::ios::in);
 
-    if (in.is_open())
+    if ( in.is_open() )
     {
 
         std::string fLine;
@@ -82,7 +82,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
     // first check the message size
-    if (msg.empty())
+    if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be decrypted!")
         throw RSADecryptionException("Empty messages can not be decrypted!");
@@ -91,7 +91,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
     // validate the string length with block size length
-    if (!validateStringLengthForRSA(msg, keysize))
+    if ( !validateStringLengthForRSA(msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSADecryptionException("Error on validateStringLengthForRSA()!");
