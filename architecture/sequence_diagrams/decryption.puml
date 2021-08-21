@@ -25,9 +25,10 @@ note left: **CPrivateRSA.pem**
 target -> AESKeySQL: decrypt the **AESKeySQL.bin** with **CPrivateRSA.pem**
 note right: **AESKeySQL.sql**
 loop
-File <- AESKeySQL: get AESKey/AESIv pair with file hash
+File <- AESKeySQL: get AESKey/AESIv pair with file hash and filepath
 File -> AESKey: decrypt *.bfly file with AESKey
-File <- AESKey: get original file *.txt
+File <- AESKey: get original file
+note right: ~*.txt
 end
 File -> target: target has again access to all decrypted files
 
