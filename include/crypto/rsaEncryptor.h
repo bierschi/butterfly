@@ -3,6 +3,8 @@
 #define BUTTERFLY_RSAENCRYPTOR_H
 
 #include "rsa.h"
+#include "utils.h"
+#include "exceptions.h"
 
 namespace butterfly
 {
@@ -65,9 +67,8 @@ public:
      * Encrypts the given message string
      *
      * @param msg: message as std::string
-     * @return boolean, true if encryption was successful else false
      */
-    bool encrypt(EVP_PKEY *pkey, const std::string &msg);
+    void encrypt(EVP_PKEY *pkey, const std::string &msg);
 
 };
 

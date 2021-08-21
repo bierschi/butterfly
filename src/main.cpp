@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
     encryptor->encryptCPrivateRSA();
 
-    encryptor->encryptAESKey();
+    encryptor->encryptAESKeyFile("AESKey.txt");
 
     sleep(2);
 

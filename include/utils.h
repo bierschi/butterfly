@@ -55,17 +55,19 @@ inline std::string readBinFile(const std::string &filepath)
  * @param filepath: path to the file
  * @param content: content to write to file
  * @param contentLength: length of the content
+ * @return True if writing was successful
  */
-inline void writeBinFile(const std::string &filepath, const char* content, long contentLength)
+inline bool writeBinFile(const std::string &filepath, const char* content, long contentLength)
 {
 
     std::fstream out(filepath, std::ios::out | std::ios::binary);
     if (out.is_open())
     {
         out.write(content, contentLength);
+        return true;
     } else
     {
-        LOG_ERROR("Failed to open file " << filepath);
+        return false;
     }
 }
 

@@ -12,7 +12,7 @@ namespace hybrid
 {
 
 /**
- * Class Decryptor to decrypt the AES and the CPrivateRSA key
+ * Class Decryptor to decrypt the AES Key collection file and the CPrivateRSA key
  */
 class Decryptor
 {
@@ -32,8 +32,18 @@ public:
      */
     ~Decryptor();
 
+    /**
+     *
+     * @param keyFromServer
+     * @return
+     */
     std::string decryptCPrivateRSA(const std::string &keyFromServer);
 
+    /**
+     *
+     * @param decryptedCPrivateRSA
+     * @return
+     */
     std::string decryptAESKey(const std::string &decryptedCPrivateRSA);
 };
 
