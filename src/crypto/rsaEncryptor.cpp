@@ -43,7 +43,7 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
 void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength)
 {
 
-    if ( !butterfly::writeBinFile(filename, ciphertextKey.c_str(), keyLength))
+    if ( !butterfly::writeBinFile(filename, ciphertextKey.c_str(), keyLength) )
     {
         LOG_ERROR("Error at writing to binary file " + filename)
         throw RSAEncryptionException("Error at writing to binary file " + filename);
@@ -55,7 +55,7 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
     // first check the message size
-    if (msg.empty())
+    if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be encrypted")
         throw RSAEncryptionException("Empty messages can not be encrypted!");
@@ -64,7 +64,7 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
     // validate the string length with block size length
-    if (!validateStringLengthForRSA(msg, keysize))
+    if ( !validateStringLengthForRSA(msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSAEncryptionException("Error on validateStringLengthForRSA()!");
