@@ -12,43 +12,70 @@ SQLDatabase::SQLDatabase() : _db(nullptr)
 
 SQLDatabase::~SQLDatabase()
 {
-    sqlite3_close(_db);
+    if (sqlite3_close(_db) != SQLITE_OK )
+    {
+        LOG_ERROR("Error on closing database " << _dbpath)
+    }
 }
 
-bool SQLDatabase::open(const std::string &dbname)
+bool SQLDatabase::open(const std::string &dbpath)
 {
 
-    if ( sqlite3_open(dbname.c_str(), &_db) != SQLITE_OK)
+    if ( sqlite3_open(dbpath.c_str(), &_db) != SQLITE_OK)
     {
-        LOG_ERROR("Error on opening database file " << dbname);
+        LOG_ERROR("Error on opening database file " << dbpath);
         return false;
     }
 
-    _dbname = dbname;
+    _dbpath = dbpath;
 
     return true;
 }
 
-void SQLDatabase::close()
+bool SQLDatabase::close()
 {
-    sqlite3_close(_db);
+    if (sqlite3_close(_db) != SQLITE_OK )
+    {
+        LOG_ERROR("Error on closing database " << _dbpath)
+        return false;
+    }
+    return true;
 }
 
-bool SQLDatabase::query(const std::string &query)
+bool SQLDatabase::query(const std::string &query, int (*callback)(void*, int, char**, char**), void *data) const
 {
 
-    if ( sqlite3_exec(_db, query.c_str(), 0, 0, 0) != SQLITE_OK )
+    if ( _db != nullptr)
     {
-        LOG_ERROR("Error on executing database query: " << query);
+        if ( sqlite3_exec(_db, query.c_str(), callback, data, nullptr) != SQLITE_OK )
+        {
+            LOG_ERROR("Error on executing database query: " << query);
+            return false;
+        } else
+        {
+            LOG_TRACE("Executed query: " << query);
+            return true;
+        }
+    } else
+    {
+        LOG_ERROR("_db handler is not initialized!")
         return false;
     }
 
-    return true;
 }
 
 void SQLDatabase::print() const
 {
+    query("SELECT * FROM *;", printDatabaseCallback);
+}
 
+int SQLDatabase::printDatabaseCallback(void *, int argc, char **argv, char **azColName)
+{
+    for(int i = 0; i< argc; i++)
+    {
+        LOG_INFO(azColName[i] << "\t: " << argv[i]);
+    }
+    return SQLITE_OK;
 }
 
 } // namespace butterfly
