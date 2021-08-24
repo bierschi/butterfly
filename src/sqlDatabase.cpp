@@ -4,18 +4,34 @@
 namespace butterfly
 {
 
-SQLDatabase::SQLDatabase() : _db(nullptr)
+SQLDatabase::SQLDatabase(const std::string &dbpath, const std::string &dbtable) : _db(nullptr), _errorMsg(nullptr),
+                                                                                  _dbpath(dbpath), _dbtable(dbtable)
 {
     LOG_TRACE("Create Class SQLDatabase");
+}
 
+SQLDatabase::SQLDatabase() : _db(nullptr), _errorMsg(nullptr)
+{
+    LOG_TRACE("Create Class SQLDatabase");
 }
 
 SQLDatabase::~SQLDatabase()
 {
-    if (sqlite3_close(_db) != SQLITE_OK )
+    /*
+    if ( sqlite3_close(_db) != SQLITE_OK )
     {
         LOG_ERROR("Error on closing database " << _dbpath)
+    }*/
+}
+
+bool SQLDatabase::setMode(int mode)
+{
+    if ( sqlite3_config(mode) != SQLITE_OK )
+    {
+        LOG_ERROR("Error on setting the sqlite config mode!")
+        return false;
     }
+    return true;
 }
 
 bool SQLDatabase::open(const std::string &dbpath)
@@ -34,7 +50,7 @@ bool SQLDatabase::open(const std::string &dbpath)
 
 bool SQLDatabase::close()
 {
-    if (sqlite3_close(_db) != SQLITE_OK )
+    if ( sqlite3_close(_db) != SQLITE_OK )
     {
         LOG_ERROR("Error on closing database " << _dbpath)
         return false;
@@ -42,18 +58,19 @@ bool SQLDatabase::close()
     return true;
 }
 
-bool SQLDatabase::query(const std::string &query, int (*callback)(void*, int, char**, char**), void *data) const
+bool SQLDatabase::query(const std::string &query, int (*callback)(void*, int, char**, char**), void *data)
 {
 
     if ( _db != nullptr)
     {
-        if ( sqlite3_exec(_db, query.c_str(), callback, data, nullptr) != SQLITE_OK )
+
+        if (sqlite3_exec(_db, query.c_str(), callback, data, &_errorMsg) != SQLITE_OK )
         {
-            LOG_ERROR("Error on executing database query: " << query);
+            LOG_ERROR("Error on executing database query: " << _errorMsg);
             return false;
         } else
         {
-            LOG_TRACE("Executed query: " << query);
+            LOG_TRACE("Successfully executed query: " << query);
             return true;
         }
     } else
@@ -64,16 +81,20 @@ bool SQLDatabase::query(const std::string &query, int (*callback)(void*, int, ch
 
 }
 
-void SQLDatabase::print() const
+void SQLDatabase::print()
 {
-    query("SELECT * FROM *;", printDatabaseCallback);
+    if ( !_dbtable.empty() )
+    {
+        query("SELECT * FROM " + _dbtable + ";", printDatabaseCallback);
+    }
+
 }
 
 int SQLDatabase::printDatabaseCallback(void *, int argc, char **argv, char **azColName)
 {
     for(int i = 0; i< argc; i++)
     {
-        LOG_INFO(azColName[i] << "\t: " << argv[i]);
+        LOG_INFO(azColName[i] << ": " << argv[i]);
     }
     return SQLITE_OK;
 }

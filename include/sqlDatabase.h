@@ -15,9 +15,14 @@ namespace butterfly
  */
 class SQLDatabase
 {
+
 private:
     sqlite3* _db;
-    std::string _dbpath;
+    char* _errorMsg;
+
+protected:
+    std::string _dbpath, _dbtable;
+    SQLDatabase(const std::string &dbpath, const std::string &dbtable);
 
 public:
 
@@ -30,6 +35,8 @@ public:
      * Destructor SQLDatabase
      */
     virtual ~SQLDatabase();
+
+    static bool setMode(int mode);
 
     /**
      * Opens the database connection to dbpath
@@ -54,12 +61,12 @@ public:
      * @param data: data for the callback function
      * @return true if the query was sucessful
      */
-    bool query(const std::string &query, int (*callback)(void*, int, char**, char**)= nullptr, void *data= nullptr) const;
+    bool query(const std::string &query, int (*callback)(void*, int, char**, char**)= nullptr, void *data= nullptr);
 
     /**
      * Prints the content of the database
      */
-    void print() const;
+    void print();
 
     /**
      * Print database callback
