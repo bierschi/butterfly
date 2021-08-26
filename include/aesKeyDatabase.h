@@ -22,10 +22,11 @@ private:
 public:
 
     /**
+     * Constructor AESKeyDatabase
      *
-     * @param dbpath:
-     * @param removeDatabase:
-     * @param dbtable:
+     * @param dbpath: path to the db file
+     * @param removeDatabase: boolean to remove the database file or not
+     * @param dbtable: db table name
      */
     explicit AESKeyDatabase(const std::string &dbpath, bool removeDatabase=false, std::string dbtable="AES");
 
@@ -35,13 +36,27 @@ public:
     ~AESKeyDatabase() override;
 
     /**
+     * Insert an new entry in the database table
      *
-     * @param filepath
-     * @param aesKey
-     * @param aesIv
+     * @param filepath: path to the file from the encryption
+     * @param aesKey: aes key from the encryption
+     * @param aesIv: aes iv from the encryption
      */
     void insertEntry(const std::string &filepath, const std::string &aesKey, const std::string &aesIv);
-    void getEntry(const std::string &filepath);
+
+    /**
+     * Get an entry from the database table
+     *
+     * @param filepath: path to the file
+     * @return column data as std::vector<std::string>
+     */
+    std::vector<std::string> getEntry(const std::string &filepath);
+
+    /**
+     * Deletes an entry from the database table
+     *
+     * @param filepath: path to the file
+     */
     void deleteEntry(const std::string &filepath);
 
 };

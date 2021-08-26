@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <sqlite3.h>
+#include <vector>
 
 #include "logger.h"
 
@@ -34,8 +35,14 @@ public:
     /**
      * Destructor SQLDatabase
      */
-    virtual ~SQLDatabase();
+    virtual ~SQLDatabase() = default;
 
+    /**
+     * Sets the sql config mode
+     *
+     * @param mode: int number for sqlite3_config call
+     * @return true if setting was successful
+     */
     static bool setMode(int mode);
 
     /**
@@ -61,7 +68,7 @@ public:
      * @param data: data for the callback function
      * @return true if the query was sucessful
      */
-    bool query(const std::string &query, int (*callback)(void*, int, char**, char**)= nullptr, void *data= nullptr);
+    bool query(const std::string &query, int (*callback)(void*, int, char**, char**) = nullptr, void *data = nullptr);
 
     /**
      * Prints the content of the database
@@ -73,11 +80,22 @@ public:
      *
      * @param data: data for the callback
      * @param argc: Number of columns
-     * @param argv: Array of pointers to the strings
+     * @param azData: Array of pointers to the strings
      * @param azColName: Array of pointers to strings
-     * @return
+     * @return SQLITE_OK
      */
-    static int printDatabaseCallback(void *data, int argc, char *argv[], char *azColName[]);
+    static int printDatabaseCallback(void *data, int argc, char **azData, char **azColName);
+
+    /**
+     * Get column data from database table
+     *
+     * @param data: data for the callback
+     * @param argc: Number of columns
+     * @param azData: Array of pointers to the strings
+     * @param azColName: Array of pointers to strings
+     * @return SQLITE_OK
+     */
+    static int getColumnDataCallback(void *data, int argc, char **azData, char **azColName);
 };
 
 } // namespace butterfly

@@ -15,15 +15,6 @@ SQLDatabase::SQLDatabase() : _db(nullptr), _errorMsg(nullptr)
     LOG_TRACE("Create Class SQLDatabase");
 }
 
-SQLDatabase::~SQLDatabase()
-{
-    /*
-    if ( sqlite3_close(_db) != SQLITE_OK )
-    {
-        LOG_ERROR("Error on closing database " << _dbpath)
-    }*/
-}
-
 bool SQLDatabase::setMode(int mode)
 {
     if ( sqlite3_config(mode) != SQLITE_OK )
@@ -92,11 +83,28 @@ void SQLDatabase::print()
 
 int SQLDatabase::printDatabaseCallback(void *, int argc, char **argv, char **azColName)
 {
+
     for(int i = 0; i< argc; i++)
     {
-        LOG_INFO(azColName[i] << ": " << argv[i]);
+        LOG_TRACE(azColName[i] << ": " << argv[i]);
     }
+
     return SQLITE_OK;
+
+}
+
+int SQLDatabase::getColumnDataCallback(void *data, int argc, char **azData, char **)
+{
+
+    auto *columnData = static_cast<std::vector<std::string>*>(data);
+
+    for(int i = 0; i < argc; i++)
+    {
+        columnData->push_back(azData[i]);
+    }
+
+    return SQLITE_OK;
+
 }
 
 } // namespace butterfly

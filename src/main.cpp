@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     _database->print();
     _database->insertEntry("/home/christian/", "abc", "defg");
 
-    _database->print();
+    _database->getEntry("/home/christian/");
 
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 

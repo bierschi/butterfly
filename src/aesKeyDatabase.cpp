@@ -41,7 +41,33 @@ AESKeyDatabase::~AESKeyDatabase()
 
 void AESKeyDatabase::insertEntry(const std::string &filepath, const std::string &aesKey, const std::string &aesIv)
 {
+
     std::string sql = "INSERT INTO AES(FILEPATH, AESKEY, AESIV) VALUES('" + filepath + "', '" + aesKey + "', '" + aesIv + "');";
+
+    query(sql);
+
+}
+
+std::vector<std::string> AESKeyDatabase::getEntry(const std::string &filepath)
+{
+    std::vector<std::string> colData;
+
+    std::string sql = "SELECT * FROM " + _dbtable +  " WHERE FILEPATH='" + filepath + "';";
+    query(sql, getColumnDataCallback, &colData);
+
+    LOG_TRACE("size of columns: " << colData.size());
+    for (auto &col: colData)
+    {
+        LOG_TRACE("COL: " << col);
+    }
+
+    return colData;
+}
+
+void AESKeyDatabase::deleteEntry(const std::string &filepath)
+{
+
+    std::string sql = "DELETE FROM " + _dbtable + " WHERE FILEPATH='" + filepath + "';";
 
     query(sql);
 
