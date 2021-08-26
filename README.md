@@ -10,9 +10,9 @@ Butterfly is a cryptographic ransomware that includes the following features
 
 ## Dependencies
 
-Install boost libraries
+Install sqlite3 and boost libraries
 <pre><code>
-sudo apt-get install -y libboost-filesystem-dev libboost-regex-dev libboost-log-dev
+sudo apt-get install -y sqlite3 libsqlite3-dev libboost-filesystem-dev libboost-regex-dev libboost-log-dev
 </code></pre>
 
 ## Build Butterfly

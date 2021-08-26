@@ -5,18 +5,27 @@
 #include "directoryIterator.h"
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
+#include "aesKeyDatabase.h"
 
 int main(int argc, char *argv[])
 {
-
     // parse args with the argument parser
     std::unique_ptr<butterfly::ArgumentParser> argparse(new butterfly::ArgumentParser());
     butterfly::ArgumentParser::Arguments arg = argparse->parseArgs(argc, argv);
 
     LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
+
+
+    std::unique_ptr<butterfly::AESKeyDatabase> _database(new butterfly::AESKeyDatabase("AES.db", false));
+
+    _database->print();
+    _database->insertEntry("/home/christian/", "abc", "defg");
+
+    _database->getEntry("/home/christian/");
+
     //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
 
-
+    /*
     /////// Hybrid Part ////////
 
     // start encryption
@@ -35,7 +44,7 @@ int main(int argc, char *argv[])
     std::string aesKey = decryptor->decryptAESKey(cprivate, "AESKey.bin");
     decryptor->decryptFileWithAES("/home/christian/projects/butterfly/bin/data/test.pdf", aesKey);
 
-
+    */
     ////// AES PART ///////
     /*
     std::unique_ptr<butterfly::aes::AESEncryptor> aesEncryptor(new butterfly::aes::AESEncryptor());

@@ -80,6 +80,24 @@ public:
     }
 };
 
+/**
+ * Class SQLDatabaseException
+ */
+class SQLDatabaseException : public std::exception
+{
+
+private:
+    std::string _error;
+
+public:
+    explicit SQLDatabaseException(const std::string &error) : _error(error) {}
+
+    const char * what() const noexcept override
+    {
+        return _error.c_str();
+    }
+};
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_EXCEPTIONS_H
