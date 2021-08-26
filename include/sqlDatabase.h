@@ -3,8 +3,9 @@
 #define BUTTERFLY_SQLDATABASE_H
 
 #include <iostream>
-#include <sqlite3.h>
 #include <vector>
+
+#include <sqlite3.h>
 
 #include "logger.h"
 

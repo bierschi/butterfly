@@ -8,14 +8,34 @@ class SQLDatabase
 {
     -_db: sqlite3*
     -_dbname: std::string
+    #_dbpath, _dbtable: std::string
 
+    #SQLDatabase(const std::string &dbpath, const std::string &dbtable)
     +SQLDatabase()
 
-    +open(): bool
-    +close(): void
-    +query(const std::string &query): bool
+    +setMode(int mode): bool
+    +open(const std::string &dbpath): bool
+    +close(): bool
+    +query(const std::string &query, int (*callback)(void*, int, char**, char**) = nullptr, void *data = nullptr): bool
     +print() const: void
+
+    +printDatabaseCallback(void *data, int argc, char *azData[], char *azColName[]): int
+    +getColumnDataCallback(void *data, int argc, char *azData[], char *azColName[]): int
 }
+
+class AESKeyDatabase
+{
+    -_aesKeyTableSQL: std::string
+    -_removeDatabase: bool
+
+    +AESKeyDatabase()
+
+    +insertEntry(const std::string &filepath, const std::string &aesKey, const std::string &aesIv): void
+    +getEntry(const std::string &filepath): std::vector<std::string>
+    +deleteEntry(const std::string &filepath)): void
+}
+
+SQLDatabase <|-- AESKeyDatabase
 
 }
 @enduml

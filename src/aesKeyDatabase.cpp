@@ -55,12 +55,6 @@ std::vector<std::string> AESKeyDatabase::getEntry(const std::string &filepath)
     std::string sql = "SELECT * FROM " + _dbtable +  " WHERE FILEPATH='" + filepath + "';";
     query(sql, getColumnDataCallback, &colData);
 
-    LOG_TRACE("size of columns: " << colData.size());
-    for (auto &col: colData)
-    {
-        LOG_TRACE("COL: " << col);
-    }
-
     return colData;
 }
 
