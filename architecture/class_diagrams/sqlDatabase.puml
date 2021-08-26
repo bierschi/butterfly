@@ -28,7 +28,7 @@ class AESKeyDatabase
     -_aesKeyTableSQL: std::string
     -_removeDatabase: bool
 
-    +AESKeyDatabase()
+    +AESKeyDatabase(const std::string &dbpath, bool removeDatabase=false, std::string dbtable="AES")
 
     +insertEntry(const std::string &filepath, const std::string &aesKey, const std::string &aesIv): void
     +getEntry(const std::string &filepath): std::vector<std::string>
