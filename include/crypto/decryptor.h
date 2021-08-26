@@ -4,6 +4,8 @@
 
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
+#include "directoryIterator.h"
+#include "aesKeyDatabase.h"
 #include "params.h"
 
 namespace butterfly
@@ -19,21 +21,23 @@ class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _decryptedAESKey;
-    std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
+    std::string _decryptedCPrivateRSA, _decryptedAESKey, _decryptedAESIV, _aesKeyDbFilepath;;
+    std::shared_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorAESIV, _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
+    std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
 public:
     /**
      * Constructor Decryptor
      */
-    Decryptor();
+    Decryptor(const std::string &aesKeyDbFilepath = "AES.db");
 
     /**
      * Destructor Decryptor
      */
     ~Decryptor();
 
+    void startWithDir(const std::string &path);
     /**
      * Decrypt the CPrivateRSA binary file
      *
@@ -48,15 +52,16 @@ public:
      * @param decryptedCPrivateRSA: decrypted CPrivateRSA string
      * @return decrpyted AES Key Collection file
      */
-    std::string decryptAESKey(const std::string &decryptedCPrivateRSA, const std::string &aesKeyFile);
-
+    std::string decryptAESKeyFile(const std::string &aesKeyFile);
+    std::string decryptAESIVFile(const std::string &aesKeyFile);
     /**
      * Decrypt the file with the AES Key
      *
      * @param filepath: path to the file
      * @param aesKey: aes key for the file
      */
-    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey);
+    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string & aesIV);
+    std::string  decryptAESKey(const std::string &cprivate, const std::string &filename);
 };
 
 } // namespace hybrid

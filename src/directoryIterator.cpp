@@ -9,11 +9,6 @@ DirectoryIterator::DirectoryIterator()
 
 }
 
-DirectoryIterator::~DirectoryIterator()
-{
-
-}
-
 bool DirectoryIterator::isFile(const boost::filesystem::path &path)
 {
     return boost::filesystem::is_regular_file(path);
@@ -43,6 +38,7 @@ std::vector<boost::filesystem::path> DirectoryIterator::getAllFiles(const boost:
     {
         files.push_back(p);
     }
+
     return files;
 }
 

@@ -27,7 +27,7 @@ public:
     /**
      * Destructor DirectoryIterator
      */
-    ~DirectoryIterator();
+    ~DirectoryIterator() = default;
 
     /**
      * Checks if given file path is a directory
@@ -35,7 +35,7 @@ public:
      * @param path: const reference boost::filesystem::path&
      * @return boolean: true if path is a directory else false
      */
-    bool isDirectory(const boost::filesystem::path &path);
+    static bool isDirectory(const boost::filesystem::path &path);
 
     /**
      * Checks if given file path is a file
@@ -43,7 +43,7 @@ public:
      * @param path: const reference boost::filesystem::path&
      * @return boolean: true if path is a file else false
      */
-    bool isFile(const boost::filesystem::path &path);
+    static bool isFile(const boost::filesystem::path &path);
 
     /**
      * Get recursively all files from given path
@@ -51,7 +51,7 @@ public:
      * @param p: const reference filesystem path
      * @return std::vector including all file paths
      */
-    std::vector<boost::filesystem::path> getAllFiles(const boost::filesystem::path &p);
+    static std::vector<boost::filesystem::path> getAllFiles(const boost::filesystem::path &p);
 
     /**
      * Get recursively all directories from given path

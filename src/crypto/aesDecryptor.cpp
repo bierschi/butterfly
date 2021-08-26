@@ -26,7 +26,7 @@ void AESDecryptor::decryptFile(const std::string &filename)
 {
 
     std::string fileData = butterfly::readBinFile(filename + butterfly::ENCRYPTED_FILE_ENDING);
-    LOG_TRACE(fileData.length() << " bytes to decrypt for file " << filename + butterfly::ENCRYPTED_FILE_ENDING);
+    LOG_TRACE(std::setprecision(3) << (fileData.length()/(1024 * 1024)) << " Mbytes to decrypt for file " << filename + butterfly::ENCRYPTED_FILE_ENDING);
 
     unsigned char *decryptedFile;
     size_t decryptedFileLength = CryptoAES::decrypt((unsigned char *) fileData.c_str(), fileData.length(), &decryptedFile);
@@ -37,11 +37,9 @@ void AESDecryptor::decryptFile(const std::string &filename)
         throw AESDecryptionException("AES Decryption failed with file " + filename + butterfly::ENCRYPTED_FILE_ENDING);
     }
 
-    LOG_TRACE("Decrypted successfully " << decryptedFileLength << " bytes from file " << filename + butterfly::ENCRYPTED_FILE_ENDING);
-
     //std::string outFile = filename + ".dec";
     butterfly::writeBinFile(filename, reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength));
-    LOG_INFO("Decrypted file written to " << filename);
+    LOG_INFO("Decrypted successfully " << std::setprecision(3) << (decryptedFileLength / (1024 * 1024)) << " Mbytes from file " << filename + butterfly::ENCRYPTED_FILE_ENDING);
 
     if ( !butterfly::removeFile(filename + butterfly::ENCRYPTED_FILE_ENDING) )
     {

@@ -24,6 +24,7 @@ private:
 
 protected:
     std::string _dbpath, _dbtable;
+
     SQLDatabase(const std::string &dbpath, const std::string &dbtable);
 
 public:

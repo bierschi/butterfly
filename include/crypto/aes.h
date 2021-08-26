@@ -36,8 +36,6 @@ private:
 
 protected:
     unsigned char *_aesKey, *_aesIv;
-    //unsigned char *_aesKey= (unsigned char *)"01234567890123456789012345678901";
-    //unsigned char *_aesIv=(unsigned char *)"0123456789012345";
 
 public:
 

