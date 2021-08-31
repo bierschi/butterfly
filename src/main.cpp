@@ -7,6 +7,32 @@
 #include "crypto/decryptor.h"
 #include "aesKeyDatabase.h"
 
+
+void test_rsa()
+{
+    // Init rsaEncryptAESKey with keysize 2048
+    butterfly::rsa::RSAEncryptor rsaEncryptAESKey = butterfly::rsa::RSAEncryptor(2048);
+    // Init rsaEncryptCPrivateRSA with keysize of SPUBLIC_PEM
+    butterfly::rsa::RSAEncryptor rsaEncryptCPrivateRSA = butterfly::rsa::RSAEncryptor(butterfly::rsa::SPUBLIC_PEM);
+
+    // Get the CPrivateRSA.pem file string
+    std::string cprivateRSAKeyFile = rsaEncryptAESKey.getRSAPrivateKeyStr();
+
+    // Encrypt the CPrivateRSA.pem
+    rsaEncryptCPrivateRSA.encrypt(rsaEncryptCPrivateRSA.getEvpPkey(), cprivateRSAKeyFile.substr(0, cprivateRSAKeyFile.size() - 1));
+    // Get the encrypted CPrivateRSA.bin string
+    std::string encCPrivateRSA = rsaEncryptCPrivateRSA.getEncryptedKey();
+
+    // save the encrypted CPrivateRSA.bin string to CPrivateRSA.bin file
+    rsaEncryptCPrivateRSA.saveEncryptedKeyFile(butterfly::CPRIVATERSA_FILENAME, encCPrivateRSA, rsaEncryptCPrivateRSA.getEvpPkeySize(rsaEncryptCPrivateRSA.getEvpPkey()));
+
+
+
+
+
+};
+
+
 int main(int argc, char *argv[])
 {
     // parse args with the argument parser
@@ -15,12 +41,14 @@ int main(int argc, char *argv[])
 
     LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
 
+    //test_rsa();
+
     std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-    encryptor->startWithDir("/home/christian/projects/butterfly/bin/data");
+    encryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
     sleep(5);
     std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
     std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
-    decryptor->startWithDir("/home/christian/projects/butterfly/bin/data");
+    decryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
 
     /*
     std::unique_ptr<butterfly::AESKeyDatabase> _database(new butterfly::AESKeyDatabase("AES.db", false));

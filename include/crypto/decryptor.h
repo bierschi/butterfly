@@ -37,7 +37,7 @@ public:
      */
     ~Decryptor();
 
-    void startWithDir(const std::string &path);
+    void invokeDir(const std::string &path);
     /**
      * Decrypt the CPrivateRSA binary file
      *
@@ -53,7 +53,7 @@ public:
      * @return decrpyted AES Key Collection file
      */
     std::string decryptAESKeyFile(const std::string &aesKeyFile);
-    std::string decryptAESIVFile(const std::string &aesKeyFile);
+
     /**
      * Decrypt the file with the AES Key
      *

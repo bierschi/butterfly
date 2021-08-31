@@ -145,7 +145,7 @@ public:
      * @param key: EVP_PKEY
      * @return size as int
      */
-    inline static int getEvpPkeySize(EVP_PKEY *key)
+    inline int getEvpPkeySize(EVP_PKEY *key)
     { return EVP_PKEY_size(key); }
 
     /**

