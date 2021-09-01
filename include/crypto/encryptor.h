@@ -16,7 +16,7 @@ namespace hybrid
 {
 
 /**
- * Class Encryptor to encrypt all files with AES and the CPrivateRSA and AES key with RSA
+ * Class Encryptor to encrypt all files with AES and the CPrivateRSA as well as AES key with RSA
  */
 class Encryptor
 {

