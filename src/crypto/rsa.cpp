@@ -149,7 +149,13 @@ bool CryptoRSA::generateRSAKey()
     if (_rsa != nullptr)
     {
         BIGNUM *e = BN_new();
-        return e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(_rsa, _keySize, e, nullptr);
+        if ( e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(_rsa, _keySize, e, nullptr) )
+        {
+            EVP_PKEY_assign_RSA(_pkey, _rsa);
+            return true;
+        }
+        return false;
+
     } else
     {
         return false;
@@ -158,7 +164,6 @@ bool CryptoRSA::generateRSAKey()
 
 EVP_PKEY *CryptoRSA::getEvpPkey()
 {
-    EVP_PKEY_assign_RSA(_pkey, _rsa);
     return _pkey;
 }
 

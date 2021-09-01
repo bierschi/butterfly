@@ -46,14 +46,14 @@ std::string CryptoAES::getOpenSSLError()
 
 bool CryptoAES::generateAESKey()
 {
-    LOG_INFO("Create the AES Key and the AES IV")
+    LOG_INFO("Create new AES Key and IV pair")
     _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     _aesIv = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
 
     auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     auto *aesSalt = (unsigned char *) malloc(8);
 
-    if (aesPass == NULL || aesSalt == NULL)
+    if (aesPass == nullptr || aesSalt == nullptr)
     {
         return false;
     }
