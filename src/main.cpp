@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     butterfly::ArgumentParser::Arguments arg = argparse->parseArgs(argc, argv);
 
     LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
-
+    std::cout << argc << argv <<std::endl;
     //test_rsa();
 
     std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));

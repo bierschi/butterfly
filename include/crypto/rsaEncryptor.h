@@ -61,7 +61,7 @@ public:
      * @param ciphertextKey: key as ciphertext
      * @param ciphertextLength: length of the ciphertext
      */
-    static void saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength);
+    static void saveEncryptedKeyFile(const std::string &filename, const std::string ciphertextKey, int keyLength);
 
     /**
      * Encrypts the given message string

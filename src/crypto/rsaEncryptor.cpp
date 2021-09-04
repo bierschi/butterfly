@@ -40,7 +40,7 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
     }
 }
 
-void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength)
+void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string ciphertextKey, int keyLength)
 {
 
     if ( !butterfly::writeBinFile(filename, ciphertextKey.c_str(), keyLength) )
