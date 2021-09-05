@@ -5,11 +5,16 @@
 namespace butterfly
 {
 
-const std::string ENC_AESKEY_FILENAME      = "AESKey.bin";
-const std::string ENC_AESIV_FILENAME       = "AESIV.bin";
-const std::string ENC_CPRIVATERSA_FILENAME = "CPrivateRSA.bin";
+// RSA Files
+const std::string ENC_CPRIVATERSA_FILENAME   = "CPrivateRSA.bin";
+const std::string RSA_ENCRYPTED_KEY_FILENAME = "RSAEncryptedKey.bin";
+const std::string RSA_IV_FILENAME            = "RSAIV.bin";
 
-const std::string ENC_BFLY_FILE_ENDING     = ".bfly";
+// AES Files
+const std::string ENC_AESKEY_FILENAME        = "AESKey.bin";
+const std::string ENC_AESIV_FILENAME         = "AESIV.bin";
+
+const std::string ENC_BFLY_FILE_ENDING       = ".bfly";
 
 } // namespace butterfly
 
