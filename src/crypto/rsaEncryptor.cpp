@@ -47,9 +47,9 @@ bool RSAEncryptor::writeRSAFilesToSystem()
     unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
     unsigned char* iv = CryptoRSA::getRSAIV();
 
-    if (butterfly::writeBinFile("encryptedKey.txt", reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
+    if (butterfly::writeBinFile(butterfly::RSA_ENCRYPTED_KEY_FILENAME, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
     {
-        if ( butterfly::writeBinFile("iv.txt", reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH) )
+        if ( butterfly::writeBinFile(butterfly::RSA_IV_FILENAME, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH) )
         {
             return true;
         } else
@@ -77,7 +77,7 @@ void RSAEncryptor::saveEncryptedMsgToFile(const std::string &filename, const std
 void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
-    // first check the message size
+    // First check the message size
     if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be encrypted")
@@ -86,13 +86,14 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
-    // validate the string length with block size length
+    // Validate the string length with block size length
     if ( !validateStringLengthForRSA(msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSAEncryptionException("Error on validateStringLengthForRSA()!");
     }
 
+    // Encrypt the message
     unsigned char ciphertextKey[keysize];
     CryptoRSA::encrypt(pkey, (unsigned char *) msg.c_str(), msg.size() + 1, ciphertextKey);
 
@@ -113,16 +114,18 @@ void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg)
     // Get the keysize
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
+    // Encrypt the message
     unsigned char *encryptedMessage = nullptr;
     CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
 
     _encryptedMessage.resize(static_cast<size_t>(keysize));
     std::copy(encryptedMessage, encryptedMessage + keysize, _encryptedMessage.begin());
 
+    // Write RSA Files to System
     if ( !writeRSAFilesToSystem() )
     {
-        LOG_ERROR("ERror on RSA Files");
-        throw RSAEncryptionException("");
+        LOG_ERROR("Error on writing RSA files to System");
+        throw RSAEncryptionException("Error on writing RSA files to System");
     }
 }
 

@@ -4,6 +4,7 @@
 
 #include "rsa.h"
 #include "utils.h"
+#include "params.h"
 #include "exceptions.h"
 
 namespace butterfly
@@ -27,7 +28,7 @@ private:
     bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
     /**
-     * Writes the RSA encrpytedKey and the RSA IV to the filesystem
+     * Writes the RSA encryptedKey and the RSA IV to the filesystem
      *
      * @return True if writing was successful
      */

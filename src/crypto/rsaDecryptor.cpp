@@ -46,7 +46,7 @@ std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath)
 void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
-    // first check the message size
+    // First check the message size
     if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be decrypted!")
@@ -55,13 +55,14 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
-    // validate the string length with block size length
+    // Validate the string length with block size length
     if ( !validateStringLengthForRSA(msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSADecryptionException("Error on validateStringLengthForRSA()!");
     }
 
+    // Decrypt the message
     unsigned char plaintextKey[keysize];
     CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(msg.c_str())), static_cast<size_t >(keysize), plaintextKey);
 
@@ -72,20 +73,31 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &msg)
 {
 
-    // first check the message size
+    // First check the message size
     if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be decrypted!")
         throw RSADecryptionException("Empty messages can not be decrypted!");
     }
 
-    //int keysize = CryptoRSAA::getEvpPkeySize(pkey);
+    std::string encKey = butterfly::readBinFile(butterfly::RSA_ENCRYPTED_KEY_FILENAME);
+    std::string iv = butterfly::readBinFile(butterfly::RSA_IV_FILENAME);
 
-    std::string encKey = butterfly::readBinFile("encryptedKey.txt");
-    std::string iv2 = butterfly::readBinFile("iv.txt");
+    if ( encKey.empty() )
+    {
+        LOG_ERROR(butterfly::RSA_ENCRYPTED_KEY_FILENAME << " is empty!")
+        throw RSADecryptionException(butterfly::RSA_ENCRYPTED_KEY_FILENAME + " is empty!");
+    }
 
+    if ( iv.empty() )
+    {
+        LOG_ERROR(butterfly::RSA_IV_FILENAME << " is empty!")
+        throw RSADecryptionException(butterfly::RSA_IV_FILENAME + " is empty!");
+    }
+
+    // Decrypt the Message
     char *decryptedMessage = nullptr;
-    CryptoRSA::decryptEVP(pkey, (unsigned char *) msg.c_str(), msg.length(), (unsigned char *) encKey.c_str(), (unsigned char *) iv2.c_str(), (unsigned char**)&decryptedMessage);
+    CryptoRSA::decryptEVP(pkey, (unsigned char *) msg.c_str(), msg.length(), (unsigned char *) encKey.c_str(), (unsigned char *) iv.c_str(), (unsigned char**)&decryptedMessage);
 
     _decryptedMessage = reinterpret_cast<char *>(decryptedMessage);
 
