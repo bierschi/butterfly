@@ -19,12 +19,15 @@ class RSAEncryptor : public CryptoRSA
 {
 
 private:
-    std::string _encryptedKey;
+    std::string _encryptedMessage;
 
     /**
      * Validates the length of given string with the max rsa block size
      */
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+    //bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) ;
+
+    bool writeRSAFilesToSystem();
 
 public:
 
@@ -53,15 +56,15 @@ public:
      * @return: encrypted key as std::string
      */
     inline std::string getEncryptedKey() const
-    { return _encryptedKey; }
+    { return _encryptedMessage; }
 
     /**
-     * Saves the encrypted key file
+     * Saves the encrypted message to file
      *
-     * @param ciphertextKey: key as ciphertext
-     * @param ciphertextLength: length of the ciphertext
+     * @param ciphertextMsg: message as ciphertext
+     * @param ciphertextMsgLength: length of the ciphertext
      */
-    static void saveEncryptedKeyFile(const std::string &filename, const std::string ciphertextKey, int keyLength);
+    static void saveEncryptedMsgToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength);
 
     /**
      * Encrypts the given message string
@@ -70,6 +73,12 @@ public:
      */
     void encrypt(EVP_PKEY *pkey, const std::string &msg);
 
+    /**
+     * Encrypts the given message string with EVP methods
+     *
+     * @param msg: message as std::string
+     */
+    void encryptEVP(EVP_PKEY *pkey, const std::string &msg);
 };
 
 } //namespace rsa

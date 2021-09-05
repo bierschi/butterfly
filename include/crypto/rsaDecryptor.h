@@ -19,13 +19,13 @@ class RSADecryptor : public CryptoRSA
 {
 
 private:
-    std::string _decryptedKey;
+    std::string _decryptedMessage;
 
     /**
      * Validates the length of given string with the RSA key size
      */
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
-
+    //bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize);
 public:
 
     /**
@@ -51,15 +51,7 @@ public:
      * @return std::string decrypted key
      */
     inline std::string getDecryptedKey() const
-    { return _decryptedKey; }
-
-    /**
-     * Get the pkey from given rsa file
-     *
-     * @param filepath: path to the rsa file
-     * @return EVP_PKEY
-     */
-    static EVP_PKEY *getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
+    { return _decryptedMessage; }
 
     /**
      * Get the binary content from the encrypted key file
@@ -76,6 +68,7 @@ public:
      * @param msg: message as std::string
      */
     void decrypt(EVP_PKEY *pkey, const std::string &msg);
+    void decryptEVP(EVP_PKEY *pkey, const std::string &msg);
 };
 
 } // namespace rsa

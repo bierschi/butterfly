@@ -7,39 +7,30 @@ namespace butterfly
 namespace rsa
 {
 
-CryptoRSA::CryptoRSA() : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(-1)
+CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _pkey(nullptr)
 {
-    LOG_TRACE("Create class CryptoRSA")
-}
+    // Initalize contexts
+    rsaEncryptContext = EVP_CIPHER_CTX_new();
+    rsaDecryptContext = EVP_CIPHER_CTX_new();
 
-CryptoRSA::CryptoRSA(int keySize) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(keySize)
-{
-    LOG_TRACE("Create class CryptoRSA with key size of " << keySize)
-
-    // init padding size
-    initPaddingSize();
-
-    // generate the rsa key
-    if (_rsa == nullptr)
+    // Generate the RSA Key
+    if ( !generateRSAKey() )
     {
-        if (!generateRSAKey())
-        {
-            LOG_ERROR("Error at generating the RSA key!");
-            throw std::runtime_error("Error at generating the RSA key!");
-        }
+        LOG_ERROR("Error at generating the RSA key!");
+        throw std::runtime_error("Error at generating the RSA key!");
     }
 }
 
-CryptoRSA::CryptoRSA(const std::string &key) : _rsa(nullptr), _pkey(EVP_PKEY_new()), _keySize(-1)
+CryptoRSA::CryptoRSA(const std::string &key) : _keysize(-1), _pkey(nullptr)
 {
-    LOG_TRACE("Create class CryptoRSA from rsa key string");
+    // Initalize contexts
+    rsaEncryptContext = EVP_CIPHER_CTX_new();
+    rsaDecryptContext = EVP_CIPHER_CTX_new();
 
-    // init padding size
-    initPaddingSize();
-
-    if (!loadKeyFromFile(key))
+    // Load pkey from file or string
+    if ( !loadKeyFromFile(key) )
     {
-        if (!loadKeyFromStr(key))
+        if ( !loadKeyFromStr(key) )
         {
             LOG_ERROR("Could not load rsa key data from " << key);
         } else
@@ -48,49 +39,68 @@ CryptoRSA::CryptoRSA(const std::string &key) : _rsa(nullptr), _pkey(EVP_PKEY_new
         }
     } else
     {
-        LOG_TRACE("Loaded successfully rsa key from file")
+        LOG_TRACE("Loaded successfully rsa key from file " << key);
     }
+
 }
 
 CryptoRSA::~CryptoRSA()
 {
+    EVP_PKEY_free(_pkey);
 
-    RSA_free(_rsa);
-
+    EVP_CIPHER_CTX_free(rsaEncryptContext);
+    EVP_CIPHER_CTX_free(rsaDecryptContext);
 }
 
-void CryptoRSA::initPaddingSize()
+std::string CryptoRSA::getOpenSSLError()
+{
+    char *buf;
+    BIO *bio = BIO_new(BIO_s_mem());
+    ERR_print_errors(bio);
+
+    size_t len = static_cast<size_t >(BIO_get_mem_data(bio, &buf));
+    std::string err(buf, len);
+    BIO_free(bio);
+
+    return err;
+}
+
+bool CryptoRSA::generateRSAKey()
 {
 
-    if (PADDING == RSA_NO_PADDING)
+    EVP_PKEY_CTX *context = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
+
+    if(EVP_PKEY_keygen_init(context) <= 0)
     {
-        _paddingSize = 0; // bytes
-    } else if (PADDING == RSA_PKCS1_PADDING)
-    {
-        _paddingSize = 11; // bytes
-    } else if (PADDING == RSA_PKCS1_OAEP_PADDING)
-    {
-        _paddingSize = 42; // bytes
-    } else
-    {
-        throw std::runtime_error("Padding mode is not supported!");
+        return false;
     }
+
+    if(EVP_PKEY_CTX_set_rsa_keygen_bits(context, _keysize) <= 0)
+    {
+        return false;
+    }
+
+    if(EVP_PKEY_keygen(context, &_pkey) <= 0)
+    {
+        return false;
+    }
+
+    EVP_PKEY_CTX_free(context);
+
+    return true;
 }
 
 bool CryptoRSA::loadKeyFromFile(const std::string &filepath)
 {
 
-    std::fstream in(filepath, std::ios::in);
-
-    if (in.is_open())
+    if ( butterfly::existsFile(filepath) )
     {
-        std::stringstream strStream;
-        strStream << in.rdbuf();
-        return loadKeyFromStr(strStream.str());
+        return loadKeyFromStr(butterfly::readBinFile(filepath));
     } else
     {
-        return false;
+        return loadKeyFromStr(filepath);
     }
+
 }
 
 bool CryptoRSA::loadKeyFromStr(const std::string &str)
@@ -107,13 +117,12 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
     {
 
         _pkey = PEM_read_bio_PrivateKey(bioPrivate, nullptr, nullptr, nullptr);
-        _rsa = EVP_PKEY_get1_RSA(_pkey);
+
 
     } else if (fLine == "-----BEGIN PUBLIC KEY-----")
     {
 
         _pkey = PEM_read_bio_PUBKEY(bioPrivate, nullptr, nullptr, nullptr);
-        _rsa = EVP_PKEY_get1_RSA(_pkey);
 
     } else
     {
@@ -127,191 +136,122 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
     return true;
 }
 
-std::string CryptoRSA::getOpenSSLError()
+unsigned char* CryptoRSA::getIV() const
 {
-
-    char *buf;
-    BIO *bio = BIO_new(BIO_s_mem());
-    ERR_print_errors(bio);
-
-    size_t len = static_cast<size_t >(BIO_get_mem_data(bio, &buf));
-    std::string err(buf, len);
-    BIO_free(bio);
-
-    return err;
+    return _iv;
 }
 
-bool CryptoRSA::generateRSAKey()
+unsigned char* CryptoRSA::getEncryptedKey() const
 {
-    LOG_INFO("Generating the RSA key with key size of " << _keySize)
-    _rsa = RSA_new();
-
-    if (_rsa != nullptr)
-    {
-        BIGNUM *e = BN_new();
-        if ( e != nullptr && BN_set_word(e, RSA_F4) && RSA_generate_key_ex(_rsa, _keySize, e, nullptr) )
-        {
-            EVP_PKEY_assign_RSA(_pkey, _rsa);
-            return true;
-        }
-        return false;
-
-    } else
-    {
-        return false;
-    }
+    return _encryptedKey;
 }
 
-EVP_PKEY *CryptoRSA::getEvpPkey()
+EVP_PKEY* CryptoRSA::getEvpPkey()
 {
     return _pkey;
 }
 
-char *CryptoRSA::getRSAPrivateKeyStr()
+char* CryptoRSA::getRSAPrivateKeyStr()
 {
-    LOG_TRACE("Generating the rsa private key string")
-
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, _rsa);
+    RSA *rsaPrivateKey = EVP_PKEY_get0_RSA(_pkey);
 
     BIO *bioPrivate = BIO_new(BIO_s_mem());
-    PEM_write_bio_RSAPrivateKey(bioPrivate, _rsa, nullptr, nullptr, 0, nullptr, nullptr);
+    PEM_write_bio_RSAPrivateKey(bioPrivate, rsaPrivateKey, nullptr, nullptr, 0, nullptr, nullptr);
 
-    int privateKeylen = BIO_pending(bioPrivate);
-    _rsaPrivateKeyStr = static_cast<char *>( calloc(static_cast<size_t>(privateKeylen + 1), 1));
-    BIO_read(bioPrivate, _rsaPrivateKeyStr, privateKeylen);
+    BIO_flush(bioPrivate);
+    BIO_get_mem_data(bioPrivate, &_rsaPrivateKeyStr);
 
     return _rsaPrivateKeyStr;
 }
 
-char *CryptoRSA::getRSAPublicKeyStr()
+char* CryptoRSA::getPrivateKeyStr()
 {
-    LOG_TRACE("Generating the rsa public key string")
 
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, _rsa);
+    BIO *bioPrivate = BIO_new(BIO_s_mem());
+    PEM_write_bio_PrivateKey(bioPrivate, _pkey, NULL, NULL, 0, 0, NULL);
 
-    BIO *bioPublic = BIO_new(BIO_s_mem());
-    PEM_write_bio_RSAPublicKey(bioPublic, _rsa);
+    BIO_flush(bioPrivate);
+    BIO_get_mem_data(bioPrivate, &_privateKeyStr);
 
-    int publicKeylen = BIO_pending(bioPublic);
-    _rsaPublicKeyStr = static_cast<char *>( calloc(static_cast<size_t>( publicKeylen + 1 ), 1));
-    BIO_read(bioPublic, _rsaPublicKeyStr, publicKeylen);
-
-    return _rsaPublicKeyStr;
+    return _privateKeyStr;
 }
 
-char *CryptoRSA::getPublicKeyStr()
+char* CryptoRSA::getPublicKeyStr()
 {
-    LOG_TRACE("Generating the public key string")
-
-    EVP_PKEY *pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, _rsa);
 
     BIO *bioPublic = BIO_new(BIO_s_mem());
-    PEM_write_bio_PUBKEY(bioPublic, pkey);
+    PEM_write_bio_PUBKEY(bioPublic, _pkey);
 
-    int publicKeylen = BIO_pending(bioPublic);
-    _publicKeyStr = static_cast<char *>( calloc(static_cast<size_t>( publicKeylen + 1 ), 1));
-    BIO_read(bioPublic, _publicKeyStr, publicKeylen);
+    BIO_flush(bioPublic);
+    BIO_get_mem_data(bioPublic, &_publicKeyStr);
 
     return _publicKeyStr;
 }
 
-bool CryptoRSA::createRSAPrivateKeyFile(const std::string &filename)
+size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage)
 {
 
-    FILE *privateKeyFile = fopen(filename.c_str(), "wb");
+    size_t encryptedMessageLength = 0;
+    size_t blockLength = 0;
+    size_t encryptedKeyLength;
 
-    if (privateKeyFile)
+    _encryptedKey = (unsigned char*)malloc(static_cast<size_t>(EVP_PKEY_size(key)));
+    _iv = (unsigned char*)malloc(EVP_MAX_IV_LENGTH);
+
+    *encryptedMessage = (unsigned char*)malloc(messageLength + EVP_MAX_IV_LENGTH);
+
+    if(!EVP_SealInit(rsaEncryptContext, EVP_aes_256_cbc(), &_encryptedKey, (int*)&encryptedKeyLength, _iv, &key, 1))
     {
-        LOG_TRACE("Creating the rsa private key file " << filename);
-        PEM_write_RSAPrivateKey(privateKeyFile, _rsa, nullptr, nullptr, 0, nullptr, nullptr);
-        fclose(privateKeyFile);
-    } else
-    {
-        LOG_ERROR("Failed to open file " << filename << " for writing private rsa key!")
-        return false;
+        LOG_ERROR("Error during EVP_SealInit in RSA encrypt: " << getOpenSSLError());
+        return 0;
     }
-    return true;
+
+    if(!EVP_SealUpdate(rsaEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)message, (int)messageLength))
+    {
+        LOG_ERROR("Error during EVP_SealUpdate in RSA encrypt: " << getOpenSSLError());
+        return 0;
+    }
+    encryptedMessageLength += blockLength;
+
+    if(!EVP_SealFinal(rsaEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength))
+    {
+        LOG_ERROR("Error during EVP_SealFinal in RSA encrypt: " << getOpenSSLError());
+        return 0;
+    }
+    encryptedMessageLength += blockLength;
+
+    return encryptedMessageLength;
 }
 
-bool CryptoRSA::createRSAPublicKeyFile(const std::string &filename)
+size_t CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **decryptedMessage)
 {
 
-    FILE *publicKeyFile = fopen(filename.c_str(), "wb");
+    size_t decryptedMessageLength = 0;
+    size_t blockLength = 0;
 
-    if (publicKeyFile)
+    *decryptedMessage = (unsigned char*)malloc(encryptedMessageLength + EVP_MAX_IV_LENGTH);
+
+    if(!EVP_OpenInit(rsaDecryptContext, EVP_aes_256_cbc(), encryptedKey, getEvpPkeySize(key), iv, key))
     {
-        LOG_TRACE("Creating the rsa public key file " << filename);
-        PEM_write_RSAPublicKey(publicKeyFile, _rsa);
-        fclose(publicKeyFile);
-    } else
-    {
-        LOG_ERROR("Failed to open file " << filename << " for writing public rsa key!")
-        return false;
-    }
-    return true;
-}
-
-bool CryptoRSA::createPublicKeyFile(const std::string &filename)
-{
-
-    FILE *publicKeyFile = fopen(filename.c_str(), "wb");
-
-    if (publicKeyFile)
-    {
-        LOG_TRACE("Creating the public key file " << filename);
-        EVP_PKEY *pkey = EVP_PKEY_new();
-        EVP_PKEY_assign_RSA(pkey, _rsa);
-        PEM_write_PUBKEY(publicKeyFile, pkey);
-
-        fclose(publicKeyFile);
-    } else
-    {
-        LOG_ERROR("Failed to open file " << filename << " for writing public key!")
-        return false;
-    }
-    return true;
-}
-
-EVP_PKEY *CryptoRSA::getPkeyFromPrivateKeyFile(const std::string &filepath)
-{
-
-    EVP_PKEY *pkey = nullptr;
-    FILE *privateFile = fopen(filepath.c_str(), "rb");
-
-    if (privateFile)
-    {
-
-        pkey = PEM_read_PrivateKey(privateFile, nullptr, nullptr, nullptr);
-
-        fclose(privateFile);
-    } else
-    {
-        LOG_ERROR("Failed to open private key file " << filepath);
+        LOG_ERROR("Error during EVP_OpenInit in RSA decrypt: " << getOpenSSLError());
+        return 0;
     }
 
-    return pkey;
-}
-
-EVP_PKEY *CryptoRSA::getPkeyFromPublicKeyFile(const std::string &filepath)
-{
-
-    EVP_PKEY *pkey = nullptr;
-    FILE *publicKeyFile = fopen(filepath.c_str(), "rb");
-
-    if (publicKeyFile)
+    if(!EVP_OpenUpdate(rsaDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength, encryptedMessage, (int)encryptedMessageLength))
     {
-
-        pkey = PEM_read_PUBKEY(publicKeyFile, nullptr, nullptr, nullptr);
-
-    } else
-    {
-        LOG_ERROR("Failed to open public key file " << filepath);
+        LOG_ERROR("Error during EVP_OpenUpdate in RSA decrypt: " << getOpenSSLError());
+        return 0;
     }
+    decryptedMessageLength += blockLength;
 
-    return pkey;
+    if(!EVP_OpenFinal(rsaDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength))
+    {
+        LOG_ERROR("Error during EVP_OpenFinal in RSA decrypt: " << getOpenSSLError());
+        return 0;
+    }
+    decryptedMessageLength += blockLength;
+
+    return decryptedMessageLength;
 }
 
 size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext)
@@ -339,7 +279,7 @@ size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t 
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0)
     {
 
-        LOG_ERROR("Error during EVP_PKEY_encrypt: " << getOpenSSLError());
+        LOG_ERROR("Error during EVP_PKEY_encrypt in RSA encrypt: " << getOpenSSLError());
         return 0;
     }
 
@@ -371,7 +311,7 @@ size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphe
     }
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0)
     {
-        LOG_ERROR("Error during EVP_PKEY_decrypt: " << getOpenSSLError());
+        LOG_ERROR("Error during EVP_PKEY_decrypt in RSA decrypt: " << getOpenSSLError());
         return 0;
     }
 
@@ -381,3 +321,4 @@ size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphe
 } // namespace rsa
 
 } // namespace butterfly
+
