@@ -71,7 +71,7 @@ std::string Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, con
     try
     {
         _rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA);
-        _decryptedCPrivateRSA = _rsaDecryptorCPrivateRSA->getDecryptedKey();
+        _decryptedCPrivateRSA = _rsaDecryptorCPrivateRSA->getDecryptedMessage();
 
         LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
 
@@ -94,7 +94,7 @@ std::string Decryptor::decryptAESKeyPair(const std::string &aesKeyFile)
     try
     {
         _rsaDecryptorAESKey->decrypt(aesKeyPKey, encAESKey);
-        decryptedAESKey = _rsaDecryptorAESKey->getDecryptedKey();
+        decryptedAESKey = _rsaDecryptorAESKey->getDecryptedMessage();
         LOG_TRACE("Decrypted Content from file " << aesKeyFile << ": " << decryptedAESKey);
 
     } catch (RSADecryptionException &e)

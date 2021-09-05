@@ -21,7 +21,7 @@ void test_rsa_enc()
     //rsaEncryptCPrivateRSA->encrypt(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile);
 
     // Get the encrypted CPrivateRSA.bin string
-    std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedKey();
+    std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
 
     // save the encrypted CPrivateRSA.bin string to CPrivateRSA.bin file
     rsaEncryptCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
@@ -36,7 +36,7 @@ void test_rsa_dec()
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
     rsaDecryptor->decrypt(rsaDecryptor->getEvpPkey(), encCPrivateRSA);
-    std::string decrpyted = rsaDecryptor->getDecryptedKey();
+    std::string decrpyted = rsaDecryptor->getDecryptedMessage();
     butterfly::writeBinFile("CPrivateRSA.pem.dec", decrpyted.c_str(), static_cast<long>(decrpyted.length()));
     std::cout << "Decrypted: " << decrpyted.size() << std::endl;
 }
@@ -56,7 +56,7 @@ void test_rsa_enc_evp()
     rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile);
 
     // Get the encrypted CPrivateRSA.bin string
-    std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedKey();
+    std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
 
     // save the encrypted CPrivateRSA.bin string to CPrivateRSA.bin file
     rsaEncryptCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
@@ -72,7 +72,7 @@ void test_rsa_dec_evp()
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
     rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA);
-    std::string decrpyted = rsaDecryptor->getDecryptedKey();
+    std::string decrpyted = rsaDecryptor->getDecryptedMessage();
     butterfly::writeBinFile("CPrivateRSA.pem.dec", decrpyted.c_str(), static_cast<long>(decrpyted.length()));
     std::cout << "Decrypted: " << decrpyted.size() << std::endl;
 }

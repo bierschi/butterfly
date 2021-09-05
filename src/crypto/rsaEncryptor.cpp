@@ -17,9 +17,9 @@ RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key)
     LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
 }
 
-bool RSAEncryptor::validateStringLengthForRSA(const std::string &, const int &)
+bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize)
 {
-    /*
+
     int msgLength = static_cast<int>(msg.length());
     int maxBlockSize = (keysize - CryptoRSA::getPaddingSize());
 
@@ -38,15 +38,14 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &, const int &)
                                     << CryptoRSA::getPaddingSize() << ")");
         return false;
     }
-     */
-    return true;
+
 }
 
 bool RSAEncryptor::writeRSAFilesToSystem()
 {
 
-    unsigned char* encryptedKey = CryptoRSA::getEncryptedKey();
-    unsigned char* iv = CryptoRSA::getIV();
+    unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
+    unsigned char* iv = CryptoRSA::getRSAIV();
 
     if (butterfly::writeBinFile("encryptedKey.txt", reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
     {

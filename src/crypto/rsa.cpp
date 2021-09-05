@@ -13,6 +13,11 @@ CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _pkey(nullptr)
     rsaEncryptContext = EVP_CIPHER_CTX_new();
     rsaDecryptContext = EVP_CIPHER_CTX_new();
 
+    if (PADDING == RSA_PKCS1_OAEP_PADDING)
+    {
+        _paddingSize = 42;
+    }
+
     // Generate the RSA Key
     if ( !generateRSAKey() )
     {
@@ -26,6 +31,11 @@ CryptoRSA::CryptoRSA(const std::string &key) : _keysize(-1), _pkey(nullptr)
     // Initalize contexts
     rsaEncryptContext = EVP_CIPHER_CTX_new();
     rsaDecryptContext = EVP_CIPHER_CTX_new();
+
+    if (PADDING == RSA_PKCS1_OAEP_PADDING)
+    {
+        _paddingSize = 42;
+    }
 
     // Load pkey from file or string
     if ( !loadKeyFromFile(key) )
@@ -136,12 +146,12 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
     return true;
 }
 
-unsigned char* CryptoRSA::getIV() const
+unsigned char* CryptoRSA::getRSAIV() const
 {
     return _iv;
 }
 
-unsigned char* CryptoRSA::getEncryptedKey() const
+unsigned char* CryptoRSA::getRSAEncryptedKey() const
 {
     return _encryptedKey;
 }
@@ -188,7 +198,7 @@ char* CryptoRSA::getPublicKeyStr()
     return _publicKeyStr;
 }
 
-size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage)
+size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
 
     size_t encryptedMessageLength = 0;
@@ -198,7 +208,7 @@ size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t
     _encryptedKey = (unsigned char*)malloc(static_cast<size_t>(EVP_PKEY_size(key)));
     _iv = (unsigned char*)malloc(EVP_MAX_IV_LENGTH);
 
-    *encryptedMessage = (unsigned char*)malloc(messageLength + EVP_MAX_IV_LENGTH);
+    *ciphertext = (unsigned char*)malloc(plaintextLength + EVP_MAX_IV_LENGTH);
 
     if(!EVP_SealInit(rsaEncryptContext, EVP_aes_256_cbc(), &_encryptedKey, (int*)&encryptedKeyLength, _iv, &key, 1))
     {
@@ -206,14 +216,14 @@ size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t
         return 0;
     }
 
-    if(!EVP_SealUpdate(rsaEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)message, (int)messageLength))
+    if(!EVP_SealUpdate(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)plaintext, (int)plaintextLength))
     {
         LOG_ERROR("Error during EVP_SealUpdate in RSA encrypt: " << getOpenSSLError());
         return 0;
     }
     encryptedMessageLength += blockLength;
 
-    if(!EVP_SealFinal(rsaEncryptContext, *encryptedMessage + encryptedMessageLength, (int*)&blockLength))
+    if(!EVP_SealFinal(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength))
     {
         LOG_ERROR("Error during EVP_SealFinal in RSA encrypt: " << getOpenSSLError());
         return 0;
@@ -223,13 +233,13 @@ size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t
     return encryptedMessageLength;
 }
 
-size_t CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **decryptedMessage)
+size_t CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext)
 {
 
     size_t decryptedMessageLength = 0;
     size_t blockLength = 0;
 
-    *decryptedMessage = (unsigned char*)malloc(encryptedMessageLength + EVP_MAX_IV_LENGTH);
+    *plaintext = (unsigned char*)malloc(ciphertextLength + EVP_MAX_IV_LENGTH);
 
     if(!EVP_OpenInit(rsaDecryptContext, EVP_aes_256_cbc(), encryptedKey, getEvpPkeySize(key), iv, key))
     {
@@ -237,14 +247,14 @@ size_t CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *encryptedMessage, siz
         return 0;
     }
 
-    if(!EVP_OpenUpdate(rsaDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength, encryptedMessage, (int)encryptedMessageLength))
+    if(!EVP_OpenUpdate(rsaDecryptContext, (unsigned char*)*plaintext + decryptedMessageLength, (int*)&blockLength, ciphertext, (int)ciphertextLength))
     {
         LOG_ERROR("Error during EVP_OpenUpdate in RSA decrypt: " << getOpenSSLError());
         return 0;
     }
     decryptedMessageLength += blockLength;
 
-    if(!EVP_OpenFinal(rsaDecryptContext, (unsigned char*)*decryptedMessage + decryptedMessageLength, (int*)&blockLength))
+    if(!EVP_OpenFinal(rsaDecryptContext, (unsigned char*)*plaintext + decryptedMessageLength, (int*)&blockLength))
     {
         LOG_ERROR("Error during EVP_OpenFinal in RSA decrypt: " << getOpenSSLError());
         return 0;

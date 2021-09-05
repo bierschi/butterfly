@@ -25,7 +25,7 @@ class CryptoRSA
 {
 
 private:
-    int _keysize;
+    int _keysize, _paddingSize;
     char *_rsaPrivateKeyStr, *_privateKeyStr, *_publicKeyStr;
     unsigned char* _encryptedKey, *_iv;
 
@@ -62,6 +62,25 @@ private:
     */
     bool loadKeyFromStr(const std::string &str);
 
+    /**
+     *
+     * Validates the length of given message string with the RSA key size
+     *
+     * @param msg: message as std::string
+     * @param keysize: rsa key size  as int
+     * @return boolean
+     */
+    virtual bool validateStringLengthForRSA(const std::string &msg, const int &keysize) = 0;
+
+protected:
+    /**
+    * Get the padding size
+    *
+    * @return int: padding size
+    */
+    inline int getPaddingSize() const
+    { return _paddingSize; }
+
 public:
     /**
     * Constructor CryptoRSA  to create new rsa key with keySize
@@ -87,14 +106,14 @@ public:
      *
      * @return _iv as unsigned char*
      */
-    unsigned char* getIV() const;
+    unsigned char* getRSAIV() const;
 
     /**
      * Get the RSA encrypted Key
      *
      * @return _encryptedKey as unsigned char*
      */
-    unsigned char* getEncryptedKey() const;
+    unsigned char* getRSAEncryptedKey() const;
 
     /**
      * Get the EVP_PKEY from the rsa keypair
@@ -133,8 +152,29 @@ public:
      */
     char *getPublicKeyStr();
 
-    size_t encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage);
-    size_t decryptEVP(EVP_PKEY *key, unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **decryptedMessage);
+    /**
+    * Encrypt the plaintext with EVP methods
+    *
+    * @param key: EVP_PKEY to encrypt
+    * @param plaintext: plaintext to encrypt
+    * @param plaintextLength: length of the plaintext
+    * @param ciphertext: encrypted ciphertext
+    * @return ciphertext length
+    */
+    size_t encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext);
+
+    /**
+    * Decrypt the ciphertext with EVP methods
+    *
+    * @param key: EVP_PKEY to decrypt
+    * @param ciphertext: ciphertext to decrypt
+    * @param ciphertextLength: length of the ciphertext
+    * @param encryptedKey: encrypted rsa key
+    * @param iv: iv for rsa encryption
+    * @param plaintext: decrypted plaintext
+    * @return plaintext length
+    */
+    size_t decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext);
 
     /**
     * Encrypt the plaintext with the EVP PKEY

@@ -24,9 +24,13 @@ private:
     /**
      * Validates the length of given string with the max rsa block size
      */
-    //bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) ;
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
+    /**
+     * Writes the RSA encrpytedKey and the RSA IV to the filesystem
+     *
+     * @return True if writing was successful
+     */
     bool writeRSAFilesToSystem();
 
 public:
@@ -51,11 +55,11 @@ public:
     virtual ~RSAEncryptor() = default;
 
     /**
-     * Get the encrypted key
+     * Get the encrypted message
      *
-     * @return: encrypted key as std::string
+     * @return: encrypted message as std::string
      */
-    inline std::string getEncryptedKey() const
+    inline std::string getEncryptedMessage() const
     { return _encryptedMessage; }
 
     /**

@@ -24,8 +24,8 @@ private:
     /**
      * Validates the length of given string with the RSA key size
      */
-    //bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize);
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+
 public:
 
     /**
@@ -46,11 +46,11 @@ public:
     virtual ~RSADecryptor() = default;
 
     /**
-     * Get the decrypted key
+     * Get the decrypted Message
      *
-     * @return std::string decrypted key
+     * @return std::string decrypted Message
      */
-    inline std::string getDecryptedKey() const
+    inline std::string getDecryptedMessage() const
     { return _decryptedMessage; }
 
     /**
@@ -68,6 +68,13 @@ public:
      * @param msg: message as std::string
      */
     void decrypt(EVP_PKEY *pkey, const std::string &msg);
+
+    /**
+     * Decrypts the given message string with EVP methods
+     *
+     * @param pkey: EVP_PKEY to decrypt the cipher message string
+     * @param msg: message as std::string
+     */
     void decryptEVP(EVP_PKEY *pkey, const std::string &msg);
 };
 
