@@ -44,7 +44,7 @@ public:
     /**
      * Destructor RSADecryptor
      */
-    virtual ~RSADecryptor() = default;
+    ~RSADecryptor() override = default;
 
     /**
      * Get the decrypted Message

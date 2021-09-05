@@ -53,7 +53,7 @@ public:
     /**
      * Destructor RSAEncryptor
      */
-    virtual ~RSAEncryptor() = default;
+    ~RSAEncryptor() override = default;
 
     /**
      * Get the encrypted message
