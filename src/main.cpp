@@ -72,9 +72,9 @@ void test_rsa_dec_evp()
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
     rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA);
-    std::string decrpyted = rsaDecryptor->getDecryptedMessage();
-    butterfly::writeBinFile("CPrivateRSA.pem.dec", decrpyted.c_str(), static_cast<long>(decrpyted.length()));
-    std::cout << "Decrypted: " << decrpyted.size() << std::endl;
+    std::string decrypted = rsaDecryptor->getDecryptedMessage();
+    butterfly::writeBinFile("CPrivateRSA.pem.dec", decrypted.c_str(), static_cast<long>(decrypted.length()));
+    std::cout << "Decrypted: " << decrypted.size() << std::endl;
 }
 
 int main(int argc, char *argv[])

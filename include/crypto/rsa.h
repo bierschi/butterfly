@@ -82,6 +82,7 @@ protected:
     { return _paddingSize; }
 
 public:
+
     /**
     * Constructor CryptoRSA  to create new rsa key with keySize
     *
@@ -99,7 +100,7 @@ public:
     /**
      * Destructor CryptoRSA
      */
-    ~CryptoRSA();
+    virtual ~CryptoRSA();
 
     /**
      * Get the RSA IV
