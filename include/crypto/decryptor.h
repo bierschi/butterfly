@@ -76,7 +76,7 @@ public:
      * @param filepath
      * @return
      */
-    std::string  decryptAESKeyPair(const std::string &filepath);
+    std::string  decryptAESKeyPair(const std::string &filepath, const std::string &type);
 
     /**
      * Decrypt the file with the AES Key

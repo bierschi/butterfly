@@ -32,7 +32,7 @@ private:
      *
      * @return True if writing was successful
      */
-    bool writeRSAFilesToSystem();
+    bool writeRSAFilesToSystem(const std::string &type);
 
 public:
 
@@ -83,7 +83,7 @@ public:
      *
      * @param msg: message as std::string
      */
-    void encryptEVP(EVP_PKEY *pkey, const std::string &msg);
+    void encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type);
 };
 
 } //namespace rsa

@@ -72,7 +72,7 @@ public:
      * @param aesKeyStr: AES Key or IV String
      * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string aesKeyStr, const std::string filename, const std::string &type);
 
     void encryptAESKeyFile(const std::string &filepath);
 };

@@ -40,16 +40,7 @@ CryptoRSA::CryptoRSA(const std::string &key) : _keysize(-1), _pkey(nullptr)
     // Load pkey from file or string
     if ( !loadKeyFromFile(key) )
     {
-        if ( !loadKeyFromStr(key) )
-        {
-            LOG_ERROR("Could not load rsa key data from " << key);
-        } else
-        {
-            LOG_TRACE("Loaded successfully rsa key from given string");
-        }
-    } else
-    {
-        LOG_TRACE("Loaded successfully rsa key from file " << key);
+        LOG_ERROR("Could not load key from file/string!");
     }
 
 }
@@ -105,12 +96,21 @@ bool CryptoRSA::loadKeyFromFile(const std::string &filepath)
 
     if ( butterfly::existsFile(filepath) )
     {
-        return loadKeyFromStr(butterfly::readBinFile(filepath));
+        if ( loadKeyFromStr(butterfly::readBinFile(filepath)) )
+        {
+            LOG_TRACE("Loaded successfully rsa key from file " << filepath);
+            return true;
+        }
     } else
     {
-        return loadKeyFromStr(filepath);
+        if ( loadKeyFromStr(filepath) )
+        {
+            LOG_TRACE("Loaded successfully rsa key from string!")
+            return true;
+        }
     }
 
+    return false;
 }
 
 bool CryptoRSA::loadKeyFromStr(const std::string &str)

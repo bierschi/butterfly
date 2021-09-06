@@ -28,6 +28,40 @@ bool RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int 
     return true;
 }
 
+void RSADecryptor::readRSAFilesFromSystem(const std::string &type, std::string &encKey, std::string &iv)
+{
+    std::string rsaek, rsaiv;
+    if ( type == butterfly::ENC_CPRIVATERSA_FILENAME )
+    {
+        rsaek = butterfly::RSA_ENCKEY_CPKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_CPKEY_FILENAME;
+
+    } else if ( type == ENC_AESKEY_FILENAME)
+    {
+        rsaek = butterfly::RSA_ENCKEY_AESKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESKEY_FILENAME;
+
+    } else {
+        rsaek = butterfly::RSA_ENCKEY_AESIV_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESIV_FILENAME;
+    }
+
+    encKey = butterfly::readBinFile(rsaek);
+    iv = butterfly::readBinFile(rsaiv);
+
+    if ( encKey.empty() )
+    {
+        LOG_ERROR(rsaek << " is empty!")
+        throw RSADecryptionException(rsaek + " is empty!");
+    }
+
+    if ( iv.empty() )
+    {
+        LOG_ERROR(rsaiv << " is empty!")
+        throw RSADecryptionException(rsaiv + " is empty!");
+    }
+}
+
 std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath)
 {
 
@@ -70,7 +104,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 
 }
 
-void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &msg)
+void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type)
 {
 
     // First check the message size
@@ -80,20 +114,8 @@ void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &msg)
         throw RSADecryptionException("Empty messages can not be decrypted!");
     }
 
-    std::string encKey = butterfly::readBinFile(butterfly::RSA_ENCRYPTED_KEY_FILENAME);
-    std::string iv = butterfly::readBinFile(butterfly::RSA_IV_FILENAME);
-
-    if ( encKey.empty() )
-    {
-        LOG_ERROR(butterfly::RSA_ENCRYPTED_KEY_FILENAME << " is empty!")
-        throw RSADecryptionException(butterfly::RSA_ENCRYPTED_KEY_FILENAME + " is empty!");
-    }
-
-    if ( iv.empty() )
-    {
-        LOG_ERROR(butterfly::RSA_IV_FILENAME << " is empty!")
-        throw RSADecryptionException(butterfly::RSA_IV_FILENAME + " is empty!");
-    }
+    std::string encKey, iv;
+    readRSAFilesFromSystem(type, encKey, iv);
 
     // Decrypt the Message
     char *decryptedMessage = nullptr;

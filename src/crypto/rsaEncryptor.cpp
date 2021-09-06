@@ -41,15 +41,31 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
 
 }
 
-bool RSAEncryptor::writeRSAFilesToSystem()
+bool RSAEncryptor::writeRSAFilesToSystem(const std::string &type)
 {
+
+    std::string rsaek, rsaiv;
+    if ( type == butterfly::ENC_CPRIVATERSA_FILENAME )
+    {
+        rsaek = butterfly::RSA_ENCKEY_CPKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_CPKEY_FILENAME;
+
+    } else if ( type == ENC_AESKEY_FILENAME)
+    {
+        rsaek = butterfly::RSA_ENCKEY_AESKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESKEY_FILENAME;
+
+    } else {
+        rsaek = butterfly::RSA_ENCKEY_AESIV_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESIV_FILENAME;
+    }
 
     unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
     unsigned char* iv = CryptoRSA::getRSAIV();
 
-    if (butterfly::writeBinFile(butterfly::RSA_ENCRYPTED_KEY_FILENAME, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
+    if (butterfly::writeBinFile(rsaek, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
     {
-        if ( butterfly::writeBinFile(butterfly::RSA_IV_FILENAME, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH) )
+        if ( butterfly::writeBinFile(rsaiv, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH) )
         {
             return true;
         } else
@@ -102,7 +118,7 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
 }
 
-void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg)
+void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type)
 {
     // First check the message size
     if ( msg.empty() )
@@ -122,11 +138,12 @@ void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg)
     std::copy(encryptedMessage, encryptedMessage + keysize, _encryptedMessage.begin());
 
     // Write RSA Files to System
-    if ( !writeRSAFilesToSystem() )
+    if ( !writeRSAFilesToSystem(type) )
     {
         LOG_ERROR("Error on writing RSA files to System");
         throw RSAEncryptionException("Error on writing RSA files to System");
     }
+
 }
 
 } // namespace rsa
