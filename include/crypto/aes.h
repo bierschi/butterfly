@@ -57,6 +57,13 @@ public:
     bool generateAESKey();
 
     /**
+     * Generates the AES Key and the AES IV with a random salt
+     *
+     * @return True if generation was successful
+     */
+    bool generateAESKeyWithSalt();
+
+    /**
      * Encrypts the plaintext
      *
      * @param plaintext: plaintext to encrypt

@@ -109,21 +109,29 @@ int main(int argc, char *argv[])
     //sleep(2);
     //test_rsa_dec_evp();
     //exit(1);
-
+    int i = 0;
     /////// Hybrid Part ////////
+    while (i < 25)
+    {
+        // start encryption
+        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+        encryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
 
-    // start encryption
-    std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-    encryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
+        sleep(2);
 
-    sleep(5);
+        // start decryption
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+        std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", "CPrivateRSA.bin");
+        //butterfly::writeBinFile("CPrivateRSA.pem.dec", cprivate.c_str(), static_cast<long>(cprivate.length()));
 
-    // start decryption
-    std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-    std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", "CPrivateRSA.bin");
-    butterfly::writeBinFile("CPrivateRSA.pem.dec", cprivate.c_str(), static_cast<long>(cprivate.length()));
+        decryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
 
-    decryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
+        i++;
+        LOG_INFO("NEW HYBRID ENCRYPTION ROUND " << i);
+        sleep(10);
+
+    }
+
 
 
     ////// AES PART ///////

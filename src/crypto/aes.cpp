@@ -47,6 +47,25 @@ std::string CryptoAES::getOpenSSLError()
 bool CryptoAES::generateAESKey()
 {
     LOG_INFO("Create new AES Key and IV pair")
+
+    _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
+    _aesIv = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
+
+    if(RAND_bytes(_aesKey, _aesKeyLength) == 0) {
+        return false;
+    }
+
+    if(RAND_bytes(_aesIv, _aesIvLength) == 0) {
+        return false;
+    }
+
+    return true;
+}
+
+bool CryptoAES::generateAESKeyWithSalt()
+{
+    LOG_INFO("Create new AES Key and IV pair with Salt")
+
     _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     _aesIv = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
 
