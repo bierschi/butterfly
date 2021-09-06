@@ -55,7 +55,7 @@ public:
     /**
      * Destructor Encryptor
      */
-    ~Encryptor();
+    ~Encryptor() = default;
 
     /**
      * Invokes the provided directory path
@@ -82,9 +82,8 @@ public:
      * @param aesKeyStr: AES Key or IV String
      * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(std::string aesKeyStr, std::string filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
 
-    void encryptAESKeyFile(const std::string &filepath);
 };
 
 } // namespace hybrid

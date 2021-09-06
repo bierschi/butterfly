@@ -7,6 +7,7 @@
 #include "directoryIterator.h"
 #include "aesKeyDatabase.h"
 #include "params.h"
+#include "exceptions.h"
 
 namespace butterfly
 {
@@ -22,6 +23,7 @@ class Decryptor
 
 private:
     std::string _decryptedCPrivateRSA, _aesKeyDbFilepath;
+    bool _decCPrivateRSAInitialized;
 
     std::shared_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
@@ -56,7 +58,7 @@ public:
     /**
      * Destructor Decryptor
      */
-    ~Decryptor();
+    ~Decryptor() = default;
 
     /**
      *
@@ -87,7 +89,7 @@ public:
      * @param filepath: path to the file
      * @param aesKey: aes key for the file
      */
-    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string & aesIV);
+    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string &aesIV);
 
 };
 

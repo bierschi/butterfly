@@ -81,6 +81,42 @@ public:
 };
 
 /**
+ * Class EncryptionException
+ */
+class EncryptorException : public std::exception
+{
+
+private:
+    std::string _error;
+
+public:
+    explicit EncryptorException(const std::string &error) : _error(error) {}
+
+    const char * what() const noexcept override
+    {
+        return _error.c_str();
+    }
+};
+
+/**
+ * Class DecryptorException
+ */
+class DecryptorException : public std::exception
+{
+
+private:
+    std::string _error;
+
+public:
+    explicit DecryptorException(const std::string &error) : _error(error) {}
+
+    const char * what() const noexcept override
+    {
+        return _error.c_str();
+    }
+};
+
+/**
  * Class SQLDatabaseException
  */
 class SQLDatabaseException : public std::exception

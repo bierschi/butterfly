@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     //exit(1);
     int i = 0;
     /////// Hybrid Part ////////
-    while (i < 25)
+    while (i < 2)
     {
         // start encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
