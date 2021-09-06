@@ -44,62 +44,64 @@ package aes #DDDDDD
 package rsa #DDDDDD
 {
     class CryptoRSA {
-        -_rsa: RSA*
         -_pkey: EVP_PKEY*
         -_keySize, _paddingSize: int
-        -_rsaPrivateKeyStr, *_rsaPublicKeyStr, *_publicKeyStr: char*
+        -_rsaPrivateKeyStr, _privateKeyStr, _publicKeyStr: char*
+        -_encryptedKey, _iv: unsigned char*
+        - rsaEncryptContext, rsaDecryptContext: EVP_CIPHER_CTX*
 
-        -initPaddingSize(): void
-        -loadKeyFromFile(const std::string &filepath): void
-        -loadKeyFromStr(const std::string &str): void
         -getOpenSSLError(): string
         -generateRSAKey(): bool
+        -loadKeyFromFile(const std::string &filepath): void
+        -loadKeyFromStr(const std::string &str): void
         -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
 
-        +CryptoRSA()
+        #getPaddingSize(): int
+
         +CryptoRSA(int keySize)
         +CryptoRSA(const std::string &key)
 
-        +getRSAKey(): RSA*
-        +getRSAKeySize(): int
-        +getPaddingSize(): int
+        +getRSAIV() const: unsigned char*
+        +getRSAEncryptedKey() const: unsigned char*
         +getEvpPkey(): EVP_PKEY*
         +getEvpPkeySize(EVP_PKEY *key): int
-        +getRSAPrivateKeyStr(): char*
-        '+getRSAPublicKeyStr(): char*
-        '+getPublicKeyStr(): char*
-        '+createRSAPrivateKeyFile(const std::string &filename):bool
-        '+createRSAPublicKeyFile(const std::string &filename): bool
-        '+createPublicKeyFile(const std::string &filename): bool
-        +getPkeyFromPrivateKeyFile(const std::string &filepath): EVP_PKEY*
-        +getPkeyFromPublicKeyFile(const std::string &filepath): EVP_PKEY*
 
+        +getRSAPrivateKeyStr(): char*
+        +getPrivateKeyStr(): char*
+        +getPublicKeyStr(): char*
+
+        +encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
+        +decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): size_t
         +encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): size_t
         +decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): size_t
     }
     class RSAEncryptor {
-        -_encryptedKey: std::string
+
+        -__encryptedMessage: std::string
 
         -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+        -writeRSAFilesToSystem(): bool
 
         +RSAEncryptor(int keySize)
         +RSAEncryptor(const std::string &key)
 
-        +getEncryptedKey(): std::string
-        +saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength): void
-        +encrypt(EVP_PKEY *pkey, const std::string &msg): bool
+        +getEncryptedMessage() const: std::string
+        +saveEncryptedMsgToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
+        +encrypt(EVP_PKEY *pkey, const std::string &msg): void
+        +encryptEVP(EVP_PKEY *pkey, const std::string &msg): void
     }
     class RSADecryptor {
 
-        -_decryptedKey: std::string
+        -__decryptedMessage: std::string
         -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
 
         +RSADecryptor()
         +RSADecryptor(const std::string &key)
 
-        +getDecryptedKey(): std::string
+        +getDecryptedMessage(): std::string
         +getBinKeyFileContents(const std::string &filepath): std::string
-        +decrypt(EVP_PKEY *pkey, const std::string &msg): bool
+        +decrypt(EVP_PKEY *pkey, const std::string &msg): void
+        +decryptEVP(EVP_PKEY *pkey, const std::string &msg): void
     }
 }
 

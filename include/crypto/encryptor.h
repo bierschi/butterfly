@@ -23,11 +23,21 @@ class Encryptor
 
 private:
     int _keySize;
+    bool _aesKeyInit;
     std::string _aesKeyDbFilepath;
+
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
     std::unique_ptr<DirectoryIterator> _dirIterator;
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
+
+    /**
+     * Validates the AESKey length after the AESKey generation
+     *
+     * @param aeskey: aes key string
+     * @param aesiv: aes iv string
+     */
+    void validateAESKeyLength(std::string &aeskey, std::string &aesiv);
 
 public:
     /**
@@ -45,7 +55,7 @@ public:
     /**
      * Destructor Encryptor
      */
-    ~Encryptor();
+    ~Encryptor() = default;
 
     /**
      * Invokes the provided directory path
@@ -74,7 +84,6 @@ public:
      */
     void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
 
-    void encryptAESKeyFile(const std::string &filepath);
 };
 
 } // namespace hybrid

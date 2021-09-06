@@ -4,6 +4,7 @@
 
 #include "rsa.h"
 #include "utils.h"
+#include "params.h"
 #include "exceptions.h"
 
 namespace butterfly
@@ -19,12 +20,21 @@ class RSADecryptor : public CryptoRSA
 {
 
 private:
-    std::string _decryptedKey;
+    std::string _decryptedMessage;
 
     /**
      * Validates the length of given string with the RSA key size
      */
     bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+
+    /**
+     * Reads the RSA EK und RSA IV from the System
+     *
+     * @param type: type of the saved file
+     * @param encKey: rsa encrypted key
+     * @param iv: rsa iv
+     */
+    void readRSAFilesFromSystem(const std::string &type, std::string &encKey, std::string &iv);
 
 public:
 
@@ -43,23 +53,15 @@ public:
     /**
      * Destructor RSADecryptor
      */
-    virtual ~RSADecryptor() = default;
+    ~RSADecryptor() override = default;
 
     /**
-     * Get the decrypted key
+     * Get the decrypted Message
      *
-     * @return std::string decrypted key
+     * @return std::string decrypted Message
      */
-    inline std::string getDecryptedKey() const
-    { return _decryptedKey; }
-
-    /**
-     * Get the pkey from given rsa file
-     *
-     * @param filepath: path to the rsa file
-     * @return EVP_PKEY
-     */
-    static EVP_PKEY *getEvpPkeyFromFile(const std::string &filepath); // TODO Delete cause unnecessary now
+    inline std::string getDecryptedMessage() const
+    { return _decryptedMessage; }
 
     /**
      * Get the binary content from the encrypted key file
@@ -76,6 +78,14 @@ public:
      * @param msg: message as std::string
      */
     void decrypt(EVP_PKEY *pkey, const std::string &msg);
+
+    /**
+     * Decrypts the given message string with EVP methods
+     *
+     * @param pkey: EVP_PKEY to decrypt the cipher message string
+     * @param msg: message as std::string
+     */
+    void decryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type);
 };
 
 } // namespace rsa

@@ -7,14 +7,14 @@ namespace butterfly
 namespace rsa
 {
 
-RSADecryptor::RSADecryptor() : CryptoRSA()
+RSADecryptor::RSADecryptor() : CryptoRSA(2048)
 {
     LOG_TRACE("Create class RSADecryptor as default constructor")
 }
 
 RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key)
 {
-    LOG_TRACE("Create class RSADecryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
+    LOG_TRACE("Create class RSADecryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
 }
 
 bool RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize)
@@ -28,39 +28,38 @@ bool RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int 
     return true;
 }
 
-EVP_PKEY *RSADecryptor::getEvpPkeyFromFile(const std::string &filepath)
+void RSADecryptor::readRSAFilesFromSystem(const std::string &type, std::string &encKey, std::string &iv)
 {
-
-    EVP_PKEY *pkey = nullptr;
-    std::ifstream in(filepath, std::ios::in);
-
-    if ( in.is_open() )
+    std::string rsaek, rsaiv;
+    if ( type == butterfly::ENC_CPRIVATERSA_FILENAME )
     {
+        rsaek = butterfly::RSA_ENCKEY_CPKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_CPKEY_FILENAME;
 
-        std::string fLine;
-        std::getline(in, fLine);
-
-        if (fLine == "-----BEGIN RSA PRIVATE KEY-----")
-        {
-
-            pkey = CryptoRSA::getPkeyFromPrivateKeyFile(filepath);
-
-        } else if (fLine == "-----BEGIN PUBLIC KEY-----")
-        {
-
-            pkey = CryptoRSA::getPkeyFromPublicKeyFile(filepath);
-
-        } else
-        {
-            LOG_ERROR("Unsupported file provided with file header: " << fLine);
-        }
-
-    } else
+    } else if ( type == ENC_AESKEY_FILENAME)
     {
-        LOG_ERROR("Failed to open file " << filepath);
+        rsaek = butterfly::RSA_ENCKEY_AESKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESKEY_FILENAME;
+
+    } else {
+        rsaek = butterfly::RSA_ENCKEY_AESIV_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESIV_FILENAME;
     }
 
-    return pkey;
+    encKey = butterfly::readBinFile(rsaek);
+    iv = butterfly::readBinFile(rsaiv);
+
+    if ( encKey.empty() )
+    {
+        LOG_ERROR(rsaek << " is empty!")
+        throw RSADecryptionException(rsaek + " is empty!");
+    }
+
+    if ( iv.empty() )
+    {
+        LOG_ERROR(rsaiv << " is empty!")
+        throw RSADecryptionException(rsaiv + " is empty!");
+    }
 }
 
 std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath)
@@ -81,7 +80,7 @@ std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath)
 void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
-    // first check the message size
+    // First check the message size
     if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be decrypted!")
@@ -90,19 +89,39 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
-    // validate the string length with block size length
+    // Validate the string length with block size length
     if ( !validateStringLengthForRSA(msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSADecryptionException("Error on validateStringLengthForRSA()!");
     }
 
+    // Decrypt the message
     unsigned char plaintextKey[keysize];
+    CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(msg.c_str())), static_cast<size_t >(keysize), plaintextKey);
 
-    CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(msg.c_str())),
-                       static_cast<size_t >(keysize), plaintextKey);
+    _decryptedMessage = reinterpret_cast<char *>(plaintextKey);
 
-    _decryptedKey = reinterpret_cast<char *>(plaintextKey);
+}
+
+void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type)
+{
+
+    // First check the message size
+    if ( msg.empty() )
+    {
+        LOG_ERROR("Empty messages can not be decrypted!")
+        throw RSADecryptionException("Empty messages can not be decrypted!");
+    }
+
+    std::string encKey, iv;
+    readRSAFilesFromSystem(type, encKey, iv);
+
+    // Decrypt the Message
+    char *decryptedMessage = nullptr;
+    CryptoRSA::decryptEVP(pkey, (unsigned char *) msg.c_str(), msg.length(), (unsigned char *) encKey.c_str(), (unsigned char *) iv.c_str(), (unsigned char**)&decryptedMessage);
+
+    _decryptedMessage = reinterpret_cast<char *>(decryptedMessage);
 
 }
 

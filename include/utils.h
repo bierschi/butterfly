@@ -94,6 +94,18 @@ inline bool removeFile(const std::string &filepath)
 
 }
 
+/**
+ * Checks if an file exists or not
+ *
+ * @param filename: name of the file
+ * @return True if file exits else false
+ */
+inline bool existsFile(const std::string& filename)
+{
+    struct stat buffer;
+    return (stat (filename.c_str(), &buffer) == 0);
+}
+
 inline std::string string_to_hex(const std::string& in) {
     std::stringstream ss;
 

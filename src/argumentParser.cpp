@@ -53,12 +53,23 @@ ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[
                 }
             } else if (arg == "-d" || arg == "--dir")
             {
-                args._dir = argv[i + 1];
+                // check end of argc
+                if (i + 1 < argc && (!strchr(argv[i + 1], '-')))
+                {
+                    args._dir = argv[i + 1];
+
+                } else
+                {
+                    std::cout << "--dir option requires one argument!" << std::endl;
+                    break;
+                }
+
             }
         }
     } else
     {
         printHelp();
+        exit(1);
     }
     return args;
 }

