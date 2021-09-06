@@ -41,7 +41,7 @@ public:
     /**
      * Constructor RSADecryptor
      */
-    RSADecryptor();
+    RSADecryptor() = delete;
 
     /**
      * Constructor RSADecryptor to init rsa key from key string or file

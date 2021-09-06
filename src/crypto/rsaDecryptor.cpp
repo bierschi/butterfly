@@ -7,11 +7,6 @@ namespace butterfly
 namespace rsa
 {
 
-RSADecryptor::RSADecryptor() : CryptoRSA(2048)
-{
-    LOG_TRACE("Create class RSADecryptor as default constructor")
-}
-
 RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key)
 {
     LOG_TRACE("Create class RSADecryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
