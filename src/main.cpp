@@ -104,7 +104,8 @@ int main(int argc, char *argv[])
     butterfly::ArgumentParser::Arguments arg = argparse->parseArgs(argc, argv);
 
     LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
-    std::cout << argc << *argv <<std::endl;
+    std::cout << "Start Application " << PROJECT_NAME << " with version " << arg._version << std::endl;
+    
     //test_rsa_enc_evp();
     //sleep(2);
     //test_rsa_dec_evp();

@@ -41,7 +41,7 @@ TEST_F(RSADecryptorTest, Decryption)
     std::string encCPrivateRSA = rsaDecryptor->getBinKeyFileContents("CPrivateRSA.bin");
     ASSERT_TRUE( !encCPrivateRSA.empty());
 
-    rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA);
+    rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, butterfly::ENC_CPRIVATERSA_FILENAME);
 
     std::string decryptedMessage = rsaDecryptor->getDecryptedMessage();
     ASSERT_TRUE( !decryptedMessage.empty());

@@ -10,10 +10,10 @@ ArgumentParser::ArgumentParser()
     // Logger is disabled as default setting
     Logger::disable();
 
-    _usage = "Usage: \n \t\t" + std::string(PROJECT_NAME) +
-             " --dir /home/christian/test/ --config /path/to/config\n\nOptions\n";
-    _help = "-h, --help\t\tPrint help message\n";
-    _version = "-v, --version\tPrint current version";
+    _usage   = "Usage: \n \t" + std::string(PROJECT_NAME) +
+               " --dir /home/christian/test/ --config /path/to/config\n\nOptions\n";
+    _help    = "-h, --help\t\tPrint help message\n";
+    _version = "-v, --version\t\tPrint current version";
 
 }
 
@@ -32,9 +32,13 @@ ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[
             if (arg == "-h" || arg == "--help")
             {
                 printHelp();
+                exit(1);
+
             } else if (arg == "-v" || arg == "--version")
             {
                 printVersion();
+                exit(1);
+
             } else if (arg == "-c" || arg == "--config")
             {
 

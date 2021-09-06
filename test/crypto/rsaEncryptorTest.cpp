@@ -55,7 +55,7 @@ TEST_F(RSAEncryptorTest, Encryption)
     std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
 
-    rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile);
+    rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::ENC_CPRIVATERSA_FILENAME);
 
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     ASSERT_TRUE(!encCPrivateRSA.empty());
