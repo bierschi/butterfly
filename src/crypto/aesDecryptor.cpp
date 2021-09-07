@@ -40,6 +40,7 @@ void AESDecryptor::decryptFile(const std::string &filename)
     //std::string outFile = filename + ".dec";
     butterfly::writeBinFile(filename, reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength));
     LOG_INFO("Decrypted successfully " << std::setprecision(3) << (decryptedFileLength / (1024 * 1024)) << " Mbytes from file " << filename + butterfly::ENC_BFLY_FILE_ENDING);
+    std::cout << "Decrypted successfully " << std::setprecision(3) << (decryptedFileLength / (1024 * 1024)) << " Mbytes from file " << filename + butterfly::ENC_BFLY_FILE_ENDING << std::endl;
 
     if ( !butterfly::removeFile(filename + butterfly::ENC_BFLY_FILE_ENDING) )
     {

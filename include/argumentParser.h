@@ -14,7 +14,7 @@ class ArgumentParser
 {
 
 private:
-    std::string _help, _version, _options, _usage;
+    std::string _dir, _protected, _config, _help, _version, _usage, _options;
 
     /**
      * Prints the help message
@@ -30,11 +30,11 @@ public:
 
     struct Arguments
     {
-        std::string _config;
-        std::string _dir;
+        std::string _dir, _config;
+        bool _protected;
         const std::string _version;
 
-        Arguments() : _config(""), _dir(""), _version(PROJECT_VER)
+        Arguments() : _dir(""), _config(""), _protected(false), _version(PROJECT_VER)
         {}
     };
 

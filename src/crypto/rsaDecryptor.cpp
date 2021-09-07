@@ -41,8 +41,8 @@ void RSADecryptor::readRSAFilesFromSystem(const std::string &type, std::string &
         rsaiv = butterfly::RSA_IV_AESIV_FILENAME;
     }
 
-    encKey = butterfly::readBinFile(rsaek);
-    iv = butterfly::readBinFile(rsaiv);
+    encKey = butterfly::readBinFile(rsaek); // 256 Bytes
+    iv = butterfly::readBinFile(rsaiv);     // 16 Bytes
 
     if ( encKey.empty() )
     {

