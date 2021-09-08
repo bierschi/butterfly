@@ -19,8 +19,8 @@ sudo apt-get install -y sqlite3 libsqlite3-dev libboost-filesystem-dev libboost-
 
 Build butterfly
 <pre><code>
-git clone https://github.com/bierschi/ransomware.git
-cd ransomware
+git clone https://github.com/bierschi/butterfly.git
+cd butterfly
 mkdir build && cd build
 cmake ..
 make
@@ -38,6 +38,25 @@ Print the available arguments for Butterfly
 butterfly --help
 </code></pre>
 
+<pre><code>
+Usage: 
+	butterfly --dir /home/christian/test/
+	butterfly --dir /home/christian/test/ --protected
+	butterfly --encrypt /home/christian/test/ 
+	butterfly --decrypt /home/christian/test/ --key /home/user/SPrivateRSA.pem
+
+Options:
+-d, --dir		Directory Path to start the Encryption+Decryption
+--encrypt		Encrypts all files in provided directory
+--decrypt		Decrypts all files in provided diretory
+-k, --key		Private Server Key for the Decryption (corresponds to the embedded server public key)
+-p, --protected		Save all key files to System
+-c, --config		Config Path
+-h, --help		Print help Message
+-v, --version		Print current Version
+
+</code></pre>
+
 ## Unit Tests
 
 Install GTest
@@ -53,11 +72,11 @@ sudo cp *.a /usr/lib
 
 ## Logs
 
-logs can be found in `/var/log/ransomware`
+logs can be found in `/var/log/butterfly`
 
 ## Changelog
-All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/ransomware/CHANGELOG.rst)
+All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/CHANGELOG.rst)
 
 ## License
-Copyright (c) 2021 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/ransomware/blob/master/LICENSE)
+Copyright (c) 2021 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/butterfly/blob/master/LICENSE)
 for details
