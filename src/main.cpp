@@ -126,20 +126,19 @@ int main(int argc, char *argv[])
 {
     // parse args with the argument parser
     std::unique_ptr<butterfly::ArgumentParser> argparse(new butterfly::ArgumentParser());
-    butterfly::ArgumentParser::Arguments arg = argparse->parseArgs(argc, argv);
+    butterfly::ArgumentParser::Arguments args = argparse->parseArgs(argc, argv);
 
-    LOG_INFO("Running " << PROJECT_NAME << " with version " << arg._version);
-    std::cout << "Running " << PROJECT_NAME << " with version " << arg._version << std::endl;
+    LOG_INFO("Running " << PROJECT_NAME << " with version " << args._version);
+    std::cout << "Running " << PROJECT_NAME << " with version " << args._version << std::endl;
 
-
-    int i = 0;
-    /////// Hybrid Part ////////
-    while (i < 1)
+    // Start Encryption + Decryption
+    if ( !args._dir.empty() )
     {
+        std::cout << "ENCRYPT + DECRYPT" << std::endl;
         // start encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-        std::cout << "Start Encryption from directory " << arg._dir << std::endl;
-        encryptor->invokeDir(arg._dir, arg._protected);
+        std::cout << "Start Encryption from directory " << args._dir << std::endl;
+        encryptor->invokeDir(args._dir, args._protected);
 
         sleep(2);
 
@@ -147,13 +146,49 @@ int main(int argc, char *argv[])
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", butterfly::ENC_CPRIVATERSA_FILENAME);
 
-        decryptor->invokeDir(arg._dir);
+        decryptor->invokeDir(args._dir);
+    }
+    // Start only Encryption
+    else if ( !args._encrypt.empty() )
+    {
+
+        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+        std::cout << "Start Encryption from directory " << args._encrypt << std::endl;
+        encryptor->invokeDir(args._encrypt, args._protected);
+
+    }
+    // Start only Decryption
+    else if ( !args._decrypt.empty() )
+    {
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+        std::cout << "Start Decryption from directory " << args._decrypt << std::endl;
+        decryptor->decryptCPrivateRSA(args._serverpKey, butterfly::ENC_CPRIVATERSA_FILENAME);
+        decryptor->invokeDir(args._decrypt);
+    }
+
+    /*
+    int i = 0;
+    /////// Hybrid Part ////////
+    while (i < 1)
+    {
+        // start encryption
+        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+        std::cout << "Start Encryption from directory " << args._dir << std::endl;
+        encryptor->invokeDir(args._dir, args._protected);
+
+        sleep(2);
+
+        // start decryption
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+        decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", butterfly::ENC_CPRIVATERSA_FILENAME);
+
+        decryptor->invokeDir(args._dir);
 
         i++;
         LOG_INFO("NEW HYBRID ENCRYPTION ROUND " << i);
         sleep(10);
 
     }
-
+    */
      return 0;
 }

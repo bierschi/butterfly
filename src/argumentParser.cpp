@@ -10,15 +10,20 @@ ArgumentParser::ArgumentParser()
     // Logger is disabled as default setting
     Logger::disable();
 
-    _usage     = "Usage: \n\t" + std::string(PROJECT_NAME) + " --dir /home/christian/test/ --config /path/to/config\n\t"
-                               + std::string(PROJECT_NAME) + " --dir /home/christian/test/ --protected\n\n";
+    _usage      = "Usage: \n\t" + std::string(PROJECT_NAME) + " --dir /home/christian/test/\n\t"
+                                + std::string(PROJECT_NAME) + " --dir /home/christian/test/ --protected\n\t"
+                                + std::string(PROJECT_NAME) + " --encrypt /home/christian/test/ \n\t"
+                                + std::string(PROJECT_NAME) + " --decrypt /home/christian/test/ --key /home/user/SPrivateRSA.pem\n\n";
 
-    _options   = "Options:\n";
-    _dir       = "-d, --dir\t\tDirectory Path to start the encryption\n";
-    _protected = "-p, --protected\t\tSave all key files to System\n";
-    _config    = "-c, --config\t\tConfig Path\n";
-    _help      = "-h, --help\t\tPrint help message\n";
-    _version   = "-v, --version\t\tPrint current version";
+    _options    = "Options:\n";
+    _dir        = "-d, --dir\t\tDirectory Path to start the Encryption+Decryption\n";
+    _encrypt    = "--encrypt\t\tEncrypts all files in provided directory\n";
+    _decrypt    = "--decrypt\t\tDecrypts all files in provided diretory\n";
+    _serverpKey = "-k, --key\t\tPrivate Server Key for the Decryption (corresponds to the embedded server public key)\n";
+    _protected  = "-p, --protected\t\tSave all key files to System\n";
+    _config     = "-c, --config\t\tConfig Path\n";
+    _help       = "-h, --help\t\tPrint help Message\n";
+    _version    = "-v, --version\t\tPrint current Version";
 
 }
 
@@ -28,7 +33,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[
     Arguments args;
     if (argc > 1)
     {
-        bool found = false;
+        bool found = false, decrypt = false, key = false;
         for (int i = 1; i < argc; i++)
         {
 
@@ -51,10 +56,10 @@ ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[
             }
             else if (arg == "-c" || arg == "--config")
             {
-                found = true;
                 // check end of argc
                 if (i + 1 < argc && (!strchr(argv[i + 1], '-')))
                 {
+                    found = true;
                     std::string configPath = argv[i + 1];
 
                     // init logger instance
@@ -67,10 +72,10 @@ ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[
                 }
             } else if (arg == "-d" || arg == "--dir")
             {
-                found = true;
                 // check end of argc
                 if (i + 1 < argc && (!strchr(argv[i + 1], '-')))
                 {
+                    found = true;
                     args._dir = argv[i + 1];
 
                 } else
@@ -79,16 +84,58 @@ ArgumentParser::Arguments ArgumentParser::parseArgs(const int &argc, char *argv[
                     exit(1);
                 }
 
+            } else if (arg == "--encrypt")
+            {
+                // check end of argc
+                if (i + 1 < argc && (!strchr(argv[i + 1], '-')))
+                {
+                    found = true;
+                    args._encrypt = argv[i + 1];
+
+                } else
+                {
+                    std::cout << "--encrypt option requires one argument!" << std::endl;
+                    exit(1);
+                }
+
+            } else if (arg == "--decrypt")
+            {
+                // check end of argc
+                if (i + 1 < argc && (!strchr(argv[i + 1], '-')))
+                {
+                    found = true, decrypt = true;
+                    args._decrypt = argv[i + 1];
+
+                } else
+                {
+                    std::cout << "--decrypt option requires one argument!" << std::endl;
+                    exit(1);
+                }
+
+            } else if (arg == "-k" || arg == "--key")
+            {
+                // check end of argc
+                if (i + 1 < argc && (!strchr(argv[i + 1], '-')))
+                {
+                    found = true, key = true;
+                    args._serverpKey = argv[i + 1];
+
+                } else
+                {
+                    std::cout << "--key option requires one argument!" << std::endl;
+                    exit(1);
+                }
+
             } else {
 
-                if ( i < argc && (strchr(argv[i], '-')) )
+                if ( i + 1 < argc && (!strchr(argv[i + 1], '-')) )
                 {
                     found = false;
                 }
 
             }
         }
-        if (!found)
+        if (!found or (!decrypt && key) or (decrypt && !key))
         {
             printHelp();
             exit(1);
@@ -105,7 +152,7 @@ void ArgumentParser::printHelp()
 {
 
     std::string output;
-    output += _usage + _options + _dir + _protected + _config + _help + _version;
+    output += _usage + _options + _dir + _encrypt + _decrypt + _serverpKey +  _protected + _config + _help + _version;
     std::cout << output << std::endl;
 }
 
