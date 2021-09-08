@@ -35,7 +35,7 @@ CMake Arguments
 
 Print the available arguments for Butterfly
 <pre><code>
-butterfly --help
+./butterfly --help
 </code></pre>
 
 <pre><code>
@@ -75,7 +75,7 @@ sudo cp *.a /usr/lib
 logs can be found in `/var/log/butterfly`
 
 ## Changelog
-All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/CHANGELOG.rst)
+All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/CHANGELOG.rst)
 
 ## License
 Copyright (c) 2021 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/butterfly/blob/master/LICENSE)
