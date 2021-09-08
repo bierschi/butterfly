@@ -10,11 +10,14 @@
 namespace butterfly
 {
 
+/**
+ * Class ArgumentParser to parse provided arguments
+ */
 class ArgumentParser
 {
 
 private:
-    std::string _help, _version, _options, _usage;
+    std::string _dir, _encrypt, _decrypt, _protected, _serverpKey, _config, _help, _version, _usage, _options;
 
     /**
      * Prints the help message
@@ -30,11 +33,11 @@ public:
 
     struct Arguments
     {
-        std::string _config;
-        std::string _dir;
+        std::string _dir, _encrypt, _decrypt, _serverpKey, _config;
+        bool _protected;
         const std::string _version;
 
-        Arguments() : _config(""), _dir(""), _version(PROJECT_VER)
+        Arguments() : _dir(""), _encrypt(""), _decrypt(""), _serverpKey(""), _config(""), _protected(false), _version(PROJECT_VER)
         {}
     };
 

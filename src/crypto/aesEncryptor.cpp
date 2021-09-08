@@ -42,6 +42,7 @@ void AESEncryptor::encryptFile(const std::string &filename)
     std::string outFile = filename + butterfly::ENC_BFLY_FILE_ENDING;
     butterfly::writeBinFile(outFile, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
     LOG_INFO("Encrypted successfully " << std::fixed << std::setprecision(3) << (encryptedFileLength / (1024 * 1024)) << " Mbytes from file " << filename);
+    std::cout << "Encrypted successfully " << std::fixed << std::setprecision(3) << (encryptedFileLength / (1024 * 1024)) << " Mbytes from file " << filename << std::endl;
 
     if ( !butterfly::removeFile(filename) )
     {

@@ -62,7 +62,7 @@ public:
      *
      * @param path: path of the directory
      */
-    void invokeDir(const std::string &path);
+    void invokeDir(const std::string &path, bool protection);
 
     /**
      * Encrypts the CPrivateRSA.pem and saves the CPrivateRSA.bin file on the host machine
