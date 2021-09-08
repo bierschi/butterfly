@@ -40,16 +40,16 @@ butterfly --help
 
 <pre><code>
 Usage: 
-	butterfly --dir /home/christian/test/
-	butterfly --dir /home/christian/test/ --protected
-	butterfly --encrypt /home/christian/test/ 
-	butterfly --decrypt /home/christian/test/ --key /home/user/SPrivateRSA.pem
+	butterfly --dir /home/butterfly/test/
+	butterfly --dir /home/butterfly/test/ --protected
+	butterfly --encrypt /home/butterfly/test/ 
+	butterfly --decrypt /home/butterfly/test/ --key /home/butterfly/SPrivateRSA.pem
 
 Options:
 -d, --dir		Directory Path to start the Encryption+Decryption
 --encrypt		Encrypts all files in provided directory
 --decrypt		Decrypts all files in provided diretory
--k, --key		Private Server Key for the Decryption (corresponds to the embedded server public key)
+-k, --key		Private Key from the Server for the Decryption (Corresponds to the embedded Server Public Key)
 -p, --protected		Save all key files to System
 -c, --config		Config Path
 -h, --help		Print help Message
