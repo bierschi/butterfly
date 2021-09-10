@@ -72,7 +72,7 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
     }
 }
 
-std::string RSADecryptor::getBinKeyFileContents(const std::string &filepath)
+std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
 {
 
     std::string binFile = butterfly::readBinFile(filepath);

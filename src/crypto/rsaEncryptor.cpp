@@ -63,7 +63,7 @@ bool RSAEncryptor::writeRSAFileToSystem(const RSAKEY_TYPE &)
 
 }
 
-void RSAEncryptor::saveEncryptedMsgToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength)
+void RSAEncryptor::writeEncMSGToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength)
 {
 
     if ( !butterfly::writeBinFile(filename, ciphertextMsg.c_str(), ciphertextMsgLength) )

@@ -89,7 +89,7 @@ void Encryptor::encryptCPrivateRSA()
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
-        _rsaEncryptorCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc,_rsaEncryptorCPrivateRSA->getEvpPkeySize(cPrivateRSAPKey));
+        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc,_rsaEncryptorCPrivateRSA->getEvpPkeySize(cPrivateRSAPKey));
 
     } catch (RSAEncryptionException &e)
     {
@@ -125,7 +125,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
         // Save the encrypted AES Key to AESKey.bin
-        _rsaEncryptorAESKey->saveEncryptedMsgToFile(filename, aesKeyEnc, static_cast<int>(aesKeyEnc.length()));
+        _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, static_cast<int>(aesKeyEnc.length()));
 
     } catch (RSAEncryptionException &e)
     {

@@ -57,7 +57,7 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
 
     _rsaDecryptorCPrivateRSA = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(pkeyFromServer));
 
-    std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->getBinKeyFileContents(encCPrivateRSAFile);
+    std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->readEncMSGFromFile(encCPrivateRSAFile);
     EVP_PKEY *CPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
 
     try
@@ -92,8 +92,8 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, const std::
     std::unique_ptr<rsa::RSADecryptor> rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
     std::unique_ptr<rsa::RSADecryptor> rsaDecryptorAESIV  = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 
-    std::string encAESKey = rsaDecryptorAESKey->getBinKeyFileContents(filepathAESKey);  // Length of encAESKey = 256
-    std::string encAESIV  = rsaDecryptorAESIV->getBinKeyFileContents(filepathAESIV);    // Length of encAESIV  = 256
+    std::string encAESKey = rsaDecryptorAESKey->readEncMSGFromFile(filepathAESKey);  // Length of encAESKey = 256
+    std::string encAESIV  = rsaDecryptorAESIV->readEncMSGFromFile(filepathAESIV);    // Length of encAESIV  = 256
 
     try
     {

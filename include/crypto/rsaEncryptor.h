@@ -71,7 +71,7 @@ public:
      * @param ciphertextMsg: message as ciphertext
      * @param ciphertextMsgLength: length of the ciphertext
      */
-    static void saveEncryptedMsgToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength);
+    static void writeEncMSGToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength);
 
     /**
      * Encrypts the given message string

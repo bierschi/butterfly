@@ -24,7 +24,7 @@ void test_rsa_enc()
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
 
     // save the encrypted CPrivateRSA.bin string to CPrivateRSA.bin file
-    rsaEncryptCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
+    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
 
 }
 
@@ -32,7 +32,7 @@ void test_rsa_dec()
 {
     std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor(new butterfly::rsa::RSADecryptor("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem"));
 
-    std::string encCPrivateRSA = rsaDecryptor->getBinKeyFileContents("CPrivateRSA.bin");
+    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile("CPrivateRSA.bin");
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
     rsaDecryptor->decrypt(rsaDecryptor->getEvpPkey(), encCPrivateRSA);
@@ -56,17 +56,17 @@ void test_rsa_enc_evp()
     // Get the encrypted CPrivateRSA.bin string
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     // save the encrypted CPrivateRSA.bin string to CPrivateRSA.bin file
-    rsaEncryptCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
+    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
 
     // Encrypt the AESKey
     rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "abcdef", butterfly::RSAKEY_TYPE::AESKEY);
     std::string encAESKey = rsaEncryptAESKey->getEncryptedMessage();
-    rsaEncryptAESKey->saveEncryptedMsgToFile("AESKey.bin", encAESKey, static_cast<int>(encAESKey.length()));
+    rsaEncryptAESKey->writeEncMSGToFile("AESKey.bin", encAESKey, static_cast<int>(encAESKey.length()));
 
     // Encrypt the AESIV
     rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "bbbbb", butterfly::RSAKEY_TYPE::AESIV);
     std::string encAESIV = rsaEncryptAESKey->getEncryptedMessage();
-    rsaEncryptAESKey->saveEncryptedMsgToFile("AESIV.bin", encAESIV, static_cast<int>(encAESIV.length()));
+    rsaEncryptAESKey->writeEncMSGToFile("AESIV.bin", encAESIV, static_cast<int>(encAESIV.length()));
 };
 
 void test_rsa_dec_evp()
@@ -74,7 +74,7 @@ void test_rsa_dec_evp()
 
     std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor(new butterfly::rsa::RSADecryptor("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem"));
 
-    std::string encCPrivateRSA = rsaDecryptor->getBinKeyFileContents("CPrivateRSA.bin");
+    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile("CPrivateRSA.bin");
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
     //rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
@@ -85,12 +85,12 @@ void test_rsa_dec_evp()
 
 
     std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor2(new butterfly::rsa::RSADecryptor(decrypted));
-    std::string encAESKey = rsaDecryptor2->getBinKeyFileContents("AESKey.bin");
+    std::string encAESKey = rsaDecryptor2->readEncMSGFromFile("AESKey.bin");
     //rsaDecryptor2->decryptEVP(rsaDecryptor2->getEvpPkey(), encAESKey, butterfly::RSAKEY_TYPE::AESKEY);
     std::string decryptedAESKey = rsaDecryptor2->getDecryptedMessage();
     std::cout << "Decrypted AESKey: " << decryptedAESKey << std::endl;
 
-    std::string encAESIV = rsaDecryptor2->getBinKeyFileContents("AESIV.bin");
+    std::string encAESIV = rsaDecryptor2->readEncMSGFromFile("AESIV.bin");
     //rsaDecryptor2->decryptEVP(rsaDecryptor2->getEvpPkey(), encAESIV, butterfly::RSAKEY_TYPE::AESKEY);
     std::string decryptedAESIV= rsaDecryptor2->getDecryptedMessage();
     std::cout << "Decrypted AESIV: " << decryptedAESIV << std::endl;
