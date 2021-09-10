@@ -57,12 +57,20 @@ inline std::string readBinFile(const std::string &filepath)
  * @param filepath: path to the file
  * @param content: content to write to file
  * @param contentLength: length of the content
+ * @param append: Appends the content to the file
  * @return True if writing was successful
  */
-inline bool writeBinFile(const std::string &filepath, const char* content, long contentLength)
+inline bool writeBinFile(const std::string &filepath, const char* content, long contentLength, bool append=false)
 {
+    std::fstream out;
+    if (append)
+    {
+        out.open(filepath, std::ios::out | std::ios::app | std::ios::binary);
+    } else
+    {
+        out.open(filepath, std::ios::out | std::ios::binary);
+    }
 
-    std::fstream out(filepath, std::ios::out | std::ios::binary);
     if (out.is_open())
     {
         out.write(content, contentLength);

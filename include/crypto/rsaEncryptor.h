@@ -28,11 +28,12 @@ private:
     bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
     /**
-     * Writes the RSA encryptedKey and the RSA IV to the filesystem
+     * Writes the RSA file that includes the RSA EK and RSA IV to the filesystem
      *
+     * @param type: enum RSAKEY_TYPE
      * @return True if writing was successful
      */
-    bool writeRSAFilesToSystem(const std::string &type);
+    bool writeRSAFileToSystem(const RSAKEY_TYPE &type);
 
 public:
 
@@ -66,6 +67,7 @@ public:
     /**
      * Saves the encrypted message to file
      *
+     * @param filename: name of the file
      * @param ciphertextMsg: message as ciphertext
      * @param ciphertextMsgLength: length of the ciphertext
      */
@@ -74,16 +76,19 @@ public:
     /**
      * Encrypts the given message string
      *
-     * @param msg: message as std::string
+     * @param pkey: EVP_PKEY for the encryption
+     * @param msg: message to encrypt
      */
     void encrypt(EVP_PKEY *pkey, const std::string &msg);
 
     /**
      * Encrypts the given message string with EVP methods
      *
+     * @param pkey: EVP_PKEY for the encryption
      * @param msg: message as std::string
+     * @param type: enum RSAKEY_TYPE
      */
-    void encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type);
+    void encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type);
 };
 
 } //namespace rsa

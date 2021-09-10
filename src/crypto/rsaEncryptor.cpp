@@ -41,31 +41,15 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
 
 }
 
-bool RSAEncryptor::writeRSAFilesToSystem(const std::string &type)
+bool RSAEncryptor::writeRSAFileToSystem(const RSAKEY_TYPE &)
 {
-
-    std::string rsaek, rsaiv;
-    if ( type == butterfly::ENC_CPRIVATERSA_FILENAME )
-    {
-        rsaek = butterfly::RSA_ENCKEY_CPKEY_FILENAME;
-        rsaiv = butterfly::RSA_IV_CPKEY_FILENAME;
-
-    } else if ( type == ENC_AESKEY_FILENAME)
-    {
-        rsaek = butterfly::RSA_ENCKEY_AESKEY_FILENAME;
-        rsaiv = butterfly::RSA_IV_AESKEY_FILENAME;
-
-    } else {
-        rsaek = butterfly::RSA_ENCKEY_AESIV_FILENAME;
-        rsaiv = butterfly::RSA_IV_AESIV_FILENAME;
-    }
 
     unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
     unsigned char* iv = CryptoRSA::getRSAIV();
 
-    if (butterfly::writeBinFile(rsaek, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey())) )
+    if ( butterfly::writeBinFile(butterfly::RSA_EKIV_FILENAME, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()), true) )
     {
-        if ( butterfly::writeBinFile(rsaiv, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH) )
+        if ( butterfly::writeBinFile(butterfly::RSA_EKIV_FILENAME, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH, true) )
         {
             return true;
         } else
@@ -118,12 +102,12 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
 }
 
-void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type)
+void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type)
 {
     // First check the message size
     if ( msg.empty() )
     {
-        LOG_ERROR("Empty messages can not be encrypted")
+        LOG_ERROR("Empty messages can not be encrypted!")
         throw RSAEncryptionException("Empty messages can not be encrypted!");
     }
 
@@ -137,8 +121,8 @@ void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const std:
     _encryptedMessage.resize(static_cast<size_t>(keysize));
     std::copy(encryptedMessage, encryptedMessage + keysize, _encryptedMessage.begin());
 
-    // Write RSA Files to System
-    if ( !writeRSAFilesToSystem(type) )
+    // Write RSA File to System
+    if ( !writeRSAFileToSystem(type) )
     {
         LOG_ERROR("Error on writing RSA files to System");
         throw RSAEncryptionException("Error on writing RSA files to System");

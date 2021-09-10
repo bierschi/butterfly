@@ -52,19 +52,19 @@ void test_rsa_enc_evp()
     std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
     butterfly::writeBinFile("CPrivateRSA.pem", cprivateRSAKeyFile.c_str(), static_cast<long>(cprivateRSAKeyFile.length()));
     // Encrypt the CPrivateRSA.pem
-    rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::ENC_CPRIVATERSA_FILENAME);
+    rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
     // Get the encrypted CPrivateRSA.bin string
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     // save the encrypted CPrivateRSA.bin string to CPrivateRSA.bin file
     rsaEncryptCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
 
     // Encrypt the AESKey
-    rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "abcdef", butterfly::ENC_AESKEY_FILENAME);
+    rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "abcdef", butterfly::RSAKEY_TYPE::AESKEY);
     std::string encAESKey = rsaEncryptAESKey->getEncryptedMessage();
     rsaEncryptAESKey->saveEncryptedMsgToFile("AESKey.bin", encAESKey, static_cast<int>(encAESKey.length()));
 
     // Encrypt the AESIV
-    rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "bbbbb", butterfly::ENC_AESIV_FILENAME);
+    rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "bbbbb", butterfly::RSAKEY_TYPE::AESIV);
     std::string encAESIV = rsaEncryptAESKey->getEncryptedMessage();
     rsaEncryptAESKey->saveEncryptedMsgToFile("AESIV.bin", encAESIV, static_cast<int>(encAESIV.length()));
 };
@@ -77,7 +77,7 @@ void test_rsa_dec_evp()
     std::string encCPrivateRSA = rsaDecryptor->getBinKeyFileContents("CPrivateRSA.bin");
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
-    rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, butterfly::ENC_CPRIVATERSA_FILENAME);
+    //rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
 
     std::string decrypted = rsaDecryptor->getDecryptedMessage();
     butterfly::writeBinFile("CPrivateRSA.pem.dec", decrypted.c_str(), static_cast<long>(decrypted.length()));
@@ -86,12 +86,12 @@ void test_rsa_dec_evp()
 
     std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor2(new butterfly::rsa::RSADecryptor(decrypted));
     std::string encAESKey = rsaDecryptor2->getBinKeyFileContents("AESKey.bin");
-    rsaDecryptor2->decryptEVP(rsaDecryptor2->getEvpPkey(), encAESKey, butterfly::ENC_AESKEY_FILENAME);
+    //rsaDecryptor2->decryptEVP(rsaDecryptor2->getEvpPkey(), encAESKey, butterfly::RSAKEY_TYPE::AESKEY);
     std::string decryptedAESKey = rsaDecryptor2->getDecryptedMessage();
     std::cout << "Decrypted AESKey: " << decryptedAESKey << std::endl;
 
     std::string encAESIV = rsaDecryptor2->getBinKeyFileContents("AESIV.bin");
-    rsaDecryptor2->decryptEVP(rsaDecryptor2->getEvpPkey(), encAESIV, butterfly::ENC_AESIV_FILENAME);
+    //rsaDecryptor2->decryptEVP(rsaDecryptor2->getEvpPkey(), encAESIV, butterfly::RSAKEY_TYPE::AESKEY);
     std::string decryptedAESIV= rsaDecryptor2->getDecryptedMessage();
     std::cout << "Decrypted AESIV: " << decryptedAESIV << std::endl;
 
@@ -144,9 +144,8 @@ int main(int argc, char *argv[])
 
         // start decryption
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", butterfly::ENC_CPRIVATERSA_FILENAME);
+        decryptor->invokeDir(args._dir, "/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
 
-        decryptor->invokeDir(args._dir);
     }
     // Start only Encryption
     else if ( !args._encrypt.empty() )
@@ -162,8 +161,7 @@ int main(int argc, char *argv[])
     {
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         std::cout << "Start Decryption from directory " << args._decrypt << std::endl;
-        decryptor->decryptCPrivateRSA(args._serverpKey, butterfly::ENC_CPRIVATERSA_FILENAME);
-        decryptor->invokeDir(args._decrypt);
+        decryptor->invokeDir(args._decrypt, args._serverpKey);
     }
 
     /*
