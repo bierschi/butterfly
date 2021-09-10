@@ -61,8 +61,9 @@ public:
      * Invokes the provided directory path
      *
      * @param path: path of the directory
+     * @param protection: enable/disable protection mode
      */
-    void invokeDir(const std::string &path, bool protection);
+    void invokeDir(const std::string &dirPath, bool protection);
 
     /**
      * Encrypts the CPrivateRSA.pem and saves the CPrivateRSA.bin file on the host machine
@@ -81,8 +82,9 @@ public:
      *
      * @param aesKeyStr: AES Key or IV String
      * @param filename: name of the encrypted file
+     * @param type: RSAKEY_TYPE enum
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename, const RSAKEY_TYPE &type);
 
 };
 

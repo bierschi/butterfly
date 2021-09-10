@@ -34,20 +34,6 @@ public:
     ~AESDecryptor() = default;
 
     /**
-     * Sets the AESKey
-     *
-     * @param aesKey: AESKey for the decryption procedure
-     */
-    void setAESKey(const std::string &aesKey);
-
-    /**
-     * Sets the AESIv
-     *
-     * @param aesIv: AESIv for the decryption procedure
-     */
-    void setAESIv(const std::string &aesIv);
-
-    /**
      * Decrypts the given filename
      *
      * @param filename: name of the file

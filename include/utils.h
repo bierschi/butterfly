@@ -16,15 +16,27 @@ namespace butterfly
  * Get file size from given filepath
  *
  * @param filepath: filepath as const std::string reference
+ * @param MBytes: return the value in MBytes
  * @return size of file in bytes
  */
-inline long getFileSize(const std::string &filepath)
+inline double getFileSize(const std::string &filepath, bool MBytes=true)
 {
     struct stat stat_buf;
 
     int rc = stat(filepath.c_str(), &stat_buf);
 
-    return rc == 0 ? stat_buf.st_size : -1;
+    if (rc != 0)
+    {
+        return -1;
+    } else {
+
+        if (MBytes)
+        {
+            return (static_cast<double>(stat_buf.st_size) / 1000000.0);
+        }
+        return static_cast<double>(stat_buf.st_size);
+    }
+
 }
 
 /**
@@ -57,12 +69,20 @@ inline std::string readBinFile(const std::string &filepath)
  * @param filepath: path to the file
  * @param content: content to write to file
  * @param contentLength: length of the content
+ * @param append: Appends the content to the file
  * @return True if writing was successful
  */
-inline bool writeBinFile(const std::string &filepath, const char* content, long contentLength)
+inline bool writeBinFile(const std::string &filepath, const char* content, long contentLength, bool append=false)
 {
+    std::fstream out;
+    if (append)
+    {
+        out.open(filepath, std::ios::out | std::ios::app | std::ios::binary);
+    } else
+    {
+        out.open(filepath, std::ios::out | std::ios::binary);
+    }
 
-    std::fstream out(filepath, std::ios::out | std::ios::binary);
     if (out.is_open())
     {
         out.write(content, contentLength);
