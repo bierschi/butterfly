@@ -25,7 +25,7 @@ bool RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int 
     return true;
 }
 
-void RSADecryptor::readRSAFilesFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv)
+void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv)
 {
 
     std::string rsaek;
@@ -125,9 +125,9 @@ void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::st
     }
 
     std::string encKey, iv;
-    readRSAFilesFromSystem(type, encKey, iv);
+    readRSAFileFromSystem(type, encKey, iv);
 
-    // Decrypt the Message
+    // Decrypt the encrypted Message
     char *decryptedMessage = nullptr;
     CryptoRSA::decryptEVP(pkey, (unsigned char *) encMSG.c_str(), encMSG.length(), (unsigned char *) encKey.c_str(), (unsigned char *) iv.c_str(), (unsigned char**)&decryptedMessage);
 

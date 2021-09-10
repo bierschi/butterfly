@@ -29,13 +29,13 @@ private:
     bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
     /**
-     * Reads the RSA EK und RSA IV from the RSA System File
+     * Reads the RSA file that includes the RSA EK and RSA IV from the host machine
      *
      * @param rsakeysType: type of the saved file
      * @param encKey: rsa encrypted key
      * @param iv: rsa iv
      */
-    void readRSAFilesFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv);
+    void readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv);
 
 public:
 
@@ -86,6 +86,7 @@ public:
      * @param pkey: EVP_PKEY to decrypt the cipher message string
      * @param encMSG: encrypted Message as std::string
      * @param decMSG: decrypted Message as std:.string
+     * @param type: enum RSAKEY_TYPE
      */
     void decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type);
 };

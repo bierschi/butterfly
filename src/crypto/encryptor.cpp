@@ -42,13 +42,13 @@ void Encryptor::validateAESKeyLength(std::string &aeskey, std::string &aesiv)
 
 }
 
-void Encryptor::invokeDir(const std::string &path, bool protection)
+void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 {
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
 
     // Get all files from provided directory path
-    auto files =  _dirIterator->getAllFiles(path);
+    auto files =  _dirIterator->getAllFiles(dirPath);
 
     // Generate and validate the AES Key and IV
     std::string aeskey, aesiv;

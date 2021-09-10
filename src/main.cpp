@@ -144,9 +144,8 @@ int main(int argc, char *argv[])
 
         // start decryption
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        decryptor->decryptCPrivateRSA("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem", butterfly::ENC_CPRIVATERSA_FILENAME);
+        decryptor->invokeDir(args._dir, "/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
 
-        decryptor->invokeDir(args._dir);
     }
     // Start only Encryption
     else if ( !args._encrypt.empty() )
@@ -162,8 +161,7 @@ int main(int argc, char *argv[])
     {
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         std::cout << "Start Decryption from directory " << args._decrypt << std::endl;
-        decryptor->decryptCPrivateRSA(args._serverpKey, butterfly::ENC_CPRIVATERSA_FILENAME);
-        decryptor->invokeDir(args._decrypt);
+        decryptor->invokeDir(args._decrypt, args._serverpKey);
     }
 
     /*

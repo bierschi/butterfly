@@ -41,7 +41,7 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
 
 }
 
-bool RSAEncryptor::writeRSAFilesToSystem(const RSAKEY_TYPE &)
+bool RSAEncryptor::writeRSAFileToSystem(const RSAKEY_TYPE &)
 {
 
     unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
@@ -60,6 +60,7 @@ bool RSAEncryptor::writeRSAFilesToSystem(const RSAKEY_TYPE &)
     {
         return false;
     }
+
 }
 
 void RSAEncryptor::saveEncryptedMsgToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength)
@@ -120,8 +121,8 @@ void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAK
     _encryptedMessage.resize(static_cast<size_t>(keysize));
     std::copy(encryptedMessage, encryptedMessage + keysize, _encryptedMessage.begin());
 
-    // Write RSA Files to System
-    if ( !writeRSAFilesToSystem(type) )
+    // Write RSA File to System
+    if ( !writeRSAFileToSystem(type) )
     {
         LOG_ERROR("Error on writing RSA files to System");
         throw RSAEncryptionException("Error on writing RSA files to System");
