@@ -98,6 +98,28 @@ bool CryptoAES::generateAESKeyWithSalt()
     return true;
 }
 
+void CryptoAES::setAESKey(const std::string &aesKey)
+{
+    _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
+}
+
+void CryptoAES::setAESIv(const std::string &aesIv)
+{
+    _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
+}
+
+std::string CryptoAES::getAESKey() const
+{
+    std::string str(reinterpret_cast<const char *>(_aesKey));
+    return str;
+}
+
+std::string CryptoAES::getAESIv() const
+{
+    std::string str(reinterpret_cast<const char *>(_aesIv));
+    return str;
+}
+
 size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
 

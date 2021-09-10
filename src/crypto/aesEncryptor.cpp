@@ -12,18 +12,6 @@ AESEncryptor::AESEncryptor() : CryptoAES()
     LOG_TRACE("Create class AESEncryptor");
 }
 
-std::string AESEncryptor::getAESKey() const
-{
-    std::string str(reinterpret_cast<const char *>(_aesKey));
-    return str;
-}
-
-std::string AESEncryptor::getAESIv() const
-{
-    std::string str(reinterpret_cast<const char *>(_aesIv));
-    return str;
-}
-
 void AESEncryptor::encryptFile(const std::string &filename)
 {
 

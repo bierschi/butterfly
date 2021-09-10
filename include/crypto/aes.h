@@ -64,6 +64,34 @@ public:
     bool generateAESKeyWithSalt();
 
     /**
+     * Sets the AESKey
+     *
+     * @param aesKey: AESKey for the decryption procedure
+     */
+    void setAESKey(const std::string &aesKey);
+
+    /**
+     * Sets the AESIv
+     *
+     * @param aesIv: AESIv for the decryption procedure
+     */
+    void setAESIv(const std::string &aesIv);
+
+    /**
+     * Get the AESKey
+     *
+     * @return AESKey as std::string
+     */
+    std::string getAESKey() const;
+
+    /**
+     * Get the AESIv
+     *
+     * @return AESIv as std::string
+     */
+    std::string getAESIv() const;
+
+    /**
      * Encrypts the plaintext
      *
      * @param plaintext: plaintext to encrypt

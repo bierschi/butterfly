@@ -34,20 +34,6 @@ public:
     ~AESEncryptor() = default;
 
     /**
-     * Get the AESKey
-     *
-     * @return AESKey as std::string
-     */
-    std::string getAESKey() const;
-
-    /**
-     * Get the AESIv
-     *
-     * @return AESIv as std::string
-     */
-    std::string getAESIv() const;
-
-    /**
      * Encrypts the given filename
      *
      * @param filename: name of the file

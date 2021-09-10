@@ -12,16 +12,6 @@ AESDecryptor::AESDecryptor() : CryptoAES()
     LOG_TRACE("Create class AESDecryptor");
 }
 
-void AESDecryptor::setAESKey(const std::string &aesKey)
-{
-    _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
-}
-
-void AESDecryptor::setAESIv(const std::string &aesIv)
-{
-    _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
-}
-
 void AESDecryptor::decryptFile(const std::string &filename)
 {
 
