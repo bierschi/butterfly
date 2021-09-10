@@ -21,6 +21,7 @@ class RSADecryptor : public CryptoRSA
 
 private:
     std::string _decryptedMessage;
+    static unsigned long cPrivateRSAKeyLength, AESKEYLength, AESIVLength;
 
     /**
      * Validates the length of given string with the RSA key size
@@ -28,13 +29,13 @@ private:
     bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
 
     /**
-     * Reads the RSA EK und RSA IV from the System
+     * Reads the RSA EK und RSA IV from the RSA System File
      *
-     * @param type: type of the saved file
+     * @param rsakeysType: type of the saved file
      * @param encKey: rsa encrypted key
      * @param iv: rsa iv
      */
-    void readRSAFilesFromSystem(const std::string &type, std::string &encKey, std::string &iv);
+    void readRSAFilesFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv);
 
 public:
 
@@ -83,9 +84,10 @@ public:
      * Decrypts the given message string with EVP methods
      *
      * @param pkey: EVP_PKEY to decrypt the cipher message string
-     * @param msg: message as std::string
+     * @param encMSG: encrypted Message as std::string
+     * @param decMSG: decrypted Message as std:.string
      */
-    void decryptEVP(EVP_PKEY *pkey, const std::string &msg, const std::string &type);
+    void decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type);
 };
 
 } // namespace rsa

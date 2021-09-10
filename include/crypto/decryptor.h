@@ -78,10 +78,13 @@ public:
     /**
      * Decrypts the AESKey/AESIV file to be able to decrypt the files
      *
-     * @param filepath: path to the AESKey.bin / AESIV.bin
+     * @param filepathAESKey: path to the AESKey.bin
+     * @param filepathAESIV: path to the AESIV.bin
+     * @param decAESKey: decrypted AESKey string
+     * @param decAESIV: decrypted AESIV string
      * @return Decrypted content as std::string
      */
-    std::string decryptAESKeyPair(const std::string &filepath, const std::string &type);
+    void decryptAESKeyPair(const std::string &filepathAESKey, const std::string &filepathAESIV, std::string &decAESKey,  std::string &decAESIV);
 
     /**
      * Decrypt the file with the AES Key
