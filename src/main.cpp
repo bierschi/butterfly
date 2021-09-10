@@ -35,10 +35,11 @@ void test_rsa_dec()
     std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile("CPrivateRSA.bin");
 
     std::cout << "Enc: " << encCPrivateRSA << std::endl;
-    rsaDecryptor->decrypt(rsaDecryptor->getEvpPkey(), encCPrivateRSA);
-    std::string decrpyted = rsaDecryptor->getDecryptedMessage();
-    butterfly::writeBinFile("CPrivateRSA.pem.dec", decrpyted.c_str(), static_cast<long>(decrpyted.length()));
-    std::cout << "Decrypted: " << decrpyted.size() << std::endl;
+    std::string decrypted;
+    rsaDecryptor->decrypt(rsaDecryptor->getEvpPkey(), encCPrivateRSA, decrypted);
+    //std::string decrpyted = rsaDecryptor->getDecryptedMessage();
+    butterfly::writeBinFile("CPrivateRSA.pem.dec", decrypted.c_str(), static_cast<long>(decrypted.length()));
+    std::cout << "Decrypted: " << decrypted.size() << std::endl;
 }
 
 void test_rsa_enc_evp()

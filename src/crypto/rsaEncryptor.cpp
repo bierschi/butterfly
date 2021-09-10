@@ -85,9 +85,10 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     }
 
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
+    std::string _msg = msg.substr(0, msg.size() -1); // TODO check correct msg length
 
     // Validate the string length with block size length
-    if ( !validateStringLengthForRSA(msg, keysize) )
+    if ( !validateStringLengthForRSA(_msg, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSAEncryptionException("Error on validateStringLengthForRSA()!");
@@ -95,7 +96,7 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
     // Encrypt the message
     unsigned char ciphertextKey[keysize];
-    CryptoRSA::encrypt(pkey, (unsigned char *) msg.c_str(), msg.size() + 1, ciphertextKey);
+    CryptoRSA::encrypt(pkey, (unsigned char *) _msg.c_str(), _msg.size() + 1, ciphertextKey);
 
     _encryptedMessage.resize(static_cast<size_t>(keysize));
     std::copy(ciphertextKey, ciphertextKey + keysize, _encryptedMessage.begin());
