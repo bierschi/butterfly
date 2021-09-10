@@ -124,8 +124,8 @@ void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAK
     // Write RSA File to System
     if ( !writeRSAFileToSystem(type) )
     {
-        LOG_ERROR("Error on writing RSA files to System");
-        throw RSAEncryptionException("Error on writing RSA files to System");
+        LOG_ERROR("Error on writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
+        throw RSAEncryptionException("Error on writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
     }
 
 }
