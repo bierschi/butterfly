@@ -1,18 +1,18 @@
 ## ToDo
 
-- add logging functionality (done)
-- create class for argument parser (done)
-- create classes for rsa, aes encryption -> Use hybrid encryption (done)
-- iterate through directory structure recursively and load all files (done)
-- add exception handling (done)
-- add unit tests for all classes (in progress)
-- add data structure for holding file extension, mainly user data files (in progress)
-- after encryption check internet connection
-- change project to support multiple os (linux, windows, macos)
-- add a http server with sockets
-- change wallpaper or create gui/local webserver on localhost
-- add classes to access the tor network
-- integrate a bitcoin api
+- Add logging functionality :heavy_check_mark:
+- Create class for argument parser :heavy_check_mark:
+- Create classes for rsa, aes encryption -> Use hybrid encryption :heavy_check_mark:
+- Iterate through directory structure recursively and load all files :heavy_check_mark:
+- Add exception handling :heavy_check_mark:
+- Add unit tests for all classes (in progress)
+- Add data structure for holding file extension, mainly user data files (in progress)
+- After encryption check internet connection :x:
+- Change project to support multiple os (linux, windows, macos) :x:
+- Add a http server with sockets :x:
+- Change wallpaper or create gui/local webserver on localhost :x:
+- Add classes to access the tor network :x:
+- Integrate a bitcoin api :x:
 
 
 ## File Extensions

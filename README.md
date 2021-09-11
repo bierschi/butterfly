@@ -2,11 +2,12 @@
 Butterfly is a cryptographic ransomware that includes the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
-- Supports multiple operating systems (Linux, Windows, MacOS)
-- Offline Encryption
-- Supports over .. file extensions
-- Connection to the TOR network
-- Bitcoin payments
+- Offline Encryption :heavy_check_mark:
+- Supports multiple operating systems (Linux, Windows, MacOS) :x:
+- Supports over 300 file extensions :heavy_check_mark:
+- Ransom Visualization with Server/GUI/Wallpaper :x:
+- Connection to the TOR network :x:
+- Bitcoin payments :x:
 
 ## Dependencies
 
