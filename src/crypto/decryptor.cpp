@@ -63,6 +63,7 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
     try
     {
         _rsaDecryptorCPrivateRSA->decryptEVP(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        //_rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA);
         LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
         //std::cout << "Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << std::endl;
 
@@ -98,10 +99,12 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, const std::
     try
     {
         rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, decAESKey, butterfly::RSAKEY_TYPE::AESKEY);
+        //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, decAESKey);
         LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << decAESKey);
         //std::cout << "Decrypted Content from file " << filepathAESKey << ": " << decAESKey << std::endl;
 
         rsaDecryptorAESIV->decryptEVP(rsaDecryptorAESIV->getEvpPkey(), encAESIV, decAESIV, butterfly::RSAKEY_TYPE::AESIV);
+        //rsaDecryptorAESIV->decrypt(rsaDecryptorAESIV->getEvpPkey(), encAESIV, decAESIV);
         LOG_TRACE("Decrypted Content from file " << filepathAESIV << ": " << decAESIV);
         //std::cout << "Decrypted Content from file " << filepathAESIV << ": " << decAESIV << std::endl;
 
@@ -140,6 +143,7 @@ void Decryptor::decryptFileWithAES(const std::string &filepath, const std::strin
     {
         std::cerr << e.what() << std::endl;
         LOG_ERROR(e.what());
+        throw DecryptorException(e.what());
     }
 
 }

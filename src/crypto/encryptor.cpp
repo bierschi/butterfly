@@ -86,6 +86,7 @@ void Encryptor::encryptCPrivateRSA()
     {
         // Encrypt the CPrivateRSA.pem file string
         _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        //_rsaEncryptorCPrivateRSA->encrypt(cPrivateRSAPKey, cPrivateRSAStr);
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
@@ -122,6 +123,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
     {
         // Encrypt the AES Key String
         _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr, type);
+        //_rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr);
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
         // Save the encrypted AES Key to AESKey.bin

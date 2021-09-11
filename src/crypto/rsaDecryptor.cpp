@@ -87,11 +87,11 @@ std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
 
 }
 
-void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
+void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG)
 {
 
     // First check the message size
-    if ( msg.empty() )
+    if ( encMSG.empty() )
     {
         LOG_ERROR("Empty messages can not be decrypted!")
         throw RSADecryptionException("Empty messages can not be decrypted!");
@@ -100,7 +100,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
     int keysize = CryptoRSA::getEvpPkeySize(pkey);
 
     // Validate the string length with block size length
-    if ( !validateStringLengthForRSA(msg, keysize) )
+    if ( !validateStringLengthForRSA(encMSG, keysize) )
     {
         LOG_ERROR("Error on validateStringLengthForRSA()!")
         throw RSADecryptionException("Error on validateStringLengthForRSA()!");
@@ -108,9 +108,10 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &msg)
 
     // Decrypt the message
     unsigned char plaintextKey[keysize];
-    CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(msg.c_str())), static_cast<size_t >(keysize), plaintextKey);
+    CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(encMSG.c_str())), static_cast<size_t >(keysize), plaintextKey);
 
     _decryptedMessage = reinterpret_cast<char *>(plaintextKey);
+    decMSG = reinterpret_cast<char *>(plaintextKey);
 
 }
 
