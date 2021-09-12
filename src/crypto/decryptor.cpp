@@ -100,12 +100,12 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, const std::
     {
         rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, decAESKey, butterfly::RSAKEY_TYPE::AESKEY);
         //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, decAESKey);
-        LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << decAESKey);
+        LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << decAESKey << " with Length: " << decAESKey.length());
         //std::cout << "Decrypted Content from file " << filepathAESKey << ": " << decAESKey << std::endl;
 
         rsaDecryptorAESIV->decryptEVP(rsaDecryptorAESIV->getEvpPkey(), encAESIV, decAESIV, butterfly::RSAKEY_TYPE::AESIV);
         //rsaDecryptorAESIV->decrypt(rsaDecryptorAESIV->getEvpPkey(), encAESIV, decAESIV);
-        LOG_TRACE("Decrypted Content from file " << filepathAESIV << ": " << decAESIV);
+        LOG_TRACE("Decrypted Content from file " << filepathAESIV << ": " << decAESIV << " with Length: " << decAESIV.length());
         //std::cout << "Decrypted Content from file " << filepathAESIV << ": " << decAESIV << std::endl;
 
     } catch (RSADecryptionException &e)
@@ -128,7 +128,7 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, const std::
 
 }
 
-void Decryptor::decryptFileWithAES(const std::string &filepath, const std::string &aeskey, const std::string &aesiv)
+void Decryptor::decryptFileWithAES(const std::string &filepath, std::string &aeskey, std::string &aesiv)
 {
     // Set AESKey and AESIV
     _aesDecryptor->setAESKey(aeskey);

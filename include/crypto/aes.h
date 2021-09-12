@@ -68,14 +68,14 @@ public:
      *
      * @param aesKey: AESKey for the decryption procedure
      */
-    void setAESKey(const std::string &aesKey);
+    void setAESKey(std::string &aesKey);
 
     /**
      * Sets the AESIv
      *
      * @param aesIv: AESIv for the decryption procedure
      */
-    void setAESIv(const std::string &aesIv);
+    void setAESIv(std::string &aesIv);
 
     /**
      * Get the AESKey

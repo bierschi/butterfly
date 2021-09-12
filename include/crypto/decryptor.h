@@ -92,7 +92,7 @@ public:
      * @param aesKey: aes key for the file to decrypt
      * @param aesIV: aes iv for the file to decrypt
      */
-    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string &aesIV);
+    void decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV);
 
 };
 

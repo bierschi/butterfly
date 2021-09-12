@@ -24,19 +24,15 @@ void Encryptor::validateAESKeyLength(std::string &aeskey, std::string &aesiv)
 
         if ( _aesKeyInit )
         {
-            sleep(2);
+            sleep(1);
+            _aesEncryptor->generateAESKey();
         }
 
-        if ( _aesEncryptor->generateAESKey() )
-        {
-            aeskey = _aesEncryptor->getAESKey();
-            aesiv = _aesEncryptor->getAESIv();
-            LOG_TRACE("Generating new AESKey with AESKEY Length: " << aeskey.length() << " and AESIV Length: " << aesiv.length());
-            _aesKeyInit = true;
-        } else
-        {
-            LOG_ERROR("Error on generating AES Key!")
-        }
+        aeskey = _aesEncryptor->getAESKey();
+        aesiv = _aesEncryptor->getAESIv();
+        LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length());
+        _aesKeyInit = true;
+
 
     } while ( (aeskey.length() < 32) or (aesiv.length() < 16));
 

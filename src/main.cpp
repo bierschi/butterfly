@@ -103,19 +103,30 @@ void test_aes()
 
     ////// AES PART ///////
     std::unique_ptr<butterfly::aes::AESEncryptor> aesEncryptor(new butterfly::aes::AESEncryptor());
+    /*
     aesEncryptor->generateAESKey();
     std::string aeskey = aesEncryptor->getAESKey();
     std::string aesiv = aesEncryptor->getAESIv();
-    butterfly::writeBinFile("AESKey.txt", aeskey.c_str(), static_cast<long>(aeskey.length()));
-    butterfly::writeBinFile("AESIv.txt", aesiv.c_str(), static_cast<long>(aesiv.length()));
+     */
+    std::string t = "abc";
+    std::string m = "def";
+    std::cout << "t: " << t.length() << " m: " << m.length() << std::endl;
+    //butterfly::writeBinFile("AESKey.txt", t.c_str(), static_cast<long>(t.length()));
+    //butterfly::writeBinFile("AESIv.txt", m.c_str(), static_cast<long>(m.length()));
+
+    aesEncryptor->setAESKey(t);
+    aesEncryptor->setAESIv(m);
     std::string s = "/home/christian/projects/butterfly/bin/data/test.pdf";
+
     aesEncryptor->encryptFile(s);
 
 
-    sleep(2);
+    sleep(5);
     std::unique_ptr<butterfly::aes::AESDecryptor> aesDecryptor(new butterfly::aes::AESDecryptor());
-    std::string aeskey2 = butterfly::readBinFile("AESKey.txt");
-    std::string aesiv2 = butterfly::readBinFile("AESIv.txt");
+    //std::string aeskey2 = butterfly::readBinFile("AESKey.txt");
+    //std::string aesiv2 = butterfly::readBinFile("AESIv.txt");
+    std::string aeskey2 = "abc";
+    std::string aesiv2 = "def";
     aesDecryptor->setAESKey(aeskey2);
     aesDecryptor->setAESIv(aesiv2);
     std::string s2 = "/home/christian/projects/butterfly/bin/data/test.pdf";
@@ -132,6 +143,8 @@ int main(int argc, char *argv[])
     LOG_INFO("Running " << PROJECT_NAME << " with version " << args._version);
     std::cout << "Running " << PROJECT_NAME << " with version " << args._version << std::endl;
 
+    //test_aes();
+    //exit(1);
     // Start Encryption + Decryption
     if ( !args._dir.empty() )
     {
