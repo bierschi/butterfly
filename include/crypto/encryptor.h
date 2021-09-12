@@ -32,12 +32,9 @@ private:
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
-     * Validates the AESKey length after the AESKey generation
-     *
-     * @param aeskey: aes key string
-     * @param aesiv: aes iv string
+     * Validates the AESKey/AESIV length after the AESKey generation
      */
-    void validateAESKeyLength(std::string &aeskey, std::string &aesiv);
+    void validateAESKeyLength();
 
 public:
     /**

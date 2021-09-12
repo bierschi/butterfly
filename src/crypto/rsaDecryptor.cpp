@@ -49,7 +49,7 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
         iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
 
-    } else
+    } /*else
     {
         // 256 Bytes
         RSADecryptor::AESIVLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
@@ -57,7 +57,7 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength + EVP_MAX_IV_LENGTH,  RSADecryptor::AESIVLength);
         iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + RSADecryptor::AESKEYLength + RSADecryptor::AESIVLength + (EVP_MAX_IV_LENGTH * 2), EVP_MAX_IV_LENGTH);
 
-    }
+    }*/
 
     if ( encKey.empty() )
     {

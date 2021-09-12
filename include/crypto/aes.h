@@ -92,6 +92,27 @@ public:
     std::string getAESIv() const;
 
     /**
+     * Get the AESKey and AESIV in one concatenated string
+     *
+     * @return string with AESKey and AESIV
+     */
+    std::string getAESKeyPair() const;
+
+    /**
+     * Get the AESKEY Length
+     *
+     * @return Length of the AESKey as an int
+     */
+    inline int getAESKeyLength() const { return _aesKeyLength; }
+
+    /**
+     * Get the AESIV Length
+     *
+     * @return Length of the AESIV as an int
+     */
+    inline int getAESIVLength() const { return _aesIvLength; }
+
+    /**
      * Encrypts the plaintext
      *
      * @param plaintext: plaintext to encrypt

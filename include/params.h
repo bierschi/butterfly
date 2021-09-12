@@ -5,16 +5,13 @@
 namespace butterfly
 {
 
-enum RSAKEY_TYPE { CPRIVATE_RSA, AESKEY, AESIV };
+enum RSAKEY_TYPE { CPRIVATE_RSA, AESKEY };
 
 // Filename CPrivateRSA.bin
 const std::string ENC_CPRIVATERSA_FILENAME   = "CPrivateRSA.bin";
 
 // Filename AESKey.bin
 const std::string ENC_AESKEY_FILENAME        = "AESKey.bin";
-
-// Filename AESIV.bin
-const std::string ENC_AESIV_FILENAME         = "AESIV.bin";
 
 // Filename RSAEKIV.bin
 const std::string RSA_EKIV_FILENAME          = "RSAEKIV.bin";

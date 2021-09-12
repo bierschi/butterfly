@@ -140,6 +140,17 @@ std::string CryptoAES::getAESIv() const
     return str;
 }
 
+std::string CryptoAES::getAESKeyPair() const
+{
+
+    std::string aeskey = getAESKey();
+    std::string aesiv = getAESIv();
+
+    aeskey.append(aesiv);
+
+    return aeskey;
+}
+
 size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
 

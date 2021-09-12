@@ -65,9 +65,9 @@ void test_rsa_enc_evp()
     rsaEncryptAESKey->writeEncMSGToFile("AESKey.bin", encAESKey, static_cast<int>(encAESKey.length()));
 
     // Encrypt the AESIV
-    rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "bbbbb", butterfly::RSAKEY_TYPE::AESIV);
-    std::string encAESIV = rsaEncryptAESKey->getEncryptedMessage();
-    rsaEncryptAESKey->writeEncMSGToFile("AESIV.bin", encAESIV, static_cast<int>(encAESIV.length()));
+    //rsaEncryptAESKey->encryptEVP(rsaEncryptAESKey->getEvpPkey(), "bbbbb", butterfly::RSAKEY_TYPE::AESIV);
+    //std::string encAESIV = rsaEncryptAESKey->getEncryptedMessage();
+    //rsaEncryptAESKey->writeEncMSGToFile("AESIV.bin", encAESIV, static_cast<int>(encAESIV.length()));
 };
 
 void test_rsa_dec_evp()
