@@ -28,7 +28,7 @@ CryptoAES::CryptoAES() : _aesKey(nullptr), _aesIv(nullptr)
     _aesIv  = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
 
     // Generate the AESKey and AESIV
-    if ( !generateAESKey() )
+    if ( !generateAESKeyWithSalt() )
     {
         LOG_ERROR("Error on generating an AES Key/IV!")
     }
@@ -56,7 +56,7 @@ std::string CryptoAES::getOpenSSLError()
 
 bool CryptoAES::generateAESKey()
 {
-    LOG_INFO("Create new AES Key and IV pair")
+    LOG_INFO("Create new AES Key/IV pair")
 
     if(RAND_bytes(_aesKey, _aesKeyLength) == 0) {
         return false;
@@ -71,7 +71,7 @@ bool CryptoAES::generateAESKey()
 
 bool CryptoAES::generateAESKeyWithSalt()
 {
-    LOG_INFO("Create new AES Key and IV pair with Salt")
+    LOG_INFO("Create new AES Key/IV pair with Salt")
 
     auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     auto *aesSalt = (unsigned char *) malloc(8);

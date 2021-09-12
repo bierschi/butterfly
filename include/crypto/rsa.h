@@ -162,7 +162,7 @@ public:
     * @param ciphertext: encrypted ciphertext
     * @return ciphertext length
     */
-    size_t encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext);
+    int encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext);
 
     /**
     * Decrypt the ciphertext with EVP methods
@@ -175,7 +175,7 @@ public:
     * @param plaintext: decrypted plaintext
     * @return plaintext length
     */
-    size_t decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext);
+    int decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext);
 
     /**
     * Encrypt the plaintext with the EVP PKEY
@@ -186,7 +186,7 @@ public:
     * @param ciphertext: encrypted ciphertext
     * @return ciphertext length
     */
-    static size_t encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext);
+    static int encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext);
 
     /**
      * Decrypt the ciphertext with the EVP PKEY
@@ -197,7 +197,7 @@ public:
      * @param plaintext: decrypted plaintext
      * @return plaintext length
      */
-    static size_t decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext);
+    static int decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext);
 };
 
 } // namespace rsa

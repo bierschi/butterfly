@@ -114,19 +114,25 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKE
 
     // Encrypt the message
     unsigned char *encryptedMessage = nullptr;
-    //size_t encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
-    size_t encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size(), &encryptedMessage);
-    
-    _encryptedMessage.resize(static_cast<size_t>(encLen));
+    //int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
+    int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size(), &encryptedMessage);
+
+    if (encLen == -1)
+    {
+        throw RSAEncryptionException("Error at encrypting the message with RSA!");
+    }
+
+    _encryptedMessage.resize(static_cast<unsigned long>(encLen));
     std::copy(encryptedMessage, encryptedMessage + encLen, _encryptedMessage.begin());
 
     // Write RSA File to System
     if ( !writeRSAFileToSystem(type) )
     {
-        LOG_ERROR("Error on writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
-        throw RSAEncryptionException("Error on writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
+        LOG_ERROR("Error at writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
+        throw RSAEncryptionException("Error at writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
     }
-    return static_cast<int>(encLen);
+
+    return encLen;
 }
 
 } // namespace rsa

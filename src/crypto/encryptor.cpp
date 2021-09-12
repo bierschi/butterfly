@@ -25,7 +25,7 @@ void Encryptor::validateAESKeyLength()
         if ( _aesKeyInit )
         {
             sleep(1);
-            _aesEncryptor->generateAESKey();
+            _aesEncryptor->generateAESKeyWithSalt();
         }
 
         aeskey = _aesEncryptor->getAESKey();
@@ -57,7 +57,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         //LOG_TRACE("Length of AESKEY: " << aeskey.length() << " and length of AESIV: " << aesiv.length());
         butterfly::writeBinFile("AESKey_protected.txt", aeskeypair.c_str(), static_cast<long>(aeskeypair.length()));
     }
-    butterfly::writeBinFile("AESKey_protected.txt", aeskeypair.c_str(), static_cast<long>(aeskeypair.length()));
+
     for (auto &file: files)
     {
         //LOG_TRACE("FILE: " << file);
