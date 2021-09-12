@@ -88,7 +88,7 @@ public:
      * @param msg: message as std::string
      * @param type: enum RSAKEY_TYPE
      */
-    void encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type);
+    int encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type);
 };
 
 } //namespace rsa

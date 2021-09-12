@@ -205,8 +205,8 @@ size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size
     size_t blockLength = 0;
     size_t encryptedKeyLength;
 
-    _encryptedKey = (unsigned char*)malloc(static_cast<size_t>(EVP_PKEY_size(key))); // 256 Bytes
-    _iv = (unsigned char*)malloc(EVP_MAX_IV_LENGTH); // 16 Bytes
+    _encryptedKey = (unsigned char*)malloc(static_cast<size_t>(EVP_PKEY_size(key)));
+    _iv = (unsigned char*)malloc(EVP_MAX_IV_LENGTH);
 
     *ciphertext = (unsigned char*)malloc(plaintextLength + EVP_MAX_IV_LENGTH);
 
@@ -215,6 +215,7 @@ size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size
         LOG_ERROR("Error during EVP_SealInit in RSA encrypt: " << getOpenSSLError());
         return 0;
     }
+
 
     if(!EVP_SealUpdate(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)plaintext, (int)plaintextLength))
     {

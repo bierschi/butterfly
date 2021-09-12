@@ -91,13 +91,13 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
 
     std::unique_ptr<rsa::RSADecryptor> rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 
-    std::string encAESKey = rsaDecryptorAESKey->readEncMSGFromFile(filepathAESKey);  // Length of encAESKey = 256
-    LOG_TRACE("ENC AESKEY Length: " << encAESKey.length())
+    std::string encAESKey = rsaDecryptorAESKey->readEncMSGFromFile(filepathAESKey);  // Length of encAESKey = encMSGLen in encrypt
+
     std::string aeskeypair;
     try
     {
         rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair, butterfly::RSAKEY_TYPE::AESKEY);
-        //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, decAESKey);
+        //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair);
         LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length());
         //std::cout << "Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length() << std::endl;
 
@@ -110,7 +110,7 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
     int aesKeyLength = _aesDecryptor->getAESKeyLength();
     int aesIVLength = _aesDecryptor->getAESIVLength();
 
-    if ( static_cast<int>(aeskeypair.length()) < aesKeyLength )
+    if ( static_cast<int>(aeskeypair.length()) < (aesKeyLength + aesIVLength) )
     {
         throw DecryptorException("AESKEYPairLength " + std::to_string(aeskeypair.length()) + " is less than " + std::to_string(aesKeyLength));
     } else
