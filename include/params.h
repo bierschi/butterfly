@@ -8,13 +8,13 @@ namespace butterfly
 enum RSAKEY_TYPE { CPRIVATE_RSA, AESKEY };
 
 // Filename CPrivateRSA.bin
-const std::string ENC_CPRIVATERSA_FILENAME   = "CPrivateRSA.bin";
+const std::string ENC_CPRIVATERSA_FILENAME   = "CPrivateRSA.bin"; // encrypted CPrivateRSA pem file
 
-// Filename AESKey.bin
-const std::string ENC_AESKEY_FILENAME        = "AESKey.bin";
+// Filename AES.bin
+const std::string ENC_AESKEY_FILENAME        = "AES.bin";         // encrypted AESKey+AESIV (32Bytes+16Bytes)
 
-// Filename RSAEKIV.bin
-const std::string RSA_EKIV_FILENAME          = "RSAEKIV.bin";
+// Filename RSA.bin
+const std::string RSA_EKIV_FILENAME          = "RSA.bin";         //unencrypted RSAEK + RSAIV (1721/256Bytes + 16Bytes)
 
 const std::string ENC_BFLY_FILE_ENDING       = ".bfly";
 

@@ -78,8 +78,9 @@ public:
      *
      * @param pkey: EVP_PKEY for the encryption
      * @param msg: message to encrypt
+     * @return size of the encrypted message
      */
-    void encrypt(EVP_PKEY *pkey, const std::string &msg);
+    int encrypt(EVP_PKEY *pkey, const std::string &msg);
 
     /**
      * Encrypts the given message string with EVP methods

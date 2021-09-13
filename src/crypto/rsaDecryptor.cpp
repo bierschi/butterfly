@@ -108,10 +108,19 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
 
     // Decrypt the message
     unsigned char plaintextKey[keysize];
-    CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(encMSG.c_str())), static_cast<size_t >(keysize), plaintextKey);
+    int decLen = CryptoRSA::decrypt(pkey, const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(encMSG.c_str())), static_cast<size_t >(keysize), plaintextKey);
 
-    _decryptedMessage = reinterpret_cast<char *>(plaintextKey);
-    decMSG = reinterpret_cast<char *>(plaintextKey);
+    if (decLen == -1)
+    {
+        throw RSADecryptionException("Error at decrypting the message with RSA!");
+    }
+
+    _decryptedMessage.resize(static_cast<size_t>(decLen));
+    std::copy(plaintextKey, plaintextKey + decLen, _decryptedMessage.begin());
+
+    std::string str(reinterpret_cast<const char *>(plaintextKey), static_cast<unsigned long>(decLen));
+
+    decMSG = str;
 
 }
 

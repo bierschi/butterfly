@@ -148,10 +148,9 @@ int main(int argc, char *argv[])
     // Start Encryption + Decryption
     if ( !args._dir.empty() )
     {
-        std::cout << "ENCRYPT + DECRYPT" << std::endl;
         // start encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-        std::cout << "Start Encryption from directory " << args._dir << std::endl;
+        std::cout << "Start Encryption+Decryption from directory " << args._dir << std::endl;
         encryptor->invokeDir(args._dir, args._protected);
 
         sleep(2);
