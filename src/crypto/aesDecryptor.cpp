@@ -12,10 +12,8 @@ AESDecryptor::AESDecryptor() : CryptoAES()
     LOG_TRACE("Create class AESDecryptor");
 }
 
-void AESDecryptor::decryptFile(const std::string &filename)
+void AESDecryptor::decryptFile(const std::string &bflyFileName)
 {
-
-    std::string bflyFileName = filename + butterfly::ENC_BFLY_FILE_ENDING;
 
     std::string fileData = butterfly::readBinFile(bflyFileName);
     double fileSize = butterfly::getFileSize(bflyFileName);
@@ -31,13 +29,13 @@ void AESDecryptor::decryptFile(const std::string &filename)
         throw AESDecryptionException("AES Decryption failed with file " + bflyFileName);
     }
 
-    butterfly::writeBinFile(filename, reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength));
+    butterfly::writeBinFile(bflyFileName, reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength));
     LOG_INFO("Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
     std::cout << "Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
 
-    if ( !butterfly::removeFile(bflyFileName) )
+    if ( !butterfly::removeFileExtension(const_cast<std::string &>(bflyFileName), butterfly::ENC_BFLY_FILE_ENDING) )
     {
-        throw AESDecryptionException("Failed to remove file " + bflyFileName);
+        throw AESDecryptionException("Failed to remove bfly extension from file " + bflyFileName);
     }
 
 }

@@ -97,7 +97,7 @@ inline bool writeBinFile(const std::string &filepath, const char* content, long 
  * Remove file from given filepath
  *
  * @param filepath: path to the file
- * @return True if removing was succesful
+ * @return True if removing was successful
  */
 inline bool removeFile(const std::string &filepath)
 {
@@ -112,6 +112,52 @@ inline bool removeFile(const std::string &filepath)
         return false;
     }
 
+}
+
+/**
+ * Appends the extension to the filename
+ *
+ * @param filename: name of the file
+ * @param extension: extension to add
+ * @return True if appending of extension was successful
+ */
+inline bool appendFileExtension(const std::string &filename, const std::string &extension)
+{
+    std::string outFile = filename + extension;
+    if ( std::rename(filename.c_str(), outFile.c_str()) == 0 )
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+/**
+ *
+ * @param filename: name of the file
+ * @param extension: extension to remove
+ * @return True if removing of extension was successful
+ */
+inline bool removeFileExtension(std::string &filename, const std::string &extension)
+{
+    if ( filename.find(extension) != std::string::npos )
+    {
+        std::string old = filename;
+        filename.erase(filename.length() - extension.length());
+
+        if ( std::rename(old.c_str(), filename.c_str()) == 0 )
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+
+    } else
+    {
+        return false;
+    }
 }
 
 /**

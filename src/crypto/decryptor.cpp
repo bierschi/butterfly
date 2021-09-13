@@ -14,14 +14,6 @@ Decryptor::Decryptor(const std::string &aesKeyDbFilepath) : _aesKeyDbFilepath(ae
     LOG_TRACE("Create class Decryptor");
 }
 
-void Decryptor::removeBFLYEnding(std::string &filepath)
-{
-    if (filepath.find(butterfly::ENC_BFLY_FILE_ENDING) != std::string::npos)
-    {
-        filepath.erase(filepath.length() - butterfly::ENC_BFLY_FILE_ENDING.length());
-    }
-}
-
 void Decryptor::removeDecryptedFiles()
 {
 
@@ -44,7 +36,6 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     for (auto &file: files)
     {
         std::string filepath = file.string();
-        removeBFLYEnding(filepath);
         decryptFileWithAES(filepath, aesk, aesiv);
     }
 
