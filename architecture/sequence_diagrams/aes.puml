@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor target
+participant "AESKEY-256"
+participant "AESIV-128"
+participant File
+participant File.bfly
+participant AESKeyPair
+participant RSA
+participant AES.bin
+
+autonumber
+
+
+target -> "AESKEY-256": Generate the 256-Bit AESKEY with SALT
+target -> "AESIV-128": Generate the 128-Bit AESIV with SALT
+
+"AESIV-128" -> File: Start AES File Encryption
+loop
+File -> File.bfly: Encrypt all user files and save with .blfy extension
+end
+
+File.bfly -> AESKeyPair: Concatenate the "AESKEY-256" with the "AESIV-128"
+
+AESKeyPair -> RSA: Encrypt the AESKeyPair with RSA
+RSA -> AES.bin: Save encrypted binary file AES.bin
+@enduml
