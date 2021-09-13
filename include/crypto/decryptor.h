@@ -29,13 +29,6 @@ private:
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
-     * Removes the BFLY ending from each encrypted file
-     *
-     * @param filepath: path from the file
-     */
-    static void removeBFLYEnding(std::string &filepath);
-
-    /**
      * Removes decrypted files from system
      */
     static void removeDecryptedFiles();
