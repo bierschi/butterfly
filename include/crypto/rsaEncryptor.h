@@ -78,8 +78,9 @@ public:
      *
      * @param pkey: EVP_PKEY for the encryption
      * @param msg: message to encrypt
+     * @return size of the encrypted message
      */
-    void encrypt(EVP_PKEY *pkey, const std::string &msg);
+    int encrypt(EVP_PKEY *pkey, const std::string &msg);
 
     /**
      * Encrypts the given message string with EVP methods
@@ -87,8 +88,9 @@ public:
      * @param pkey: EVP_PKEY for the encryption
      * @param msg: message as std::string
      * @param type: enum RSAKEY_TYPE
+     * @return size of the encrypted message
      */
-    void encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type);
+    int encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type);
 };
 
 } //namespace rsa

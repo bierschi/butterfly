@@ -2,9 +2,9 @@
 #ifndef BUTTERFLY_AES_H
 #define BUTTERFLY_AES_H
 
-#include "openssl/evp.h"
-#include "openssl/aes.h"
-#include "openssl/rand.h"
+#include <openssl/evp.h>
+#include <openssl/aes.h>
+#include <openssl/rand.h>
 #include <openssl/err.h>
 
 #include "logger.h"
@@ -68,14 +68,14 @@ public:
      *
      * @param aesKey: AESKey for the decryption procedure
      */
-    void setAESKey(const std::string &aesKey);
+    void setAESKey(std::string &aesKey);
 
     /**
      * Sets the AESIv
      *
      * @param aesIv: AESIv for the decryption procedure
      */
-    void setAESIv(const std::string &aesIv);
+    void setAESIv(std::string &aesIv);
 
     /**
      * Get the AESKey
@@ -90,6 +90,27 @@ public:
      * @return AESIv as std::string
      */
     std::string getAESIv() const;
+
+    /**
+     * Get the AESKey and AESIV in one concatenated string
+     *
+     * @return string with AESKey and AESIV
+     */
+    std::string getAESKeyPair() const;
+
+    /**
+     * Get the AESKEY Length
+     *
+     * @return Length of the AESKey as an int
+     */
+    inline int getAESKeyLength() const { return _aesKeyLength; }
+
+    /**
+     * Get the AESIV Length
+     *
+     * @return Length of the AESIV as an int
+     */
+    inline int getAESIVLength() const { return _aesIvLength; }
 
     /**
      * Encrypts the plaintext

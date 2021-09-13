@@ -19,9 +19,19 @@ CryptoAES::CryptoAES() : _aesKey(nullptr), _aesIv(nullptr)
 
     EVP_CipherInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, NULL, NULL, 1);
 
+    // Get length from the context
     _aesKeyLength = EVP_CIPHER_CTX_key_length(_aesEncryptContext);
     _aesIvLength = EVP_CIPHER_CTX_iv_length(_aesEncryptContext);
 
+    // Allocate correct buffer size
+    _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
+    _aesIv  = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
+
+    // Generate the AESKey and AESIV
+    if ( !generateAESKeyWithSalt() )
+    {
+        LOG_ERROR("Error on generating an AES Key/IV!")
+    }
 }
 
 CryptoAES::~CryptoAES()
@@ -46,10 +56,7 @@ std::string CryptoAES::getOpenSSLError()
 
 bool CryptoAES::generateAESKey()
 {
-    LOG_INFO("Create new AES Key and IV pair")
-
-    _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
-    _aesIv = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
+    LOG_INFO("Create new AES Key/IV pair")
 
     if(RAND_bytes(_aesKey, _aesKeyLength) == 0) {
         return false;
@@ -64,10 +71,7 @@ bool CryptoAES::generateAESKey()
 
 bool CryptoAES::generateAESKeyWithSalt()
 {
-    LOG_INFO("Create new AES Key and IV pair with Salt")
-
-    _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
-    _aesIv = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
+    LOG_INFO("Create new AES Key/IV pair with Salt")
 
     auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     auto *aesSalt = (unsigned char *) malloc(8);
@@ -98,36 +102,57 @@ bool CryptoAES::generateAESKeyWithSalt()
     return true;
 }
 
-void CryptoAES::setAESKey(const std::string &aesKey)
+void CryptoAES::setAESKey(std::string &aesKey)
 {
+
+    if (static_cast<int>(aesKey.length()) < _aesKeyLength)
+    {
+        // fill string to length 32
+        aesKey.insert(aesKey.length(), static_cast<unsigned long>(_aesKeyLength), '0');
+    }
+
     _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
+
 }
 
-void CryptoAES::setAESIv(const std::string &aesIv)
+void CryptoAES::setAESIv(std::string &aesIv)
 {
+
+    if (static_cast<int>(aesIv.length()) < _aesIvLength)
+    {
+        // fill string to length 16
+        aesIv.insert(aesIv.length(), static_cast<unsigned long>(_aesIvLength), '0');
+    }
+
     _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
+
 }
 
 std::string CryptoAES::getAESKey() const
 {
-    std::string str(reinterpret_cast<const char *>(_aesKey));
+    std::string str(reinterpret_cast<const char *>(_aesKey), static_cast<unsigned long>(_aesKeyLength));
     return str;
 }
 
 std::string CryptoAES::getAESIv() const
 {
-    std::string str(reinterpret_cast<const char *>(_aesIv));
+    std::string str(reinterpret_cast<const char *>(_aesIv), static_cast<unsigned long>(_aesIvLength));
     return str;
+}
+
+std::string CryptoAES::getAESKeyPair() const
+{
+
+    std::string aeskey = getAESKey();
+    std::string aesiv = getAESIv();
+
+    aeskey.append(aesiv);
+
+    return aeskey;
 }
 
 size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
-
-    if (_aesKey == nullptr || _aesIv == nullptr)
-    {
-        LOG_ERROR("AESKey or AESIv is not initialized!")
-        return 0;
-    }
 
     size_t blockLength = 0;
     size_t ciphertextLength = 0;
@@ -160,11 +185,6 @@ size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength
 
 size_t CryptoAES::decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext)
 {
-    if (_aesKey == nullptr || _aesIv == nullptr)
-    {
-        LOG_ERROR("AESKey or AESIv is not initialized!")
-        return 0;
-    }
 
     size_t plaintextLength = 0;
     size_t blockLength = 0;

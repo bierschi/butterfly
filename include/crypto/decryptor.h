@@ -75,24 +75,22 @@ public:
     void decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile);
 
     /**
-     * Decrypts the AESKey/AESIV file to be able to decrypt the files
+     * Decrypts the AESKey.bin file to be able to get the decrypted AESKEY/AESIV
      *
      * @param filepathAESKey: path to the AESKey.bin
-     * @param filepathAESIV: path to the AESIV.bin
      * @param decAESKey: decrypted AESKey string
      * @param decAESIV: decrypted AESIV string
-     * @return Decrypted content as std::string
      */
-    void decryptAESKeyPair(const std::string &filepathAESKey, const std::string &filepathAESIV, std::string &decAESKey,  std::string &decAESIV);
+    void decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV);
 
     /**
-     * Decrypt the file with the AES Key
+     * Decrypt the file with the AES Key/IV pair
      *
      * @param filepath: path to the file
      * @param aesKey: aes key for the file to decrypt
      * @param aesIV: aes iv for the file to decrypt
      */
-    void decryptFileWithAES(const std::string &filepath, const std::string &aesKey, const std::string &aesIV);
+    void decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV);
 
 };
 

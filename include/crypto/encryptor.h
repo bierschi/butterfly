@@ -32,12 +32,9 @@ private:
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
-     * Validates the AESKey length after the AESKey generation
-     *
-     * @param aeskey: aes key string
-     * @param aesiv: aes iv string
+     * Validates the AESKey/AESIV length after the AESKey generation
      */
-    void validateAESKeyLength(std::string &aeskey, std::string &aesiv);
+    void validateAESKeyLength();
 
 public:
     /**
@@ -82,9 +79,8 @@ public:
      *
      * @param aesKeyStr: AES Key or IV String
      * @param filename: name of the encrypted file
-     * @param type: RSAKEY_TYPE enum
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename, const RSAKEY_TYPE &type);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
 
 };
 
