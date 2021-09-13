@@ -198,42 +198,43 @@ char* CryptoRSA::getPublicKeyStr()
     return _publicKeyStr;
 }
 
-size_t CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
+int CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
 
     size_t encryptedMessageLength = 0;
     size_t blockLength = 0;
     size_t encryptedKeyLength;
 
-    _encryptedKey = (unsigned char*)malloc(static_cast<size_t>(EVP_PKEY_size(key))); // 256 Bytes
-    _iv = (unsigned char*)malloc(EVP_MAX_IV_LENGTH); // 16 Bytes
+    _encryptedKey = (unsigned char*)malloc(static_cast<size_t>(EVP_PKEY_size(key)));
+    _iv = (unsigned char*)malloc(EVP_MAX_IV_LENGTH);
 
     *ciphertext = (unsigned char*)malloc(plaintextLength + EVP_MAX_IV_LENGTH);
 
     if(!EVP_SealInit(rsaEncryptContext, EVP_aes_256_cbc(), &_encryptedKey, (int*)&encryptedKeyLength, _iv, &key, 1))
     {
         LOG_ERROR("Error during EVP_SealInit in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
+
 
     if(!EVP_SealUpdate(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)plaintext, (int)plaintextLength))
     {
         LOG_ERROR("Error during EVP_SealUpdate in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     encryptedMessageLength += blockLength;
 
     if(!EVP_SealFinal(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength))
     {
         LOG_ERROR("Error during EVP_SealFinal in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     encryptedMessageLength += blockLength;
 
-    return encryptedMessageLength;
+    return static_cast<int>(encryptedMessageLength);
 }
 
-size_t CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext)
+int CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext)
 {
 
     size_t decryptedMessageLength = 0;
@@ -244,27 +245,27 @@ size_t CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ci
     if(!EVP_OpenInit(rsaDecryptContext, EVP_aes_256_cbc(), encryptedKey, getEvpPkeySize(key), iv, key))
     {
         LOG_ERROR("Error during EVP_OpenInit in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
 
     if(!EVP_OpenUpdate(rsaDecryptContext, (unsigned char*)*plaintext + decryptedMessageLength, (int*)&blockLength, ciphertext, (int)ciphertextLength))
     {
         LOG_ERROR("Error during EVP_OpenUpdate in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     decryptedMessageLength += blockLength;
 
     if(!EVP_OpenFinal(rsaDecryptContext, (unsigned char*)*plaintext + decryptedMessageLength, (int*)&blockLength))
     {
         LOG_ERROR("Error during EVP_OpenFinal in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     decryptedMessageLength += blockLength;
 
-    return decryptedMessageLength;
+    return static_cast<int>(decryptedMessageLength);
 }
 
-size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext)
+int CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext)
 {
 
     EVP_PKEY_CTX *ctx;
@@ -274,30 +275,30 @@ size_t CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t 
     if (!ctx)
     {
         LOG_ERROR("Error during context init in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     if (EVP_PKEY_encrypt_init(ctx) <= 0)
     {
         LOG_ERROR("Error during EVP_PKEY_encrypt_init(ctx) in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
         LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0)
     {
 
         LOG_ERROR("Error during EVP_PKEY_encrypt in RSA encrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
 
-    return ciphertextLength;
+    return static_cast<int>(ciphertextLength);
 
 }
 
-size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext)
+int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext)
 {
 
     EVP_PKEY_CTX *ctx;
@@ -307,25 +308,25 @@ size_t CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphe
     if (!ctx)
     {
         LOG_ERROR("Error during context init in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     if (EVP_PKEY_decrypt_init(ctx) <= 0)
     {
         LOG_ERROR("Error during EVP_PKEY_decrypt_init(ctx) in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
         LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0)
     {
         LOG_ERROR("Error during EVP_PKEY_decrypt in RSA decrypt: " << getOpenSSLError());
-        return 0;
+        return -1;
     }
 
-    return plaintextLength;
+    return static_cast<int>(plaintextLength);
 }
 
 } // namespace rsa

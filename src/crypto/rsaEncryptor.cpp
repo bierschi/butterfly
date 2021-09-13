@@ -103,7 +103,7 @@ void RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
 }
 
-void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type)
+int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type)
 {
     // First check the message size
     if ( msg.empty() )
@@ -112,23 +112,27 @@ void RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAK
         throw RSAEncryptionException("Empty messages can not be encrypted!");
     }
 
-    // Get the keysize
-    int keysize = CryptoRSA::getEvpPkeySize(pkey);
-
     // Encrypt the message
     unsigned char *encryptedMessage = nullptr;
-    CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
+    //int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
+    int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size(), &encryptedMessage);
 
-    _encryptedMessage.resize(static_cast<size_t>(keysize));
-    std::copy(encryptedMessage, encryptedMessage + keysize, _encryptedMessage.begin());
+    if (encLen == -1)
+    {
+        throw RSAEncryptionException("Error at encrypting the message with RSA!");
+    }
+
+    _encryptedMessage.resize(static_cast<unsigned long>(encLen));
+    std::copy(encryptedMessage, encryptedMessage + encLen, _encryptedMessage.begin());
 
     // Write RSA File to System
     if ( !writeRSAFileToSystem(type) )
     {
-        LOG_ERROR("Error on writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
-        throw RSAEncryptionException("Error on writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
+        LOG_ERROR("Error at writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
+        throw RSAEncryptionException("Error at writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
     }
 
+    return encLen;
 }
 
 } // namespace rsa

@@ -49,7 +49,7 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
         iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
 
-    } else
+    } /*else
     {
         // 256 Bytes
         RSADecryptor::AESIVLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
@@ -57,7 +57,7 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength + EVP_MAX_IV_LENGTH,  RSADecryptor::AESIVLength);
         iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + RSADecryptor::AESKEYLength + RSADecryptor::AESIVLength + (EVP_MAX_IV_LENGTH * 2), EVP_MAX_IV_LENGTH);
 
-    }
+    }*/
 
     if ( encKey.empty() )
     {
@@ -130,10 +130,19 @@ void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::st
 
     // Decrypt the encrypted Message
     char *decryptedMessage = nullptr;
-    CryptoRSA::decryptEVP(pkey, (unsigned char *) encMSG.c_str(), encMSG.length(), (unsigned char *) encKey.c_str(), (unsigned char *) iv.c_str(), (unsigned char**)&decryptedMessage);
+    int decLen = CryptoRSA::decryptEVP(pkey, (unsigned char *) encMSG.c_str(), encMSG.length(), (unsigned char *) encKey.c_str(), (unsigned char *) iv.c_str(), (unsigned char**)&decryptedMessage);
 
-    _decryptedMessage = reinterpret_cast<char *>(decryptedMessage);
-    decMSG = decryptedMessage;
+    if (decLen == -1)
+    {
+        throw RSADecryptionException("Error at decrypting the message with RSA!");
+    }
+
+    _decryptedMessage.resize(static_cast<size_t>(decLen));
+    std::copy(decryptedMessage, decryptedMessage + decLen, _decryptedMessage.begin());
+
+    std::string str(reinterpret_cast<const char *>(decryptedMessage), static_cast<unsigned long>(decLen));
+
+    decMSG = str;
 
 }
 
