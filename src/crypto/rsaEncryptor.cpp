@@ -108,10 +108,10 @@ int RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     return encLen;
 }
 
-int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type)
+int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RSAKEY_TYPE &type)
 {
     // First check the message size
-    if ( msg.empty() )
+    if ( decMSG.empty() )
     {
         LOG_ERROR("Empty messages can not be encrypted!")
         throw RSAEncryptionException("Empty messages can not be encrypted!");
@@ -119,8 +119,8 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKE
 
     // Encrypt the message
     unsigned char *encryptedMessage = nullptr;
-    //int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size() + 1, &encryptedMessage);
-    int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(msg.c_str()), msg.size(), &encryptedMessage);
+    //int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(decMSG.c_str()), decMSG.size() + 1, &encryptedMessage);
+    int encLen = CryptoRSA::encryptEVP(pkey, reinterpret_cast<const unsigned char *>(decMSG.c_str()), decMSG.size(), &encryptedMessage);
 
     if (encLen == -1)
     {

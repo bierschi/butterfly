@@ -6,10 +6,13 @@ package butterfly #DDDDDD
 
 class ArgumentParser
 {
-
+    -_dir, _encrypt, _decrypt, _protected, _serverpKey, _config, _help, _version, _usage, _options: std::string
+    -printHelp(): void
+    -printVersion(): void
 
     +ArgumentParser()
 
+    +parseArgs(const int &argc, char *argv[]): Arguments
 }
 
 }

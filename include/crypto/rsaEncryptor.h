@@ -77,20 +77,20 @@ public:
      * Encrypts the given message string
      *
      * @param pkey: EVP_PKEY for the encryption
-     * @param msg: message to encrypt
+     * @param decMSG: message to encrypt
      * @return size of the encrypted message
      */
-    int encrypt(EVP_PKEY *pkey, const std::string &msg);
+    int encrypt(EVP_PKEY *pkey, const std::string &decMSG);
 
     /**
      * Encrypts the given message string with EVP methods
      *
      * @param pkey: EVP_PKEY for the encryption
-     * @param msg: message as std::string
+     * @param decMSG: message to encrypt
      * @param type: enum RSAKEY_TYPE
      * @return size of the encrypted message
      */
-    int encryptEVP(EVP_PKEY *pkey, const std::string &msg, const RSAKEY_TYPE &type);
+    int encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RSAKEY_TYPE &type);
 };
 
 } //namespace rsa

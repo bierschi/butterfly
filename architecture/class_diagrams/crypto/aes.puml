@@ -17,6 +17,16 @@ class CryptoAES
     +CryptoAES()
 
     +generateAESKey(): bool
+    +generateAESKeyWithSalt(): bool
+
+    +setAESKey(std::string &aesKey): void
+    +setAESIv(std::string &aesIv): void
+    +getAESKey() const: std::string
+    +getAESIv() const: std::string
+    +getAESKeyPair() const: std::string
+    +getAESKeyLength() const: int
+    +getAESIVLength() const: int
+
     +encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
     +decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
 }
@@ -24,9 +34,6 @@ class CryptoAES
 class AESEncryptor
 {
     +AESEncryptor()
-
-    +getAESKey() const: std::string
-    +getAESIv() const: std::string
 
     +encryptFile(const std::string &filename): void
 
@@ -36,14 +43,11 @@ class AESDecryptor
 {
     +AESDecryptor()
 
-    +setAESKey(const std::string &aesKey): void
-    +setAESIv(const std::string &aesIv): void
-
     +decryptFile(const std::string &filename): void
 }
 
-CryptoAES <-- AESEncryptor
-CryptoAES <-- AESDecryptor
+CryptoAES <|-- AESEncryptor
+CryptoAES <|-- AESDecryptor
 }
 
 }
