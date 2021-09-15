@@ -32,11 +32,19 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     std::string aesk, aesiv;
     decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, aesk, aesiv);
 
+    // Get all files from provided directory path
     auto files = DirectoryIterator::getAllFiles(dirPath);
+
+    // Iterate over all file paths
     for (auto &file: files)
     {
-        std::string filepath = file.string();
-        decryptFileWithAES(filepath, aesk, aesiv);
+        // Check if the provided file path has the .bfly extension
+        if ( DirectoryIterator::getFileExtension(file) == butterfly::ENC_BFLY_FILE_ENDING )
+        {
+            std::string filepath = file.string();
+            decryptFileWithAES(filepath, aesk, aesiv);
+        }
+
     }
 
     removeDecryptedFiles();

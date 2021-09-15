@@ -14,9 +14,9 @@ bool DirectoryIterator::isFile(const boost::filesystem::path &path)
     return boost::filesystem::is_regular_file(path);
 }
 
-bool DirectoryIterator::isDirectory(const boost::filesystem::path &path)
+bool DirectoryIterator::isDirectory(const boost::filesystem::path &p)
 {
-    return boost::filesystem::is_directory(path);
+    return boost::filesystem::is_directory(p);
 }
 
 std::vector<boost::filesystem::path> DirectoryIterator::getAllFiles(const boost::filesystem::path &p)
@@ -89,6 +89,11 @@ uintmax_t DirectoryIterator::getFileSize(const boost::filesystem::path &file)
         return 0;
     }
 
+}
+
+std::string DirectoryIterator::getFileExtension(const boost::filesystem::path &p)
+{
+    return p.extension().string();
 }
 
 } // namespace butterfly

