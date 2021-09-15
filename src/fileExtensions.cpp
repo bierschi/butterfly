@@ -71,5 +71,4 @@ std::vector<std::string> fileExtensionVec = {
 
 };
 
-}
-
+} // namespace butterfly
