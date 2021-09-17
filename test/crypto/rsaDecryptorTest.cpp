@@ -28,7 +28,7 @@ protected:
  */
 TEST_F(RSADecryptorTest, CPrivateRSA_String)
 {
-    std::string encCPrivateRSA = rsaDecryptor->getBinKeyFileContents("CPrivateRSA.bin");
+    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::ENC_CPRIVATERSA_FILENAME);
     ASSERT_TRUE( !encCPrivateRSA.empty());
 }
 
@@ -38,13 +38,13 @@ TEST_F(RSADecryptorTest, CPrivateRSA_String)
 TEST_F(RSADecryptorTest, Decryption)
 {
 
-    std::string encCPrivateRSA = rsaDecryptor->getBinKeyFileContents("CPrivateRSA.bin");
+    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::ENC_CPRIVATERSA_FILENAME);
     ASSERT_TRUE( !encCPrivateRSA.empty());
 
     std::string decryptedMessage;
-    rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, decryptedMessage, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+    int decLen = rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, decryptedMessage, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
     ASSERT_TRUE( !decryptedMessage.empty());
 
-    butterfly::writeBinFile("CPrivateRSA.pem.dec", decryptedMessage.c_str(), static_cast<long>(decryptedMessage.length()));
+    butterfly::writeBinFile("CPrivateRSA.pem.dec", decryptedMessage.c_str(), decLen);
 }
 
