@@ -88,8 +88,9 @@ public:
      * @param encMSG: encrypted Message as std::string
      * @param decMSG: decrypted Message as std:.string
      * @param type: enum RSAKEY_TYPE
+     * @return size of the decrypted message
      */
-    void decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type);
+    int decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type);
 };
 
 } // namespace rsa
