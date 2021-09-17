@@ -16,6 +16,7 @@ const std::string ENC_AESKEY_FILENAME        = "AES.bin";         // encrypted A
 // Filename RSA.bin
 const std::string RSA_EKIV_FILENAME          = "RSA.bin";         //unencrypted RSAEK + RSAIV (1721/256Bytes + 16Bytes)
 
+// Encrypted Butterfly File Extension
 const std::string ENC_BFLY_FILE_ENDING       = ".bfly";
 
 } // namespace butterfly

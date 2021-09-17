@@ -5,9 +5,8 @@
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
-#include "aesKeyDatabase.h"
-#include "params.h"
 #include "exceptions.h"
+#include "params.h"
 
 namespace butterfly
 {
@@ -16,17 +15,16 @@ namespace hybrid
 {
 
 /**
- * Class Decryptor to decrypt all files with AES and the CPrivateRSA as well as AES Key/IV with RSA
+ * Class Decryptor to decrypt files with AES, CPrivateRSA and AESKeyPair(Key+IV) with RSA
  */
 class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _aesKeyDbFilepath;
+    std::string _decryptedCPrivateRSA, _aesKeyDBPath;
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
-    std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
      * Removes decrypted files from system
@@ -42,9 +40,9 @@ public:
      *       std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
      *       decryptor->invokeDir("/home/", "SPrivateRSA.pem");
      *
-     * @param aesKeyDbFilepath:
+     * @param aesKeyDBPath: Path to the AESKey Database
      */
-    explicit Decryptor(const std::string &aesKeyDbFilepath = "AES.db");
+    explicit Decryptor(const std::string &aesKeyDBPath = "AES.db");
 
     /**
      * Destructor Decryptor

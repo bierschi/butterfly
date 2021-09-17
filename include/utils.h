@@ -134,6 +134,7 @@ inline bool appendFileExtension(const std::string &filename, const std::string &
 }
 
 /**
+ * Removes the extension from the filename
  *
  * @param filename: name of the file
  * @param extension: extension to remove
@@ -166,13 +167,20 @@ inline bool removeFileExtension(std::string &filename, const std::string &extens
  * @param filename: name of the file
  * @return True if file exits else false
  */
-inline bool existsFile(const std::string& filename)
+inline bool existsFile(const std::string &filename)
 {
     struct stat buffer;
     return (stat (filename.c_str(), &buffer) == 0);
 }
 
-inline std::string string_to_hex(const std::string& in) {
+/**
+ * Converts string to HEX
+ *
+ * @param in: std::string
+ * @return hex string
+ */
+inline std::string string2Hex(const std::string &in)
+{
     std::stringstream ss;
 
     ss << std::hex << std::setfill('0');
@@ -183,7 +191,14 @@ inline std::string string_to_hex(const std::string& in) {
     return ss.str();
 }
 
-inline std::string hex_to_string(const std::string& in) {
+/**
+ * Converts HEX to String
+ *
+ * @param in: HEX string
+ * @return std::string
+ */
+inline std::string hex2String(const std::string &in)
+{
     std::string output;
 
     if ((in.length() % 2) != 0) {

@@ -7,10 +7,10 @@ namespace butterfly
 namespace hybrid
 {
 
-Encryptor::Encryptor(int keySize, const std::string &aesKeyDbFilepath) : _keySize(keySize), _aesKeyInit(false), _aesKeyDbFilepath(aesKeyDbFilepath),
-                                                                         _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
-                                                                         _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
-                                                                         _aesEncryptor(new aes::AESEncryptor())
+Encryptor::Encryptor(int keySize, const std::string &aesKeyDBPath) : _keySize(keySize), _aesKeyInit(false), _aesKeyDBPath(aesKeyDBPath),
+                                                                     _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
+                                                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
+                                                                     _aesEncryptor(new aes::AESEncryptor())
 {
     LOG_TRACE("Create class Encryptor");
 }
@@ -18,7 +18,8 @@ Encryptor::Encryptor(int keySize, const std::string &aesKeyDbFilepath) : _keySiz
 void Encryptor::validateAESKeyLength()
 {
     std::string aeskey, aesiv, aeskeypair;
-    do {
+    do
+    {
 
         if ( _aesKeyInit )
         {
@@ -32,7 +33,8 @@ void Encryptor::validateAESKeyLength()
         LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length() << " and AESKeyPairLength: " << aeskeypair.length());
         _aesKeyInit = true;
 
-    } while ( (aeskey.length() < 32) or (aesiv.length() < 16));
+    }
+    while ( (aeskey.length() < 32) or (aesiv.length() < 16));
 
 }
 
