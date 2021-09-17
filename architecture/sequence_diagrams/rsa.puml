@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor target
+participant Data
+participant "SPublic.pem/\nCPublic.pem" as SPublic.pem
+participant RSAEK
+participant RSAIV
+participant RSA.bin
+participant RSA
+
+autonumber
+target -> Data: Get target specific data
+Data -> SPublic.pem: Encrypt the data with \n**SPublic.pem** (CPrivateRSA) or \nwith **CPublic.pem** (AESKeyPair)
+SPublic.pem -> RSAEK: Generate the RSA EK
+RSAEK -> RSAIV: Generate the RSA IV
+RSAIV -> RSA.bin: Save RSA KeyPair (RSAEK +RSAIV)\n in **RSA.bin** (unencrypted)
+RSA.bin -> RSA: Start RSA Encryption
+RSA -> Data: Get RSA Encrypted data
+Data -> target: Save **encrypted** data\non target host machine
+@enduml

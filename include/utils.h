@@ -97,7 +97,7 @@ inline bool writeBinFile(const std::string &filepath, const char* content, long 
  * Remove file from given filepath
  *
  * @param filepath: path to the file
- * @return True if removing was succesful
+ * @return True if removing was successful
  */
 inline bool removeFile(const std::string &filepath)
 {
@@ -115,18 +115,72 @@ inline bool removeFile(const std::string &filepath)
 }
 
 /**
+ * Appends the extension to the filename
+ *
+ * @param filename: name of the file
+ * @param extension: extension to add
+ * @return True if appending of extension was successful
+ */
+inline bool appendFileExtension(const std::string &filename, const std::string &extension)
+{
+    std::string outFile = filename + extension;
+    if ( std::rename(filename.c_str(), outFile.c_str()) == 0 )
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+/**
+ * Removes the extension from the filename
+ *
+ * @param filename: name of the file
+ * @param extension: extension to remove
+ * @return True if removing of extension was successful
+ */
+inline bool removeFileExtension(std::string &filename, const std::string &extension)
+{
+    if ( filename.find(extension) != std::string::npos )
+    {
+        std::string old = filename;
+        filename.erase(filename.length() - extension.length());
+
+        if ( std::rename(old.c_str(), filename.c_str()) == 0 )
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+
+    } else
+    {
+        return false;
+    }
+}
+
+/**
  * Checks if an file exists or not
  *
  * @param filename: name of the file
  * @return True if file exits else false
  */
-inline bool existsFile(const std::string& filename)
+inline bool existsFile(const std::string &filename)
 {
     struct stat buffer;
     return (stat (filename.c_str(), &buffer) == 0);
 }
 
-inline std::string string_to_hex(const std::string& in) {
+/**
+ * Converts string to HEX
+ *
+ * @param in: std::string
+ * @return hex string
+ */
+inline std::string string2Hex(const std::string &in)
+{
     std::stringstream ss;
 
     ss << std::hex << std::setfill('0');
@@ -137,7 +191,14 @@ inline std::string string_to_hex(const std::string& in) {
     return ss.str();
 }
 
-inline std::string hex_to_string(const std::string& in) {
+/**
+ * Converts HEX to String
+ *
+ * @param in: HEX string
+ * @return std::string
+ */
+inline std::string hex2String(const std::string &in)
+{
     std::string output;
 
     if ((in.length() % 2) != 0) {

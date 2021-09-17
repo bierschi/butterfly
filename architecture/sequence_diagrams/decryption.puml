@@ -7,29 +7,30 @@ actor target
 participant "SPublic.pem\n(embedded)" as SPublic
 participant CPrivateRSA.pem as CPrivate
 participant CPublic.pem as CPublic
-participant "AESKey/AESIv" as AESKey
+participant "AESKey/AESIV" as AESKey
 participant File
-participant AESKeySQL.sql as AESKeySQL
+'participant AESKeySQL.sql as AESKeySQL
 
 autonumber
-hnote over SPrivate, SPublic: server rsa key pair (keysize: 13768)
-hnote over CPrivate, CPublic: client rsa key pair (keysize: 2048)
-hnote over AESKey: 256-Bit-AESKey/128-Bit-AESIv
+hnote over SPrivate, SPublic: Server RSA Key pair (**Keysize: 13768**)
+hnote over CPrivate, CPublic: Client RSA Key pair (**Keysize: 2048**)
+hnote over AESKey: 256-Bit-AESKey/128-Bit-AESIV
 ...
 attacker <- target: target pays ransom
 attacker -> target: attacker sends the **SPrivateRSA.pem** file
 
-target -> CPrivate: decrypt the CPrivateRSA.bin\n with **SPrivateRSA.pem**
+target -> CPrivate: decrypt the **CPrivateRSA.bin**\n with **SPrivateRSA.pem**
 CPrivate -> target: get the decrypted **CPrivateRSA.pem**
 note left: **CPrivateRSA.pem**
-target -> AESKeySQL: decrypt the **AESKeySQL.bin** with **CPrivateRSA.pem**
-note right: **AESKeySQL.sql**
+target -> AESKey: decrypt the **AES.bin** with **CPrivateRSA.pem**
+note right: **AESKeyPair(AESKey & AESIV)**
+
 loop
-File <- AESKeySQL: get AESKey/AESIv pair with file hash and filepath
-File -> AESKey: decrypt *.bfly file with AESKey
+File <- AESKey: get file with butterfly ending
+File -> AESKey: decrypt ***.bfly** file with **AESKey&AESIV**
 File <- AESKey: get original file
-note right: ~*.txt
+note right: **~*.txt**
 end
-File -> target: target has again access to all decrypted files
+File -> target: target has again access to all user files
 
 @enduml

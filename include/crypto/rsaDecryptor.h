@@ -70,15 +70,16 @@ public:
      * @param filepath: path to the encrypted key file
      * @return std::string encrypted key content
      */
-    static std::string getBinKeyFileContents(const std::string &filepath);
+    static std::string readEncMSGFromFile(const std::string &filepath);
 
     /**
      * Decrypts the given message string
      *
      * @param pkey: EVP_PKEY to decrypt the cipher message string
-     * @param msg: message as std::string
+     * @param encMSG: encrypted message as std::string
+     * @param decMSG: decrypted message as std::string
      */
-    void decrypt(EVP_PKEY *pkey, const std::string &msg);
+    void decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG);
 
     /**
      * Decrypts the given message string with EVP methods
