@@ -36,9 +36,9 @@ public:
     /**
      * Decrypts the given filename
      *
-     * @param filename: name of the file
+     * @param bflyFileName: name of the file with bfly extension
      */
-    void decryptFile(const std::string &filename);
+    void decryptFile(const std::string &bflyFileName);
 
 };
 

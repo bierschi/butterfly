@@ -32,18 +32,18 @@ public:
     /**
      * Checks if given file path is a directory
      *
-     * @param path: const reference boost::filesystem::path&
+     * @param p: const reference boost::filesystem::path&
      * @return boolean: true if path is a directory else false
      */
-    static bool isDirectory(const boost::filesystem::path &path);
+    static bool isDirectory(const boost::filesystem::path &p);
 
     /**
      * Checks if given file path is a file
      *
-     * @param path: const reference boost::filesystem::path&
+     * @param p: const reference boost::filesystem::path&
      * @return boolean: true if path is a file else false
      */
-    static bool isFile(const boost::filesystem::path &path);
+    static bool isFile(const boost::filesystem::path &p);
 
     /**
      * Get recursively all files from given path
@@ -59,7 +59,7 @@ public:
      * @param p: const reference filesystem path
      * @return std::vector<boost::filesystem::path> including all directory paths
      */
-    std::vector<boost::filesystem::path> getAllDirectories(const boost::filesystem::path &p);
+    static std::vector<boost::filesystem::path> getAllDirectories(const boost::filesystem::path &p);
 
     /**
      * Get only files from given directory path
@@ -67,7 +67,7 @@ public:
      * @param p: filesytem path
      * @return std::vector including the file paths
      */
-    std::vector<boost::filesystem::path> getFilesFromDir(const boost::filesystem::path &p);
+    static std::vector<boost::filesystem::path> getFilesFromDir(const boost::filesystem::path &p);
 
     /**
     * Get the file size from given file path
@@ -75,7 +75,15 @@ public:
     * @param file: const boost::filesystem::path&
     * @return size of file in bytes
     */
-    uintmax_t getFileSize(const boost::filesystem::path &file);
+    static uintmax_t getFileSize(const boost::filesystem::path &file);
+
+    /**
+     * Get the file extension from given path
+     *
+     * @param p: const boost::filesystem::path&
+     * @return file extension as std::string
+     */
+    static std::string getFileExtension(const boost::filesystem::path &p);
 };
 
 } // namespace butterfly

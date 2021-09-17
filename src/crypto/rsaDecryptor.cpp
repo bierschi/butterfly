@@ -124,7 +124,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
 
 }
 
-void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type)
+int RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type)
 {
 
     // First check the message size
@@ -153,6 +153,7 @@ void RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::st
 
     decMSG = str;
 
+    return decLen;
 }
 
 } // namespace rsa

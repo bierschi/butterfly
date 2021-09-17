@@ -38,15 +38,6 @@ TEST_F(RSAEncryptorTest, CPrivateRSA_String)
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
 }
 
-
-/**
- * Testcase for EncryptedCPrivateRSA String
- */
-TEST_F(RSAEncryptorTest, EncryptedCPrivateRSA_String)
-{
-    std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
-}
-
 /**
  * Testcase for Encryption
  */
@@ -55,10 +46,10 @@ TEST_F(RSAEncryptorTest, Encryption)
     std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
 
-    rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+    int encMSGLen = rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
 
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     ASSERT_TRUE(!encCPrivateRSA.empty());
 
-    rsaEncryptCPrivateRSA->saveEncryptedMsgToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, static_cast<int>(encCPrivateRSA.length()));
+    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, encMSGLen);
 }

