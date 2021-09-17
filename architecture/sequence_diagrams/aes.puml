@@ -25,6 +25,7 @@ end
 File.bfly -> AESKeyPair: Concatenate the **AESKEY-256**\n with the **AESIV-128** string
 
 AESKeyPair -> RSA: Encrypt the AESKeyPair\n with **RSA-2048**
-RSA -> AES.bin: Save encrypted\n binary file **AES.bin**
+RSA -> AES.bin: Save encrypted\n data in file **AES.bin**
 note right: **AES.bin**
+AES.bin -> target: Save binary file on target host machine
 @enduml

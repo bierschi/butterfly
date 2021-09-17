@@ -24,14 +24,14 @@ CPrivate -> target: save **CPrivateRSA.bin** on the target host machine
 note left: **CPrivateRSA.bin**
 loop
 target -> AESKey: generate a random 256-Bit-AESKey and 128-Bit-AESIV with SALT
-AESKey -> File: encrypt file with 256-Bit-AESKey & 128-Bit-AESIV and save with butterfly ending
+AESKey -> File: encrypt file with 256-Bit-AESKey & 128-Bit-AESIV\n and save with butterfly ending
 note right: **~*.bfly**
 'File -> AESKeySQL: save filepath, file hash and AESKey/AESIv pair in sql database
 
 end
 
 File->AESKey: Concatenate AESKey&AESIV to AESKeyPair
-AESKey -> CPublic: encrypt AESKeyPair with **CPublic.pem**
+AESKey -> CPublic: encrypt AESKeyPair \nwith **CPublic.pem**
 CPublic -> target: save **AES.bin** on the target host machine
 note left: **AES.bin**
 
