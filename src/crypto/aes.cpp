@@ -7,7 +7,10 @@ namespace butterfly
 namespace aes
 {
 
-CryptoAES::CryptoAES() : _aesKey(nullptr), _aesIv(nullptr)
+unsigned char* CryptoAES::aesKey = nullptr;
+unsigned char* CryptoAES::aesIv = nullptr;
+
+CryptoAES::CryptoAES() //: _aesKey(nullptr), _aesIv(nullptr)
 {
 
     LOG_TRACE("Create class CryptoAES")
@@ -23,15 +26,20 @@ CryptoAES::CryptoAES() : _aesKey(nullptr), _aesIv(nullptr)
     _aesKeyLength = EVP_CIPHER_CTX_key_length(_aesEncryptContext);
     _aesIvLength = EVP_CIPHER_CTX_iv_length(_aesEncryptContext);
 
-    // Allocate correct buffer size
-    _aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
-    _aesIv  = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
-
-    // Generate the AESKey and AESIV
-    if ( !generateAESKeyWithSalt() )
+    if (CryptoAES::aesKey == nullptr && CryptoAES::aesIv == nullptr)
     {
-        LOG_ERROR("Error on generating an AES Key/IV!")
+
+        // Allocate correct buffer size
+        CryptoAES::aesKey = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
+        CryptoAES::aesIv  = (unsigned char *) malloc(static_cast<size_t>(_aesIvLength));
+
+        // Generate the AESKey and AESIV
+        if ( !generateAESKeyWithSalt() )
+        {
+            LOG_ERROR("Error on generating an AES Key/IV!")
+        }
     }
+
 }
 
 CryptoAES::~CryptoAES()
@@ -58,11 +66,11 @@ bool CryptoAES::generateAESKey()
 {
     LOG_INFO("Create new AES Key/IV pair")
 
-    if(RAND_bytes(_aesKey, _aesKeyLength) == 0) {
+    if(RAND_bytes(CryptoAES::aesKey, _aesKeyLength) == 0) {
         return false;
     }
 
-    if(RAND_bytes(_aesIv, _aesIvLength) == 0) {
+    if(RAND_bytes(CryptoAES::aesIv, _aesIvLength) == 0) {
         return false;
     }
 
@@ -91,7 +99,7 @@ bool CryptoAES::generateAESKeyWithSalt()
         return false;
     }
 
-    if (EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), aesSalt, aesPass, _aesKeyLength, AES_ROUNDS, _aesKey, _aesIv) == 0)
+    if (EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), aesSalt, aesPass, _aesKeyLength, AES_ROUNDS, CryptoAES::aesKey, CryptoAES::aesIv) == 0)
     {
         return false;
     }
@@ -102,41 +110,41 @@ bool CryptoAES::generateAESKeyWithSalt()
     return true;
 }
 
-void CryptoAES::setAESKey(std::string &aesKey)
+void CryptoAES::setAESKey(std::string &key)
 {
 
-    if (static_cast<int>(aesKey.length()) < _aesKeyLength)
+    if (static_cast<int>(key.length()) < _aesKeyLength)
     {
         // fill string to length 32
-        aesKey.insert(aesKey.length(), static_cast<unsigned long>(_aesKeyLength), '0');
+        key.insert(key.length(), static_cast<unsigned long>(_aesKeyLength), '0');
     }
 
-    _aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(aesKey.c_str()));
+    CryptoAES::aesKey = reinterpret_cast<unsigned char*>(const_cast<char*>(key.c_str()));
 
 }
 
-void CryptoAES::setAESIv(std::string &aesIv)
+void CryptoAES::setAESIv(std::string &iv)
 {
 
-    if (static_cast<int>(aesIv.length()) < _aesIvLength)
+    if (static_cast<int>(iv.length()) < _aesIvLength)
     {
         // fill string to length 16
-        aesIv.insert(aesIv.length(), static_cast<unsigned long>(_aesIvLength), '0');
+        iv.insert(iv.length(), static_cast<unsigned long>(_aesIvLength), '0');
     }
 
-    _aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(aesIv.c_str()));
+    CryptoAES::aesIv = reinterpret_cast<unsigned char*>(const_cast<char*>(iv.c_str()));
 
 }
 
 std::string CryptoAES::getAESKey() const
 {
-    std::string str(reinterpret_cast<const char *>(_aesKey), static_cast<unsigned long>(_aesKeyLength));
+    std::string str(reinterpret_cast<const char *>(CryptoAES::aesKey), static_cast<unsigned long>(_aesKeyLength));
     return str;
 }
 
 std::string CryptoAES::getAESIv() const
 {
-    std::string str(reinterpret_cast<const char *>(_aesIv), static_cast<unsigned long>(_aesIvLength));
+    std::string str(reinterpret_cast<const char *>(CryptoAES::aesIv), static_cast<unsigned long>(_aesIvLength));
     return str;
 }
 
@@ -159,7 +167,7 @@ size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength
 
     *ciphertext = static_cast<unsigned char *>(malloc(plaintextLength + AES_BLOCK_SIZE));
 
-    if (!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv))
+    if (!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, CryptoAES::aesKey, CryptoAES::aesIv))
     {
         LOG_ERROR("Error during EVP_EncryptInit_ex in CryptoAES encrypt: " << getOpenSSLError());
         return 0;
@@ -191,7 +199,7 @@ size_t CryptoAES::decrypt(unsigned char *ciphertext, size_t ciphertextLength, un
 
     *plaintext = static_cast<unsigned char *>(malloc(ciphertextLength));
 
-    if (!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, _aesKey, _aesIv))
+    if (!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, CryptoAES::aesKey, CryptoAES::aesIv))
     {
         LOG_ERROR("Error during EVP_DecryptInit_ex in CryptoAES decrypt: " << getOpenSSLError());
         return 0;

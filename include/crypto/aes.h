@@ -35,7 +35,7 @@ private:
     static std::string getOpenSSLError();
 
 protected:
-    unsigned char *_aesKey, *_aesIv;
+    static unsigned char *aesKey, *aesIv;
 
 public:
 

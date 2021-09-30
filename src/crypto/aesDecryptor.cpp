@@ -16,6 +16,12 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
 {
 
     std::string fileData = butterfly::readBinFile(bflyFileName);
+
+    if ( fileData.empty() )
+    {
+        throw AESDecryptionException("Empty Data from file " + bflyFileName);
+    }
+
     double fileSize = butterfly::getFileSize(bflyFileName);
     LOG_TRACE("Decrypting file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
 
