@@ -50,6 +50,13 @@ public:
     ~CryptoAES();
 
     /**
+     * Check if the init of the AES Key and IV were already done
+     *
+     * @return True if already initialized
+     */
+    static bool initDone();
+
+    /**
      * Generates the AES Key and the AES IV
      *
      * @return True if generation was successful

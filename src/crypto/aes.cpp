@@ -62,6 +62,14 @@ std::string CryptoAES::getOpenSSLError()
     return err;
 }
 
+bool CryptoAES::initDone()
+{
+    if ( (CryptoAES::aesKey != nullptr) && (CryptoAES::aesIv != nullptr) )
+        return true;
+    else
+        return false;
+}
+
 bool CryptoAES::generateAESKey()
 {
     LOG_INFO("Create new AES Key/IV pair")

