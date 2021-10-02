@@ -10,7 +10,7 @@ namespace aes
 unsigned char* CryptoAES::aesKey = nullptr;
 unsigned char* CryptoAES::aesIv = nullptr;
 
-CryptoAES::CryptoAES() //: _aesKey(nullptr), _aesIv(nullptr)
+CryptoAES::CryptoAES()
 {
 
     LOG_TRACE("Create class CryptoAES")
@@ -44,8 +44,8 @@ CryptoAES::CryptoAES() //: _aesKey(nullptr), _aesIv(nullptr)
 
 CryptoAES::~CryptoAES()
 {
-    EVP_CIPHER_CTX_free(_aesEncryptContext);
-    EVP_CIPHER_CTX_free(_aesDecryptContext);
+    EVP_CIPHER_CTX_reset(_aesEncryptContext);
+    EVP_CIPHER_CTX_reset(_aesDecryptContext);
 }
 
 std::string CryptoAES::getOpenSSLError()

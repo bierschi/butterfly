@@ -156,7 +156,11 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
 
 void Encryptor::spawnThread(const std::string &filepath)
 {
-    std::thread t(&Encryptor::encryptFileWithAES, this, filepath);
+    // Create new instance for each huge file
+    std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+    // Create dedicated thread for this encryption file
+    std::thread t(&aes::AESEncryptor::encryptFile, *aesEncInstance, filepath);
+    // Save thread in thread vector
     _threads.push_back(std::move(t));
 }
 
