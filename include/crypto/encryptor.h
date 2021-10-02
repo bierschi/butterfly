@@ -92,7 +92,7 @@ public:
     void spawnThread(const std::string &filepath);
 
     /**
-     *
+     * Joins the threads in the thread vector
      */
     void joinThreads();
 };

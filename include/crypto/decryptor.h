@@ -2,6 +2,8 @@
 #ifndef BUTTERFLY_DECRYPTOR_H
 #define BUTTERFLY_DECRYPTOR_H
 
+#include <thread>
+
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
@@ -22,6 +24,7 @@ class Decryptor
 
 private:
     std::string _decryptedCPrivateRSA, _aesKeyDBPath;
+    std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
@@ -81,9 +84,21 @@ public:
      * @param aesKey: aes key for the file to decrypt
      * @param aesIV: aes iv for the file to decrypt
      */
-    void decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV);
+    void decryptFileWithAES(const std::string &filepath);
 
+    /**
+     * Spawns a new Thread for encrypting the file
+     *
+     * @param filepath: path to the file
+     */
+    void spawnThread(const std::string &filepath);
+
+    /**
+     * Joins the threads in the thread vector
+     */
+    void joinThreads();
 };
+
 
 } // namespace hybrid
 

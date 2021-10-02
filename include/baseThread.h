@@ -22,7 +22,7 @@ protected:
     /**
      * Execution thread in base class
      */
-    void execution();
+    static void execution(void *t);
 
 public:
 
@@ -56,6 +56,7 @@ public:
      */
     bool stop();
 
+    void join();
 };
 
 } // namespace butterfly

@@ -4,12 +4,12 @@
 namespace butterfly
 {
 
-BaseThread::BaseThread(bool start) : _running(false)
+BaseThread::BaseThread(bool ) : _running(false)
 {
     LOG_INFO("Create Class BaseThread")
 
-    if (start)
-        this->start();
+    //if (start)
+    //    this->start();
 
 }
 
@@ -27,7 +27,7 @@ bool BaseThread::start()
 
 
     _running = true;
-    _thread = std::thread(std::bind(&BaseThread::execution, this));
+    _thread = std::thread(&BaseThread::execution, this);
 
     return true;
 }
@@ -42,7 +42,13 @@ bool BaseThread::stop()
     return true;
 }
 
-void BaseThread::execution()
+void BaseThread::join()
+{
+    if (_thread.joinable())
+        _thread.join();
+}
+
+void BaseThread::execution(void *t)
 {
     /*
     while (_running)
@@ -50,7 +56,7 @@ void BaseThread::execution()
         run();
     }*/
 
-    this->run();
+    static_cast<BaseThread*>(t)->run();
 }
 
 } // namespace butterfly
