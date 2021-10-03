@@ -58,7 +58,6 @@ inline std::string readBinFile(const std::string &filepath)
         return s;
     } else
     {
-        LOG_ERROR("Failed to open file " << filepath);
         return s;
     }
 }

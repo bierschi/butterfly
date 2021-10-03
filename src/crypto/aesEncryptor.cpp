@@ -16,6 +16,12 @@ void AESEncryptor::encryptFile(const std::string &filename)
 {
 
     std::string fileData = butterfly::readBinFile(filename);
+
+    if ( fileData.empty() )
+    {
+        throw AESEncryptionException("Empty Data from file " + filename);
+    }
+
     double fileSize = butterfly::getFileSize(filename);
     LOG_TRACE("Encrypting file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
 
