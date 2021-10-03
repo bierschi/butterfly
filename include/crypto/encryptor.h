@@ -3,6 +3,7 @@
 #define BUTTERFLY_ENCRYPTOR_H
 
 #include <algorithm>
+#include <thread>
 
 #include "crypto/rsaEncryptor.h"
 #include "crypto/aesEncryptor.h"
@@ -10,7 +11,6 @@
 #include "directoryIterator.h"
 #include "fileExtensions.h"
 #include "params.h"
-#include "fileEncryptor.h"
 
 namespace butterfly
 {

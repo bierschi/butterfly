@@ -79,7 +79,6 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
                 encryptFileWithAES(file.string());
             }
 
-            //butterfly::FileEncryptor _t(file.string(), false);
         }
 
     }
