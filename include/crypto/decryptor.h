@@ -7,7 +7,7 @@
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
-#include "exceptions.h"
+#include "bflyExceptions.h"
 #include "params.h"
 
 namespace butterfly
