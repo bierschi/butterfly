@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_EXCEPTIONS_H
-#define BUTTERFLY_EXCEPTIONS_H
+#ifndef BUTTERFLY_BFLYEXCEPTIONS_H
+#define BUTTERFLY_BFLYEXCEPTIONS_H
 
 #include <exception>
 #include <iostream>
@@ -26,50 +26,6 @@ public:
 };
 
 /**
- * Class RSAEncryptionException
- */
-class RSAEncryptionException : public ButterflyException
-{
-
-public:
-    explicit RSAEncryptionException(const std::string &error) : ButterflyException(error) {}
-
-};
-
-/**
- * Class RSADecryptionException
- */
-class RSADecryptionException : public ButterflyException
-{
-
-public:
-    explicit RSADecryptionException(const std::string &error) : ButterflyException(error) {}
-
-};
-
-/**
- * Class AESEncryptionException
- */
-class AESEncryptionException : public ButterflyException
-{
-
-public:
-    explicit AESEncryptionException(const std::string &error) : ButterflyException(error) {}
-
-};
-
-/**
- * Class AESDecryptionException
- */
-class AESDecryptionException : public ButterflyException
-{
-
-public:
-    explicit AESDecryptionException(const std::string &error) : ButterflyException(error) {}
-
-};
-
-/**
  * Class EncryptionException
  */
 class EncryptorException : public ButterflyException
@@ -92,6 +48,50 @@ public:
 };
 
 /**
+ * Class RSAEncryptionException
+ */
+class RSAEncryptionException : public EncryptorException
+{
+
+public:
+    explicit RSAEncryptionException(const std::string &error) : EncryptorException(error) {}
+
+};
+
+/**
+ * Class RSADecryptionException
+ */
+class RSADecryptionException : public DecryptorException
+{
+
+public:
+    explicit RSADecryptionException(const std::string &error) : DecryptorException(error) {}
+
+};
+
+/**
+ * Class AESEncryptionException
+ */
+class AESEncryptionException : public EncryptorException
+{
+
+public:
+    explicit AESEncryptionException(const std::string &error) : EncryptorException(error) {}
+
+};
+
+/**
+ * Class AESDecryptionException
+ */
+class AESDecryptionException : public DecryptorException
+{
+
+public:
+    explicit AESDecryptionException(const std::string &error) : DecryptorException(error) {}
+
+};
+
+/**
  * Class SQLDatabaseException
  */
 class SQLDatabaseException : public ButterflyException
@@ -104,4 +104,4 @@ public:
 
 } // namespace butterfly
 
-#endif //BUTTERFLY_EXCEPTIONS_H
+#endif //BUTTERFLY_BFLYEXCEPTIONS_H
