@@ -2,7 +2,7 @@
 
 ![](argumentParser.svg)
 
-## bflyExceptions
+## ButterflyException
 
 ![](bflyExceptions.svg)
 
