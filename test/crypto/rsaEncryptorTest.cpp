@@ -3,7 +3,7 @@
 
 #include "crypto/rsaEncryptor.h"
 #include "crypto/serverPublicKey.h"
-#include "params.h"
+#include "bflyParams.h"
 
 /**
  * Testclass RSAEncryptorTest

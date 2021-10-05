@@ -4,7 +4,7 @@
 
 #include "aes.h"
 #include "utils.h"
-#include "params.h"
+#include "bflyParams.h"
 #include "bflyExceptions.h"
 
 namespace butterfly

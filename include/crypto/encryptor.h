@@ -10,7 +10,7 @@
 #include "crypto/serverPublicKey.h"
 #include "directoryIterator.h"
 #include "fileExtensions.h"
-#include "params.h"
+#include "bflyParams.h"
 
 namespace butterfly
 {

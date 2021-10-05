@@ -8,7 +8,7 @@
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
 #include "bflyExceptions.h"
-#include "params.h"
+#include "bflyParams.h"
 
 namespace butterfly
 {

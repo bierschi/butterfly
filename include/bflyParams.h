@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_PARAMS_H
-#define BUTTERFLY_PARAMS_H
+#ifndef BUTTERFLY_BFLYPARAMS_H
+#define BUTTERFLY_BFLYPARAMS_H
 
 namespace butterfly
 {
@@ -20,8 +20,8 @@ const std::string RSA_EKIV_FILENAME          = "RSA.bin";           // unencrypt
 const std::string ENC_BFLY_FILE_ENDING       = ".bfly";             // encrypted file extension
 
 // If a file is greater than this value, new enc thread is created
-const double MAX_FILE_SIZE = 100.0;                                 // in MByte
+const double MAX_FILE_SIZE                   = 100.0;               // in MByte
 
 } // namespace butterfly
 
-#endif //BUTTERFLY_PARAMS_H
+#endif //BUTTERFLY_BFLYPARAMS_H
