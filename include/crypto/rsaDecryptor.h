@@ -3,7 +3,7 @@
 #define BUTTERFLY_RSADECRYPTOR_H
 
 #include "rsa.h"
-#include "utils.h"
+#include "bflyUtils.h"
 #include "bflyParams.h"
 #include "bflyExceptions.h"
 

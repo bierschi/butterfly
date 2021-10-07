@@ -3,7 +3,7 @@
 #define BUTTERFLY_AESENCRYPTOR_H
 
 #include "aes.h"
-#include "utils.h"
+#include "bflyUtils.h"
 #include "bflyParams.h"
 #include "bflyExceptions.h"
 

@@ -4,7 +4,7 @@
 
 #include "sqlDatabase.h"
 #include "bflyExceptions.h"
-#include "utils.h"
+#include "bflyUtils.h"
 
 namespace butterfly
 {
