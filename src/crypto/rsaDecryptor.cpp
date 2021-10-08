@@ -74,15 +74,21 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
 
 std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
 {
-
-    std::string binFile = butterfly::readBinFile(filepath);
-    if ( binFile.empty() )
+    if ( butterfly::existsFile(filepath) )
     {
-        LOG_ERROR("Content of binary file " + filepath + " is empty!")
-        throw RSADecryptionException("Content of binary file " + filepath + " is empty!");
+        std::string binFile = butterfly::readBinFile(filepath);
+        if ( binFile.empty() )
+        {
+            LOG_ERROR("Content of binary file " + filepath + " is empty!")
+            throw RSADecryptionException("Content of binary file " + filepath + " is empty!");
+        } else
+        {
+            return binFile;
+        }
     } else
     {
-        return binFile;
+        LOG_ERROR("Binary File " << filepath << " does not exists!")
+        throw RSADecryptionException("Binary File " + filepath + " does not exists!");
     }
 
 }
@@ -112,6 +118,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
 
     if (decLen == -1)
     {
+        LOG_ERROR("Error at decrypting the message with RSA!")
         throw RSADecryptionException("Error at decrypting the message with RSA!");
     }
 
@@ -143,6 +150,7 @@ int RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::str
 
     if (decLen == -1)
     {
+        LOG_ERROR("Error at decrypting the message with RSA!")
         throw RSADecryptionException("Error at decrypting the message with RSA!");
     }
 

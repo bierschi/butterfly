@@ -3,9 +3,9 @@
 #define BUTTERFLY_RSAENCRYPTOR_H
 
 #include "rsa.h"
-#include "utils.h"
-#include "params.h"
-#include "exceptions.h"
+#include "bflyUtils.h"
+#include "bflyParams.h"
+#include "bflyExceptions.h"
 
 namespace butterfly
 {

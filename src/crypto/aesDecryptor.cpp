@@ -19,6 +19,7 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
 
     if ( fileData.empty() )
     {
+        LOG_TRACE("Empty Data from file " + bflyFileName);
         throw AESDecryptionException("Empty Data from file " + bflyFileName);
     }
 
@@ -41,6 +42,7 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
 
     if ( !butterfly::removeFileExtension(const_cast<std::string &>(bflyFileName), butterfly::ENC_BFLY_FILE_ENDING) )
     {
+        LOG_TRACE("Failed to remove bfly extension from file " + bflyFileName);
         throw AESDecryptionException("Failed to remove bfly extension from file " + bflyFileName);
     }
 

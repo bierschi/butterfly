@@ -1,0 +1,81 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+package butterfly #DDDDDD
+{
+
+class std::exception
+{
+
+}
+
+class ButterflyException
+{
+    -_error: std::string
+    +ButterflyException(const std::string &error)
+
+    +what(): const char*
+}
+
+class RSAEncryptionException
+{
+
+    +RSAEncryptionException(const std::string &error)
+
+}
+
+class RSADecryptionException
+{
+
+    +RSADecryptionException(const std::string &error)
+
+}
+
+class AESEncryptionException
+{
+
+    +AESEncryptionException(const std::string &error)
+
+}
+
+class AESDecryptionException
+{
+
+    +AESDecryptionException(const std::string &error)
+
+}
+
+class EncryptorException
+{
+
+    +EncryptorException(const std::string &error)
+
+}
+
+class DecryptorException
+{
+
+    +DecryptorException(const std::string &error)
+
+}
+
+class SQLDatabaseException
+{
+
+    +SQLDatabaseException(const std::string &error)
+
+}
+
+std::exception <|-- ButterflyException
+ButterflyException <|-- EncryptorException
+ButterflyException <|-- DecryptorException
+
+EncryptorException <|-- RSAEncryptionException
+DecryptorException <|-- RSADecryptionException
+EncryptorException <|-- AESEncryptionException
+DecryptorException <|-- AESDecryptionException
+
+ButterflyException <|-- SQLDatabaseException
+
+}
+@enduml

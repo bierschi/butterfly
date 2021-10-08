@@ -7,8 +7,8 @@
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
-#include "exceptions.h"
-#include "params.h"
+#include "bflyExceptions.h"
+#include "bflyParams.h"
 
 namespace butterfly
 {
@@ -33,6 +33,14 @@ private:
      * Removes decrypted files from system
      */
     static void removeDecryptedFiles();
+
+    /**
+     * Get the AESKeyPair string from the unencrypted file
+     *
+     * @param aesKeyPair: string reference to the aeskeypair
+     * @return True if reading was successful else False
+     */
+    static bool getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair);
 
 public:
 

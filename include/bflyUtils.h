@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_UTILS_H
-#define BUTTERFLY_UTILS_H
+#ifndef BUTTERFLY_BFLYUTILS_H
+#define BUTTERFLY_BFLYUTILS_H
 
 #include <sys/stat.h>
 #include <fstream>
@@ -220,4 +220,4 @@ inline std::string hex2String(const std::string &in)
 
 } // namespace butterfly
 
-#endif //BUTTERFLY_UTILS_H
+#endif //BUTTERFLY_BFLYUTILS_H

