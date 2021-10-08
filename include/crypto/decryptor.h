@@ -34,6 +34,14 @@ private:
      */
     static void removeDecryptedFiles();
 
+    /**
+     * Get the AESKeyPair string from the unencrypted file
+     *
+     * @param aesKeyPair: string reference to the aeskeypair
+     * @return True if reading was successful else False
+     */
+    static bool getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair);
+
 public:
 
     /**

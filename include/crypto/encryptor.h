@@ -38,6 +38,13 @@ private:
      */
     void validateAESKeyLength();
 
+    /**
+     * Saves the unencrypted AESKeyPair to the filesystem
+     *
+     * @param aesKeyPair: aesKeyPair string
+     */
+    static void saveUnencryptedAESKeyPair(const std::string &aesKeyPair);
+
 public:
     /**
      * Constructor Encryptor
@@ -79,10 +86,10 @@ public:
     /**
      * Encrypts the final AES Key and IV with RSA
      *
-     * @param aesKeyStr: AES Key or IV String
+     * @param aesKeyPair: AES Key and IV String
      * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const std::string &filename);
 
     /**
      * Spawns a new Thread for encrypting the file

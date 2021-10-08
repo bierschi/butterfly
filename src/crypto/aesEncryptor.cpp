@@ -19,6 +19,7 @@ void AESEncryptor::encryptFile(const std::string &filename)
 
     if ( fileData.empty() )
     {
+        LOG_TRACE("Empty Data from file " + filename);
         throw AESEncryptionException("Empty Data from file " + filename);
     }
 
@@ -40,6 +41,7 @@ void AESEncryptor::encryptFile(const std::string &filename)
 
     if ( !butterfly::appendFileExtension(filename, butterfly::ENC_BFLY_FILE_ENDING) )
     {
+        LOG_TRACE("Failed to append bfly extension to file " + filename);
         throw AESEncryptionException("Failed to append bfly extension to file " + filename);
     }
 
