@@ -1,6 +1,7 @@
 
 #include "butterfly.h"
 
+#include "tcpSocket.h"
 namespace butterfly
 {
 
@@ -16,6 +17,23 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
 
 void Butterfly::run()
 {
+    std::shared_ptr<butterfly::TCPSocket> _serverSocket = std::make_shared<butterfly::TCPSocket>();
+    _serverSocket->bind(8080);
+    _serverSocket->listen();
+    std::shared_ptr<butterfly::TCPSocket> newSocket = _serverSocket->accept();
+
+    std::string body = "<!DOCTYPE html><html><body>TEST MeSSAGE</body></html>";
+    std::string test = "HTTP/1.1 302 Found \r\nContent-Type: text/html; charset=utf8 \r\nContent-Length:" + std::to_string(body.length()) + "\r\n\r\n" + body;
+
+    //newSocket->send("HTTP/1.1 302 Found \r\nContent-Type: text/html; charset=utf8 \r\nContent-Length:279\r\n\r\n<!DOCTYPE html><html><head><title>Creating an HTML Element</title></head><body><form name=\"input\" action=\"login.html\" method=\"get\">user name: <input type=\"text\" name=\"user\"><br>password: <input type=\"text\" name=\"password\"><input type=\"submit\" value=\"Submit\"></form></body></html>");
+    newSocket->send(test);
+
+    std::string s;
+    newSocket->recv(s, 1024);
+    std::cout << s << std::endl;
+    newSocket->recv(s, 1024);
+    std::cout << s << std::endl;
+    /*
     // Start Encryption + Decryption
     if ( !_args._dir.empty() )
     {
@@ -50,6 +68,7 @@ void Butterfly::run()
     {
         throw ButterflyException("Invalid usage of the Arguments!");
     }
+     */
 }
 
 } // namespace butterfly
