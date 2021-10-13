@@ -39,8 +39,14 @@ class HTTPServer
     +HTTPServer()
 }
 
+class HTTPRequest
+{
+
+    +HTTPRequest()
+}
+
 Socket <|-- TCPSocket
-TCPSocket <-- HTTPServer
+TCPSocket <-- "1..N" HTTPServer
 
 }
 @enduml

@@ -18,9 +18,22 @@ Socket::Socket(int domain, int type, int protocol) : _socketDomain(domain), _soc
     _addr.sin_addr.s_addr = INADDR_ANY;                                  // Accept any incoming message
 }
 
+Socket::Socket(int fileDescriptor, int domain, int type, int protocol) : _socketDomain(domain), _socketType(type), _socketProtocol(protocol), _fd(fileDescriptor)
+{
+    memset(&_addr, 0, sizeof(_addr));
+
+    _addr.sin_family      = static_cast<sa_family_t>(_socketDomain);     // For IPv4
+    _addr.sin_addr.s_addr = INADDR_ANY;                                  // Accept any incoming message
+}
+
 Socket::~Socket()
 {
     ::close(_fd);
+}
+
+int Socket::getFileDescriptor() const
+{
+    return _fd;
 }
 
 bool Socket::shutdown() const
@@ -98,8 +111,7 @@ std::shared_ptr<Socket> Socket::accept()
         throw SocketException("Error on creating a valid socket file descriptor!");
     }
 
-    std::shared_ptr<Socket> newSocket(new Socket(_socketDomain, _socketType, _socketProtocol));
-    newSocket->_fd = newSockFD;
+    std::shared_ptr<Socket> newSocket = std::make_shared<Socket>(newSockFD, _socketDomain, _socketType, _socketProtocol);
 
     return newSocket;
 }

@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM)
+TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM, 0)
 {
 
     if ( !Socket::setOptions() )
@@ -14,9 +14,18 @@ TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM)
 
 }
 
+TCPSocket::TCPSocket(int fileDescriptor) : Socket(fileDescriptor, AF_INET, SOCK_STREAM, 0)
+{
+    if ( !Socket::setOptions() )
+    {
+        throw SocketException("Error on setting options for the socket!");
+    }
+}
+
 std::shared_ptr<TCPSocket> TCPSocket::accept()
 {
-    struct sockaddr_storage new_addr;
+    //struct sockaddr_storage new_addr;
+    struct sockaddr_in new_addr;
     socklen_t addr_size;
     addr_size = sizeof(new_addr);
 
@@ -26,8 +35,7 @@ std::shared_ptr<TCPSocket> TCPSocket::accept()
         throw SocketException("Error on creating a valid socket file descriptor!");
     }
 
-    std::shared_ptr<TCPSocket> newSocket(new TCPSocket());
-    newSocket->_fd = newSockFD;
+    std::shared_ptr<TCPSocket> newSocket = std::make_shared<TCPSocket>(newSockFD);
 
     return newSocket;
 }
@@ -43,19 +51,42 @@ bool TCPSocket::send(const std::string &s) const
     return true;
 }
 
-bool TCPSocket::recv(std::string &buf, int len) const
+int TCPSocket::recv(char *buf, int len)
 {
-    char buffer[len];
-    bzero(buffer, static_cast<size_t>(len));
+    std::string s;
+    ssize_t size_recv , total_size= 0;
 
-    if (::recv(_fd, buffer, static_cast<size_t>(len - 1), 0) == -1)
+    memset(buf , 0 , static_cast<size_t>(len));	//clear the variable
+
+    while(1)
     {
-        return false;
+
+        if((size_recv =  ::recv(_fd , buf , static_cast<size_t>(len), MSG_DONTWAIT) ) < 0 )
+        {
+            break;
+        }
+        else
+        {
+            total_size += size_recv;
+        }
     }
 
-    buf = std::string(buffer);
+    return static_cast<int>(total_size);
 
-    return true;
+}
+
+std::string TCPSocket::recvAll(int chunkSize)
+{
+    char buffer[chunkSize];
+    std::string str;
+
+    int recvLength;
+    while ( (recvLength = static_cast<int>(::recv(_fd, buffer, sizeof(buffer), MSG_DONTWAIT))) > 0 )
+    {
+        str.append(buffer, static_cast<unsigned long>(recvLength));
+    }
+
+    return str;
 }
 
 } // namespace butterfly

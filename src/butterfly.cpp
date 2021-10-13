@@ -1,7 +1,7 @@
 
 #include "butterfly.h"
 
-#include "tcpSocket.h"
+#include "httpServer.h"
 namespace butterfly
 {
 
@@ -17,6 +17,7 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
 
 void Butterfly::run()
 {
+    /*
     std::shared_ptr<butterfly::TCPSocket> _serverSocket = std::make_shared<butterfly::TCPSocket>();
     _serverSocket->bind(8080);
     _serverSocket->listen();
@@ -33,6 +34,10 @@ void Butterfly::run()
     std::cout << s << std::endl;
     newSocket->recv(s, 1024);
     std::cout << s << std::endl;
+     */
+    std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
+    server->run();
+
     /*
     // Start Encryption + Decryption
     if ( !_args._dir.empty() )

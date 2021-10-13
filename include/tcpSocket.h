@@ -38,6 +38,13 @@ public:
     TCPSocket();
 
     /**
+     * TCPSocket Constructor
+     *
+     * @param fileDescriptor: Create TCPSocket with a File Descriptor
+     */
+    explicit TCPSocket(int fileDescriptor);
+
+    /**
      * Destructor TCPSocket
      */
     ~TCPSocket() override = default;
@@ -58,13 +65,21 @@ public:
     bool send(const std::string& s) const;
 
     /**
-     * Receives the buffer from the socket
+     * Receives the complete buffer as chunks from the socket
      *
-     * @param buf: Buffer to fill
-     * @param len: Length of the buffer
-     * @return True if the receiving was successful
+     * @param chunkSize: Size of the chunks
+     * @return data as std::string
      */
-    bool recv(std::string& buf, int len) const;
+    std::string recvAll(int chunkSize);
+
+    /**
+     * Receives the len size from the socket
+     *
+     * @param buf: buffer
+     * @param len: length of the buffer
+     * @return size of the read data
+     */
+    int recv(char *buf, int len);
 };
 
 } // namespace butterfly
