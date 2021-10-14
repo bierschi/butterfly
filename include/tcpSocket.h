@@ -65,21 +65,22 @@ public:
     bool send(const std::string& s) const;
 
     /**
-     * Receives the complete buffer as chunks from the socket
-     *
-     * @param chunkSize: Size of the chunks
-     * @return data as std::string
-     */
-    std::string recvAll(int chunkSize);
-
-    /**
      * Receives the len size from the socket
      *
      * @param buf: buffer
      * @param len: length of the buffer
      * @return size of the read data
      */
-    int recv(char *buf, int len);
+    int recv(char *buf, int len) const;
+
+    /**
+     * Receives the complete buffer as chunks from the socket
+     *
+     * @param chunkSize: Size of the chunks
+     * @return data as std::string
+     */
+    std::string recvAll(int chunkSize) const;
+
 };
 
 } // namespace butterfly

@@ -51,7 +51,7 @@ bool TCPSocket::send(const std::string &s) const
     return true;
 }
 
-int TCPSocket::recv(char *buf, int len)
+int TCPSocket::recv(char *buf, int len) const
 {
     std::string s;
     ssize_t size_recv , total_size= 0;
@@ -75,7 +75,7 @@ int TCPSocket::recv(char *buf, int len)
 
 }
 
-std::string TCPSocket::recvAll(int chunkSize)
+std::string TCPSocket::recvAll(int chunkSize) const
 {
     char buffer[chunkSize];
     std::string str;
