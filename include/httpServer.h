@@ -4,7 +4,9 @@
 
 #include <memory>
 
+#include "logger.h"
 #include "tcpSocket.h"
+#include "httpRequest.h"
 
 namespace butterfly
 {
@@ -14,24 +16,44 @@ class HTTPServer
 
 private:
     unsigned int _port;
-    std::shared_ptr<TCPSocket> _tcpSocket, _newSocket;
+    bool _running;
+    std::shared_ptr<TCPSocket> _TCPSocket, _newTCPSocket;
+    std::unique_ptr<HTTPRequest> _httpRequest;
+
+    bool handleRequest();
+    int recvRequest();
+    void processRequest();
+    void prepareResponse();
+    void sendResponse();
 
 public:
 
     /**
+     * Constructor HTTPServer
      *
-     * @param port
+     * Usage:
+     *      std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
+     *      server.run();
+     *
+     * @param port: Port for the Server
      */
-    explicit HTTPServer(unsigned int port);
+    explicit HTTPServer(unsigned int port=8080);
+
+    /**
+     * Destructor HTTPServer
+     */
+    ~HTTPServer();
 
     /**
      *
      */
-    ~HTTPServer();
-    
-    int run();
-    bool handleRequest();
-    int recvRequest();
+    void run();
+
+    /**
+     *
+     */
+    void stop();
+
 };
 
 } // namespace butterfly

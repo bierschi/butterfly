@@ -30,11 +30,11 @@ void Butterfly::run()
     newSocket->send(test);
 
     std::string s;
-    newSocket->recv(s, 1024);
+    s = newSocket->recvAll(1024);
     std::cout << s << std::endl;
-    newSocket->recv(s, 1024);
+    s = newSocket->recvAll(1024);
     std::cout << s << std::endl;
-     */
+    */
     std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
     server->run();
 

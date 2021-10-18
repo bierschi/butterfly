@@ -55,6 +55,12 @@ class HTTPServer
     +stop(): void
 }
 
+class HTTPSchema
+{
+
+    +HTTPSchema()
+}
+
 class HTTPRequest
 {
 
@@ -72,6 +78,9 @@ TCPSocket "1..*"  o--  "1" HTTPServer : uses
 
 HTTPServer "1"    --* "1..*" HTTPRequest: <<processes>>
 HTTPServer "1"    --* "1..*" HTTPResponse: <<sends>>
+
+HTTPSchema <|-- HTTPRequest
+HTTPSchema <|-- HTTPResponse
 
 }
 @enduml

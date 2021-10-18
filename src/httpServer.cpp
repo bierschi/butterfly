@@ -4,29 +4,33 @@
 namespace butterfly
 {
 
-HTTPServer::HTTPServer(unsigned int port) : _port(port), _tcpSocket(std::make_shared<TCPSocket>()), _newSocket(std::make_shared<TCPSocket>())
+HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _TCPSocket(std::make_shared<TCPSocket>()), _newTCPSocket(std::make_shared<TCPSocket>())
 {
-    _tcpSocket->bind(_port);
-    _tcpSocket->listen();
+    LOG_TRACE("Create class HTTPServer");
+
+    _TCPSocket->bind(_port);
+    _TCPSocket->listen();
 }
 
 HTTPServer::~HTTPServer()
 {
-    _tcpSocket->disconnect();
+    _TCPSocket->disconnect();
 }
 
-int HTTPServer::run()
+void HTTPServer::run()
 {
-    std::string funcName = "run: ";
+    LOG_INFO("Run HTTPServer on port " << _port);
+    _running = true;
 
-    while(1){
+    while(_running){
 
         // blocking accept call
-        _newSocket = _tcpSocket->accept();
+        _newTCPSocket = _TCPSocket->accept();
 
-        if(fork() == 0){
-            if(handleRequest()){
-                std::cerr<<funcName<<"Failed handling request"<<std::endl;
+        if(fork() == 0)
+        {
+            if(handleRequest())
+            {
                 exit(-1);
             }
 
@@ -34,33 +38,72 @@ int HTTPServer::run()
 
         }
 
-        _newSocket->disconnect();
-        _newSocket.reset();
+        _newTCPSocket->disconnect();
+        _newTCPSocket.reset();
     }
 
-    return 0;
+}
+
+void HTTPServer::stop()
+{
+    _running = false;
 }
 
 bool HTTPServer::handleRequest()
 {
-    std::cout << "Handle REQUEST!" << std::endl;
-    if(recvRequest()){
-        std::cerr<<"Receiving request failed"<<std::endl;
-        return -1;
-    }
 
-    return 0;
+    LOG_TRACE("Handle new HTTP Request!");
+    _httpRequest = std::unique_ptr<HTTPRequest>(new HTTPRequest());
+
+    recvRequest();
+
+    _httpRequest->print();
+
+
+    processRequest();
+
+    prepareResponse();
+
+    sendResponse();
+
+    return true;
 }
 
 int HTTPServer::recvRequest()
 {
 
-    std::string data = _newSocket->recvAll(1024);
+    std::string data = _newTCPSocket->recvAll(1024);
 
     if ( !data.empty())
-        std::cout << "DATA: " << data << std::endl;
-
+    {
+        std::cout <<  data << std::endl;
+        _httpRequest->addData(data);
+    }
+    else
+        LOG_ERROR("No Data received!");
     return 0;
+}
+
+void HTTPServer::processRequest()
+{
+    _httpRequest->parse();
+    std::cout << "HEader: " << _httpRequest->getHTTPHeader("Connection") << std::endl;
+
+    Method method = _httpRequest->getMethod();
+    std::cout << method << std::endl;
+}
+
+void HTTPServer::prepareResponse()
+{
+
+}
+
+void HTTPServer::sendResponse()
+{
+    std::string body = "<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>";
+    std::string test = "HTTP/1.1 302 Found \r\nContent-Type: text/html; charset=utf8 \r\nContent-Length:" + std::to_string(body.length()) + "\r\n\r\n" + body;
+
+    _newTCPSocket->send(test);
 }
 
 } // namespace butterfly
