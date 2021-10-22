@@ -9,41 +9,41 @@ package aes #DDDDDD
 
 class CryptoAES
 {
-    -_aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
-    -_aesKeyLength, _aesIvLength: int
+    - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
+    - _aesKeyLength, _aesIvLength: int
 
-    #_aesKey, _aesIv: unsigned char*
+    # _aesKey, _aesIv: unsigned char*
 
-    +CryptoAES()
+    + CryptoAES()
 
-    +generateAESKey(): bool
-    +generateAESKeyWithSalt(): bool
+    + generateAESKey(): bool
+    + generateAESKeyWithSalt(): bool
 
-    +setAESKey(std::string &aesKey): void
-    +setAESIv(std::string &aesIv): void
-    +getAESKey() const: std::string
-    +getAESIv() const: std::string
-    +getAESKeyPair() const: std::string
-    +getAESKeyLength() const: int
-    +getAESIVLength() const: int
+    + setAESKey(std::string &aesKey): void
+    + setAESIv(std::string &aesIv): void
+    + getAESKey() const: std::string
+    + getAESIv() const: std::string
+    + getAESKeyPair() const: std::string
+    + getAESKeyLength() const: int
+    + getAESIVLength() const: int
 
-    +encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
-    +decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
+    + encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
+    + decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
 }
 
 class AESEncryptor
 {
-    +AESEncryptor()
+    + AESEncryptor()
 
-    +encryptFile(const std::string &filename): void
+    + encryptFile(const std::string &filename): void
 
 }
 
 class AESDecryptor
 {
-    +AESDecryptor()
+    + AESDecryptor()
 
-    +decryptFile(const std::string &filename): void
+    + decryptFile(const std::string &filename): void
 }
 
 CryptoAES <|-- AESEncryptor
