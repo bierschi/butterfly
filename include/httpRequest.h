@@ -39,7 +39,7 @@ public:
      *
      * @param method: HTTP Method
      */
-    void setMethod(Method method);
+    void setMethod(Method &method);
 
     /**
      * Getter for the Method
@@ -88,12 +88,12 @@ public:
      *
      * @return
      */
-    int parse() override;
+    int parseIncoming() override;
 
     /**
      * Method to prepare the HTTP Requests for further usage
      */
-    void prepare() override;
+    void prepareOutgoing() override;
 
 };
 

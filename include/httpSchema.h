@@ -105,12 +105,12 @@ public:
      *
      * @return
      */
-    virtual int parse() = 0;
+    virtual int parseIncoming() = 0;
 
     /**
      * Abstract method prepare for subclasses
      */
-    virtual void prepare() = 0;
+    virtual void prepareOutgoing() = 0;
 };
 
 } // namespace butterfly

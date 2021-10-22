@@ -7,6 +7,7 @@
 #include "logger.h"
 #include "tcpSocket.h"
 #include "httpRequest.h"
+#include "httpResponse.h"
 
 namespace butterfly
 {
@@ -19,12 +20,13 @@ private:
     bool _running;
     std::shared_ptr<TCPSocket> _TCPSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
+    std::unique_ptr<HTTPResponse> _httpResponse;
 
     bool handleRequest();
     int recvRequest();
     void processRequest();
     void prepareResponse();
-    void sendResponse();
+    bool sendResponse();
 
 public:
 

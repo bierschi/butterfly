@@ -82,12 +82,12 @@ public:
      *
      * @return
      */
-    int parse() override;
+    int parseIncoming() override;
 
     /**
      * Method to prepare the HTTP Responses for further usage
      */
-    void prepare() override;
+    void prepareOutgoing() override;
 
 };
 

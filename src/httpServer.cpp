@@ -54,19 +54,23 @@ bool HTTPServer::handleRequest()
 
     LOG_TRACE("Handle new HTTP Request!");
     _httpRequest = std::unique_ptr<HTTPRequest>(new HTTPRequest());
+    _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
+    // parse incoming data from TCP Socket
     recvRequest();
 
+    _httpRequest->parseIncoming();
+
     _httpRequest->print();
-
-
+    // process the http request
     processRequest();
 
+    // prepare the actual HTTP Response message
     prepareResponse();
 
-    sendResponse();
+    // send the HTTP Response via the TCP Socket
+    return sendResponse();
 
-    return true;
 }
 
 int HTTPServer::recvRequest()
@@ -80,13 +84,16 @@ int HTTPServer::recvRequest()
         _httpRequest->addData(data);
     }
     else
+    {
         LOG_ERROR("No Data received!");
+    }
+
     return 0;
 }
 
 void HTTPServer::processRequest()
 {
-    _httpRequest->parse();
+    _httpRequest->parseIncoming();
     std::cout << "HEader: " << _httpRequest->getHTTPHeader("Connection") << std::endl;
 
     Method method = _httpRequest->getMethod();
@@ -96,14 +103,21 @@ void HTTPServer::processRequest()
 void HTTPServer::prepareResponse()
 {
 
+    _httpResponse->setProtocol(HTTP1_1);
+    _httpResponse->setReasonPhrase(302);
+    _httpResponse->addBody("<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>");
+
+    _httpResponse->prepareOutgoing();
 }
 
-void HTTPServer::sendResponse()
+bool HTTPServer::sendResponse()
 {
     std::string body = "<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>";
     std::string test = "HTTP/1.1 302 Found \r\nContent-Type: text/html; charset=utf8 \r\nContent-Length:" + std::to_string(body.length()) + "\r\n\r\n" + body;
 
-    _newTCPSocket->send(test);
+    return _newTCPSocket->send(test);
+
+    //return _newTCPSocket->send(_httpResponse->getData());
 }
 
 } // namespace butterfly

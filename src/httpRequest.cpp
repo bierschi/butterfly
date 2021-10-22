@@ -9,7 +9,7 @@ HTTPRequest::HTTPRequest() : HTTPSchema()
 
 }
 
-void HTTPRequest::setMethod(Method method)
+void HTTPRequest::setMethod(Method &method)
 {
     _httpMethod = method;
 }
@@ -24,51 +24,7 @@ void HTTPRequest::setUserAgent(const std::string &userAgent)
     _userAgent = userAgent;
 }
 
-void HTTPRequest::prepare()
-{
-    std::string httpMethod, protocol;
-
-    switch(_httpMethod)
-    {
-        case GET:
-            httpMethod = "GET";
-            break;
-        case PUT:
-            httpMethod = "PUT";
-            break;
-        default:
-            httpMethod = "GET";
-            break;
-    }
-
-    switch(_protocol)
-    {
-        case HTTP1_0:
-            protocol = "HTTP/1.0";
-            break;
-        case HTTP1_1:
-            protocol = "HTTP/1.1";
-            break;
-        default:
-            protocol = "HTTP/1.1";
-            break;
-    }
-
-    _data += httpMethod + " " + _url + " " + protocol + CRLF;
-
-    for(auto it = _httpHeaders.begin(); it!=_httpHeaders.end(); it++)
-    {
-        _data += it->first + ": " + it->second + CRLF;
-    }
-
-    _data += CRLF;
-
-    _data += _body;
-
-}
-
-
-int HTTPRequest::parse()
+int HTTPRequest::parseIncoming()
 {
     /*
        Request = Request-Line CRLF
@@ -159,6 +115,49 @@ int HTTPRequest::parse()
     _body = _data.substr(parseCursorOld);
 
     return 0;
+}
+
+void HTTPRequest::prepareOutgoing()
+{
+    std::string httpMethod, protocol;
+
+    switch(_httpMethod)
+    {
+        case GET:
+            httpMethod = "GET";
+            break;
+        case PUT:
+            httpMethod = "PUT";
+            break;
+        default:
+            httpMethod = "GET";
+            break;
+    }
+
+    switch(_protocol)
+    {
+        case HTTP1_0:
+            protocol = "HTTP/1.0";
+            break;
+        case HTTP1_1:
+            protocol = "HTTP/1.1";
+            break;
+        default:
+            protocol = "HTTP/1.1";
+            break;
+    }
+
+    _data += httpMethod + " " + _url + " " + protocol + CRLF;
+
+    for(auto it = _httpHeaders.begin(); it!=_httpHeaders.end(); it++)
+    {
+        _data += it->first + ": " + it->second + CRLF;
+    }
+
+    _data += CRLF;
+
+    _data += _body;
+
 }
 
 } // namespace butterfly

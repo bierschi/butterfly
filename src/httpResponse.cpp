@@ -23,12 +23,12 @@ void HTTPResponse::setReasonPhrase(size_t statusCode)
     }
 }
 
-int HTTPResponse::parse()
+int HTTPResponse::parseIncoming()
 {
     return 0;
 }
 
-void HTTPResponse::prepare()
+void HTTPResponse::prepareOutgoing()
 {
 
 }
