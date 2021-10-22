@@ -6,8 +6,8 @@ package butterfly #DDDDDD
 class Socket
 {
     - _socketDomain, _socketType, _socketProtocol: int
-    #_fd: int
-    #_addr: sockadd_in
+    # _fd: int
+    # _addr: sockadd_in
 
     +Socket(int domain, int type, int protocol)
     +Socket(int fileDescriptor, int domain, int type, int protocol)
@@ -40,13 +40,13 @@ class TCPSocket
 class HTTPServer
 {
     - _port: unsigned int port
-    -_running: bool
+    - _running: bool
     - _TCPSocket, _newTCPSocket: std::shared_ptr<TCPSocket>
+    - _httpRequest: std::unique_ptr<HTTPRequest>
     +HTTPServer(unsigned int port)
 
     -handleRequest():
     -recvRequest():
-    -parseRequest():
     -processRequest():
     -preprareResponse():
     -sendResponse():
@@ -74,7 +74,7 @@ class HTTPResponse
 }
 
 Socket            <|-- TCPSocket
-TCPSocket "1..*"  o--  "1" HTTPServer : uses
+TCPSocket "1..*"  o--  "1" HTTPServer : <<uses>>
 
 HTTPServer "1"    --* "1..*" HTTPRequest: <<processes>>
 HTTPServer "1"    --* "1..*" HTTPResponse: <<sends>>
