@@ -2,7 +2,7 @@
 #ifndef BUTTERFLY_HTTPREQUEST_H
 #define BUTTERFLY_HTTPREQUEST_H
 
-#include "httpSchema.h"
+#include "httpMSGSchema.h"
 
 namespace butterfly
 {
@@ -10,7 +10,7 @@ namespace butterfly
 /**
  * Class HTTPRequest for incoming HTTP Requests (Client -> Server)
  */
-class HTTPRequest: public HTTPSchema
+class HTTPRequest: public HTTPMSGSchema
 {
 
 private:

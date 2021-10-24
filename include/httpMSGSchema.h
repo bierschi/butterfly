@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_HTTPSCHEMA_H
-#define BUTTERFLY_HTTPSCHEMA_H
+#ifndef BUTTERFLY_HTTPMSGSCHEMA_H
+#define BUTTERFLY_HTTPMSGSCHEMA_H
 
 #include <iostream>
 #include <vector>
@@ -14,9 +14,9 @@ typedef enum { GET, HEAD, POST, PUT, DELETE, CONNECT, NOT_IMPLEMENTED } Method;
 typedef enum { HTTP1_0, HTTP1_1, HTTP_UNSUPPORTED } Protocol;
 
 /**
- * Abstract Base Class HTTPSchema to provide basic methods for HTTP Handling
+ * Abstract Base Class HTTPMSGSchema to provide a Message Schema for HTTP Requests and Responses
  */
-class HTTPSchema
+class HTTPMSGSchema
 {
 
 protected:
@@ -30,12 +30,12 @@ public:
     /**
      * Constructor HTTPSchema
      */
-    explicit HTTPSchema(const std::string &messageType);
+    explicit HTTPMSGSchema(const std::string &messageType);
 
     /**
      * Virtual Destructor HTTPSchema
      */
-    virtual ~HTTPSchema() = default;
+    virtual ~HTTPMSGSchema() = default;
 
     /**
      * Prints the HTTP Request/Response
@@ -122,4 +122,4 @@ public:
 
 } // namespace butterfly
 
-#endif //BUTTERFLY_HTTPSCHEMA_H
+#endif //BUTTERFLY_HTTPMSGSCHEMA_H

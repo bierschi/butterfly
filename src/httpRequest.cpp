@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPRequest::HTTPRequest() : HTTPSchema("Request")
+HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request")
 {
 
 }

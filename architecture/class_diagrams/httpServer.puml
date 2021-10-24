@@ -57,14 +57,20 @@ class HTTPServer
     +stop(): void
 }
 
-class HTTPSchema
+class HTTPClient <<NOT IMPLEMENTED>>
+{
+
+    + HTTPClient()
+}
+
+class HTTPMSGSchema
 {
     - _data, _body, _messageType: std::string
     - _httpMethod: Method
     - _protocol: Protocol
     - _httpHeaders: std::vector< std::pair<std::string, std::string> >
 
-    + HTTPSchema(const std::string &messageType)
+    + HTTPMSGSchema(const std::string &messageType)
 
     + print() const: void
     + addHTTPData(const std::string &data): void
@@ -116,14 +122,23 @@ class HTTPResponse
     + prepareOutgoing(): void
 }
 
+together {
+    class HTTPServer
+    class HTTPClient
+}
+
 Socket            <|-- TCPSocket
 TCPSocket "1..*"  o--  "1" HTTPServer : <<uses>>
+TCPSocket "1..*"  o--  "1" HTTPClient : <<uses>>
 
 HTTPServer "1"    --* "1..*" HTTPRequest: <<processes>>
 HTTPServer "1"    --* "1..*" HTTPResponse: <<sends>>
 
-HTTPSchema <|-- HTTPRequest
-HTTPSchema <|-- HTTPResponse
+HTTPClient "1"    --* "1..*" HTTPRequest: <<sends>>
+HTTPClient "1"    --* "1..*" HTTPResponse: <<processes>>
+
+HTTPMSGSchema <|-- HTTPRequest
+HTTPMSGSchema <|-- HTTPResponse
 
 }
 @enduml

@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPResponse::HTTPResponse() : HTTPSchema("Response"), _statusCode(501)
+HTTPResponse::HTTPResponse() : HTTPMSGSchema("Response"), _statusCode(501)
 {
 
 }

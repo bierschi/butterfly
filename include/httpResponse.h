@@ -2,7 +2,7 @@
 #ifndef BUTTERFLY_HTTPRESPONSE_H
 #define BUTTERFLY_HTTPRESPONSE_H
 
-#include "httpSchema.h"
+#include "httpMSGSchema.h"
 
 namespace butterfly
 {
@@ -10,7 +10,7 @@ namespace butterfly
 /**
  * Class HTTPResponse for outgoing HTTP Responses (Server -> Client)
  */
-class HTTPResponse: public HTTPSchema
+class HTTPResponse: public HTTPMSGSchema
 {
 
 private:
