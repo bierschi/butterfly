@@ -10,7 +10,7 @@
 namespace butterfly
 {
 
-typedef enum { GET, PUT, HEAD, POST, NOT_IMPLEMENTED } Method;
+typedef enum { GET, HEAD, POST, PUT, DELETE, CONNECT, NOT_IMPLEMENTED } Method;
 typedef enum { HTTP1_0, HTTP1_1, HTTP_UNSUPPORTED } Protocol;
 
 /**
@@ -20,7 +20,7 @@ class HTTPSchema
 {
 
 protected:
-    std::string _data, _body;
+    std::string _httpData, _body, _messageType;
     Method _httpMethod;
     Protocol _protocol;
     std::vector< std::pair<std::string, std::string> > _httpHeaders;
@@ -30,7 +30,7 @@ public:
     /**
      * Constructor HTTPSchema
      */
-    HTTPSchema();
+    explicit HTTPSchema(const std::string &messageType);
 
     /**
      * Virtual Destructor HTTPSchema
@@ -45,16 +45,16 @@ public:
     /**
      * Adds HTTP Data to string container
      *
-     * @param data: data as std::string
+     * @param httpData: data as std::string
      */
-    void addData(const std::string &data);
+    void addHTTPData(const std::string &httpData);
 
     /**
-     * Getter for the string container
+     * Getter for the HTTP Data string container
      *
      * @return data as std::string
      */
-    inline std::string getData() const { return _data; }
+    inline std::string getHTTPData() const { return _httpData; }
 
     /**
      * Setter for the protocol
@@ -101,11 +101,18 @@ public:
     std::string getHTTPHeader(const std::string &headerName) const;
 
     /**
+     * Getter for the HTTP Header Size
+     *
+     * @return Number of received Headers
+     */
+    inline size_t getHTTPHeaderSize() const { return _httpHeaders.size(); }
+
+    /**
      * Abstract method parse for subclasses
      *
      * @return
      */
-    virtual int parseIncoming() = 0;
+    virtual void parseIncoming() = 0;
 
     /**
      * Abstract method prepare for subclasses

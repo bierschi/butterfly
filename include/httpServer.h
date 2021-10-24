@@ -23,7 +23,7 @@ private:
     std::unique_ptr<HTTPResponse> _httpResponse;
 
     bool handleRequest();
-    int recvRequest();
+    bool recvRequest();
     void processRequest();
     void prepareResponse();
     bool sendResponse();

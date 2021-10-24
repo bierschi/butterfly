@@ -59,35 +59,61 @@ class HTTPServer
 
 class HTTPSchema
 {
-    - _data, _body: std::string
+    - _data, _body, _messageType: std::string
     - _httpMethod: Method
     - _protocol: Protocol
     - _httpHeaders: std::vector< std::pair<std::string, std::string> >
 
-    + HTTPSchema()
+    + HTTPSchema(const std::string &messageType)
 
-    + addData(const std::string &data): void
-    + getData() const: std::string
+    + print() const: void
+    + addHTTPData(const std::string &data): void
+    + getHTTPData() const: std::string
     + setProtocol(Protocol protocol): void
     + getProtocol() const: Protocol
     + addBody(const std::string &body)
     + getBody() const: std::string
     + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
     + getHTTPHeader(const std::string &headerName) const: std::string
-    + parse() = 0: int
-    + prepare() = 0: void
+    + getHTTPHeaderSize() const: size_t
+
+    + parseIncoming() = 0: void
+    + prepareOutgoing() = 0: void
 }
 
 class HTTPRequest
 {
+    - _url, _userAgent: std::string
 
-    +HTTPRequest()
+    + HTTPRequest()
+
+    + setMethod(Method &method): void
+    + getMethod() const: Method
+    + setURL(const std::string &url): void
+    + getURL() const: std::string
+    + setUserAgent(const std::string &userAgent): void
+    + getUserAgent() const: std::string
+    + getRequestSize() const: size_t
+
+    + parseIncoming(): void
+    + prepareOutgoing(): void
 }
 
 class HTTPResponse
 {
+    - _reasonPhrase: std::string
+    - _statusCode: size_t
 
-    +HTTPResponse()
+    + HTTPResponse()
+
+    + setStatusCode(size_t statusCode): void
+    + getStatusCode() const: size_t
+    + setReasonPhrase(size_t statusCode): void
+    + getReasonPhrase() const: std::string
+    + getResponseSize() const: size_t
+
+    + parseIncoming(): void
+    + prepareOutgoing(): void
 }
 
 Socket            <|-- TCPSocket

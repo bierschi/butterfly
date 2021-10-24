@@ -8,7 +8,7 @@ namespace butterfly
 {
 
 /**
- * Class HTTPRequest for incoming HTTP Requests
+ * Class HTTPRequest for incoming HTTP Requests (Client -> Server)
  */
 class HTTPRequest: public HTTPSchema
 {
@@ -23,8 +23,8 @@ public:
      *
      * Usage:
      *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new HTTPRequest());
-     *      _httpRequest->addData(data);
-     *      _httpRequest->parse();
+     *      _httpRequest->addHTTPData(data);
+     *      _httpRequest->parseIncoming();
      *
      */
     HTTPRequest();
@@ -77,18 +77,17 @@ public:
     inline std::string getUserAgent() const { return _userAgent; }
 
     /**
-     * Getter for the Request size
+     * Getter for the HTTP Request size
      *
      * @return size of the request
      */
-    inline size_t getRequestSize() const { return _data.size(); }
+    inline size_t getRequestSize() const { return _httpData.size(); }
 
     /**
      * Method to parse the incoming HTTP Requests
      *
-     * @return
      */
-    int parseIncoming() override;
+    void parseIncoming() override;
 
     /**
      * Method to prepare the HTTP Requests for further usage

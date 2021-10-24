@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPRequest::HTTPRequest() : HTTPSchema()
+HTTPRequest::HTTPRequest() : HTTPSchema("Request")
 {
 
 }
@@ -24,7 +24,7 @@ void HTTPRequest::setUserAgent(const std::string &userAgent)
     _userAgent = userAgent;
 }
 
-int HTTPRequest::parseIncoming()
+void HTTPRequest::parseIncoming()
 {
     /*
        Request = Request-Line CRLF
@@ -40,81 +40,76 @@ int HTTPRequest::parseIncoming()
     std::string httpMethod, httpProtocol, requestHeader;
     std::string requestHeaderName, requestHeaderContent;
 
-    /* Parse Request-Line */
-    /* HTTP Method */
-    parseCursorNew = _data.find_first_of(" ", parseCursorOld);
-    httpMethod = _data.substr(parseCursorOld, parseCursorNew - parseCursorOld);
+    // HTTP Method
+    parseCursorNew = _httpData.find_first_of(" ", parseCursorOld);
+    httpMethod = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
     parseCursorOld = parseCursorNew+1;
 
-    if(httpMethod == "GET")
+    if( httpMethod == "GET" )
     {
         _httpMethod = GET;
-    }else if(httpMethod == "PUT")
+    } else if( httpMethod == "PUT" )
     {
         _httpMethod = PUT;
-    }else
+    } else
     {
         _httpMethod = NOT_IMPLEMENTED;
-        return 0;
     }
 
-    /* URL */
-    parseCursorNew = _data.find_first_of(" ", parseCursorOld);
-    _url = _data.substr(parseCursorOld, parseCursorNew - parseCursorOld);
+    // URL
+    parseCursorNew = _httpData.find_first_of(" ", parseCursorOld);
+    _url = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
     parseCursorOld = parseCursorNew+1;
 
-    /* HTTP Protocol */
-    parseCursorNew = _data.find_first_of(CRLF, parseCursorOld);
-    httpProtocol = _data.substr(parseCursorOld, parseCursorNew - parseCursorOld);
+    //HTTP Protocol
+    parseCursorNew = _httpData.find_first_of(CRLF, parseCursorOld);
+    httpProtocol = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
     parseCursorOld = parseCursorNew+1;
 
-    if(httpProtocol == "HTTP/1.0")
+    if( httpProtocol == "HTTP/1.0" )
     {
         _protocol = HTTP1_0;
-    }else if(httpProtocol == "HTTP/1.1")
+    } else if( httpProtocol == "HTTP/1.1" )
     {
         _protocol = HTTP1_1;
-    }else
+    } else
     {
         _protocol = HTTP_UNSUPPORTED;
-        return 0;
     }
 
-    /* Skip the CRLF */
+    // Skip the CRLF
     parseCursorOld++;
 
-    /* Request Headers start here */
+    // Request Headers start here
     while(1){
-        parseCursorNew = _data.find_first_of(CRLF, parseCursorOld);
-        requestHeader = _data.substr(parseCursorOld, parseCursorNew - parseCursorOld);
+        parseCursorNew = _httpData.find_first_of(CRLF, parseCursorOld);
+        requestHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew+1;
 
         headerParseCursorOld = headerParseCursorNew = 0;
-        /* Further parse the request header */
-        /* Header Name */
+        // Further parse the request header
+        // Header Name
         headerParseCursorNew = requestHeader.find_first_of(":", headerParseCursorOld);
         requestHeaderName = requestHeader.substr(headerParseCursorOld, headerParseCursorNew - headerParseCursorOld);
         headerParseCursorOld = headerParseCursorNew+2;
 
-        /* Header Content */
+        // Header Content
         headerParseCursorNew = requestHeader.find_first_of(CRLF, headerParseCursorOld);
         requestHeaderContent = requestHeader.substr(headerParseCursorOld, headerParseCursorNew - headerParseCursorOld);
         headerParseCursorOld = headerParseCursorNew;
 
         setHTTPHeader(requestHeaderName, requestHeaderContent);
 
-        /* Skip the CRLF */
+        // Skip the CRLF
         parseCursorOld++;
 
-        /* Is there another CRLF? */
-        if(_data.substr(parseCursorOld, 2) == CRLF)
+        // Is there another CRLF?
+        if(_httpData.substr(parseCursorOld, 2) == CRLF)
             break;
     }
 
     parseCursorOld+=2;
-    _body = _data.substr(parseCursorOld);
-
-    return 0;
+    _body = _httpData.substr(parseCursorOld);
 }
 
 void HTTPRequest::prepareOutgoing()
@@ -147,16 +142,16 @@ void HTTPRequest::prepareOutgoing()
             break;
     }
 
-    _data += httpMethod + " " + _url + " " + protocol + CRLF;
+    _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
 
     for(auto it = _httpHeaders.begin(); it!=_httpHeaders.end(); it++)
     {
-        _data += it->first + ": " + it->second + CRLF;
+        _httpData += it->first + ": " + it->second + CRLF;
     }
 
-    _data += CRLF;
+    _httpData += CRLF;
 
-    _data += _body;
+    _httpData += _body;
 
 }
 

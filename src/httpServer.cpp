@@ -57,67 +57,68 @@ bool HTTPServer::handleRequest()
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
     // parse incoming data from TCP Socket
-    recvRequest();
+    if ( recvRequest() )
+    {
+        // process the http request
+        processRequest();
 
-    _httpRequest->parseIncoming();
+        // prepare the actual HTTP Response message
+        prepareResponse();
 
-    _httpRequest->print();
-    // process the http request
-    processRequest();
+        // send the HTTP Response via the TCP Socket
+        return sendResponse();
 
-    // prepare the actual HTTP Response message
-    prepareResponse();
-
-    // send the HTTP Response via the TCP Socket
-    return sendResponse();
+    } else
+    {
+        return false;
+    }
 
 }
 
-int HTTPServer::recvRequest()
+bool HTTPServer::recvRequest()
 {
 
     std::string data = _newTCPSocket->recvAll(1024);
 
     if ( !data.empty())
     {
-        std::cout <<  data << std::endl;
-        _httpRequest->addData(data);
+        _httpRequest->addHTTPData(data);
+        return true;
     }
     else
     {
-        LOG_ERROR("No Data received!");
+        LOG_ERROR("No HTTP Data received!");
+        return false;
     }
 
-    return 0;
 }
 
 void HTTPServer::processRequest()
 {
-    _httpRequest->parseIncoming();
-    std::cout << "HEader: " << _httpRequest->getHTTPHeader("Connection") << std::endl;
 
-    Method method = _httpRequest->getMethod();
-    std::cout << method << std::endl;
+    _httpRequest->parseIncoming();
+
+    //_httpRequest->print();
 }
 
 void HTTPServer::prepareResponse()
 {
 
     _httpResponse->setProtocol(HTTP1_1);
-    _httpResponse->setReasonPhrase(302);
+    _httpResponse->setStatusCode(302);
+    _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
+    _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
     _httpResponse->addBody("<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>");
+    _httpResponse->setHTTPHeader("Content-Length", std::to_string(_httpResponse->getBody().length()));
 
     _httpResponse->prepareOutgoing();
+
 }
 
 bool HTTPServer::sendResponse()
 {
-    std::string body = "<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>";
-    std::string test = "HTTP/1.1 302 Found \r\nContent-Type: text/html; charset=utf8 \r\nContent-Length:" + std::to_string(body.length()) + "\r\n\r\n" + body;
 
-    return _newTCPSocket->send(test);
-
-    //return _newTCPSocket->send(_httpResponse->getData());
+    return _newTCPSocket->send(_httpResponse->getHTTPData());
 }
 
 } // namespace butterfly

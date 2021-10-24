@@ -4,19 +4,19 @@
 namespace butterfly
 {
 
-HTTPSchema::HTTPSchema() : _httpMethod(NOT_IMPLEMENTED), _protocol(HTTP_UNSUPPORTED)
+HTTPSchema::HTTPSchema(const std::string &messageType) : _messageType(messageType), _httpMethod(NOT_IMPLEMENTED), _protocol(HTTP_UNSUPPORTED)
 {
 
 }
 
 void HTTPSchema::print() const
 {
-    std::cout << "---HTTP Begin---" << std::endl << _data << "---HTTP End---" << std::endl;
+    std::cout << "---HTTP " << _messageType << " Begin---" << std::endl << _httpData << "---HTTP " << _messageType << " End---" << std::endl;
 }
 
-void HTTPSchema::addData(const std::string &data)
+void HTTPSchema::addHTTPData(const std::string &httpData)
 {
-    _data.append(data);
+    _httpData.append(httpData);
 };
 
 void HTTPSchema::setProtocol(Protocol protocol)

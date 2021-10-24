@@ -8,13 +8,13 @@ namespace butterfly
 {
 
 /**
- * Class HTTPResponse for outgoing HTTP Responses
+ * Class HTTPResponse for outgoing HTTP Responses (Server -> Client)
  */
 class HTTPResponse: public HTTPSchema
 {
 
 private:
-    std::string _responseBody, _reasonPhrase;
+    std::string _reasonPhrase;
     size_t _statusCode;
 
 public:
@@ -24,8 +24,14 @@ public:
      *
      * Usage:
      *      std::unique_ptr<butterfly::HTTPResponse> _httpResponse(new HTTPResponse());
-     *      _httpResponse->addData(data);
-     *      _httpResponse->parse();
+     *
+     *      _httpResponse->setProtocol(HTTP1_1);
+     *      _httpResponse->setReasonPhrase(302);
+     *      _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
+     *      _httpResponse->addBody("<!DOCTYPE html><html><body><h1>Test Message</h1></body></html>");
+     *      _httpResponse->setHTTPHeader("Content-Length", std::to_string(_httpResponse->getBody().length()));
+     *
+     *      _httpResponse->prepareOutgoing();
      *
      */
     HTTPResponse();
@@ -68,21 +74,14 @@ public:
      *
      * @return size of the response
      */
-    inline size_t getResponseSize() const { return _data.length(); }
-
-    /**
-     * Getter for the response data
-     *
-     * @return size of the response data
-     */
-    std::string getResponseData() const { return _data; }
+    inline size_t getResponseSize() const { return _httpData.length(); }
 
     /**
      * Method to parse the incoming HTTP Responses
      *
      * @return
      */
-    int parseIncoming() override;
+    void parseIncoming() override;
 
     /**
      * Method to prepare the HTTP Responses for further usage
