@@ -77,15 +77,17 @@ void HTTPResponse::parseIncoming()
     httpProtocol = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
     parseCursorOld = parseCursorNew+1;
 
-    if( httpProtocol == "HTTP/1.0" )
+    if ( httpProtocol == "HTTP/1.0" )
     {
-        _protocol = HTTP1_0;
-    } else if( httpProtocol == "HTTP/1.1" )
+        _protocol = Protocol::HTTP1_0;
+
+    } else if ( httpProtocol == "HTTP/1.1" )
     {
-        _protocol = HTTP1_1;
+        _protocol = Protocol::HTTP1_1;
+
     } else
     {
-        _protocol = HTTP_UNSUPPORTED;
+        _protocol = Protocol::HTTP_UNSUPPORTED;
     }
 
     // Status Code
@@ -140,10 +142,10 @@ void HTTPResponse::prepareOutgoing()
     std::string protocol;
 
     switch(_protocol){
-        case HTTP1_0:
+        case Protocol::HTTP1_0:
             protocol = "HTTP/1.0";
             break;
-        case HTTP1_1:
+        case Protocol::HTTP1_1:
             protocol = "HTTP/1.1";
             break;
         default:
@@ -153,7 +155,7 @@ void HTTPResponse::prepareOutgoing()
 
     _httpData += protocol + " " + std::to_string(_statusCode) + " " + _reasonPhrase + CRLF;
 
-    for(auto it = _httpHeaders.begin(); it!=_httpHeaders.end(); it++)
+    for(auto it = _httpHeaders.begin(); it != _httpHeaders.end(); it++)
     {
         _httpData += it->first + ": " + it->second + CRLF;
     }

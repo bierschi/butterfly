@@ -110,7 +110,6 @@ public:
     /**
      * Abstract method parse for subclasses
      *
-     * @return
      */
     virtual void parseIncoming() = 0;
 

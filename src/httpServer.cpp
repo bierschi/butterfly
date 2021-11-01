@@ -17,9 +17,14 @@ HTTPServer::~HTTPServer()
     _TCPSocket->disconnect();
 }
 
+void HTTPServer::registerMasterPKeyCB(std::function<void(std::string)> cb)
+{
+    _masterPKeyCB = cb;
+}
+
 void HTTPServer::run()
 {
-    LOG_INFO("Run HTTPServer on port " << _port);
+    LOG_INFO("Running HTTPServer on port " << _port);
     _running = true;
 
     while(_running){
@@ -53,17 +58,14 @@ bool HTTPServer::handleRequest()
 {
 
     LOG_TRACE("Handle new HTTP Request!");
-    _httpRequest = std::unique_ptr<HTTPRequest>(new HTTPRequest());
+    _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
     // parse incoming data from TCP Socket
     if ( recvRequest() )
     {
-        // process the http request
+        // process the HTTP request
         processRequest();
-
-        // prepare the actual HTTP Response message
-        prepareResponse();
 
         // send the HTTP Response via the TCP Socket
         return sendResponse();
@@ -80,7 +82,7 @@ bool HTTPServer::recvRequest()
 
     std::string data = _newTCPSocket->recvAll(1024);
 
-    if ( !data.empty())
+    if ( !data.empty() )
     {
         _httpRequest->addHTTPData(data);
         return true;
@@ -98,13 +100,92 @@ void HTTPServer::processRequest()
 
     _httpRequest->parseIncoming();
 
-    //_httpRequest->print();
+    Method  m = _httpRequest->getMethod();
+    std::string url = _httpRequest->getURL();
+
+    if ( m == Method::GET )
+    {
+        if ( url == "/" )
+        {
+            LOG_TRACE("Prepare Browser Response");
+            browserRoute();
+        } else
+        {
+            errorResponse(404);
+        }
+
+    } else if ( m == Method::POST )
+    {
+
+        if ( url == "/masterkey" )
+        {
+            LOG_TRACE("Extracting provided masterkey from HTTP Request");
+
+            if ( masterKeyRoute() )
+            {
+                successResponse(200);
+            } else
+            {
+                errorResponse(400);
+            }
+
+        } else
+        {
+            errorResponse(404);
+        }
+
+    } else
+    {
+        LOG_ERROR("Method not supported from HTTP Server!");
+        errorResponse(500);
+    }
+
+    LOG_TRACE("METHOD: " << m << " AND URL: " << url);
+    _httpRequest->print();
 }
 
-void HTTPServer::prepareResponse()
+bool HTTPServer::sendResponse()
 {
 
-    _httpResponse->setProtocol(HTTP1_1);
+    return _newTCPSocket->send(_httpResponse->getHTTPData());
+}
+
+bool HTTPServer::masterKeyRoute()
+{
+    std::string body = _httpRequest->getBody();
+
+    // check if body has the key as param
+    if ( body.substr(0, body.find('=')) == "key" )
+    {
+        // get the key as value parameter
+        std::string key = body.substr( body.find('=') + 1, body.length() - body.find('='));
+        if ( !key.empty() )
+        {
+            // If we received a masterkey, invoke the masterPKeyCB callback to start the decrypting procedure
+            if ( _masterPKeyCB)
+            {
+                _masterPKeyCB(key);
+            } else
+            {
+                LOG_ERROR("No MasterPrivateKey Callback registered!");
+            }
+            return true;
+        } else
+        {
+            return false;
+        }
+
+    } else
+    {
+        return false;
+    }
+
+}
+
+void HTTPServer::browserRoute()
+{
+
+    _httpResponse->setProtocol(Protocol::HTTP1_1);
     _httpResponse->setStatusCode(302);
     _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
     _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
@@ -115,10 +196,26 @@ void HTTPServer::prepareResponse()
 
 }
 
-bool HTTPServer::sendResponse()
+void HTTPServer::successResponse(size_t statuscode)
 {
 
-    return _newTCPSocket->send(_httpResponse->getHTTPData());
+    _httpResponse->setProtocol(Protocol::HTTP1_1);
+    _httpResponse->setStatusCode(statuscode);
+    _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
+    _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
+
+    _httpResponse->prepareOutgoing();
+}
+
+void HTTPServer::errorResponse(size_t statuscode)
+{
+
+    _httpResponse->setProtocol(Protocol::HTTP1_1);
+    _httpResponse->setStatusCode(statuscode);
+    _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
+    _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
+
+    _httpResponse->prepareOutgoing();
 }
 
 } // namespace butterfly

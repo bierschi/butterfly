@@ -12,6 +12,9 @@
 namespace butterfly
 {
 
+/**
+ * Class HTTPServer to support incoming HTTP Requests and outgoing HTTP Responses
+ */
 class HTTPServer
 {
 
@@ -21,12 +24,59 @@ private:
     std::shared_ptr<TCPSocket> _TCPSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
+    std::function<void(std::string)> _masterPKeyCB;
 
+    /**
+     * Handles incoming requests to the http server
+     *
+     * @return True if the request could be handled, else False
+     */
     bool handleRequest();
+
+    /**
+     * Receive the actual request from the TCP Socket
+     *
+     * @return True if data is available on the TCP Socket, else False
+     */
     bool recvRequest();
+
+    /**
+     * Processes the incoming HTTP requests
+     */
     void processRequest();
-    void prepareResponse();
+
+    /**
+     * Sends the HTTP Response to the client
+     *
+     * @return True if sending was successful, else False
+     */
     bool sendResponse();
+
+    /**
+     * Prepares the HTTP response for the browser route
+     */
+    void browserRoute();
+
+    /**
+     * Prepares the HTTP response for the master key route
+     *
+     * @return True if the masterkey was received, else False
+     */
+    bool masterKeyRoute();
+
+    /**
+     * Returns the success response to the client
+     *
+     * @param statuscode
+     */
+    void successResponse(size_t statuscode);
+
+    /**
+     * Returns the error response to the client
+     *
+     * @param statuscode
+     */
+    void errorResponse(size_t statuscode);
 
 public:
 
@@ -47,15 +97,21 @@ public:
     ~HTTPServer();
 
     /**
-     *
+     * Run method for the HTTP Server
      */
     void run();
 
     /**
-     *
+     * Stop method for the HTTP Server
      */
     void stop();
 
+    /**
+     * Registers the master pkey callback
+     *
+     * @param cb: callback to invoke as soon as the master key was received
+     */
+    void registerMasterPKeyCB(std::function<void(std::string)> cb);
 };
 
 } // namespace butterfly

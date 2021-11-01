@@ -47,13 +47,31 @@ void HTTPRequest::parseIncoming()
 
     if( httpMethod == "GET" )
     {
-        _httpMethod = GET;
-    } else if( httpMethod == "PUT" )
+        _httpMethod = Method::GET;
+
+    } else if ( httpMethod == "HEAD" )
     {
-        _httpMethod = PUT;
+        _httpMethod = Method::HEAD;
+
+    } else if ( httpMethod == "POST" )
+    {
+        _httpMethod = Method::POST;
+
+    } else if ( httpMethod == "PUT" )
+    {
+        _httpMethod = Method::PUT;
+
+    } else if ( httpMethod == "DELETE" )
+    {
+        _httpMethod = Method::DELETE;
+
+    } else if ( httpMethod == "CONNECT" )
+    {
+        _httpMethod = Method::CONNECT;
+
     } else
     {
-        _httpMethod = NOT_IMPLEMENTED;
+        _httpMethod = Method::NOT_IMPLEMENTED;
     }
 
     // URL
@@ -66,15 +84,17 @@ void HTTPRequest::parseIncoming()
     httpProtocol = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
     parseCursorOld = parseCursorNew+1;
 
-    if( httpProtocol == "HTTP/1.0" )
+    if ( httpProtocol == "HTTP/1.0" )
     {
-        _protocol = HTTP1_0;
-    } else if( httpProtocol == "HTTP/1.1" )
+        _protocol = Protocol::HTTP1_0;
+
+    } else if ( httpProtocol == "HTTP/1.1" )
     {
-        _protocol = HTTP1_1;
+        _protocol = Protocol::HTTP1_1;
+
     } else
     {
-        _protocol = HTTP_UNSUPPORTED;
+        _protocol = Protocol::HTTP_UNSUPPORTED;
     }
 
     // Skip the CRLF
@@ -118,11 +138,23 @@ void HTTPRequest::prepareOutgoing()
 
     switch(_httpMethod)
     {
-        case GET:
+        case Method::GET:
             httpMethod = "GET";
             break;
-        case PUT:
+        case Method::HEAD:
+            httpMethod = "GET";
+            break;
+        case Method::POST:
+            httpMethod = "POST";
+            break;
+        case Method::PUT:
             httpMethod = "PUT";
+            break;
+        case Method::DELETE:
+            httpMethod = "DELETE";
+            break;
+        case Method::CONNECT:
+            httpMethod = "CONNECT";
             break;
         default:
             httpMethod = "GET";
@@ -144,7 +176,7 @@ void HTTPRequest::prepareOutgoing()
 
     _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
 
-    for(auto it = _httpHeaders.begin(); it!=_httpHeaders.end(); it++)
+    for(auto it = _httpHeaders.begin(); it != _httpHeaders.end(); it++)
     {
         _httpData += it->first + ": " + it->second + CRLF;
     }
