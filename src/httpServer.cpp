@@ -140,8 +140,7 @@ void HTTPServer::processRequest()
         errorResponse(500);
     }
 
-    LOG_TRACE("METHOD: " << m << " AND URL: " << url);
-    _httpRequest->print();
+    //_httpRequest->print();
 }
 
 bool HTTPServer::sendResponse()
