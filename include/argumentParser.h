@@ -35,7 +35,7 @@ public:
     {
         std::string _dir, _encrypt, _decrypt, _serverpKey, _config;
         bool _protected;
-        const std::string _version;
+        std::string _version;
 
         Arguments() : _dir(""), _encrypt(""), _decrypt(""), _serverpKey(""), _config(""), _protected(false), _version(PROJECT_VER)
         {}

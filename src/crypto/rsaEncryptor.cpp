@@ -99,6 +99,7 @@ int RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
     if (encLen == -1)
     {
+        LOG_ERROR("Error at encrypting the message with RSA!")
         throw RSAEncryptionException("Error at encrypting the message with RSA!");
     }
 
@@ -124,6 +125,7 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RS
 
     if (encLen == -1)
     {
+        LOG_ERROR("Error at encrypting the message with RSA!")
         throw RSAEncryptionException("Error at encrypting the message with RSA!");
     }
 

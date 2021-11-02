@@ -3,8 +3,8 @@
 #define BUTTERFLY_AESKEYDATABASE_H
 
 #include "sqlDatabase.h"
-#include "exceptions.h"
-#include "utils.h"
+#include "bflyExceptions.h"
+#include "bflyUtils.h"
 
 namespace butterfly
 {

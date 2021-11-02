@@ -8,7 +8,7 @@
 #include <openssl/err.h>
 
 #include "logger.h"
-#include "utils.h"
+#include "bflyUtils.h"
 
 #define PADDING RSA_PKCS1_OAEP_PADDING
 

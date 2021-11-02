@@ -35,7 +35,7 @@ private:
     static std::string getOpenSSLError();
 
 protected:
-    unsigned char *_aesKey, *_aesIv;
+    static unsigned char *aesKey, *aesIv;
 
 public:
 
@@ -48,6 +48,13 @@ public:
      * Destructor CryptoAES
      */
     ~CryptoAES();
+
+    /**
+     * Check if the init of the AES Key and IV were already done
+     *
+     * @return True if already initialized
+     */
+    static bool initDone();
 
     /**
      * Generates the AES Key and the AES IV
