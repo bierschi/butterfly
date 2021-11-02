@@ -116,11 +116,18 @@ std::shared_ptr<Socket> Socket::accept()
     return newSocket;
 }
 
-bool Socket::connect(const std::string& host, int port)
+bool Socket::connect(const std::string &host, int port)
 {
+    std::string ip;
+
+    if ( hostnameToIP(host, ip) == -1)
+    {
+        return false;
+    }
+
     _addr.sin_port   = htons(static_cast<uint16_t>(port));
 
-    inet_pton(_addr.sin_family, host.c_str(), &_addr.sin_addr);
+    inet_pton(_addr.sin_family, ip.c_str(), &_addr.sin_addr);
 
     if ( ::connect(_fd, (sockaddr*)&_addr, sizeof(_addr)) == -1 )
     {
@@ -138,6 +145,31 @@ bool Socket::disconnect() const
     }
 
     return true;
+}
+
+int Socket::hostnameToIP(const std::string &hostname, std::string &ip)
+{
+    struct hostent *he;
+    struct in_addr **addr_list;
+    char ipBuf[20];
+
+    if ( (he = gethostbyname( hostname.c_str() ) ) == nullptr)
+    {
+        herror("Error at gethostbyname");
+        return -1;
+    }
+
+    addr_list = (struct in_addr **) he->h_addr_list;
+
+    for(int i = 0; addr_list[i] != nullptr; i++)
+    {
+        //Return the first one;
+        strcpy(ipBuf , inet_ntoa(*addr_list[i]) );
+        ip = ipBuf;
+        return 0;
+    }
+
+    return -1;
 }
 
 } // namespace butterfly

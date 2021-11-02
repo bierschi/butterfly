@@ -130,7 +130,7 @@ public:
      * @param port: Port to connect to
      * @return True if the connection was successful
      */
-    bool connect(const std::string& host, int port);
+    bool connect(const std::string &host, int port);
 
     /**
      * Disconnect cleanly from a socket
@@ -139,6 +139,13 @@ public:
      */
     bool disconnect() const;
 
+    /**
+     *
+     * @param hostname
+     * @param ip
+     * @return
+     */
+    static int hostnameToIP(const std::string &hostname, std::string &ip);
 };
 
 } // namespace butterfly
