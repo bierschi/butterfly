@@ -66,6 +66,14 @@ class SQLDatabaseException
 
 }
 
+class SocketException
+{
+
+    +SocketException(const std::string &error)
+
+}
+
+
 std::exception <|-- ButterflyException
 ButterflyException <|-- EncryptorException
 ButterflyException <|-- DecryptorException
@@ -76,6 +84,7 @@ EncryptorException <|-- AESEncryptionException
 DecryptorException <|-- AESDecryptionException
 
 ButterflyException <|-- SQLDatabaseException
+ButterflyException <|-- SocketException
 
 }
 @enduml

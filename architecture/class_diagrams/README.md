@@ -2,6 +2,10 @@
 
 ![](argumentParser.svg)
 
+## HTTPServer
+
+![](httpServer.svg)
+
 ## ButterflyException
 
 ![](bflyExceptions.svg)
