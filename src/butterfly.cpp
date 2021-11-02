@@ -16,7 +16,7 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
 
 void Butterfly::run()
 {
-    
+
     // Start Encryption + Decryption
     if ( !_args._dir.empty() )
     {

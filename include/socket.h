@@ -140,10 +140,11 @@ public:
     bool disconnect() const;
 
     /**
+     * Converts given hostname to IP address
      *
-     * @param hostname
-     * @param ip
-     * @return
+     * @param hostname: hostname as std::string
+     * @param ip: std::string reference for the IP
+     * @return Returns 0 on success and -1 on error
      */
     static int hostnameToIP(const std::string &hostname, std::string &ip);
 };
