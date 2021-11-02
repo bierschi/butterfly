@@ -107,3 +107,4 @@ venv.bak/
 .idea/
 cmake-build-debug/
 bin/
+notes/http_server.txt

@@ -1,0 +1,144 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+package butterfly #DDDDDD
+{
+
+class Socket
+{
+    - _socketDomain, _socketType, _socketProtocol: int
+    # _fd: int
+    # _addr: sockaddr_in
+
+    + Socket(int domain, int type, int protocol)
+    + Socket(int fileDescriptor, int domain, int type, int protocol)
+
+    + getFileDescriptor() const: int
+    + shutdown() const: bool
+    + setOptions() const: bool
+    + setBlocking() const: bool
+    + setNonBlocking() const: bool
+
+    + bind(unsigned int port): bool
+    + listen() const: bool
+    + accept(): std::shared_ptr<Socket>
+    + connect(const std::string& host, const int port): bool
+    + disconnect() const: bool
+}
+
+class TCPSocket
+{
+
+    + TCPSocket()
+    + TCPSocket(int fileDescriptor)
+
+    + accept(): std::shared_ptr<TCPSocket>
+    + send(const std::string& s) const: bool
+    + recv(char *buf,int len) const: int
+    + recvAll(int chunkSize) const: std::string
+}
+
+
+class HTTPServer
+{
+    - _port: unsigned int port
+    - _running: bool
+    - _TCPSocket, _newTCPSocket: std::shared_ptr<TCPSocket>
+    - _httpRequest: std::unique_ptr<HTTPRequest>
+
+    + HTTPServer(unsigned int port)
+
+    - handleRequest():
+    - recvRequest():
+    - processRequest():
+    - preprareResponse():
+    - sendResponse():
+
+    +run(): void
+    +stop(): void
+}
+
+class HTTPClient <<NOT IMPLEMENTED>>
+{
+
+    + HTTPClient()
+}
+
+class HTTPMSGSchema
+{
+    - _data, _body, _messageType: std::string
+    - _httpMethod: Method
+    - _protocol: Protocol
+    - _httpHeaders: std::vector< std::pair<std::string, std::string> >
+
+    + HTTPMSGSchema(const std::string &messageType)
+
+    + print() const: void
+    + addHTTPData(const std::string &data): void
+    + getHTTPData() const: std::string
+    + setProtocol(Protocol protocol): void
+    + getProtocol() const: Protocol
+    + addBody(const std::string &body)
+    + getBody() const: std::string
+    + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
+    + getHTTPHeader(const std::string &headerName) const: std::string
+    + getHTTPHeaderSize() const: size_t
+
+    + parseIncoming() = 0: void
+    + prepareOutgoing() = 0: void
+}
+
+class HTTPRequest
+{
+    - _url, _userAgent: std::string
+
+    + HTTPRequest()
+
+    + setMethod(Method &method): void
+    + getMethod() const: Method
+    + setURL(const std::string &url): void
+    + getURL() const: std::string
+    + setUserAgent(const std::string &userAgent): void
+    + getUserAgent() const: std::string
+    + getRequestSize() const: size_t
+
+    + parseIncoming(): void
+    + prepareOutgoing(): void
+}
+
+class HTTPResponse
+{
+    - _reasonPhrase: std::string
+    - _statusCode: size_t
+
+    + HTTPResponse()
+
+    + setStatusCode(size_t statusCode): void
+    + getStatusCode() const: size_t
+    + setReasonPhrase(size_t statusCode): void
+    + getReasonPhrase() const: std::string
+    + getResponseSize() const: size_t
+
+    + parseIncoming(): void
+    + prepareOutgoing(): void
+}
+
+together {
+    class HTTPServer
+    class HTTPClient
+}
+
+Socket            <|-- TCPSocket
+TCPSocket "1..*"  o--  "1" HTTPServer : <<uses>>
+TCPSocket "1..*"  o--  "1" HTTPClient : <<uses>>
+
+HTTPServer "1"    --* "1..*" HTTPRequest: <<processes>>
+HTTPServer "1"    --* "1..*" HTTPResponse: <<sends>>
+
+HTTPClient "1"    --* "1..*" HTTPRequest: <<sends>>
+HTTPClient "1"    --* "1..*" HTTPResponse: <<processes>>
+
+HTTPMSGSchema <|-- HTTPRequest
+HTTPMSGSchema <|-- HTTPResponse
+
+}
+@enduml
