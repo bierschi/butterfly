@@ -43,7 +43,7 @@ void HTTPRequest::parseIncoming()
     // HTTP Method
     parseCursorNew = _httpData.find_first_of(" ", parseCursorOld);
     httpMethod = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
-    parseCursorOld = parseCursorNew+1;
+    parseCursorOld = parseCursorNew + 1;
 
     if( httpMethod == "GET" )
     {
@@ -77,12 +77,12 @@ void HTTPRequest::parseIncoming()
     // URL
     parseCursorNew = _httpData.find_first_of(" ", parseCursorOld);
     _url = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
-    parseCursorOld = parseCursorNew+1;
+    parseCursorOld = parseCursorNew + 1;
 
     //HTTP Protocol
     parseCursorNew = _httpData.find_first_of(CRLF, parseCursorOld);
     httpProtocol = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
-    parseCursorOld = parseCursorNew+1;
+    parseCursorOld = parseCursorNew + 1;
 
     if ( httpProtocol == "HTTP/1.0" )
     {
@@ -104,14 +104,14 @@ void HTTPRequest::parseIncoming()
     while(1){
         parseCursorNew = _httpData.find_first_of(CRLF, parseCursorOld);
         requestHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
-        parseCursorOld = parseCursorNew+1;
+        parseCursorOld = parseCursorNew + 1;
 
         headerParseCursorOld = headerParseCursorNew = 0;
         // Further parse the request header
         // Header Name
         headerParseCursorNew = requestHeader.find_first_of(":", headerParseCursorOld);
         requestHeaderName = requestHeader.substr(headerParseCursorOld, headerParseCursorNew - headerParseCursorOld);
-        headerParseCursorOld = headerParseCursorNew+2;
+        headerParseCursorOld = headerParseCursorNew + 2;
 
         // Header Content
         headerParseCursorNew = requestHeader.find_first_of(CRLF, headerParseCursorOld);
@@ -124,11 +124,11 @@ void HTTPRequest::parseIncoming()
         parseCursorOld++;
 
         // Is there another CRLF?
-        if(_httpData.substr(parseCursorOld, 2) == CRLF)
+        if (_httpData.substr(parseCursorOld, 2) == CRLF)
             break;
     }
 
-    parseCursorOld+=2;
+    parseCursorOld += 2;
     _body = _httpData.substr(parseCursorOld);
 }
 

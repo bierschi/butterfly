@@ -114,7 +114,7 @@ void HTTPResponse::parseIncoming()
         // Header Name
         headerParseCursorNew = responseHeader.find_first_of(":", headerParseCursorOld);
         responseHeaderName = responseHeader.substr(headerParseCursorOld, headerParseCursorNew - headerParseCursorOld);
-        headerParseCursorOld = headerParseCursorNew+2;
+        headerParseCursorOld = headerParseCursorNew + 2;
 
         // Header Content
         headerParseCursorNew = responseHeader.find_first_of(CRLF, headerParseCursorOld);
@@ -127,11 +127,11 @@ void HTTPResponse::parseIncoming()
         parseCursorOld++;
 
         // Is there another CRLF?
-        if(_httpData.substr(parseCursorOld, 2) == CRLF)
+        if (_httpData.substr(parseCursorOld, 2) == CRLF)
             break;
     }
 
-    parseCursorOld+=2;
+    parseCursorOld += 2;
     _body = _httpData.substr(parseCursorOld);
 
 }

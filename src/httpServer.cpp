@@ -27,10 +27,12 @@ void HTTPServer::run()
     LOG_INFO("Running HTTPServer on port " << _port);
     _running = true;
 
-    while(_running){
+    while(_running)
+    {
 
         // blocking accept call
         _newTCPSocket = _TCPSocket->accept();
+
 
         if(fork() == 0)
         {
@@ -151,31 +153,27 @@ bool HTTPServer::sendResponse()
 
 bool HTTPServer::masterKeyRoute()
 {
-    std::string body = _httpRequest->getBody();
+    std::string key = _httpRequest->getBody();
 
-    // check if body has the key as param
-    if ( body.substr(0, body.find('=')) == "key" )
+    // get the key as value parameter
+    //std::string key = body.substr( body.find('=') + 1, body.length() - body.find('='));
+
+    if ( !key.empty() && ( key.find("-----BEGIN RSA PRIVATE KEY-----") != std::string::npos) )
     {
-        // get the key as value parameter
-        std::string key = body.substr( body.find('=') + 1, body.length() - body.find('='));
-        if ( !key.empty() )
+        // If we received a masterkey, invoke the masterPKeyCB callback to start the decrypting procedure
+        if ( _masterPKeyCB)
         {
-            // If we received a masterkey, invoke the masterPKeyCB callback to start the decrypting procedure
-            if ( _masterPKeyCB)
-            {
-                _masterPKeyCB(key);
-            } else
-            {
-                LOG_ERROR("No MasterPrivateKey Callback registered!");
-            }
-            return true;
+
+            _masterPKeyCB(key);
+
         } else
         {
-            return false;
+            LOG_ERROR("No MasterPrivateKey Callback registered!");
         }
-
+        return true;
     } else
     {
+        LOG_ERROR("Invalid Private Key provided on /masterkey Route!")
         return false;
     }
 

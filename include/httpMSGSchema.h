@@ -28,12 +28,12 @@ protected:
 public:
 
     /**
-     * Constructor HTTPSchema
+     * Constructor HTTPMSGSchema
      */
     explicit HTTPMSGSchema(const std::string &messageType);
 
     /**
-     * Virtual Destructor HTTPSchema
+     * Virtual Destructor HTTPMSGSchema
      */
     virtual ~HTTPMSGSchema() = default;
 
@@ -108,13 +108,13 @@ public:
     inline size_t getHTTPHeaderSize() const { return _httpHeaders.size(); }
 
     /**
-     * Abstract method parse for subclasses
+     * Abstract method parseIncoming for subclasses
      *
      */
     virtual void parseIncoming() = 0;
 
     /**
-     * Abstract method prepare for subclasses
+     * Abstract method prepareOutgoing for subclasses
      */
     virtual void prepareOutgoing() = 0;
 };

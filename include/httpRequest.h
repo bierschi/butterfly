@@ -25,6 +25,8 @@ public:
      *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new HTTPRequest());
      *      _httpRequest->addHTTPData(data);
      *      _httpRequest->parseIncoming();
+     *      _httpRequest->getMethod();
+     *      _httpRequest->getURL();
      *
      */
     HTTPRequest();

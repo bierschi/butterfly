@@ -17,7 +17,7 @@ void HTTPMSGSchema::print() const
 void HTTPMSGSchema::addHTTPData(const std::string &httpData)
 {
     _httpData.append(httpData);
-};
+}
 
 void HTTPMSGSchema::setProtocol(Protocol protocol)
 {

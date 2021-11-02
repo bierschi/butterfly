@@ -97,6 +97,13 @@ public:
     ~HTTPServer();
 
     /**
+     * Registers the master pkey callback
+     *
+     * @param cb: callback to invoke as soon as the master key is received
+     */
+    void registerMasterPKeyCB(std::function<void(std::string)> cb);
+
+    /**
      * Run method for the HTTP Server
      */
     void run();
@@ -106,12 +113,6 @@ public:
      */
     void stop();
 
-    /**
-     * Registers the master pkey callback
-     *
-     * @param cb: callback to invoke as soon as the master key was received
-     */
-    void registerMasterPKeyCB(std::function<void(std::string)> cb);
 };
 
 } // namespace butterfly
