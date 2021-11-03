@@ -16,9 +16,6 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
 
 void Butterfly::run()
 {
-    std::unique_ptr<butterfly::ConnManager> conn(new ConnManager());
-    conn->start();
-
 
     // Start Encryption + Decryption
     if ( !_args._dir.empty() )
