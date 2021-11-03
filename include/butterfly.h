@@ -8,7 +8,7 @@
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
 #include "httpServer.h"
-
+#include "connManager.h"
 namespace butterfly
 {
 
