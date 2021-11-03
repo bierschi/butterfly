@@ -25,7 +25,7 @@ void ConnManager::run()
         {
             if (_connStateChangeCB)
             {
-                _connStateChangeCB(true);
+                _connStateChangeCB(newState);
             }
         }
         oldState = newState;
