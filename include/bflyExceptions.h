@@ -23,6 +23,11 @@ public:
     {
         return _error.c_str();
     }
+
+    virtual std::string getType() const
+    {
+        return "ButterflyException";
+    }
 };
 
 /**
@@ -34,6 +39,10 @@ class EncryptorException : public ButterflyException
 public:
     explicit EncryptorException(const std::string &error) : ButterflyException(error) {}
 
+    std::string getType() const override
+    {
+        return "EncryptorException";
+    }
 };
 
 /**
@@ -45,6 +54,10 @@ class DecryptorException : public ButterflyException
 public:
     explicit DecryptorException(const std::string &error) : ButterflyException(error) {}
 
+    std::string getType() const override
+    {
+        return "DecryptorException";
+    }
 };
 
 /**
@@ -56,6 +69,10 @@ class RSAEncryptionException : public EncryptorException
 public:
     explicit RSAEncryptionException(const std::string &error) : EncryptorException(error) {}
 
+    std::string getType() const override
+    {
+        return "RSAEncryptionException";
+    }
 };
 
 /**
@@ -67,6 +84,10 @@ class RSADecryptionException : public DecryptorException
 public:
     explicit RSADecryptionException(const std::string &error) : DecryptorException(error) {}
 
+    std::string getType() const override
+    {
+        return "RSADecryptionException";
+    }
 };
 
 /**
@@ -78,6 +99,10 @@ class AESEncryptionException : public EncryptorException
 public:
     explicit AESEncryptionException(const std::string &error) : EncryptorException(error) {}
 
+    std::string getType() const override
+    {
+        return "AESEncryptionException";
+    }
 };
 
 /**
@@ -89,6 +114,10 @@ class AESDecryptionException : public DecryptorException
 public:
     explicit AESDecryptionException(const std::string &error) : DecryptorException(error) {}
 
+    std::string getType() const override
+    {
+        return "AESDecryptionException";
+    }
 };
 
 /**
@@ -99,6 +128,11 @@ class SQLDatabaseException : public ButterflyException
 
 public:
     explicit SQLDatabaseException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "SQLDatabaseException";
+    }
 };
 
 /**
@@ -109,6 +143,11 @@ class SocketException : public ButterflyException
 
 public:
     explicit SocketException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "SocketException";
+    }
 };
 
 } // namespace butterfly
