@@ -23,7 +23,7 @@ class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _aesKeyDBPath;
+    std::string _decryptedCPrivateRSA, _aesKeyDBPath, _dirPath;
     std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA;
@@ -61,12 +61,19 @@ public:
     ~Decryptor() = default;
 
     /**
+     * Sets the directory path for the decryption procedure
+     *
+     * @param dirPath: path to the directory
+     */
+    void setDirPath(const std::string &dirPath);
+
+    /**
      * Invokes the directory to start the decryption process
      *
      * @param dirPath: path to the directory
      * @param pkeyFromServer: SPrivateRSA.pem from server (corresponds to the embedded SPublicKey.pem)
      */
-    void invokeDir(const std::string &dirPath, const std::string &pkeyFromServer);
+    void invokeDir(const std::string &pkeyFromServer);
 
     /**
      * Decrypt the CPrivateRSA.bin file
@@ -106,7 +113,6 @@ public:
      */
     void joinThreads();
 };
-
 
 } // namespace hybrid
 

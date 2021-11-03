@@ -101,6 +101,15 @@ public:
     explicit SQLDatabaseException(const std::string &error) : ButterflyException(error) {}
 };
 
+/**
+ * Class SocketException
+ */
+class SocketException : public ButterflyException
+{
+
+public:
+    explicit SocketException(const std::string &error) : ButterflyException(error) {}
+};
 
 } // namespace butterfly
 

@@ -8,42 +8,42 @@ package aes #DDDDDD
 {
     class CryptoAES
     {
-        -_aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
-        -_aesKeyLength, _aesIvLength: int
+        - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
+        - _aesKeyLength, _aesIvLength: int
 
-        #_aesKey, _aesIv: unsigned char*
+        # _aesKey, _aesIv: unsigned char*
 
-        +CryptoAES()
+        + CryptoAES()
 
-        +generateAESKey(): bool
-        +generateAESKeyWithSalt(): bool
+        + generateAESKey(): bool
+        + generateAESKeyWithSalt(): bool
 
-        +setAESKey(std::string &aesKey): void
-        +setAESIv(std::string &aesIv): void
-        +getAESKey() const: std::string
-        +getAESIv() const: std::string
-        +getAESKeyPair() const: std::string
-        +getAESKeyLength() const: int
-        +getAESIVLength() const: int
+        + setAESKey(std::string &aesKey): void
+        + setAESIv(std::string &aesIv): void
+        + getAESKey() const: std::string
+        + getAESIv() const: std::string
+        + getAESKeyPair() const: std::string
+        + getAESKeyLength() const: int
+        + getAESIVLength() const: int
 
-        +encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
-        +decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
+        + encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
+        + decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
     }
 
 
     class AESEncryptor
     {
-        +AESEncryptor()
+        + AESEncryptor()
 
-        +encryptFile(const std::string &filename): void
+        + encryptFile(const std::string &filename): void
 
     }
 
     class AESDecryptor
     {
-        +AESDecryptor()
+        + AESDecryptor()
 
-        +decryptFile(const std::string &filename): void
+        + decryptFile(const std::string &filename): void
     }
 
 }
@@ -52,101 +52,110 @@ package rsa #DDDDDD
 {
     class CryptoRSA
     {
-        -_pkey: EVP_PKEY*
-        -_keySize, _paddingSize: int
-        -_rsaPrivateKeyStr, _privateKeyStr, _publicKeyStr: char*
-        -_encryptedKey, _iv: unsigned char*
+        - _pkey: EVP_PKEY*
+        - _keySize, _paddingSize: int
+        - _rsaPrivateKeyStr, _privateKeyStr, _publicKeyStr: char*
+        - _encryptedKey, _iv: unsigned char*
         - rsaEncryptContext, rsaDecryptContext: EVP_CIPHER_CTX*
 
-        -getOpenSSLError(): string
-        -generateRSAKey(): bool
-        -loadKeyFromFile(const std::string &filepath): void
-        -loadKeyFromStr(const std::string &str): void
-        -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+        - getOpenSSLError(): string
+        - generateRSAKey(): bool
+        - loadKeyFromFile(const std::string &filepath): void
+        - loadKeyFromStr(const std::string &str): void
+        - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
 
-        #getPaddingSize(): int
+        # getPaddingSize(): int
 
-        +CryptoRSA(int keySize)
-        +CryptoRSA(const std::string &key)
+        + CryptoRSA(int keySize)
+        + CryptoRSA(const std::string &key)
 
-        +getRSAIV() const: unsigned char*
-        +getRSAEncryptedKey() const: unsigned char*
-        +getEvpPkey(): EVP_PKEY*
-        +getEvpPkeySize(EVP_PKEY *key): int
+        + getRSAIV() const: unsigned char*
+        + getRSAEncryptedKey() const: unsigned char*
+        + getEvpPkey(): EVP_PKEY*
+        + getEvpPkeySize(EVP_PKEY *key): int
 
-        +getRSAPrivateKeyStr(): char*
-        +getPrivateKeyStr(): char*
-        +getPublicKeyStr(): char*
+        + getRSAPrivateKeyStr(): char*
+        + getPrivateKeyStr(): char*
+        + getPublicKeyStr(): char*
 
-        +encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): int
-        +decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): int
-        +encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int
-        +decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
+        + encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): int
+        + decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): int
+        + encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int
+        + decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
     }
 
     class RSAEncryptor
     {
-        -__encryptedMessage: std::string
+        - _encryptedMessage: std::string
 
-        -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-        -writeRSAFileToSystem(const RSAKEY_TYPE &type): bool
+        - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+        - writeRSAFileToSystem(const RSAKEY_TYPE &type): bool
 
-        +RSAEncryptor(int keySize)
-        +RSAEncryptor(const std::string &key)
+        + RSAEncryptor(int keySize)
+        + RSAEncryptor(const std::string &key)
 
-        +getEncryptedMessage() const: std::string
-        +writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
+        + getEncryptedMessage() const: std::string
+        + writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
 
-        +encrypt(EVP_PKEY *pkey, const std::string &decMSG): int
-        +encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RSAKEY_TYPE &type): int
+        + encrypt(EVP_PKEY *pkey, const std::string &decMSG): int
+        + encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RSAKEY_TYPE &type): int
     }
 
     class RSADecryptor
     {
-        -__decryptedMessage: std::string
-        -validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-        -readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
+        - _decryptedMessage: std::string
+        - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+        - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
 
-        +RSADecryptor()
-        +RSADecryptor(const std::string &key)
+        + RSADecryptor()
+        + RSADecryptor(const std::string &key)
 
-        +getDecryptedMessage(): std::string
-        +readEncMSGFromFile(const std::string &filepath): std::string
+        + getDecryptedMessage(): std::string
+        + readEncMSGFromFile(const std::string &filepath): std::string
 
-        +decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
-        +decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
+        + decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
+        + decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
     }
 
 }
 
 package hybrid #DDDDDD
 {
-    class Encryptor {
+    class Encryptor
+    {
         - _keySize: int
-        - _rsaEncryptorCPrivateRSA, _rsaEncryptorAESKey: rsa::RSAEncryptor
-        -_aesEncryptor: aes::AESEncryptor
-        -_dirIterator: DirectoryIterator
+        - _rsaEncryptorCPrivateRSA, _rsaEncryptorAESKey: std::unique_ptr<rsa::RSAEncryptor>
+        - _aesEncryptor: std::unique_ptr<aes::AESEncryptor>
 
         - validateAESKeyLength(): void
+        - static saveUnencryptedAESKeyPair(const std::string &aesKeyPair): void
 
-        +Encryptor(int keySize = 2048)
+        + Encryptor(int keySize = 2048)
 
-        +invokeDir(const std::string &dirPath, bool protection): void
-        +encryptCPrivateRSA(): void
-        +encryptFileWithAES(const std::string &filepath): void
-        +encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename): void
+        + invokeDir(const std::string &dirPath, bool protection): void
+        + encryptCPrivateRSA(): void
+        + encryptFileWithAES(const std::string &filepath): void
+        + encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename): void
+        + spawnThread(const std::string &filepath): void
+        + joinThreads(): void
     }
 
-    class Decryptor {
-        -_rsaDecryptorCPrivateRSA: rsa::RSADecryptor
-        -_aesDecryptor: aes::AESDecryptor
+    class Decryptor
+    {
+        - _rsaDecryptorCPrivateRSA: std::unique_ptr<rsa::RSADecryptor>
+        - _aesDecryptor: std::unique_ptr<aes::AESDecryptor>
 
-        +Decryptor()
+        - static removeDecryptedFiles(): void
+        - static getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair): bool
 
-        +invokeDir(const std::string &dirPath, const std::string &pkeyFromServer): void
-        +decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile): void
-        +decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV): void
-        +decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV): void
+        + Decryptor()
+
+        + invokeDir(const std::string &dirPath, const std::string &pkeyFromServer): void
+        + decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile): void
+        + decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV): void
+        + decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV): void
+        + spawnThread(const std::string &filepath): void
+        + joinThreads(): void
     }
 }
 
@@ -173,12 +182,11 @@ CryptoRSA <|-- RSADecryptor
 CryptoAES <|-- AESEncryptor
 CryptoAES <|-- AESDecryptor
 
-RSAEncryptor *-- Encryptor
-AESEncryptor *-- Encryptor
+RSAEncryptor "1..*" o-- "1" Encryptor: <<uses>>
+AESEncryptor "1..*" o-- "1" Encryptor: <<uses>>
 
-RSADecryptor *-- Decryptor
-AESDecryptor *-- Decryptor
+RSADecryptor "1..*" o-- "1" Decryptor: <<uses>>
+AESDecryptor "1..*" o-- "1" Decryptor: <<uses>>
 
 }
-@enduml
 @enduml
