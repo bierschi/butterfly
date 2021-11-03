@@ -21,6 +21,11 @@ public:
 
     /**
      * Constructor DirectoryIterator
+     *
+     * Usage:
+     *      std::shared_ptr<butterfly::DirectoryIterator> _dirIterator = std::make_shared<butterfly::DirectoryIterator>();
+     *      _dirIterator->isDirectory();
+     *      _dirIterator->getAllFiles("/home/test/");
      */
     DirectoryIterator();
 
@@ -33,7 +38,7 @@ public:
      * Checks if given file path is a directory
      *
      * @param p: const reference boost::filesystem::path&
-     * @return boolean: true if path is a directory else false
+     * @return boolean: True if path is a directory, else False
      */
     static bool isDirectory(const boost::filesystem::path &p);
 
@@ -41,7 +46,7 @@ public:
      * Checks if given file path is a file
      *
      * @param p: const reference boost::filesystem::path&
-     * @return boolean: true if path is a file else false
+     * @return boolean: True if path is a file else False
      */
     static bool isFile(const boost::filesystem::path &p);
 

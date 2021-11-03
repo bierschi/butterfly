@@ -41,18 +41,23 @@ public:
 
     /**
      * Constructor CryptoAES
+     *
+     * Usage:
+     *      std::unique_ptr<butterfly::aes::CryptoAES> _cryptoAES(new butterfly::aes::CryptoAES());
+     *      _cryptoAES->generateAESKeyWithSalt();
+     *      _cryptoAES->getAESKey();
      */
     CryptoAES();
 
     /**
      * Destructor CryptoAES
      */
-    ~CryptoAES();
+    virtual ~CryptoAES();
 
     /**
      * Check if the init of the AES Key and IV were already done
      *
-     * @return True if already initialized
+     * @return True if already initialized, else False
      */
     static bool initDone();
 

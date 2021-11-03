@@ -59,10 +59,10 @@ public:
      *      _socket->listen();
      *      std::shared_ptr<butterfly::Socket> newSocket = _socket->accept();
      *
-     * @param fileDescriptor
-     * @param domain
-     * @param type
-     * @param protocol
+     * @param fileDescriptor: File Descriptor for the Socket
+     * @param domain: Address families like AF_INET
+     * @param type: Types of sockets like SOCK_STREAM or SOCK_DGRAM
+     * @param protocol: Protocol for socket
      */
     Socket(int fileDescriptor, int domain, int type, int protocol);
 
@@ -73,7 +73,8 @@ public:
 
     /**
      * Get the File Descriptor for the socket
-     * @return
+     *
+     * @return File Descriptor as int
      */
     int getFileDescriptor() const;
 
@@ -128,7 +129,7 @@ public:
      *
      * @param host: Host to connect to
      * @param port: Port to connect to
-     * @return True if the connection was successful
+     * @return True if the connection was successful, else False
      */
     bool connect(const std::string &host, int port);
 

@@ -193,22 +193,22 @@ void HTTPServer::browserRoute()
 
 }
 
-void HTTPServer::successResponse(size_t statuscode)
+void HTTPServer::successResponse(size_t statusCode)
 {
 
     _httpResponse->setProtocol(Protocol::HTTP1_1);
-    _httpResponse->setStatusCode(statuscode);
+    _httpResponse->setStatusCode(statusCode);
     _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
     _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
 
     _httpResponse->prepareOutgoing();
 }
 
-void HTTPServer::errorResponse(size_t statuscode)
+void HTTPServer::errorResponse(size_t statusCode)
 {
 
     _httpResponse->setProtocol(Protocol::HTTP1_1);
-    _httpResponse->setStatusCode(statuscode);
+    _httpResponse->setStatusCode(statusCode);
     _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
     _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
 
