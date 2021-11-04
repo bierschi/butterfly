@@ -1,5 +1,5 @@
 @startuml
-'https://plantuml.com/sequence-diagram
+
 package butterfly #AAAAAA
 {
 
@@ -63,7 +63,7 @@ class RSADecryptor
     - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
     - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
 
-    + RSADecryptor()
+    + RSADecryptor() = delete
     + RSADecryptor(const std::string &key)
 
     + getDecryptedMessage(): std::string

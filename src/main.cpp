@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     } catch ( butterfly::ButterflyException &e )
     {
-        std::cout << "Unhandled BFLY Exception: " << e.what() << std::endl;
+        std::cout << "Unhandled BFLY " << e.getType() << ": " << e.what() << std::endl;
     }
 
     return 0;

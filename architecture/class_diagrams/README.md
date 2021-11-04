@@ -6,6 +6,14 @@
 
 ![](httpServer.svg)
 
+## Sockets
+
+![](sockets.svg)
+
+## ConnManager
+
+![](connManager.svg)
+
 ## ButterflyException
 
 ![](bflyExceptions.svg)

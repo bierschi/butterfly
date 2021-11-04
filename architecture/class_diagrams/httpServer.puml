@@ -1,5 +1,5 @@
 @startuml
-'https://plantuml.com/sequence-diagram
+
 package butterfly #DDDDDD
 {
 
@@ -23,6 +23,7 @@ class Socket
     + accept(): std::shared_ptr<Socket>
     + connect(const std::string& host, const int port): bool
     + disconnect() const: bool
+    + hostnameToIP(const std::string &hostname, std::string &ip): int
 }
 
 class TCPSocket
@@ -44,17 +45,23 @@ class HTTPServer
     - _running: bool
     - _TCPSocket, _newTCPSocket: std::shared_ptr<TCPSocket>
     - _httpRequest: std::unique_ptr<HTTPRequest>
+    - _httpResponse: std::unique_ptr<HTTPResponse>
+    - _masterPKeyCB: std::function
 
     + HTTPServer(unsigned int port)
 
-    - handleRequest():
-    - recvRequest():
-    - processRequest():
-    - preprareResponse():
-    - sendResponse():
+    - handleRequest(): bool
+    - recvRequest(): bool
+    - processRequest(): void
+    - sendResponse(): bool
+    - browserRoute(): void
+    - masterKeyRoute(): bool
+    - successResponse(size_t statusCode): void
+    - errorResponse((size_t statusCode): void
 
-    +run(): void
-    +stop(): void
+    + registerMasterPKeyCB(std::function<void(std::string)> cb): void
+    + run(): void
+    + stop(): void
 }
 
 class HTTPClient <<NOT IMPLEMENTED>>

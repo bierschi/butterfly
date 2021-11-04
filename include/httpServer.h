@@ -67,16 +67,16 @@ private:
     /**
      * Returns the success response to the client
      *
-     * @param statuscode
+     * @param status code
      */
-    void successResponse(size_t statuscode);
+    void successResponse(size_t statusCode);
 
     /**
      * Returns the error response to the client
      *
-     * @param statuscode
+     * @param status code
      */
-    void errorResponse(size_t statuscode);
+    void errorResponse(size_t statusCode);
 
 public:
 

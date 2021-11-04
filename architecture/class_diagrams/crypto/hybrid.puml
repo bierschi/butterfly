@@ -1,5 +1,4 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
 package butterfly #AAAAAA
 {
@@ -11,10 +10,11 @@ package aes #DDDDDD
         - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
         - _aesKeyLength, _aesIvLength: int
 
-        # _aesKey, _aesIv: unsigned char*
+        # aesKey, aesIv: unsigned char*
 
         + CryptoAES()
 
+        + initDone(): bool
         + generateAESKey(): bool
         + generateAESKeyWithSalt(): bool
 
@@ -43,7 +43,7 @@ package aes #DDDDDD
     {
         + AESDecryptor()
 
-        + decryptFile(const std::string &filename): void
+        + decryptFile(const std::string &bflyFileName): void
     }
 
 }
@@ -104,10 +104,11 @@ package rsa #DDDDDD
     class RSADecryptor
     {
         - _decryptedMessage: std::string
+
         - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
         - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
 
-        + RSADecryptor()
+        + RSADecryptor() = delete
         + RSADecryptor(const std::string &key)
 
         + getDecryptedMessage(): std::string
@@ -124,6 +125,8 @@ package hybrid #DDDDDD
     class Encryptor
     {
         - _keySize: int
+        - _aesKeyInit: bool
+        - _threads: std::vector<std::thread>
         - _rsaEncryptorCPrivateRSA, _rsaEncryptorAESKey: std::unique_ptr<rsa::RSAEncryptor>
         - _aesEncryptor: std::unique_ptr<aes::AESEncryptor>
 
@@ -142,6 +145,8 @@ package hybrid #DDDDDD
 
     class Decryptor
     {
+        - _decryptedCPrivateRSA, _dirPath: std::string
+        - _threads: std::vector<std::thread>
         - _rsaDecryptorCPrivateRSA: std::unique_ptr<rsa::RSADecryptor>
         - _aesDecryptor: std::unique_ptr<aes::AESDecryptor>
 
@@ -182,11 +187,11 @@ CryptoRSA <|-- RSADecryptor
 CryptoAES <|-- AESEncryptor
 CryptoAES <|-- AESDecryptor
 
-RSAEncryptor "1..*" o-- "1" Encryptor: <<uses>>
-AESEncryptor "1..*" o-- "1" Encryptor: <<uses>>
+RSAEncryptor "1..*" o-- "1" Encryptor: <<encrypting keys>>
+AESEncryptor "1..*" o-- "1" Encryptor: <<encrypting files>>
 
-RSADecryptor "1..*" o-- "1" Decryptor: <<uses>>
-AESDecryptor "1..*" o-- "1" Decryptor: <<uses>>
+RSADecryptor "1..*" o-- "1" Decryptor: <<decrypting keys>>
+AESDecryptor "1..*" o-- "1" Decryptor: <<decrypting files>>
 
 }
 @enduml

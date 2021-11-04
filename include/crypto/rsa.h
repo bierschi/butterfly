@@ -1,3 +1,4 @@
+
 #ifndef BUTTERFLY_RSA_H
 #define BUTTERFLY_RSA_H
 
@@ -86,6 +87,11 @@ public:
     /**
     * Constructor CryptoRSA  to create new rsa key with keySize
     *
+    * Usage:
+    *      std::unique_ptr<butterfly::rsa::CryptoRSA> _cryptoRSA(new butterfly::rsa::CryptoRSA(2048));
+    *      _cryptoRSA->getRSAIV();
+    *      _cryptoRSA->getRSAEncryptedKey();
+     *
     * @param keySize: size of the key
     */
     explicit CryptoRSA(int keysize);
@@ -93,6 +99,11 @@ public:
     /**
     * Constructor CryptoRSA to init rsa key from key string or file
     *
+    * Usage:
+    *      std::unique_ptr<butterfly::rsa::CryptoRSA> _cryptoRSA(new butterfly::rsa::CryptoRSA(""));
+    *      _cryptoRSA->getRSAIV();
+    *      _cryptoRSA->getRSAEncryptedKey();
+     *
     * @param key: key string or filepath to key
     */
     explicit CryptoRSA(const std::string &key);
