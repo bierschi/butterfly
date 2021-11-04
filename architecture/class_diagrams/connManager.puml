@@ -1,0 +1,27 @@
+@startuml
+
+package butterfly #DDDDDD
+{
+
+class ConnManager
+{
+    - _running: bool
+    - _queryHostname: std::string
+    - _queryPort: int
+    - _queryTime: unsigned int
+    - _thread: std::thread
+    - _connStateChangeCB: std::function
+    - _tcpSocket: std::unique_ptr<TCPSocket>
+
+    - run(): void
+
+    + ConnManager(const std::string &queryHostname="google.com", int queryPort=80, unsigned int queryTime=10)
+
+    + registerConnStateChangeCB(std::function<void(bool)> cb): void
+    + isInternetAvailable(): bool
+    + start(): void
+    + stop(): void
+}
+
+}
+@enduml
