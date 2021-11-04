@@ -41,6 +41,10 @@ public:
 
     /**
      * Constructor RSADecryptor
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor(new butterfly::rsa::RSADecryptor(""));
+     *       rsaDecryptor->getDecryptedMessage();
      */
     RSADecryptor() = delete;
 

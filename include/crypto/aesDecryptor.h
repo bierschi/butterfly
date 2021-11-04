@@ -25,13 +25,17 @@ public:
 
     /**
      * Constructor AESDecryptor
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::aes::AESDecryptor> aesDecryptor(new butterfly::aes::AESDecryptor());
+     *       aesDecryptor->decryptFile("/home/user/test.bfly");
      */
     AESDecryptor();
 
     /**
      * Destructor AESDecryptor
      */
-    ~AESDecryptor() = default;
+    ~AESDecryptor() override = default;
 
     /**
      * Decrypts the given filename

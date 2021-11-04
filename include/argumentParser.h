@@ -3,6 +3,7 @@
 #define BUTTERFLY_ARGUMENT_PARSER_H
 
 #include <iostream>
+#include <vector>
 
 #include "app.h"
 #include "logger.h"
@@ -11,23 +12,24 @@ namespace butterfly
 {
 
 /**
- * Class ArgumentParser to parse provided arguments
+ * Class ArgumentParser to parse provided command line arguments
  */
 class ArgumentParser
 {
 
 private:
-    std::string _dir, _encrypt, _decrypt, _protected, _serverpKey, _config, _help, _version, _usage, _options;
+    int _argc;
+    char **_argv;
+    std::vector<std::string> _args;
 
     /**
-     * Prints the help message
+     * Shows the Application Usage
      */
-    void printHelp();
-
+    void showUsage() const;
     /**
-     * Prints the version message
+     * Shows the version message
      */
-    void printVersion();
+    void showVersion() const;
 
 public:
 
@@ -37,24 +39,30 @@ public:
         bool _protected;
         std::string _version;
 
-        Arguments() : _dir(""), _encrypt(""), _decrypt(""), _serverpKey(""), _config(""), _protected(false), _version(PROJECT_VER)
-        {}
+        Arguments() : _protected(false), _version(PROJECT_VER) {}
     };
 
     /**
-     * ArgumentParser default constructor
+     * Constructor ArgumentParser
+     *
+     * Usage:
+     *      std::shared_ptr<butterfly::ArgumentParser> _argparse = std::make_shared<butterfly::ArgumentParser>(argc, argv);
+     *      Arguments args = _argparse->parseArgs();
+     *
+     * @param argc: number of arguments
+     * @param argv: char* of arguments
      */
-    ArgumentParser();
+    ArgumentParser(int argc, char *argv[]);
 
     /**
-     * ArgumentParser Destructor
+     * Destructor ArgumentParser
      */
     ~ArgumentParser() = default;
 
     /**
-     * Parses the given application arguments
+     * Parses the command line arguments
      */
-    Arguments parseArgs(const int &argc, char *argv[]);
+    Arguments parseArgs();
 
 };
 

@@ -1,12 +1,14 @@
+
 #ifndef BUTTERFLY_LOGGER_H
 #define BUTTERFLY_LOGGER_H
+
+#include <string>
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 #include <boost/log/attributes/mutable_constant.hpp>
 #include <boost/log/utility/manipulators/add_value.hpp>
-#include <string>
 
 BOOST_LOG_GLOBAL_LOGGER(sysLogger, boost::log::sources::severity_channel_logger_mt<boost::log::trivial::severity_level>);
 
@@ -49,13 +51,15 @@ public:
 
     /**
      * Inits the Logger with a config file
-     * @param configFileName
+     *
+     * @param configFileName: name of the config file
      */
     static void initFromConfig(const std::string &configFileName);
 
     /**
      * Adds a data file log
-     * @param logFileName
+     *
+     * @param logFileName: name of the log file
      */
     static void addDataFileLog(const std::string &logFileName);
 

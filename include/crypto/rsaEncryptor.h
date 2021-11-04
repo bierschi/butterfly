@@ -40,6 +40,10 @@ public:
     /**
      * Constructor RSAEncryptor
      *
+     *  Usage:
+     *       std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptor(new butterfly::rsa::RSAEncryptor(""));
+     *       rsaEncryptor->getEncryptedMessage();
+     *
      * @param keySize: size of the key
      */
     explicit RSAEncryptor(int keySize);

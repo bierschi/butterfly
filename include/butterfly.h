@@ -7,6 +7,7 @@
 #include "argumentParser.h"
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
+#include "httpServer.h"
 
 namespace butterfly
 {
