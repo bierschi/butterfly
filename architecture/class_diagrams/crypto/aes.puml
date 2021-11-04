@@ -1,5 +1,4 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
 package butterfly #AAAAAA
 {
@@ -12,10 +11,11 @@ class CryptoAES
     - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
     - _aesKeyLength, _aesIvLength: int
 
-    # _aesKey, _aesIv: unsigned char*
+    # aesKey, aesIv: unsigned char*
 
     + CryptoAES()
 
+    + initDone(): bool
     + generateAESKey(): bool
     + generateAESKeyWithSalt(): bool
 
@@ -43,11 +43,12 @@ class AESDecryptor
 {
     + AESDecryptor()
 
-    + decryptFile(const std::string &filename): void
+    + decryptFile(const std::string &bflyFileName): void
 }
 
 CryptoAES <|-- AESEncryptor
 CryptoAES <|-- AESDecryptor
+
 }
 
 }

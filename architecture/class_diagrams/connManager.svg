@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="327px" preserveAspectRatio="none" style="width:740px;height:327px;" version="1.1" viewBox="0 0 740 327" width="740px" zoomAndPan="magnify"><defs><filter height="300%" id="f23qww9skp6v7" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--cluster butterfly--><polygon fill="#DDDDDD" filter="url(#f23qww9skp6v7)" points="22,24,96,24,103,46.2969,718,46.2969,718,315,22,315,22,24" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="22" x2="103" y1="46.2969" y2="46.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="68" x="26" y="38.9951">butterfly</text><!--class ConnManager--><rect fill="#FEFECE" filter="url(#f23qww9skp6v7)" height="240.0703" id="ConnManager" style="stroke: #A80036; stroke-width: 1.5;" width="664" x="38" y="59"/><ellipse cx="322.25" cy="75" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M325.2188,80.6406 Q324.6406,80.9375 324,81.0781 Q323.3594,81.2344 322.6563,81.2344 Q320.1563,81.2344 318.8281,79.5938 Q317.5156,77.9375 317.5156,74.8125 Q317.5156,71.6875 318.8281,70.0313 Q320.1563,68.375 322.6563,68.375 Q323.3594,68.375 324,68.5313 Q324.6563,68.6875 325.2188,68.9844 L325.2188,71.7031 Q324.5938,71.125 324,70.8594 Q323.4063,70.5781 322.7813,70.5781 Q321.4375,70.5781 320.75,71.6563 Q320.0625,72.7188 320.0625,74.8125 Q320.0625,76.9063 320.75,77.9844 Q321.4375,79.0469 322.7813,79.0469 Q323.4063,79.0469 324,78.7813 Q324.5938,78.5 325.2188,77.9219 L325.2188,80.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="87" x="342.75" y="79.1543">ConnManager</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="39" x2="701" y1="91" y2="91"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="99.9023"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="81" x="58" y="105.2104">_running: bool</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="112.707"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="163" x="58" y="118.0151">_queryHostname: std::string</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="125.5117"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="83" x="58" y="130.8198">_queryPort: int</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="138.3164"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="144" x="58" y="143.6245">_queryTime: unsigned int</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="151.1211"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="114" x="58" y="156.4292">_thread: std::thread</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="163.9258"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="201" x="58" y="169.2339">_connStateChangeCB: std::function</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="176.7305"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="233" x="58" y="182.0386">_tcpSocket: std::unique_ptr&lt;TCPSocket&gt;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="39" x2="701" y1="188.6328" y2="188.6328"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46" y="197.5352"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="58" x="58" y="202.8433">run(): void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="62" y="215.6479"/><ellipse cx="49" cy="226.1445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="638" x="58" y="228.4526">ConnManager(const std::string &amp;queryHostname="google.com", int queryPort=80, unsigned int queryTime=10)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="62" y="241.2573"/><ellipse cx="49" cy="251.7539" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="363" x="58" y="254.062">registerConnStateChangeCB(std::function&lt;void(bool)&gt; cb): void</text><ellipse cx="49" cy="264.5586" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="144" x="58" y="266.8667">isInternetAvailable(): bool</text><ellipse cx="49" cy="277.3633" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="66" x="58" y="279.6714">start(): void</text><ellipse cx="49" cy="290.168" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="64" x="58" y="292.4761">stop(): void</text><!--
+@startuml
+
+package butterfly #DDDDDD
+{
+
+class ConnManager
+{
+    - _running: bool
+    - _queryHostname: std::string
+    - _queryPort: int
+    - _queryTime: unsigned int
+    - _thread: std::thread
+    - _connStateChangeCB: std::function
+    - _tcpSocket: std::unique_ptr<TCPSocket>
+
+    - run(): void
+
+    + ConnManager(const std::string &queryHostname="google.com", int queryPort=80, unsigned int queryTime=10)
+
+    + registerConnStateChangeCB(std::function<void(bool)> cb): void
+    + isInternetAvailable(): bool
+    + start(): void
+    + stop(): void
+}
+
+}
+@enduml
+
+PlantUML version 1.2018.13(Mon Nov 26 18:11:51 CET 2018)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.11+9-Ubuntu-0ubuntu2.20.04
+Operating System: Linux
+OS Version: 5.11.0-38-generic
+Default Encoding: UTF-8
+Language: de
+Country: DE
+--></g></svg>
