@@ -76,7 +76,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     exit(1);
                 }
 
-            } else if (arg == "--encrypt")
+            } else if (arg == "-enc" || arg == "--encrypt")
             {
                 // check end of argc
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
@@ -90,7 +90,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     exit(1);
                 }
 
-            } else if (arg == "--decrypt")
+            } else if (arg == "-dec" || arg == "--decrypt")
             {
                 // check end of argc
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
@@ -127,7 +127,11 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
 
             }
         }
-        if (!found or (!decrypt && key) or (decrypt && !key))
+        if ( (!decrypt && key) or (decrypt && !key) )
+        {
+            std::cout << "Please use -dec/--decrypt and -k/--key options together!" << std::endl;
+            exit(1);
+        } else if (!found)
         {
             showUsage();
             exit(1);
