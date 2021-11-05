@@ -18,7 +18,7 @@ option(UNITTESTS "Enable Unittests" OFF)
 
 # Find required OpenSSL, SQLite3 and Boost packages
 find_package(OpenSSL REQUIRED)
-find_package(SQLite3 REQUIRED)
+#find_package(SQLite3 REQUIRED)
 find_package(Boost 1.45.0 COMPONENTS filesystem regex log log_setup REQUIRED)
 
 # Set boost library settings
@@ -36,6 +36,8 @@ include_directories(${PROJECT_BINARY_DIR})
 
 # Add the source files
 file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+# Remove SQL Sources for now
+list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/sqlDatabase.cpp ${CMAKE_SOURCE_DIR}/src/aesKeyDatabase.cpp)
 
 # Enable Unittests and include test folder as a subdirectory
 if(UNITTESTS)
@@ -49,7 +51,8 @@ endif()
 # Build the executable
 if(Boost_FOUND)
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
-    target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})
+    target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${Boost_LIBRARIES})
+    #target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})
 else()
     message("Boost Libraries not found!")
 endif()

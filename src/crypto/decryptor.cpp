@@ -9,7 +9,7 @@ namespace butterfly
 namespace hybrid
 {
 
-Decryptor::Decryptor(const std::string &aesKeyDBPath) : _aesKeyDBPath(aesKeyDBPath), _aesDecryptor(new aes::AESDecryptor())
+Decryptor::Decryptor() : _aesDecryptor(new aes::AESDecryptor())
 {
     LOG_TRACE("Create class Decryptor");
 }

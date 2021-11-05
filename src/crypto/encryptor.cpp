@@ -7,10 +7,10 @@ namespace butterfly
 namespace hybrid
 {
 
-Encryptor::Encryptor(int keySize, const std::string &aesKeyDBPath) : _keySize(keySize), _aesKeyInit(false), _aesKeyDBPath(aesKeyDBPath),
-                                                                     _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
-                                                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
-                                                                     _aesEncryptor(new aes::AESEncryptor())
+Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
+                                    _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
+                                    _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
+                                    _aesEncryptor(new aes::AESEncryptor())
 {
     LOG_TRACE("Create class Encryptor");
 }
