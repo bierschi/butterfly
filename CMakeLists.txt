@@ -16,15 +16,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
 # Add build options
 option(UNITTESTS "Enable Unittests" OFF)
 
-# Find required OpenSSL, SQLite3 and Boost packages
-find_package(OpenSSL REQUIRED)
-#find_package(SQLite3 REQUIRED)
-find_package(Boost 1.45.0 COMPONENTS filesystem regex log log_setup REQUIRED)
-
 # Set boost library settings
-set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+
+# Find required OpenSSL and Boost packages
+find_package(OpenSSL REQUIRED)
+#find_package(SQLite3 REQUIRED)
+find_package(Boost 1.45.0 COMPONENTS filesystem log log_setup REQUIRED)
 
 # Set binary output path
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
