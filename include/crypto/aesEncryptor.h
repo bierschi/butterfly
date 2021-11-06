@@ -25,13 +25,17 @@ public:
 
     /**
      * Constructor AESEncryptor
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::aes::AESEncryptor> aesEncryptor(new butterfly::aes::AESEncryptor());
+     *       aesEncryptor->encryptFile("/home/user/test.txt");
      */
     AESEncryptor();
 
     /**
      * Destructor AESEncryptor
      */
-    ~AESEncryptor() = default;
+    ~AESEncryptor() override = default;
 
     /**
      * Encrypts the given filename

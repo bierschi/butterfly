@@ -4,11 +4,11 @@
 namespace butterfly
 {
 
-Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::ArgumentParser())
+Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::ArgumentParser(argc, argv))
 {
 
     // parse args with the argument parser
-    _args = _argparse->parseArgs(argc, argv);
+    _args = _argparse->parseArgs();
 
     LOG_INFO("Running " << PROJECT_NAME << " with version " << _args._version);
     std::cout << "Running " << PROJECT_NAME << " with version " << _args._version << std::endl;

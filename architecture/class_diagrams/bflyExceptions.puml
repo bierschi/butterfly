@@ -1,5 +1,4 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
 package butterfly #DDDDDD
 {
@@ -11,66 +10,76 @@ class std::exception
 
 class ButterflyException
 {
-    -_error: std::string
-    +ButterflyException(const std::string &error)
+    - _error: std::string
 
-    +what(): const char*
+    + ButterflyException(const std::string &error)
+
+    + what(): const char*
+    + virtual getType() const: std::string
 }
 
 class RSAEncryptionException
 {
 
-    +RSAEncryptionException(const std::string &error)
+    + RSAEncryptionException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class RSADecryptionException
 {
 
-    +RSADecryptionException(const std::string &error)
+    + RSADecryptionException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class AESEncryptionException
 {
 
-    +AESEncryptionException(const std::string &error)
+    + AESEncryptionException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class AESDecryptionException
 {
 
-    +AESDecryptionException(const std::string &error)
+    + AESDecryptionException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class EncryptorException
 {
 
-    +EncryptorException(const std::string &error)
+    + EncryptorException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class DecryptorException
 {
 
-    +DecryptorException(const std::string &error)
+    + DecryptorException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class SQLDatabaseException
 {
 
-    +SQLDatabaseException(const std::string &error)
+    + SQLDatabaseException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 class SocketException
 {
 
-    +SocketException(const std::string &error)
+    + SocketException(const std::string &error)
 
+    + getType() const: std::string
 }
 
 

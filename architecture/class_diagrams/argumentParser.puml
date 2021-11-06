@@ -1,18 +1,20 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
 package butterfly #DDDDDD
 {
 
 class ArgumentParser
 {
-    -_dir, _encrypt, _decrypt, _protected, _serverpKey, _config, _help, _version, _usage, _options: std::string
-    -printHelp(): void
-    -printVersion(): void
+    - _argc: int
+    - _argv: char**
+    - _args: std::vector
 
-    +ArgumentParser()
+    - showUsage() const: void
+    - showVersion() const: void
 
-    +parseArgs(const int &argc, char *argv[]): Arguments
+    + ArgumentParser(int argc, char *argv[])
+
+    + parseArgs(): ArgumentParser::Arguments
 }
 
 }

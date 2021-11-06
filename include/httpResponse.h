@@ -78,8 +78,6 @@ public:
 
     /**
      * Method to parse the incoming HTTP Responses
-     *
-     * @return
      */
     void parseIncoming() override;
 

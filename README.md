@@ -3,17 +3,17 @@ Butterfly is a cryptographic ransomware that includes the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
 - Offline Encryption :heavy_check_mark:
-- Supports multiple Operating Systems (Linux, Windows, MacOS) :x:
+- Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :x:, MacOS :x:)
 - Supports over 300 File Extensions :heavy_check_mark:
-- Ransom Visualization with Server/GUI/Wallpaper :x:
+- Ransom Visualization with HTTPServer :heavy_check_mark: GUI :x: Wallpaper :x:
 - Connection to the TOR Network :x:
 - Bitcoin Payments :x:
 
 ## Dependencies
 
-Install sqlite3 and boost libraries
+Install boost libraries
 <pre><code>
-sudo apt-get install -y sqlite3 libsqlite3-dev libboost-filesystem-dev libboost-regex-dev libboost-log-dev
+sudo apt-get install -y libboost-filesystem-dev libboost-log-dev
 </code></pre>
 
 ## Build Butterfly
@@ -41,21 +41,22 @@ Print the available arguments for Butterfly
 
 <pre><code>
 Usage: 
-	butterfly --dir /home/butterfly/test/
-	butterfly --dir /home/butterfly/test/ --protected
-	butterfly --encrypt /home/butterfly/test/ 
-	butterfly --decrypt /home/butterfly/test/ --key /home/butterfly/SPrivateRSA.pem
+	butterfly --dir /home/testuser/butterfly/data/
+	butterfly --dir /home/testuser/butterfly/data/ --protected
+	butterfly --encrypt /home/testuser/butterfly/data/ 
+	butterfly --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem
 
 Options:
--d, --dir		Directory Path to start the Encryption+Decryption
---encrypt		Encrypts all files in provided directory
---decrypt		Decrypts all files in provided diretory
--k, --key		Private Key from the Server for the Decryption (Corresponds to the embedded Server Public Key)
--p, --protected		Save all key files to System
--c, --config		Config Path
--h, --help		Print help Message
--v, --version		Print current Version
+	-d,   --dir         Directory Path to start the Encryption+Decryption
+	-enc, --encrypt	    Encrypts all files in provided directory
+	-dec, --decrypt	    Decrypts all files in provided diretory
+	-k,   --key         Private Key from the Server for the Decryption (Corresponds to the embedded Server Public Key)
+	-p,   --protected   Save all key files to the System
+	-c,   --config	    Logger Config Path
+	-v,   --version	    Show version information and quit
+	-h,   --help	    Show this message and quit
 
+butterfly homepage at: https://github.com/bierschi/butterfly
 </code></pre>
 
 ## Unit Tests

