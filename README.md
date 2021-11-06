@@ -3,9 +3,9 @@ Butterfly is a cryptographic ransomware that includes the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
 - Offline Encryption :heavy_check_mark:
-- Supports multiple Operating Systems (Linux, Windows, MacOS) :x:
+- Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :x:, MacOS :x:)
 - Supports over 300 File Extensions :heavy_check_mark:
-- Ransom Visualization with Server/GUI/Wallpaper :x:
+- Ransom Visualization with HTTPServer :heavy_check_mark: /GUI :x: /Wallpaper :x:
 - Connection to the TOR Network :x:
 - Bitcoin Payments :x:
 
@@ -13,7 +13,7 @@ Butterfly is a cryptographic ransomware that includes the following features
 
 Install sqlite3 and boost libraries
 <pre><code>
-sudo apt-get install -y sqlite3 libsqlite3-dev libboost-filesystem-dev libboost-regex-dev libboost-log-dev
+sudo apt-get install -y libboost-filesystem-dev libboost-log-dev
 </code></pre>
 
 ## Build Butterfly
