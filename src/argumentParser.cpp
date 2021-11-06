@@ -148,10 +148,10 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
 void ArgumentParser::showUsage() const
 {
     std::cout << "Usage: \n\t"
-                        + std::string(PROJECT_NAME) + " --dir /home/butterfly/test/\n\t"
-                        + std::string(PROJECT_NAME) + " --dir /home/butterfly/test/ --protected\n\t"
-                        + std::string(PROJECT_NAME) + " --encrypt /home/butterfly/test/ \n\t"
-                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/test/ --key /home/butterfly/SPrivateRSA.pem\n\n"
+                        + std::string(PROJECT_NAME) + " --dir /home/testuser/butterfly/data/\n\t"
+                        + std::string(PROJECT_NAME) + " --dir /home/testuser/butterfly/data/ --protected\n\t"
+                        + std::string(PROJECT_NAME) + " --encrypt /home/testuser/butterfly/data/ \n\t"
+                        + std::string(PROJECT_NAME) + " --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem\n\n"
 
                + "Options:\n"
                         + "\t-d,   --dir         Directory Path to start the Encryption+Decryption\n"
