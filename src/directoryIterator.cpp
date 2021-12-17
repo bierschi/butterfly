@@ -85,7 +85,9 @@ uintmax_t DirectoryIterator::getFileSize(const boost::filesystem::path &file)
         return boost::filesystem::file_size(file);
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Not a regular File: " << file);
+        #endif
         return 0;
     }
 

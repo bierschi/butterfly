@@ -3,6 +3,7 @@
 #define BUTTERFLY_HTTPSERVER_H
 
 #include <memory>
+#include <functional>
 
 #include "logger.h"
 #include "tcpSocket.h"

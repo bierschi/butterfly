@@ -8,8 +8,9 @@ ArgumentParser::ArgumentParser(int argc, char *argv[]) : _argc(argc), _argv(argv
 {
 
     // Logger is disabled as default setting
+    #ifdef LOGGING
     Logger::disable();
-
+    #endif
     // Save all arguments in vector
     for(int i = 1; i < _argc; i++)
     {
@@ -55,8 +56,9 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     std::string configPath = _argv[i + 1];
 
                     // init logger instance
+                    #ifdef LOGGING
                     Logger::initFromConfig(configPath);
-
+                    #endif
                 } else
                 {
                     std::cout << "--config option requires one argument!" << std::endl;

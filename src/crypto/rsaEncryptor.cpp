@@ -9,12 +9,16 @@ namespace rsa
 
 RSAEncryptor::RSAEncryptor(int keySize) : CryptoRSA(keySize)
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class RSAEncryptor with key size of " << keySize)
+    #endif
 }
 
 RSAEncryptor::RSAEncryptor(const std::string &key) : CryptoRSA(key)
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class RSAEncryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
+    #endif
 }
 
 bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize)
@@ -25,17 +29,21 @@ bool RSAEncryptor::validateStringLengthForRSA(const std::string &msg, const int 
 
     if (msgLength < maxBlockSize)
     {
+        #ifdef LOGGING
         LOG_INFO("Message string " << msg << " with length of " << msgLength
                                    << " bytes is less than RSA block size of max " << maxBlockSize
                                    << " bytes (RSA key size: " << keysize << " - padding size: "
                                    << CryptoRSA::getPaddingSize() << ")");
+        #endif
         return true;
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Message string " << msg << " with length of " << msgLength
                                     << " bytes is greater/equal than RSA block size of max " << maxBlockSize
                                     << " bytes (RSA key size: " << keysize << " - padding size: "
                                     << CryptoRSA::getPaddingSize() << ")");
+        #endif
         return false;
     }
 
@@ -68,7 +76,9 @@ void RSAEncryptor::writeEncMSGToFile(const std::string &filename, const std::str
 
     if ( !butterfly::writeBinFile(filename, ciphertextMsg.c_str(), ciphertextMsgLength) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at writing to binary file " + filename)
+        #endif
         throw RSAEncryptionException("Error at writing to binary file " + filename);
     }
 
@@ -80,7 +90,9 @@ int RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     // First check the message size
     if ( msg.empty() )
     {
+        #ifdef LOGGING
         LOG_ERROR("Empty messages can not be encrypted")
+        #endif
         throw RSAEncryptionException("Empty messages can not be encrypted!");
     }
 
@@ -89,7 +101,9 @@ int RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
     // Validate the string length with block size length
     if ( !validateStringLengthForRSA(msg, keysize) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Error on validateStringLengthForRSA()!")
+        #endif
         throw RSAEncryptionException("Error on validateStringLengthForRSA()!");
     }
 
@@ -99,7 +113,9 @@ int RSAEncryptor::encrypt(EVP_PKEY *pkey, const std::string &msg)
 
     if (encLen == -1)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at encrypting the message with RSA!")
+        #endif
         throw RSAEncryptionException("Error at encrypting the message with RSA!");
     }
 
@@ -114,7 +130,9 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RS
     // First check the message size
     if ( decMSG.empty() )
     {
+        #ifdef LOGGING
         LOG_ERROR("Empty messages can not be encrypted!")
+        #endif
         throw RSAEncryptionException("Empty messages can not be encrypted!");
     }
 
@@ -125,7 +143,9 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RS
 
     if (encLen == -1)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at encrypting the message with RSA!")
+        #endif
         throw RSAEncryptionException("Error at encrypting the message with RSA!");
     }
 
@@ -135,7 +155,9 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RS
     // Write RSA File to System
     if ( !writeRSAFileToSystem(type) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
+        #endif
         throw RSAEncryptionException("Error at writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
     }
 

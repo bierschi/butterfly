@@ -6,13 +6,15 @@ namespace butterfly
 
 AESKeyDatabase::AESKeyDatabase(const std::string &dbpath, bool removeDatabase, std::string dbtable) : SQLDatabase(dbpath, dbtable), _removeDatabase(removeDatabase)
 {
-
+    #ifdef LOGGING
     LOG_TRACE("Create Class AESKeyDatabase");
-
+    #endif
     // enable multithread environment
     if ( !setMode(SQLITE_CONFIG_SERIALIZED) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Could not set the mode to serialized in AESKeyDatabase");
+        #endif
     }
 
     // open database
@@ -25,7 +27,9 @@ AESKeyDatabase::AESKeyDatabase(const std::string &dbpath, bool removeDatabase, s
 
     if ( !query(_aesKeyTableSQL) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Error on creating " << _dbtable << " Table!");
+        #endif
     }
 
 }
@@ -36,7 +40,9 @@ AESKeyDatabase::~AESKeyDatabase()
     {
         if ( _removeDatabase && butterfly::removeFile(_dbpath) )
         {
+            #ifdef LOGGING
             LOG_INFO("Removed the database file " << _dbpath);
+            #endif
         }
 
     }
