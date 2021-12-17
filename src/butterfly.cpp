@@ -11,8 +11,10 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
     _args = _argparse->parseArgs();
     #ifdef LOGGING
     LOG_INFO("Running " << PROJECT_NAME << " with version " << _args._version);
-    #endif
+    #else
     std::cout << "Running " << PROJECT_NAME << " with version " << _args._version << std::endl;
+    #endif
+
 }
 
 void Butterfly::run()

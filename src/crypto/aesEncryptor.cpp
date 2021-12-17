@@ -45,8 +45,9 @@ void AESEncryptor::encryptFile(const std::string &filename)
     butterfly::writeBinFile(filename, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
     #ifdef LOGGING
     LOG_INFO("Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
-    #endif
+    #else
     std::cout << "Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
+    #endif
 
     if ( !butterfly::appendFileExtension(filename, butterfly::ENC_BFLY_FILE_ENDING) )
     {

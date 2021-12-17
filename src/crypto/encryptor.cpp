@@ -49,8 +49,9 @@ void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
     {
         #ifdef LOGGING
         LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
-        #endif
+        #else
         std::cerr << "Could not save the unencrypted AESKeyPair File to Filesystem!" << std::endl;
+        #endif
     }
 
 }
