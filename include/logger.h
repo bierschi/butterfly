@@ -2,6 +2,7 @@
 #ifndef BUTTERFLY_LOGGER_H
 #define BUTTERFLY_LOGGER_H
 
+#ifdef LOGGING
 #include <string>
 
 #include <boost/log/trivial.hpp>
@@ -70,4 +71,5 @@ public:
 
 };
 
+#endif // LOGGING
 #endif //BUTTERFLY_LOGGER_H

@@ -21,7 +21,9 @@ CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _pkey(nullptr)
     // Generate the RSA Key
     if ( !generateRSAKey() )
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at generating the RSA key!");
+        #endif
         throw std::runtime_error("Error at generating the RSA key!");
     }
 }
@@ -40,7 +42,9 @@ CryptoRSA::CryptoRSA(const std::string &key) : _keysize(-1), _pkey(nullptr)
     // Load pkey from file or string
     if ( !loadKeyFromFile(key) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Could not load key from file/string!");
+        #endif
     }
 
 }
@@ -98,14 +102,18 @@ bool CryptoRSA::loadKeyFromFile(const std::string &filepath)
     {
         if ( loadKeyFromStr(butterfly::readBinFile(filepath)) )
         {
+            #ifdef LOGGING
             LOG_TRACE("Loaded successfully rsa key from file " << filepath);
+            #endif
             return true;
         }
     } else
     {
         if ( loadKeyFromStr(filepath) )
         {
+            #ifdef LOGGING
             LOG_TRACE("Loaded successfully rsa key from string!")
+            #endif
             return true;
         }
     }
@@ -136,7 +144,9 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
 
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Unsupported file provided with file header: " << fLine);
+        #endif
         BIO_free(bioPrivate);
         return false;
     }
@@ -212,21 +222,27 @@ int CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t 
 
     if(!EVP_SealInit(rsaEncryptContext, EVP_aes_256_cbc(), &_encryptedKey, (int*)&encryptedKeyLength, _iv, &key, 1))
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_SealInit in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
 
 
     if(!EVP_SealUpdate(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)plaintext, (int)plaintextLength))
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_SealUpdate in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     encryptedMessageLength += blockLength;
 
     if(!EVP_SealFinal(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength))
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_SealFinal in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     encryptedMessageLength += blockLength;
@@ -244,20 +260,26 @@ int CryptoRSA::decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphe
 
     if(!EVP_OpenInit(rsaDecryptContext, EVP_aes_256_cbc(), encryptedKey, getEvpPkeySize(key), iv, key))
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_OpenInit in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
 
     if(!EVP_OpenUpdate(rsaDecryptContext, (unsigned char*)*plaintext + decryptedMessageLength, (int*)&blockLength, ciphertext, (int)ciphertextLength))
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_OpenUpdate in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     decryptedMessageLength += blockLength;
 
     if(!EVP_OpenFinal(rsaDecryptContext, (unsigned char*)*plaintext + decryptedMessageLength, (int*)&blockLength))
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_OpenFinal in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     decryptedMessageLength += blockLength;
@@ -274,23 +296,30 @@ int CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t pla
 
     if (!ctx)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during context init in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     if (EVP_PKEY_encrypt_init(ctx) <= 0)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_PKEY_encrypt_init(ctx) in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0)
     {
-
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_PKEY_encrypt in RSA encrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
 
@@ -307,22 +336,30 @@ int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t cipherte
 
     if (!ctx)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during context init in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     if (EVP_PKEY_decrypt_init(ctx) <= 0)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_PKEY_decrypt_init(ctx) in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_PKEY_CTX_set_rsa_padding in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error during EVP_PKEY_decrypt in RSA decrypt: " << getOpenSSLError());
+        #endif
         return -1;
     }
 

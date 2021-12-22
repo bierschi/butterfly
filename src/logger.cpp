@@ -1,3 +1,4 @@
+#ifdef LOGGING
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/log/core.hpp>
@@ -157,3 +158,5 @@ void Logger::disable()
 {
     boost::log::core::get()->set_logging_enabled(false);
 }
+
+#endif // LOGGING

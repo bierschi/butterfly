@@ -1,4 +1,4 @@
-# Hybrid Encryption Mechanism
+# Hybrid Encryption/Decryption Mechanism
 
 ## Attacker
 
@@ -16,8 +16,8 @@ ransomware creates infection specific RSA-2048 keypair
 - `CPublic.pem` (Kp)
 
 `SPublic.pem` (KA) encrypts `CPrivateRSA.pem` (Ks) => `CPrivateRSA.bin` <br>
-Save `CPublic.pem` key file => `CPublic.pem` <br>
-Encrypting all AES keys with `CPublic.pem` => `AESKeys.bin`
+Save `CPublic.pem` key file in Memory => `CPublic.pem` <br>
+Encrypting all AES keys with `CPublic.pem` String => `AESKeys.bin`
 
 ## Decryption
 
