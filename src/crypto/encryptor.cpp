@@ -76,7 +76,9 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // If --protected is enabled
     if (protection)
     {
-        //LOG_TRACE("Length of AESKEY: " << aeskey.length() << " and length of AESIV: " << aesiv.length());
+        #ifdef LOGGING
+        LOG_TRACE("Length of AESKEYPair: " << aeskeypair.length());
+        #endif
         saveUnencryptedAESKeyPair(aeskeypair);
     }
 
