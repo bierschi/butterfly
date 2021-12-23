@@ -21,6 +21,9 @@ openssl rsautl -decrypt -oaep -inkey ../../masterkeys/SPrivateRSA.pem -in CPriva
 Compare the md5sum of both files to validate
 <pre><code>
 md5sum CPrivateRSA.pem CPrivateRSA.dec.pem
+</code></pre>
+Result:
+<pre><code>
 9ede908085d7aef033ba37fe8a997ff9  CPrivateRSA.pem
 9ede908085d7aef033ba37fe8a997ff9  CPrivateRSA.dec.pem
 </code></pre>
@@ -36,17 +39,28 @@ Generate random iv in hex
 hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom
 </code></pre>
 
+Encrypt the `5357083.pdf` with AES-2566-CBC Cipher
 <pre><code>
 openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in ../papers/5357083.pdf -K '7c07f68ea8494b2f8b9fea297119350d78708afa69c1c76' -iv 'FEDCBA987654321' -out 5357083.bin
 </code></pre>
-
+Decrypt the `5357083.bin` with AES-2566-CBC Cipher
 <pre><code>
 openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.bin -K '7c07f68ea8494b2f8b9fea297119350d78708afa69c1c76' -iv 'FEDCBA987654321' -out 5357083.dec.pdf
 </code></pre>
 
 
+Compare the md5sum of both files to validate
+<pre><code>
+md5sum ../papers/5357083.pdf 5357083.dec.pdf
+</code></pre>
 
-### Hybrid RSA/AES
+Result:
+<pre><code>
+b411f593df510506131549a8f79158a2  ../papers/5357083.pdf
+b411f593df510506131549a8f79158a2  5357083.dec.pdf
+</code></pre>
+
+### Hybrid (RSA & AES) Encryption and Decryption
 
 
 
