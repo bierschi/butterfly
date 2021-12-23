@@ -130,7 +130,7 @@ void Encryptor::encryptCPrivateRSA()
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what())); // If error occured here, it makes no sense to continue
+        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what())); // If error occurred here, it makes no sense to continue
     }
 
 }
