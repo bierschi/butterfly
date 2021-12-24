@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(aes)
+project(aesbfly)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -14,6 +14,6 @@ find_package(OpenSSL REQUIRED)
 # Include the header files
 include_directories(include)
 
-add_executable(aes src/main.cpp src/aes.cpp)
+add_executable(aesbfly src/main.cpp src/aes.cpp)
 
-target_link_libraries(aes OpenSSL::SSL)
+target_link_libraries(aesbfly OpenSSL::SSL)

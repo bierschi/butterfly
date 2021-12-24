@@ -31,7 +31,7 @@ protected:
 public:
 
     CryptoAES();
-    virtual ~CryptoAES();
+    ~CryptoAES();
 
     static bool initDone();
 
