@@ -1,5 +1,6 @@
 #include <memory>
 #include <unistd.h>
+#include <algorithm>
 
 #include "aes.h"
 #include "utils.h"
@@ -37,21 +38,33 @@ void encrypt_with_aes(const std::string &filename)
 
 }
 
-void decrypt_with_aes(const std::string &filename, const std::string &aeskeyFile, const std::string &aesivFile)
+void decrypt_with_aes(const std::string &filename, const std::string &aeskeyFile, const std::string &aesivFile, bool hex)
 {
     std::shared_ptr<tools::CryptoAES> cryptoAES(new tools::CryptoAES());
 
     std::cout << "Decrypting file " << filename << " with AES..." << std::endl;
 
     std::string fileDataBfly = readBinFile(filename);
-    std::string aeskey = readBinFile(AESKEY_FILENAME);
-    std::string aesiv  = readBinFile(AESIV_FILENAME);
+
+    std::string aeskey = readBinFile(aeskeyFile);
+    std::string aesiv  = readBinFile(aesivFile);
+
+    if (hex)
+    {
+        aeskey = hex2String(aeskey);
+        aesiv  = hex2String(aesiv);
+    }
 
     cryptoAES->setAESKey(aeskey);
     cryptoAES->setAESIv(aesiv);
 
     unsigned char *decryptedFile;
     size_t decryptedFileLength = cryptoAES->decrypt((unsigned char *) fileDataBfly.c_str(), fileDataBfly.length(), &decryptedFile);
+
+    if (decryptedFileLength == 0)
+    {
+        exit(1);
+    }
 
     writeBinFile(filename + ".dec", reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength));
 
@@ -69,6 +82,7 @@ void showUsage()
                  + "\t-dec, --decrypt\t    Decrypts the file with AES\n"
                  + "\t-k,   --key         Provide the AESKey for the Decryption\n"
                  + "\t-i,   --iv          Provide the AESIV for the Decryption\n"
+                 + "\t--hex               Provide the AESKey and AESIV as hex numbers\n"
                  + "\t-h,   --help\t    Show this message and quit"
 
                  + "\n\nbutterfly homepage at: https://github.com/bierschi/butterfly"
@@ -105,6 +119,7 @@ int main (int argc, char* argv[])
         else if (arg == "-dec" || arg == "--decrypt")
         {
             std::string key, iv;
+            bool hex = false;
             for (int j=2; j < argc; j++)
             {
                 std::string arg2 = argv[j];
@@ -117,9 +132,13 @@ int main (int argc, char* argv[])
                 {
                     iv = argv[j+1];
                 }
+                if (arg2 == "--hex")
+                {
+                    hex  = true;
+                }
             }
             std::string filename = argv[argc-1];
-            decrypt_with_aes(filename, key, iv);
+            decrypt_with_aes(filename, key, iv, hex);
 
             break;
         } else

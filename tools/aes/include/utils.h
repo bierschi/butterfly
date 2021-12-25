@@ -96,17 +96,14 @@ inline std::string string2Hex(const std::string &in)
     return ss.str();
 }
 
-inline std::string hex2String(const std::string &in)
+inline std::string hex2String(const std::string in)
 {
     std::string output;
 
-    if ((in.length() % 2) != 0) {
-        throw std::runtime_error("String is not valid length ...");
-    }
-
     size_t cnt = in.length() / 2;
 
-    for (size_t i = 0; cnt > i; ++i) {
+    for (size_t i = 0; cnt > i; ++i)
+    {
         uint32_t s = 0;
         std::stringstream ss;
         ss << std::hex << in.substr(i * 2, 2);
