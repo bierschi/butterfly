@@ -132,7 +132,8 @@ void Encryptor::encryptCPrivateRSA()
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what())); // If error occurred here, it makes no sense to continue
+        // If error occurred here, it makes no sense to continue
+        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what()));
     }
 
 }
@@ -168,7 +169,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const s
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        // If error occured here, save AESKeyPair unencrypted to ensure that files can be decrypted manually
+        // If error occurred here, save AESKeyPair unencrypted to ensure that files can be decrypted manually
         saveUnencryptedAESKeyPair(aesKeyPair);
     }
 
