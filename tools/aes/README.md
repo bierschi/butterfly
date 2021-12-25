@@ -10,7 +10,7 @@ aesbfly --encrypt 5357083.pdf
 #### Decrypt with openssl cli
 
 <pre><code>
-openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.pdf.bfly -K $(cat AESKeyHex.txt) -iv $(cat AESKeyHex.txt) -out 5357083.pdf
+openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.pdf.bfly -K $(cat AESKeyHex.txt) -iv $(cat AESIVHex.txt) -out 5357083.pdf
 </code></pre>
 
 ## 2. cli -> aesbfly
@@ -71,5 +71,5 @@ openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in ../5357083.pdf -K $(cat
 #### Decrypt with openssl cli
 
 <pre><code>
-openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.pdf.bfly -K $(cat AESKeyHex.txt) -iv $(cat AESKeyHex.txt) -out 5357083.pdf
+openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.pdf.bfly -K $(cat AESKeyHex.txt) -iv $(cat AESIVHex.txt) -out 5357083.pdf
 </code></pre>
