@@ -3,6 +3,7 @@
 ### Encrypt with `aesbfly`
 
 <pre><code>
+aesbfly --encrypt 5357083.pdf
 </code></pre>
 
 ### Decrypt with openssl cli
@@ -31,15 +32,17 @@ openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in ../5357083.pdf -K $(cat
 ### Decrypt with `aesbfly`
 
 <pre><code>
-
+aesbfly --decrypt --key AESKey.txt --iv AESIV.txt 5357083.pdf.bfly
 </code></pre>
 
 ### Encrypt with `aesbfly`
 
 <pre><code>
+aesbfly --encrypt 5357083.pdf
 </code></pre>
 
 ### Decrypt with `aesbfly`
 
 <pre><code>
+aesbfly --decrypt --key AESKey.txt --iv AESIV.txt 5357083.pdf.bfly
 </code></pre>

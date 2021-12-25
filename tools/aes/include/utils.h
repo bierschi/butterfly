@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <sys/stat.h>
 
 inline std::string readBinFile(const std::string &filepath)
 {
@@ -77,6 +78,12 @@ inline bool removeFileExtension(std::string &filename, const std::string &extens
     }
 }
 
+inline bool existsFile(const std::string &filename)
+{
+    struct stat buffer;
+    return (stat (filename.c_str(), &buffer) == 0);
+}
+
 inline std::string string2Hex(const std::string &in)
 {
     std::stringstream ss;
@@ -109,6 +116,41 @@ inline std::string hex2String(const std::string &in)
     }
 
     return output;
+}
+
+inline bool removeFile(const std::string &filepath)
+{
+
+    int rc = std::remove(filepath.c_str());
+
+    if (rc == 0)
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+
+}
+
+inline double getFileSize(const std::string &filepath, bool MBytes=true)
+{
+    struct stat stat_buf;
+
+    int rc = stat(filepath.c_str(), &stat_buf);
+
+    if (rc != 0)
+    {
+        return -1;
+    } else {
+
+        if (MBytes)
+        {
+            return (static_cast<double>(stat_buf.st_size) / 1000000.0);
+        }
+        return static_cast<double>(stat_buf.st_size);
+    }
+
 }
 
 #endif //AES_UTILS_H

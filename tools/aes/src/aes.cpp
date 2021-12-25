@@ -9,9 +9,6 @@ unsigned char* CryptoAES::aesIv = nullptr;
 
 CryptoAES::CryptoAES()
 {
-    #ifdef LOGGING
-    std::cerr << "Create class CryptoAES" << std::endl;
-    #endif
     _aesEncryptContext = EVP_CIPHER_CTX_new();
     _aesDecryptContext = EVP_CIPHER_CTX_new();
 
@@ -72,9 +69,7 @@ bool CryptoAES::initDone()
 
 bool CryptoAES::generateAESKey()
 {
-    #ifdef LOGGING
-    std::cerr << "Create new AES Key/IV pair" << std::endl;
-    #endif
+
     if(RAND_bytes(CryptoAES::aesKey, _aesKeyLength) == 0) {
         return false;
     }
@@ -88,9 +83,6 @@ bool CryptoAES::generateAESKey()
 
 bool CryptoAES::generateAESKeyWithSalt()
 {
-    #ifdef LOGGING
-    std::cerr << "Create new AES Key/IV pair with Salt" << std::endl;
-    #endif
     auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
     auto *aesSalt = (unsigned char *) malloc(8);
 
