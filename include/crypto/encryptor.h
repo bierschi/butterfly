@@ -44,6 +44,11 @@ private:
      */
     static void saveUnencryptedAESKeyPair(const std::string &aesKeyPair);
 
+    /**
+     * Checks if bfly encryption files exists (CPrivateRSA.bin, AES.bin, RSA.bin)
+     */
+    static void checkIfEncryptionFilesExists();
+
 public:
     /**
      * Constructor Encryptor
