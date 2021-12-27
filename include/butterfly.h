@@ -24,9 +24,10 @@ private:
     butterfly::ArgumentParser::Arguments _args;
 
     /**
-     *
+     * Init logging Framework
      */
     void initLoggingFramework();
+
 public:
 
     /**
