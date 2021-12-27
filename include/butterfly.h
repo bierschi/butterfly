@@ -8,6 +8,7 @@
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
 #include "httpServer.h"
+#include "logger.h"
 
 namespace butterfly
 {
@@ -22,6 +23,10 @@ private:
     std::unique_ptr<butterfly::ArgumentParser> _argparse;
     butterfly::ArgumentParser::Arguments _args;
 
+    /**
+     *
+     */
+    void initLoggingFramework();
 public:
 
     /**
