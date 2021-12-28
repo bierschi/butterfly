@@ -11,9 +11,9 @@ Butterfly is a cryptographic ransomware that includes the following features
 
 ## Dependencies
 
-Install boost filesystem library
+Install openssl and boost filesystem libraries
 <pre><code>
-sudo apt-get install -y libboost-filesystem-dev  libssl-dev
+sudo apt-get install -y libssl-dev libboost-filesystem-dev
 </code></pre>
 
 If you enable the logging definition with cmake you need to install the boost logging library as well
@@ -78,9 +78,6 @@ sudo make
 #copy or symlink libgtest.a and libgtest_main.a to your /usr/lib folder
 sudo cp *.a /usr/lib
 </code></pre>
-
-## Logs
-logs can be found in `/var/log/butterfly`
 
 ## Changelog
 All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/CHANGELOG.rst)

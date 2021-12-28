@@ -4,3 +4,4 @@
 - 19.08.2021: Finished the AES Encryption/Decryption
 - 06.09.2021: Finished the hybrid Encryption/Decryption mechanism
 - 17.09.2021: Release Version 1.0
+- 28.12.2021: Updated the project to support over 300 File Extensions
