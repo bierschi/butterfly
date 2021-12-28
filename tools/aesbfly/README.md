@@ -1,5 +1,14 @@
 # AES Encryption/Decryption Tool
 
+## Build `aesbfly`
+
+<pre><code>
+mkdir build && cd build
+cmake ../
+make
+./aesbfly --help
+</code></pre>
+
 ## 1. aesbfly -> cli
 #### Encrypt with `aesbfly`
 
