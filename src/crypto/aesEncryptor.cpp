@@ -44,7 +44,13 @@ void AESEncryptor::encryptFile(const std::string &filename)
 
     butterfly::writeBinFile(filename, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
     #ifdef LOGGING
-    LOG_INFO("Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
+    if ( Logger::isConfigFileAvailable() )
+    {
+        LOG_INFO("Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
+    } else
+    {
+        std::cout << "Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
+    }
     #else
     std::cout << "Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
     #endif

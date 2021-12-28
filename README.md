@@ -13,10 +13,10 @@ Butterfly is a cryptographic ransomware that includes the following features
 
 Install boost filesystem library
 <pre><code>
-sudo apt-get install -y libboost-filesystem-dev
+sudo apt-get install -y libboost-filesystem-dev  libssl-dev
 </code></pre>
 
-If you enable the logging definition with cmake you need to install the boost logging library
+If you enable the logging definition with cmake you need to install the boost logging library as well
 <pre><code>
 sudo apt-get install -y libboost-log-dev
 </code></pre>
