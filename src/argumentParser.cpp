@@ -6,11 +6,6 @@ namespace butterfly
 
 ArgumentParser::ArgumentParser(int argc, char *argv[]) : _argc(argc), _argv(argv)
 {
-
-    // Logger is disabled as default setting
-    #ifdef LOGGING
-    Logger::disable();
-    #endif
     // Save all arguments in vector
     for(int i = 1; i < _argc; i++)
     {
@@ -45,7 +40,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
             } else if (arg == "-p" || arg == "--protected")
             {
                 found = true;
-                args._protected = true;
+                args.protection = true;
             }
             else if (arg == "-c" || arg == "--config")
             {
@@ -53,12 +48,8 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true;
-                    std::string configPath = _argv[i + 1];
+                    args.config = _argv[i + 1];
 
-                    // init logger instance
-                    #ifdef LOGGING
-                    Logger::initFromConfig(configPath);
-                    #endif
                 } else
                 {
                     std::cout << "--config option requires one argument!" << std::endl;
@@ -70,7 +61,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true;
-                    args._dir = _argv[i + 1];
+                    args.dir = _argv[i + 1];
 
                 } else
                 {
@@ -84,7 +75,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true;
-                    args._encrypt = _argv[i + 1];
+                    args.encrypt = _argv[i + 1];
 
                 } else
                 {
@@ -98,7 +89,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true, decrypt = true;
-                    args._decrypt = _argv[i + 1];
+                    args.decrypt = _argv[i + 1];
 
                 } else
                 {
@@ -112,7 +103,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true, key = true;
-                    args._serverpKey = _argv[i + 1];
+                    args.serverpKey = _argv[i + 1];
 
                 } else
                 {
@@ -120,7 +111,8 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     exit(1);
                 }
 
-            } else {
+            } else
+            {
 
                 if ( i + 1 < _argc && (!strchr(_argv[i + 1], '-')) )
                 {
