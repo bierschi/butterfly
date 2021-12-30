@@ -1,4 +1,4 @@
-# OpenSSL CLI with BFLY files
+# OpenSSL CLI with BFLY files (Hybrid)
 Files were encrypted with the `butterfly` application
 <br><br>
 `5357083.pdf.bfly` -> Encrypted pdf file <br>
