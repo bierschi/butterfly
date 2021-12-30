@@ -17,13 +17,31 @@ Encrypt with `rsabfly`
 ./rsabfly --encrypt 
 </code></pre>
 
+Decrypt with openssl cli
+
+## cli -> rsabfly
+Encrypt with openssl cli
+
+<pre><code>
+openssl rsautl
+</code></pre>
+
+Decrypt with `rsabfly`
 <pre><code>
 ./rsabfly --decrypt
 </code></pre>
 
-## cli -> rsabfly
-
 ## rsabfly -> rsabfly
+
+Encrypt with `rsabfly`
+<pre><code>
+./rsabfly --encrypt
+</code></pre>
+
+Decrypt with `rsabfly`
+<pre><code>
+./rsabfly --decrypt
+</code></pre>
 
 ## cli -> cli
 Encrypt with openssl cli

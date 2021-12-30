@@ -10,10 +10,6 @@ CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _pkey(nullptr)
     rsaEncryptContext = EVP_CIPHER_CTX_new();
     rsaDecryptContext = EVP_CIPHER_CTX_new();
 
-    if (PADDING == RSA_PKCS1_OAEP_PADDING)
-    {
-        _paddingSize = 42;
-    }
 
     // Generate the RSA Key
     if ( !generateRSAKey() )

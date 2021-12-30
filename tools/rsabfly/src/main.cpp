@@ -67,7 +67,21 @@ void decrypt_with_evp()
 void encrypt()
 {
 
-    std::unique_ptr<tools::>
+    std::unique_ptr<tools::CryptoRSA> cryptoRsa = std::unique_ptr<tools::CryptoRSA>(new tools::CryptoRSA(2048));
+
+    std::string msg = "ab";
+
+    unsigned char* encryptedMessage;
+    encryptedMessage = (unsigned char*)malloc(256);
+    int encryptedMessageLength = cryptoRsa->encrypt(cryptoRsa->getEvpPkey(), (unsigned char*)msg.c_str(), msg.length(), encryptedMessage);
+
+    if(encryptedMessageLength == -1)
+    {
+        std::cerr << "Encryption failed" << std::endl;
+        exit(1);
+    }
+
+    std::cout << "Encrypted message: " << encryptedMessage << " with Length: " << encryptedMessageLength << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -75,6 +89,7 @@ int main(int argc, char* argv[])
 
     encrypt_decrypt_with_evp("abcdef");
 
+    //encrypt();
 
     return 0;
 }

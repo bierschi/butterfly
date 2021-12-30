@@ -23,7 +23,7 @@ class CryptoRSA
 {
 
 private:
-    int _keysize, _paddingSize;
+    int _keysize;
     char *_rsaPrivateKeyStr, *_privateKeyStr, *_publicKeyStr;
     unsigned char* _encryptedKey, *_iv;
 
@@ -36,9 +36,6 @@ private:
 
     bool loadKeyFromFile(const std::string &filepath);
     bool loadKeyFromStr(const std::string &str);
-
-protected:
-    inline int getPaddingSize() const { return _paddingSize; }
 
 public:
 
