@@ -53,7 +53,7 @@ void encrypt_decrypt_with_evp(std::string msg_to_encrypt)
 
 }
 
-void encrypt_with_evp(std::unique_ptr<tools::CryptoRSA> &cryptoRSA)
+void encrypt_with_evp()
 {
 
 
@@ -62,6 +62,12 @@ void encrypt_with_evp(std::unique_ptr<tools::CryptoRSA> &cryptoRSA)
 void decrypt_with_evp()
 {
 
+}
+
+void encrypt()
+{
+
+    std::unique_ptr<tools::>
 }
 
 int main(int argc, char* argv[])

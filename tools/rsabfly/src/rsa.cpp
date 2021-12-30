@@ -18,9 +18,9 @@ CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _pkey(nullptr)
     // Generate the RSA Key
     if ( !generateRSAKey() )
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error at generating the RSA key!" << std::endl;
-#endif
+        #endif
         throw std::runtime_error("Error at generating the RSA key!");
     }
 }
@@ -34,9 +34,9 @@ CryptoRSA::CryptoRSA(const std::string &key) : _keysize(-1), _pkey(nullptr)
     // Load pkey from file or string
     if ( !loadKeyFromFile(key) )
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Could not load key from file/string!" << std::endl;
-#endif
+        #endif
     }
 
 }
@@ -94,18 +94,18 @@ bool CryptoRSA::loadKeyFromFile(const std::string &filepath)
     {
         if ( loadKeyFromStr(readBinFile(filepath)) )
         {
-#ifdef LOGGING
+            #ifdef LOGGING
             std::cerr << "Loaded successfully rsa key from file " << filepath << std::endl;
-#endif
+            #endif
             return true;
         }
     } else
     {
         if ( loadKeyFromStr(filepath) )
         {
-#ifdef LOGGING
+            #ifdef LOGGING
             std::cerr << "Loaded successfully rsa key from string!" << std::endl;
-#endif
+            #endif
             return true;
         }
     }
@@ -136,9 +136,9 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
 
     } else
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Unsupported file provided with file header: " << fLine << std::endl;
-#endif
+        #endif
         BIO_free(bioPrivate);
         return false;
     }
@@ -277,30 +277,30 @@ int CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t pla
 
     if (!ctx)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during context init in RSA encrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
     if (EVP_PKEY_encrypt_init(ctx) <= 0)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during EVP_PKEY_encrypt_init(ctx) in RSA encrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during EVP_PKEY_CTX_set_rsa_padding in RSA encrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during EVP_PKEY_encrypt in RSA encrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
 
@@ -317,35 +317,34 @@ int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t cipherte
 
     if (!ctx)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during context init in RSA decrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
     if (EVP_PKEY_decrypt_init(ctx) <= 0)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during EVP_PKEY_decrypt_init(ctx) in RSA decrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during EVP_PKEY_CTX_set_rsa_padding in RSA decrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0)
     {
-#ifdef LOGGING
+        #ifdef LOGGING
         std::cerr << "Error during EVP_PKEY_decrypt in RSA decrypt: " << getOpenSSLError() << std::endl;
-#endif
+        #endif
         return -1;
     }
 
     return static_cast<int>(plaintextLength);
 }
-
 
 } // namespace tools
