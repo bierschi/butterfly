@@ -37,8 +37,8 @@ openssl rsautl -decrypt -inkey CPrivateRSA.pem -in rsa_ek2.bin -out rsa_ek2.txt
 
 Convert the `rsa_ek2.txt` and `rsa_iv2.bin` to hex numbers
 <pre><code>
-xxd -p rsa_ek2.txt > rsa_ek2.hex.txt
-xxd -p rsa_iv2.txt > rsa_iv2.hex.txt
+xxd -p -c 256 rsa_ek2.txt > rsa_ek2.hex.txt
+xxd -p -c 256 rsa_iv2.txt > rsa_iv2.hex.txt
 </code></pre>
 
 Decrypt the `AES.bin` file with the `AES-256-CBC` Cipher

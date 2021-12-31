@@ -1,8 +1,8 @@
-# OpenSSL CLI with BFLY files (Hybrid)
+# OpenSSL CLI with BFLY files (Hybrid Mechanism)
 Files were encrypted with the `butterfly` application
 <br><br>
 `5357083.pdf.bfly` -> Encrypted pdf file <br>
-`AES.bin` -> Encrypted AES Key<br>
+`AES.bin` -> Encrypted AES KeyPair<br>
 `CPrivateRSA.bin` -> Encrypted CPrivateRSA.pem certificate<br>
 `RSA.bin` -> Includes the EK and IV for the RSA Encryption/Decryption<br>
 
