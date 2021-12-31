@@ -374,4 +374,3 @@ int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t cipherte
 } // namespace rsa
 
 } // namespace butterfly
-
