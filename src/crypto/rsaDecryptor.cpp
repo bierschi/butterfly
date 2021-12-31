@@ -52,7 +52,14 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
         iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
 
-    } /*else
+    } else
+    {
+        #ifdef LOGGING
+        LOG_ERROR("RSAKEY_TYPE Number " + std::to_string(rsakeysType) + " is not implemented!");
+        #endif
+        std::cerr << "RSAKEY_TYPE Number " + std::to_string(rsakeysType) + " is not implemented!" << std::endl;
+    }
+    /*else
     {
         // 256 Bytes
         RSADecryptor::AESIVLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));

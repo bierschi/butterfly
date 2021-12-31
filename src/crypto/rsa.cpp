@@ -228,7 +228,6 @@ int CryptoRSA::encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t 
         return -1;
     }
 
-
     if(!EVP_SealUpdate(rsaEncryptContext, *ciphertext + encryptedMessageLength, (int*)&blockLength, (const unsigned char*)plaintext, (int)plaintextLength))
     {
         #ifdef LOGGING
@@ -301,6 +300,7 @@ int CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t pla
         #endif
         return -1;
     }
+
     if (EVP_PKEY_encrypt_init(ctx) <= 0)
     {
         #ifdef LOGGING
@@ -308,6 +308,7 @@ int CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t pla
         #endif
         return -1;
     }
+
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
         #ifdef LOGGING
@@ -315,6 +316,7 @@ int CryptoRSA::encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t pla
         #endif
         return -1;
     }
+
     if (EVP_PKEY_encrypt(ctx, ciphertext, &ciphertextLength, plaintext, plaintextLength) <= 0)
     {
         #ifdef LOGGING
@@ -341,6 +343,7 @@ int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t cipherte
         #endif
         return -1;
     }
+
     if (EVP_PKEY_decrypt_init(ctx) <= 0)
     {
         #ifdef LOGGING
@@ -348,6 +351,7 @@ int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t cipherte
         #endif
         return -1;
     }
+
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, PADDING) <= 0)
     {
         #ifdef LOGGING
@@ -355,6 +359,7 @@ int CryptoRSA::decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t cipherte
         #endif
         return -1;
     }
+
     if (EVP_PKEY_decrypt(ctx, plaintext, &plaintextLength, ciphertext, ciphertextLength) <= 0)
     {
         #ifdef LOGGING
