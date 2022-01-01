@@ -60,5 +60,33 @@ b411f593df510506131549a8f79158a2  5357083.dec.pdf
 
 ### Encrypt with CLI
 
+<pre><code>
+openssl rand 32 > AESKey.txt
+openssl rand 16 > AESIV.txt
+openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in 5357083.pdf -K $(xxd -p -c 256 AESKey.txt)  -iv $(xxd -p -c 256 AESIV.txt) -out 5357083.pdf.bfly
+</code></pre>
 
+<pre><code>
+openssl rand 256 > rsa_ek2.txt
+openssl rand 16 > rsa_iv2.txt
+openssl enc -aes-256-cbc -e -in AES.txt -K $(xxd -p -c 256 rsa_ek2.txt) -iv $(xxd -p -c 256 rsa_iv2.txt) -out AES.bin
+</code></pre>
 
+Encrypt the `rsa_ek2.txt` with the `openssl rsautl` cli and the `CPrivateRSA.pem`
+<pre><code>
+openssl rsautl -encrypt -inkey CPrivateRSA.pem -in rsa_ek2.txt -out rsa_ek2.bin
+</code></pre>
+
+Encrypt the `CPrivateRSA.pem` file with the `AES-256-CBC` Cipher
+<pre><code>
+openssl rand 1721 > rsa_ek1.txt
+openssl rand 16 > rsa_iv1.txt
+openssl enc -aes-256-cbc -e -in CPrivateRSA.pem -K $(xxd -p -c 256 rsa_ek1.txt) -iv $(xxd -p -c 256 rsa_iv1.txt) -out CPrivateRSA.bin
+</code></pre>
+
+Encrypt the `rsa_ek1.txt` with the `openssl rsautl` cli
+<pre><code>
+openssl rsautl -encrypt -inkey ../../masterkeys/SPublic.pem -in rsa_ek1.txt -out rsa_ek1.bin
+</code></pre>
+
+Concatenate rsa_ek1.bin + rsa_iv1.txt + rsa_ek2.bin + rsa_iv2.txt => RSA.bin
