@@ -18,7 +18,5 @@ include_directories(include)
 #file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
 add_executable(rsabfly src/main.cpp src/rsa.cpp)
-add_executable(rsa_crypto_example src/main_crypto_example.cpp src/rsa_crypto_example.cpp)
 
 target_link_libraries(rsabfly OpenSSL::SSL)
-target_link_libraries(rsa_crypto_example OpenSSL::SSL)

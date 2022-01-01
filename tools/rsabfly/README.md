@@ -18,6 +18,13 @@ Encrypt with `rsabfly`
 </code></pre>
 
 Decrypt with openssl cli
+<pre><code>
+openssl rsautl -decrypt -inkey RSAPrivateKey.pem -in rsa_ek.bin -out rsa_ek.txt
+</code></pre>
+
+<pre><code>
+openssl enc -aes-256-cbc -d -in encrypted.bin -K $(xxd -p -c 256 rsa_ek.txt) -iv $(xxd -p -c 256 rsa_iv.txt) -out encrypted.dec.txt
+</code></pre>
 
 ## cli -> rsabfly
 Encrypt with openssl cli

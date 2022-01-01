@@ -52,8 +52,8 @@ public:
     char *getPrivateKeyStr();
     char *getPublicKeyStr();
 
-    int encryptEVP(EVP_PKEY *key, const unsigned char *message, size_t messageLength, unsigned char **encryptedMessage, unsigned char **encryptedKey, size_t *encryptedKeyLength, unsigned char **iv);
-    int decryptEVP(EVP_PKEY *key, unsigned char *encryptedMessage, size_t encryptedMessageLength, unsigned char *encryptedKey, size_t encryptedKeyLength, unsigned char *iv, unsigned char **decryptedMessage);
+    int encryptEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext);
+    int decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext);
 
     static int encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext);
     static int decrypt(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *plaintext);
