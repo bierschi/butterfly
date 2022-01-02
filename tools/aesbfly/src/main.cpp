@@ -38,16 +38,13 @@ void encrypt_with_aes(const std::string &filename)
 
 }
 
-void decrypt_with_aes(const std::string &filename, const std::string &aeskeyFile, const std::string &aesivFile, bool hex)
+void decrypt_with_aes(const std::string &filename, std::string aeskey, std::string aesiv, bool hex)
 {
     std::shared_ptr<tools::CryptoAES> cryptoAES(new tools::CryptoAES());
 
     std::cout << "Decrypting file " << filename << " with AES..." << std::endl;
 
     std::string fileDataBfly = readBinFile(filename);
-
-    std::string aeskey = readBinFile(aeskeyFile);
-    std::string aesiv  = readBinFile(aesivFile);
 
     if (hex)
     {
@@ -82,6 +79,7 @@ void showUsage()
                  + "\t-dec, --decrypt\t    Decrypts the file with AES\n"
                  + "\t-k,   --key         Provide the AESKey for the Decryption\n"
                  + "\t-i,   --iv          Provide the AESIV for the Decryption\n"
+                 + "\t-p,   --pair        Provide the AES Keypair(Key+IV) for the Decryption\n"
                  + "\t--hex               Provide the AESKey and AESIV as hex numbers\n"
                  + "\t-h,   --help\t    Show this message and quit"
 
@@ -118,19 +116,24 @@ int main (int argc, char* argv[])
         }
         else if (arg == "-dec" || arg == "--decrypt")
         {
-            std::string key, iv;
-            bool hex = false;
+            std::string keyFile, ivFile, keypairFile;
+            bool hex = false, pair=false;
             for (int j=2; j < argc; j++)
             {
                 std::string arg2 = argv[j];
 
                 if (arg2 == "-k" || arg2 == "--key")
                 {
-                    key = argv[j+1];
+                    keyFile = argv[j+1];
                 }
                 if (arg2 == "-i" || arg2 == "--iv")
                 {
-                    iv = argv[j+1];
+                    ivFile = argv[j+1];
+                }
+                if (arg2 == "-p" || arg2 == "--pair")
+                {
+                    keypairFile = argv[j+1];
+                    pair = true;
                 }
                 if (arg2 == "--hex")
                 {
@@ -138,7 +141,29 @@ int main (int argc, char* argv[])
                 }
             }
             std::string filename = argv[argc-1];
-            decrypt_with_aes(filename, key, iv, hex);
+            if (pair)
+            {
+                std::string keypair = readBinFile(keypairFile);
+                if (keypair.length() == 48)
+                {
+                    std::string key = keypair.substr(0, 32);
+                    std::string iv = keypair.substr(32, 48);
+
+                    decrypt_with_aes(filename, key, iv, hex);
+                } else
+                {
+                    std::cerr << "String length of keypair is unequal 48!. Exiting" << std::endl;
+                    exit(1);
+                }
+
+            } else
+            {
+                std::string aeskey = readBinFile(keyFile);
+                std::string aesiv  = readBinFile(ivFile);
+
+                decrypt_with_aes(filename, aeskey, aesiv, hex);
+            }
+
 
             break;
         } else

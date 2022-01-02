@@ -31,9 +31,15 @@ void Butterfly::initLoggingFramework()
     }
     
     #ifdef LOGGING
-    LOG_INFO("Running " << PROJECT_NAME << " with version " << _args.version);
+    if( Logger::isConfigFileAvailable() )
+    {
+        LOG_INFO("Running " << PROJECT_NAME << " version " << _args.version);
+    } else
+    {
+        std::cout << "Running " << PROJECT_NAME << " version " << _args.version << std::endl;
+    }
     #else
-    std::cout << "Running " << PROJECT_NAME << " with version " << _args.version << std::endl;
+    std::cout << "Running " << PROJECT_NAME << " version " << _args.version << std::endl;
     #endif
 }
 

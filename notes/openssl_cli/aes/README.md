@@ -1,6 +1,6 @@
 # BFLY AES Decryption
 
-File was encrypted with butterfly application and the AESKeyPair was saved unencrypted <br>
+File was encrypted with the `butterfly` application and the AES KeyPair was saved unencrypted to file `AES.bin.unencrypted`<br>
 
 
 ### Get AESKey and AESIV from `AES.bin.unencrypted`
