@@ -6,10 +6,6 @@ namespace butterfly
 
 ArgumentParser::ArgumentParser(int argc, char *argv[]) : _argc(argc), _argv(argv)
 {
-
-    // Logger is disabled as default setting
-    Logger::disable();
-
     // Save all arguments in vector
     for(int i = 1; i < _argc; i++)
     {
@@ -44,7 +40,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
             } else if (arg == "-p" || arg == "--protected")
             {
                 found = true;
-                args._protected = true;
+                args.protection = true;
             }
             else if (arg == "-c" || arg == "--config")
             {
@@ -52,10 +48,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true;
-                    std::string configPath = _argv[i + 1];
-
-                    // init logger instance
-                    Logger::initFromConfig(configPath);
+                    args.config = _argv[i + 1];
 
                 } else
                 {
@@ -68,7 +61,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true;
-                    args._dir = _argv[i + 1];
+                    args.dir = _argv[i + 1];
 
                 } else
                 {
@@ -76,13 +69,13 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     exit(1);
                 }
 
-            } else if (arg == "--encrypt")
+            } else if (arg == "-enc" || arg == "--encrypt")
             {
                 // check end of argc
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true;
-                    args._encrypt = _argv[i + 1];
+                    args.encrypt = _argv[i + 1];
 
                 } else
                 {
@@ -90,13 +83,13 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     exit(1);
                 }
 
-            } else if (arg == "--decrypt")
+            } else if (arg == "-dec" || arg == "--decrypt")
             {
                 // check end of argc
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true, decrypt = true;
-                    args._decrypt = _argv[i + 1];
+                    args.decrypt = _argv[i + 1];
 
                 } else
                 {
@@ -110,7 +103,7 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                 if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
                 {
                     found = true, key = true;
-                    args._serverpKey = _argv[i + 1];
+                    args.serverpKey = _argv[i + 1];
 
                 } else
                 {
@@ -118,7 +111,8 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
                     exit(1);
                 }
 
-            } else {
+            } else
+            {
 
                 if ( i + 1 < _argc && (!strchr(_argv[i + 1], '-')) )
                 {
@@ -127,7 +121,11 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
 
             }
         }
-        if (!found or (!decrypt && key) or (decrypt && !key))
+        if ( (!decrypt && key) or (decrypt && !key) )
+        {
+            std::cout << "Please use -dec/--decrypt and -k/--key options together!" << std::endl;
+            exit(1);
+        } else if (!found)
         {
             showUsage();
             exit(1);
@@ -144,10 +142,10 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
 void ArgumentParser::showUsage() const
 {
     std::cout << "Usage: \n\t"
-                        + std::string(PROJECT_NAME) + " --dir /home/butterfly/test/\n\t"
-                        + std::string(PROJECT_NAME) + " --dir /home/butterfly/test/ --protected\n\t"
-                        + std::string(PROJECT_NAME) + " --encrypt /home/butterfly/test/ \n\t"
-                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/test/ --key /home/butterfly/SPrivateRSA.pem\n\n"
+                        + std::string(PROJECT_NAME) + " --dir /home/testuser/butterfly/data/\n\t"
+                        + std::string(PROJECT_NAME) + " --dir /home/testuser/butterfly/data/ --protected\n\t"
+                        + std::string(PROJECT_NAME) + " --encrypt /home/testuser/butterfly/data/ \n\t"
+                        + std::string(PROJECT_NAME) + " --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem\n\n"
 
                + "Options:\n"
                         + "\t-d,   --dir         Directory Path to start the Encryption+Decryption\n"

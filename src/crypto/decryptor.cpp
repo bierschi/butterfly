@@ -9,9 +9,11 @@ namespace butterfly
 namespace hybrid
 {
 
-Decryptor::Decryptor(const std::string &aesKeyDBPath) : _aesKeyDBPath(aesKeyDBPath), _aesDecryptor(new aes::AESDecryptor())
+Decryptor::Decryptor() : _aesDecryptor(new aes::AESDecryptor())
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class Decryptor");
+    #endif
 }
 
 void Decryptor::removeDecryptedFiles()
@@ -72,7 +74,9 @@ void Decryptor::invokeDir(const std::string &pkeyFromServer)
             // Compare file size with the MAX FILE SIZE
             if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE)
             {
+                #ifdef LOGGING
                 LOG_TRACE("Spawn a new decryption thread for file: " << file.string());
+                #endif
                 spawnThread(file.string());
             } else
             {
@@ -101,7 +105,9 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
 
         _rsaDecryptorCPrivateRSA->decryptEVP(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
         //_rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA);
+        #ifdef LOGGING
         LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
+        #endif
         //std::cout << "Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << std::endl;
 
     } catch (RSADecryptionException &e)
@@ -135,7 +141,9 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
 
         rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair, butterfly::RSAKEY_TYPE::AESKEY);
         //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair);
+        #ifdef LOGGING
         LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length());
+        #endif
         //std::cout << "Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length() << std::endl;
 
     } catch (RSADecryptionException &e)

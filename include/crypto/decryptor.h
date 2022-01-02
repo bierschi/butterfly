@@ -23,7 +23,7 @@ class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _aesKeyDBPath, _dirPath;
+    std::string _decryptedCPrivateRSA, _dirPath;
     std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA;
@@ -51,9 +51,8 @@ public:
      *       std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
      *       decryptor->invokeDir("/home/", "SPrivateRSA.pem");
      *
-     * @param aesKeyDBPath: Path to the AESKey Database
      */
-    explicit Decryptor(const std::string &aesKeyDBPath = "AES.db");
+    Decryptor();
 
     /**
      * Destructor Decryptor

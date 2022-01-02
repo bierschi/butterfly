@@ -4,9 +4,9 @@
 
 #include <iostream>
 #include <vector>
+#include <cstring>
 
 #include "app.h"
-#include "logger.h"
 
 namespace butterfly
 {
@@ -35,11 +35,11 @@ public:
 
     struct Arguments
     {
-        std::string _dir, _encrypt, _decrypt, _serverpKey, _config;
-        bool _protected;
-        std::string _version;
+        std::string dir, encrypt, decrypt, serverpKey, config;
+        bool protection;
+        std::string version;
 
-        Arguments() : _protected(false), _version(PROJECT_VER) {}
+        Arguments() : protection(false), version(PROJECT_VER) {}
     };
 
     /**
