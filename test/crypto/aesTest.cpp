@@ -88,7 +88,7 @@ TEST_F(CryptoAESTest, setAESKey)
 /**
  * Testcase for testing the setAESIv
  */
-TEST_F(CryptoAESTest, AESIVLength)
+TEST_F(CryptoAESTest, setAESIv)
 {
     cryptoAES->setAESIv(aesivTest);
     std::string aesiv = cryptoAES->getAESIv();

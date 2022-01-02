@@ -11,16 +11,17 @@
 class RSAEncryptorTest : public ::testing::Test
 {
 
-    protected:
-        std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptAESKey;
-        std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptCPrivateRSA;
+protected:
+    int rsaKeysize = 2048;
+    std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptAESKey;
+    std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptCPrivateRSA;
 
     void SetUp() override
     {
         // Init rsaEncryptCPrivateRSA with Server Public Key embedded in ransomware
-        rsaEncryptCPrivateRSA.reset(new butterfly::rsa::RSAEncryptor(butterfly::rsa::SPUBLIC_PEM));
+        rsaEncryptCPrivateRSA = std::unique_ptr<butterfly::rsa::RSAEncryptor>(new butterfly::rsa::RSAEncryptor(butterfly::rsa::SPUBLIC_PEM));
         // Init rsaEncryptAESKey with keysize 2048
-        rsaEncryptAESKey.reset( new butterfly::rsa::RSAEncryptor(2048));
+        rsaEncryptAESKey = std::unique_ptr<butterfly::rsa::RSAEncryptor>(new butterfly::rsa::RSAEncryptor(rsaKeysize));
     }
 
     void TearDown() override
@@ -30,18 +31,9 @@ class RSAEncryptorTest : public ::testing::Test
 };
 
 /**
- * Testcase for CPrivateRSA string
- */
-TEST_F(RSAEncryptorTest, CPrivateRSA_String)
-{
-    std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
-    ASSERT_TRUE(!cprivateRSAKeyFile.empty());
-}
-
-/**
  * Testcase for Encryption
  */
-TEST_F(RSAEncryptorTest, Encryption)
+TEST_F(RSAEncryptorTest, rsaEncryption)
 {
     std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());

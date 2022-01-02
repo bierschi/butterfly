@@ -11,6 +11,7 @@ class CryptoRSATest : public ::testing::Test
 
 protected:
     int rsaKeysize = 2048;
+    std::string msg_to_encrypt = "abcdef";
     std::unique_ptr<butterfly::rsa::CryptoRSA> cryptoRSA;
 
     void SetUp() override
@@ -23,29 +24,6 @@ protected:
 
     }
 };
-
-/**
- * Testcase for testing the getRSAIV
- */
- /*
-TEST_F(CryptoRSATest, getRSAIV)
-{
-    std::string rsaiv = reinterpret_cast<const char *>(cryptoRSA->getRSAIV());
-    EXPECT_TRUE( rsaiv.length() == 16);
-    EXPECT_FALSE(rsaiv.length() == 17);
-}*/
-
-/**
- * Testcase for testing the getRSAEncryptedKey
- */
- /*
-TEST_F(CryptoRSATest, getRSAEncryptedKey)
-{
-    std::string rsaek = reinterpret_cast<const char *>(cryptoRSA->getRSAEncryptedKey());
-    EXPECT_TRUE( rsaek.length() == 32);
-    EXPECT_FALSE(rsaek.length() == 33);
-}
-*/
 
 /**
  * Testcase for testing the getEvpPkeySize
@@ -96,3 +74,49 @@ TEST_F(CryptoRSATest, getPublicKeyStr)
 
     EXPECT_TRUE( fLine == "-----BEGIN PUBLIC KEY-----");
 }
+
+/**
+ * Testcase for testing the encryptEVP
+ */
+TEST_F(CryptoRSATest, encryptEVP)
+{
+    unsigned char *encryptedMessage = nullptr;
+    int encryptedMessageLength = cryptoRSA->encryptEVP(cryptoRSA->getEvpPkey(), (const unsigned char*)msg_to_encrypt.c_str(), msg_to_encrypt.size(), &encryptedMessage);
+
+    EXPECT_FALSE(encryptedMessageLength == -1);
+    EXPECT_TRUE(encryptedMessage != nullptr);
+}
+
+/**
+ * Testcase for testing the getRSAIV
+ */
+TEST_F(CryptoRSATest, getRSAIV)
+{
+   std::string rsaiv = reinterpret_cast<const char *>(cryptoRSA->getRSAIV());
+   EXPECT_TRUE( rsaiv.length() == EVP_MAX_IV_LENGTH);
+   EXPECT_FALSE(rsaiv.length() == 17);
+}
+
+/**
+ * Testcase for testing the getRSAEncryptedKey
+ */
+TEST_F(CryptoRSATest, getRSAEncryptedKey)
+{
+   std::string rsaek = reinterpret_cast<const char *>(cryptoRSA->getRSAEncryptedKey());
+   EXPECT_TRUE( !rsaek.empty());
+}
+
+/**
+ * Testcase for testing the decryptEVP
+ */
+ /*
+TEST_F(CryptoRSATest, decryptEVP)
+{
+    std::string encryptedMessage = readBinFile(ENCRYPTED_FILE);
+    std::string rsaek = readBinFile(RSA_EK_FILE);
+    std::string rsaiv = readBinFile(RSA_IV_FILE);
+
+    char *decryptedMessage = nullptr;
+    int decryptedMessageLength = cryptoRSA->decryptEVP(cryptoRSA->getEvpPkey(), (unsigned char *) encryptedMessage.c_str(), encryptedMessage.length(), (unsigned char *) rsaek.c_str(), (unsigned char *) rsaiv.c_str(), (unsigned char**)&decryptedMessage);
+
+}*/

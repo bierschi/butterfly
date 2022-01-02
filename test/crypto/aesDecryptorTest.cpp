@@ -28,25 +28,9 @@ protected:
 };
 
 /**
- * Testcase for testing the AES Key/IV Setter/Getter
+ * Testcase for decrypting a file with AES
  */
-TEST_F(AESDecryptorTest, AESKEYPair)
-{
-
-    aesDecryptor->setAESKey(aeskeyTest);
-    aesDecryptor->setAESIv(aesivTest);
-
-    std::string aeskey = aesDecryptor->getAESKey();
-    std::string aesiv = aesDecryptor->getAESIv();
-
-    EXPECT_TRUE( aeskey == aeskeyTest);
-    EXPECT_TRUE( aesiv == aesivTest);
-}
-
-/**
- * Testcase for decrypting a file
- */
-TEST_F(AESDecryptorTest, DecryptFile)
+TEST_F(AESDecryptorTest, decryptFile)
 {
 
     aesDecryptor->setAESKey(aeskeyTest);

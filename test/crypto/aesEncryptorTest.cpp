@@ -55,11 +55,10 @@ protected:
     }
 };
 
-
 /**
- * Testcase for encrypting a file
+ * Testcase for encrypting a file with AES
  */
-TEST_F(AESEncryptorTest, EncryptFile)
+TEST_F(AESEncryptorTest, encryptFile)
 {
     aesEncryptor->setAESKey(aeskeyTest);
     aesEncryptor->setAESIv(aesivTest);
