@@ -4,7 +4,7 @@
 #include "crypto/rsaDecryptor.h"
 
 /**
- * Testclass CryptoRSATest
+ * Testclass RSADecryptorTest
  */
 class RSADecryptorTest : public ::testing::Test
 {
@@ -14,7 +14,7 @@ protected:
 
     void SetUp() override
     {
-        rsaDecryptor.reset(new butterfly::rsa::RSADecryptor("../masterkeys/SPrivateRSA.pem"));
+        rsaDecryptor = std::unique_ptr<butterfly::rsa::RSADecryptor>(new butterfly::rsa::RSADecryptor("../masterkeys/SPrivateRSA.pem"));
     }
 
     void TearDown() override
@@ -24,18 +24,9 @@ protected:
 };
 
 /**
- * Testcase for CPrivateRSA.bin file
- */
-TEST_F(RSADecryptorTest, CPrivateRSA_String)
-{
-    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::ENC_CPRIVATERSA_FILENAME);
-    ASSERT_TRUE( !encCPrivateRSA.empty());
-}
-
-/**
  * Testcase for Decryption
  */
-TEST_F(RSADecryptorTest, Decryption)
+TEST_F(RSADecryptorTest, rsaDecryption)
 {
 
     std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::ENC_CPRIVATERSA_FILENAME);
@@ -47,4 +38,3 @@ TEST_F(RSADecryptorTest, Decryption)
 
     butterfly::writeBinFile("CPrivateRSA.pem.dec", decryptedMessage.c_str(), decLen);
 }
-
