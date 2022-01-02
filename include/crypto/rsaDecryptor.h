@@ -26,7 +26,7 @@ private:
     /**
      * Validates the length of given string with the RSA key size
      */
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize);
 
     /**
      * Reads the RSA file that includes the RSA EK and RSA IV from the host machine

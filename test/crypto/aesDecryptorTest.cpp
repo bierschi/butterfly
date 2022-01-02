@@ -2,6 +2,9 @@
 #include <gtest/gtest.h>
 
 #include "crypto/aesDecryptor.h"
+#include "bflyUtils.h"
+
+#define TESTFILE "../test/crypto/testfile.pdf"
 
 /**
  * Testclass AESDecryptorTest
@@ -10,12 +13,12 @@ class AESDecryptorTest : public ::testing::Test
 {
 
 protected:
-    std::string _aeskey = "0123456789abcefghijklmnopqrstuvw", _aesiv = "0123456789abcefg";
+    std::string aeskeyTest = "0123456789abcefghijklmnopqrstuvw", aesivTest = "0123456789abcefg";
     std::unique_ptr<butterfly::aes::AESDecryptor> aesDecryptor;
 
     void SetUp() override
     {
-        aesDecryptor.reset(new butterfly::aes::AESDecryptor());
+        aesDecryptor = std::unique_ptr<butterfly::aes::AESDecryptor>(new butterfly::aes::AESDecryptor());
     }
 
     void TearDown() override
@@ -30,15 +33,14 @@ protected:
 TEST_F(AESDecryptorTest, AESKEYPair)
 {
 
-    aesDecryptor->generateAESKeyWithSalt();
-    aesDecryptor->setAESKey(_aeskey);
-    aesDecryptor->setAESIv(_aesiv);
+    aesDecryptor->setAESKey(aeskeyTest);
+    aesDecryptor->setAESIv(aesivTest);
 
     std::string aeskey = aesDecryptor->getAESKey();
     std::string aesiv = aesDecryptor->getAESIv();
 
-    EXPECT_TRUE( aeskey == _aeskey);
-    EXPECT_TRUE( aesiv == _aesiv);
+    EXPECT_TRUE( aeskey == aeskeyTest);
+    EXPECT_TRUE( aesiv == aesivTest);
 }
 
 /**
@@ -47,8 +49,20 @@ TEST_F(AESDecryptorTest, AESKEYPair)
 TEST_F(AESDecryptorTest, DecryptFile)
 {
 
-    aesDecryptor->setAESKey(_aeskey);
-    aesDecryptor->setAESIv(_aesiv);
+    aesDecryptor->setAESKey(aeskeyTest);
+    aesDecryptor->setAESIv(aesivTest);
 
-    aesDecryptor->decryptFile("../test/crypto/testfile.pdf" + butterfly::ENC_BFLY_FILE_ENDING);
+    if ( butterfly::existsFile(TESTFILE + butterfly::ENC_BFLY_FILE_ENDING) )
+    {
+        aesDecryptor->decryptFile(TESTFILE + butterfly::ENC_BFLY_FILE_ENDING);
+
+        if ( butterfly::existsFile(TESTFILE) )
+        {
+            butterfly::removeFile(TESTFILE);
+        }
+    } else
+    {
+        std::cerr << "Could not decrypt file " << TESTFILE + butterfly::ENC_BFLY_FILE_ENDING << " because file does not exists!" << std::endl;
+    }
+
 }
