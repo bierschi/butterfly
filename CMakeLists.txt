@@ -54,6 +54,11 @@ endif()
 # Enable Unittests and include test folder as a subdirectory
 if(UNITTESTS)
     MESSAGE("Enabled Unittests")
+    # Set the Library Output Directory
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+    # Create library libbfly for UnitTests
+    add_library (bfly ${SOURCE_FILES})
+    # Enable the testing
     enable_testing()
     add_subdirectory(test)
 else()
