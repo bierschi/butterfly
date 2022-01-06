@@ -92,6 +92,6 @@ TEST_F(CryptoAESTest, setAESIv)
 {
     cryptoAES->setAESIv(aesivTest);
     std::string aesiv = cryptoAES->getAESIv();
-    EXPECT_TRUE( aesiv.length() == 16);
+    EXPECT_TRUE(aesiv.length() == 16);
     EXPECT_TRUE(aesiv == aesivTest);
 }

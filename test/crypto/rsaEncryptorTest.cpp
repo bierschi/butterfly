@@ -22,6 +22,7 @@ protected:
         rsaEncryptCPrivateRSA = std::unique_ptr<butterfly::rsa::RSAEncryptor>(new butterfly::rsa::RSAEncryptor(butterfly::rsa::SPUBLIC_PEM));
         // Init rsaEncryptAESKey with keysize 2048
         rsaEncryptAESKey = std::unique_ptr<butterfly::rsa::RSAEncryptor>(new butterfly::rsa::RSAEncryptor(rsaKeysize));
+        // TODO Encrypt the AES.bin file
     }
 
     void TearDown() override
@@ -31,7 +32,7 @@ protected:
 };
 
 /**
- * Testcase for Encryption
+ * Testcase for RSA Encryption
  */
 TEST_F(RSAEncryptorTest, rsaEncryption)
 {
@@ -39,6 +40,7 @@ TEST_F(RSAEncryptorTest, rsaEncryption)
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
 
     int encMSGLen = rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+    ASSERT_TRUE(encMSGLen != -1);
 
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     ASSERT_TRUE(!encCPrivateRSA.empty());
