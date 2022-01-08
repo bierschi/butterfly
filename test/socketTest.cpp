@@ -83,6 +83,7 @@ TEST_F(SocketTest, accept)
     std::shared_ptr<butterfly::Socket> newSocket = serverSocket->accept();
     int fd = newSocket->getFileDescriptor();
     EXPECT_TRUE(fd != -1);
+
     testSocket->disconnect();
 }
 
