@@ -24,7 +24,7 @@ protected:
 };
 
 /**
- * Testcase for Decryption
+ * Testcase for RSA Decryption
  */
 TEST_F(RSADecryptorTest, rsaDecryption)
 {
@@ -34,6 +34,8 @@ TEST_F(RSADecryptorTest, rsaDecryption)
 
     std::string decryptedMessage;
     int decLen = rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, decryptedMessage, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+    ASSERT_TRUE(decLen != -1);
+
     ASSERT_TRUE( !decryptedMessage.empty());
 
     butterfly::writeBinFile("CPrivateRSA.pem.dec", decryptedMessage.c_str(), decLen);
