@@ -6,15 +6,15 @@
 /**
  * Testclass ConnManager
  */
-class ConnManager : public ::testing::Test
+class ConnManagerTest : public ::testing::Test
 {
 
 protected:
-    std::shared_ptr<butterfly::ConnManager> _connManager;
+    std::unique_ptr<butterfly::ConnManager> connManager;
 
     void SetUp() override
     {
-
+        connManager = std::unique_ptr<butterfly::ConnManager>(new butterfly::ConnManager());
     }
 
     void TearDown() override
