@@ -21,6 +21,8 @@ class BFLYServerApp:
         # router instance for specific endpoints
         self.router = Router(name=__title__)
         self.router.add_endpoint('/', 'index', method="GET", handler=self.api.index)
+        self.router.add_endpoint(endpoint='/decrypt/', endpoint_name='decrypt', method="POST", handler=self.api.decrypt)
+
 
     def run(self, host='0.0.0.0', port=None, debug=None):
         """

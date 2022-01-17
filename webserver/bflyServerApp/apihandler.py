@@ -22,3 +22,12 @@ class APIHandler:
         """
         return "hello world"
 
+    def decrypt(self):
+        """
+
+        :return:
+        """
+
+        self.logger.info("POST request to route /decrypt/")
+
+        return Response(status=200, response=json.dumps("Test"), mimetype='application/json')
