@@ -1,5 +1,6 @@
 import os
 import json
+import string
 import logging
 from flask import Response, request
 from bflyServerApp import Decryption
@@ -10,7 +11,7 @@ class APIHandler:
     """ class APIHandler to link routes to specific handler function
 
     USAGE:
-            api = APIHandler()
+            api = APIHandler(sprivatersa_filepath=../../masterkeys/SPrivateRSA.pem)
 
     """
     def __init__(self, sprivatersa_filepath):
@@ -22,15 +23,45 @@ class APIHandler:
         else:
             raise FileExistsError("Could not find file {}".format(sprivatersa_filepath))
 
-    def index(self):
+    def _is_hex(self, s):
+        """ checks if given string is in hex format
+
+        :param s: string to check
+        :return: True if the string is in hex, else False
         """
+        hex_digits = set(string.hexdigits)
+        return all(c in hex_digits for c in s)
+
+    def _decryption(self, cprivatersa, rsabin):
+        """ decrypts the cprivatersa string
+
+        :param cprivatersa: cprivate rsa string
+        :param rsabin rsa bin string
+        :return: Response object
+        """
+        try:
+            if self._is_hex(cprivatersa):
+                cprivatersa = bytes.fromhex(cprivatersa)
+            if self._is_hex(rsabin):
+                rsabin = bytes.fromhex(rsabin)
+
+            decryptor = Decryption(cprivatersa, rsabin, self.sprivatersa_filepath)
+            cprivatersa_decrypted = decryptor.get_decrypted_cprivatersa()
+            return Response(status=200, response=cprivatersa_decrypted.decode('utf-8'), mimetype='application/json')
+
+        except ValueError as e:
+            self.logger.error(e)
+            return Response(status=500, response="Internal Server Error at the Decryption Process occurred!", mimetype='application/json')
+
+    def index(self):
+        """ index page
 
         :return:
         """
         return "hello world"
 
-    def decrypt(self):
-        """ Decrypts the CPrivateRSA.bin string
+    def route_decrypt(self):
+        """ decrypts the CPrivateRSA.bin string
 
         :return: Response object
         """
@@ -46,28 +77,15 @@ class APIHandler:
                 self.logger.error("Missing Key 'RSA.bin 'in Request!")
                 return Response(status=400, response=json.dumps("Missing Key in Request"), mimetype='application/json')
 
-            cprivatersa_hex = request.json['CPrivateRSA.bin']
-            rsabin_hex = request.json['RSA.bin']
+            cprivate_rsa = request.json['CPrivateRSA.bin']
+            rsa_bin = request.json['RSA.bin']
 
-            cprivatersa = bytes.fromhex(cprivatersa_hex)
-            rsabin = bytes.fromhex(rsabin_hex)
-
-            decryptor = Decryption(cprivatersa, rsabin, self.sprivatersa_filepath)
-            cprivatersa_decrypted = decryptor.get_decrypted_cprivatersa()
-
-            #return Response(status=200, response=json.dumps(cprivatersa_decrypted.decode('utf-8')), mimetype='application/json')
-            return Response(status=200, response=cprivatersa_decrypted.decode('utf-8'), mimetype='application/json')
+            return self._decryption(cprivate_rsa, rsa_bin)
 
         elif all(key in request.form.keys() for key in ('CPrivateRSA.bin', 'RSA.bin')):
-            cprivatersa_hex = request.form['CPrivateRSA.bin']
-            rsabin_hex = request.form['RSA.bin']
+            cprivate_rsa = request.form['CPrivateRSA.bin']
+            rsa_bin = request.form['RSA.bin']
 
-            cprivatersa = bytes.fromhex(cprivatersa_hex)
-            rsabin = bytes.fromhex(rsabin_hex)
-
-            decryptor = Decryption(cprivatersa, rsabin, self.sprivatersa_filepath)
-            cprivatersa_decrypted = decryptor.get_decrypted_cprivatersa()
-            return Response(status=200, response=cprivatersa_decrypted.decode('utf-8'), mimetype='application/json')
-
+            return self._decryption(cprivate_rsa, rsa_bin)
         else:
             return Response(status=400, response=json.dumps("Not a valid json format!"), mimetype='application/json')

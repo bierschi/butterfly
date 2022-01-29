@@ -35,7 +35,7 @@ class Decryption:
             raise FileExistsError("Could not find file {}".format(sprivatersa_filepath))
 
     def _get_ekbin_from_rsabin(self):
-        """ Get the rsa ek from the RSA.bin string
+        """ get the rsa ek from the RSA.bin string
 
         :return: rsa_ek1, rsa_ek2
         """
@@ -44,7 +44,7 @@ class Decryption:
         return rsa_ek1, rsa_ek2
 
     def _get_iv_from_rsabin(self):
-        """ Get the rsa iv from the RSA.bin string
+        """ get the rsa iv from the RSA.bin string
 
         :return: rsa_iv1, rsa_iv2
         """
@@ -53,7 +53,7 @@ class Decryption:
         return rsa_iv1, rsa_iv2
 
     def decrypt_rsa(self):
-        """ Decrypt the rsa_ek1.bin with the RSA Decryption class
+        """ decrypt the rsa_ek1.bin with the RSA Decryption class
 
         :return: rsa_ek1 string
         """
@@ -67,10 +67,10 @@ class Decryption:
             self.logger.error("File {} not found!".format(self.sprivatersa_filepath))
 
         except ValueError as e:
-            self.logger.error("Exception: {}".format(e))
+            self.logger.error(e)
 
     def decrypt_aes(self, key, iv, enc):
-        """ Decrypt the CPrivateRSA.bin with the AES Decryption class
+        """ decrypt the CPrivateRSA.bin with the AES Decryption class
 
         :return: decrypted CPrivateRSA string
         """
