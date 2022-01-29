@@ -106,5 +106,4 @@ venv.bak/
 #project
 .idea/
 files/
-bflyServerApp/decryption_old.py
 notes.txt
