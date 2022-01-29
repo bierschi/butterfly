@@ -87,13 +87,3 @@ class RSADecryption:
             return self.private_key.decrypt(enc_msg, padding=padding.PKCS1v15())
         else:
             raise ValueError("'private_key' is not initialized! Did you invoke the generate_keys() or the load_private_key() method?")
-
-
-if __name__ == '__main__':
-
-    dec = RSADecryption()
-    #dec.generate_keys()
-    dec.load_private_key("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem")
-    with open('/home/christian/projects/butterfly/webserver/files/rsa_ek1.bin', 'rb') as f:
-        encrypted = f.read()
-    print(dec.decrypt(encrypted))

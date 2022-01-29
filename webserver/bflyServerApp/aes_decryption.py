@@ -36,26 +36,3 @@ class AESDecryption:
         :return: aes decrypted message as byte string
         """
         return self.decryptor.update(enc_msg) + self.decryptor.finalize()
-
-
-if __name__ == '__main__':
-    #key = os.urandom(32)
-    #iv = os.urandom(16)
-    with open('/home/christian/projects/butterfly/webserver/files/rsa_ek1.txt', 'rb') as f:
-        key = f.read()
-    with open('/home/christian/projects/butterfly/webserver/files/rsa_iv1.txt', 'rb') as f:
-        iv = f.read()
-    with open('/home/christian/projects/butterfly/webserver/files/CPrivateRSA.bin', 'rb') as f:
-        enc = f.read()
-    aes = AESDecryption(key, iv)
-    #enc = aes.encrypt(b"a secret messagea")
-    dec = aes.decrypt(enc)
-    print(dec.decode())
-
-    #cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
-    #encryptor = cipher.encryptor()
-    #ct = encryptor.update(b"a secret message") + encryptor.finalize()
-    #print(ct)
-    #decryptor = cipher.decryptor()
-    #dec = decryptor.update(ct) + decryptor.finalize()
-    #print(dec)
