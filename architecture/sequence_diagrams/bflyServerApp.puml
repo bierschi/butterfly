@@ -7,9 +7,11 @@ actor "webserver \n**/decryption/**" as webserver
 participant SPrivateRSA.pem
 participant RSADecryption
 participant AESDecryption
-participant CPrivateRSA.pem
 
 target -> webserver: Send **CPrivateRSA.bin** and **RSA.bin**\n in HTTP POST Request
-webserver <- CPrivateRSA.pem: Get the decrypted **CPrivateRSA.pem** string
+webserver -> SPrivateRSA.pem: Load the **SPrivateRSA.pem** file for RSA Decryption
+SPrivateRSA.pem -> RSADecryption: Decrypt **rsa_ek1.bin** from **RSA.bin**
+RSADecryption -> AESDecryption: Decrypt **CPrivateRSA.bin** with \n**rsa_ek1.txt** and **rsa_iv1.txt**
+webserver <- AESDecryption: Get the decrypted **CPrivateRSA.pem** string
 webserver -> target: Send decrypted **CPrivateRSA.pem**\n back to the target
 @enduml
