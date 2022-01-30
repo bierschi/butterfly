@@ -17,7 +17,7 @@ Install openssl and boost filesystem libraries
 sudo apt-get install -y libssl-dev libboost-filesystem-dev
 </code></pre>
 
-If you enable the logging definition with cmake you need to install the boost logging library as well
+If you enable the logging definition with cmake you also need to install the boost logging library
 <pre><code>
 sudo apt-get install -y libboost-log-dev
 </code></pre>
@@ -48,17 +48,22 @@ Print the available arguments for Butterfly
 </code></pre>
 
 <pre><code>
+Butterfly is a cryptographic ransomware
+
 Usage: 
 	butterfly --dir /home/testuser/butterfly/data/
 	butterfly --dir /home/testuser/butterfly/data/ --protected
+
 	butterfly --encrypt /home/testuser/butterfly/data/ 
+	butterfly --decrypt /home/testuser/butterfly/data/ 
+
 	butterfly --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem
 
 Options:
-	-d,   --dir         Directory Path to start the Encryption+Decryption
+	-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)
 	-enc, --encrypt	    Encrypts all files in provided directory
-	-dec, --decrypt	    Decrypts all files in provided diretory
-	-k,   --key         Private Key from the Server for the Decryption (Corresponds to the embedded Server Public Key)
+	-dec, --decrypt	    Decrypts all files in provided directory, if the request to the Server was successful
+	-k,   --key         Masterkey for the Decryption (Corresponds to the embedded Server Public Key)
 	-p,   --protected   Save all key files to the System
 	-c,   --config	    Logger Config Path
 	-v,   --version	    Show version information and quit
