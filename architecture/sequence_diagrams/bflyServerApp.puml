@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor target
+actor "webserver \n**/decryption/**" as webserver
+
+participant SPrivateRSA.pem
+participant RSADecryption
+participant AESDecryption
+participant CPrivateRSA.pem
+
+target -> webserver: Send **CPrivateRSA.bin** and **RSA.bin**\n in HTTP POST Request
+webserver <- CPrivateRSA.pem: Get the decrypted **CPrivateRSA.pem** string
+webserver -> target: Send decrypted **CPrivateRSA.pem**\n back to the target
+@enduml
