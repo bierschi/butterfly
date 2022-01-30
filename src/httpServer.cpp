@@ -6,8 +6,9 @@ namespace butterfly
 
 HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _TCPSocket(std::make_shared<TCPSocket>()), _newTCPSocket(std::make_shared<TCPSocket>())
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class HTTPServer");
-
+    #endif
     _TCPSocket->bind(_port);
     _TCPSocket->listen();
 }
@@ -24,7 +25,9 @@ void HTTPServer::registerMasterPKeyCB(std::function<void(std::string)> cb)
 
 void HTTPServer::run()
 {
+    #ifdef LOGGING
     LOG_INFO("Running HTTPServer on port " << _port);
+    #endif
     _running = true;
 
     while(_running)
@@ -58,8 +61,9 @@ void HTTPServer::stop()
 
 bool HTTPServer::handleRequest()
 {
-
+    #ifdef LOGGING
     LOG_TRACE("Handle new HTTP Request!");
+    #endif
     _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
@@ -91,7 +95,9 @@ bool HTTPServer::recvRequest()
     }
     else
     {
+        #ifdef LOGGING
         LOG_ERROR("No HTTP Data received!");
+        #endif
         return false;
     }
 
@@ -109,7 +115,9 @@ void HTTPServer::processRequest()
     {
         if ( url == "/" )
         {
+            #ifdef LOGGING
             LOG_TRACE("Prepare Browser Response");
+            #endif
             browserRoute();
         } else
         {
@@ -121,8 +129,9 @@ void HTTPServer::processRequest()
 
         if ( url == "/masterkey" )
         {
+            #ifdef LOGGING
             LOG_TRACE("Extracting provided masterkey from HTTP Request");
-
+            #endif
             if ( masterKeyRoute() )
             {
                 successResponse(200);
@@ -138,7 +147,9 @@ void HTTPServer::processRequest()
 
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Method not supported from HTTP Server!");
+        #endif
         errorResponse(500);
     }
 
@@ -168,12 +179,16 @@ bool HTTPServer::masterKeyRoute()
 
         } else
         {
+            #ifdef LOGGING
             LOG_ERROR("No MasterPrivateKey Callback registered!");
+            #endif
         }
         return true;
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Invalid Private Key provided on /masterkey Route!")
+        #endif
         return false;
     }
 

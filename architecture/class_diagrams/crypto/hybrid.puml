@@ -187,11 +187,11 @@ CryptoRSA <|-- RSADecryptor
 CryptoAES <|-- AESEncryptor
 CryptoAES <|-- AESDecryptor
 
-RSAEncryptor "1..*" o-- "1" Encryptor: <<uses>>
-AESEncryptor "1..*" o-- "1" Encryptor: <<uses>>
+RSAEncryptor "1..*" o-- "1" Encryptor: <<encrypting keys>>
+AESEncryptor "1..*" o-- "1" Encryptor: <<encrypting files>>
 
-RSADecryptor "1..*" o-- "1" Decryptor: <<uses>>
-AESDecryptor "1..*" o-- "1" Decryptor: <<uses>>
+RSADecryptor "1..*" o-- "1" Decryptor: <<decrypting keys>>
+AESDecryptor "1..*" o-- "1" Decryptor: <<decrypting files>>
 
 }
 @enduml

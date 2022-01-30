@@ -11,13 +11,16 @@ unsigned long RSADecryptor::cPrivateRSAKeyLength = 0, RSADecryptor::AESKEYLength
 
 RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key)
 {
+    #ifdef LOGGING
     LOG_TRACE("Create class RSADecryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
+    #endif
 }
 
 bool RSADecryptor::validateStringLengthForRSA(const std::string &msg, const int &keysize)
 {
+    #ifdef LOGGING
     LOG_TRACE("Validating message length " << msg.length() << " with key size " << keysize);
-
+    #endif
     if (static_cast<int>(msg.length()) > keysize)
     {
         return false;
@@ -49,7 +52,14 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
         iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
 
-    } /*else
+    } else
+    {
+        #ifdef LOGGING
+        LOG_ERROR("RSAKEY_TYPE Number " + std::to_string(rsakeysType) + " is not implemented!");
+        #endif
+        std::cerr << "RSAKEY_TYPE Number " + std::to_string(rsakeysType) + " is not implemented!" << std::endl;
+    }
+    /*else
     {
         // 256 Bytes
         RSADecryptor::AESIVLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
@@ -61,13 +71,17 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
 
     if ( encKey.empty() )
     {
+        #ifdef LOGGING
         LOG_ERROR("encKey is empty for RSAKEY_TYPE " << rsakeysType)
+        #endif
         throw RSADecryptionException("encKey is empty for RSAKEY_TYPE " + std::to_string(rsakeysType));
     }
 
     if ( iv.empty() )
     {
+        #ifdef LOGGING
         LOG_ERROR("iv is empty for RSAKEY_TYPE " << rsakeysType)
+        #endif
         throw RSADecryptionException("iv is empty for RSAKEY_TYPE " + std::to_string(rsakeysType));
     }
 }
@@ -79,7 +93,9 @@ std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
         std::string binFile = butterfly::readBinFile(filepath);
         if ( binFile.empty() )
         {
+            #ifdef LOGGING
             LOG_ERROR("Content of binary file " + filepath + " is empty!")
+            #endif
             throw RSADecryptionException("Content of binary file " + filepath + " is empty!");
         } else
         {
@@ -87,7 +103,9 @@ std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
         }
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Binary File " << filepath << " does not exists!")
+        #endif
         throw RSADecryptionException("Binary File " + filepath + " does not exists!");
     }
 
@@ -99,7 +117,9 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
     // First check the message size
     if ( encMSG.empty() )
     {
+        #ifdef LOGGING
         LOG_ERROR("Empty messages can not be decrypted!")
+        #endif
         throw RSADecryptionException("Empty messages can not be decrypted!");
     }
 
@@ -108,7 +128,9 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
     // Validate the string length with block size length
     if ( !validateStringLengthForRSA(encMSG, keysize) )
     {
+        #ifdef LOGGING
         LOG_ERROR("Error on validateStringLengthForRSA()!")
+        #endif
         throw RSADecryptionException("Error on validateStringLengthForRSA()!");
     }
 
@@ -118,7 +140,9 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
 
     if (decLen == -1)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at decrypting the message with RSA!")
+        #endif
         throw RSADecryptionException("Error at decrypting the message with RSA!");
     }
 
@@ -137,7 +161,9 @@ int RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::str
     // First check the message size
     if ( encMSG.empty() )
     {
+        #ifdef LOGGING
         LOG_ERROR("Empty messages can not be decrypted!")
+        #endif
         throw RSADecryptionException("Empty messages can not be decrypted!");
     }
 
@@ -150,7 +176,9 @@ int RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::str
 
     if (decLen == -1)
     {
+        #ifdef LOGGING
         LOG_ERROR("Error at decrypting the message with RSA!")
+        #endif
         throw RSADecryptionException("Error at decrypting the message with RSA!");
     }
 

@@ -1,25 +1,4 @@
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/common.hpp>
-#include <boost/log/sinks.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/expressions/keyword.hpp>
-#include <boost/log/attributes.hpp>
-#include <boost/log/utility/exception_handler.hpp>
-#include <boost/log/utility/setup/console.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/utility/setup/filter_parser.hpp>
-#include <boost/log/utility/setup/formatter_parser.hpp>
-#include <boost/log/utility/setup/from_stream.hpp>
-#include <boost/log/utility/setup/settings.hpp>
-#include <boost/log/sinks/sync_frontend.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/log/support/date_time.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
-#include <fstream>
-#include <string>
+#ifdef LOGGING
 
 #include "logger.h"
 
@@ -72,6 +51,13 @@ public:
     }
 };
 
+bool Logger::configFileAvailable = false;
+
+bool Logger::isConfigFileAvailable()
+{
+    return Logger::configFileAvailable;
+}
+
 void Logger::init()
 {
     initFromConfig("");
@@ -97,7 +83,7 @@ void Logger::initFromConfig(const std::string &configFileName)
 
     if (configFileName.empty())
     {
-        //config file empty. Log only to console
+        Logger::configFileAvailable = false;
     } else
     {
         std::ifstream ifs(configFileName);
@@ -110,6 +96,7 @@ void Logger::initFromConfig(const std::string &configFileName)
             try
             {
                 boost::log::init_from_stream(ifs);
+                Logger::configFileAvailable = true;
             } catch (std::exception &e)
             {
                 std::string err = "Caught exception initializing boost logging: ";
@@ -157,3 +144,5 @@ void Logger::disable()
 {
     boost::log::core::get()->set_logging_enabled(false);
 }
+
+#endif // LOGGING
