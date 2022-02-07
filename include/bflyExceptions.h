@@ -150,6 +150,21 @@ public:
     }
 };
 
+/**
+ * Class FileNotFoundException
+ */
+class FileNotFoundException : public ButterflyException
+{
+
+public:
+    explicit FileNotFoundException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "FileNotFoundException";
+    }
+};
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYEXCEPTIONS_H

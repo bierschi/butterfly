@@ -8,6 +8,8 @@
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
 #include "httpServer.h"
+#include "httpClient.h"
+#include "connManager.h"
 #include "logger.h"
 
 namespace butterfly

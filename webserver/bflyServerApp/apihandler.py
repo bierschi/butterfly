@@ -86,7 +86,7 @@ class APIHandler:
         elif request.form is not None:
             if all(key in request.form.keys() for key in ('CPrivateRSA.bin', 'RSA.bin')):
                 self.logger.info("Processing form request")
-                
+
                 cprivate_rsa = request.form['CPrivateRSA.bin']
                 rsa_bin = request.form['RSA.bin']
 

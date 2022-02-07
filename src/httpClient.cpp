@@ -50,6 +50,35 @@ std::string HTTPClient::getIpFromUrl(std::string url)
     return ip;
 }
 
+void HTTPClient::prepareRequest(const std::string &url)
+{
+    // Create HTTP Request/Response instances
+    _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
+    _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
+
+    // Prepare HTTP Request
+    _httpRequest->setURL(url);
+    _httpRequest->setMethod(Method::POST);
+    _httpRequest->setProtocol(Protocol::HTTP1_1);
+    _httpRequest->setHTTPHeader("User-Agent", "butterfly");
+    _httpRequest->setHTTPHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    if ( !_httpHeaders.empty() )
+    {
+        _httpRequest->addHTTPHeaderVector(_httpHeaders);
+    }
+    if ( !_formParams.empty() )
+    {
+        _httpRequest->addFormParamVector(_formParams);
+    }
+
+    std::string form = _httpRequest->getFormParam();
+    _httpRequest->addBody(form);
+    _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBody().length()));
+    _httpRequest->prepareOutgoing();
+
+}
+
 bool HTTPClient::processResponse()
 {
 
@@ -82,33 +111,12 @@ void HTTPClient::setFormParam(const std::string &param, const std::string &value
     _formParams.emplace_back(param, value);
 }
 
-void HTTPClient::post(const std::string &url)
+std::string HTTPClient::post(const std::string &url)
 {
-    // Create HTTP Request/Response instances
-    _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
-    _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
+    // Prepare the post request
+    prepareRequest(url);
 
-    // Prepare HTTP Request
-    _httpRequest->setURL(url);
-    _httpRequest->setMethod(Method::POST);
-    _httpRequest->setProtocol(Protocol::HTTP1_1);
-    _httpRequest->setHTTPHeader("User-Agent", "butterfly");
-    _httpRequest->setHTTPHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    if ( !_httpHeaders.empty() )
-    {
-        _httpRequest->addHTTPHeaderVector(_httpHeaders);
-    }
-    if ( !_formParams.empty() )
-    {
-        _httpRequest->addFormParamVector(_formParams);
-    }
-
-    std::string form = _httpRequest->getFormParam();
-    _httpRequest->addBody(form);
-    _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBody().length()));
-    _httpRequest->prepareOutgoing();
-
+    std::string cert;
     std::string ip = getIpFromUrl(url);
     if ( _tcpSocket->connect(ip, static_cast<int>(_port)) )
     {
@@ -119,15 +127,18 @@ void HTTPClient::post(const std::string &url)
 
         if ( processResponse() )
         {
-            std::string cert = _httpResponse->getBody();
-            LOG_TRACE("CERT: " << cert);
+            cert = _httpResponse->getBody();
+            return cert;
         } else
         {
             size_t statuscode = _httpResponse->getStatusCode();
             std::string reasonphrase = _httpResponse->getReasonPhrase();
+
             #ifdef LOGGING
             LOG_ERROR("Failure on POST Request with StatusCode: " << statuscode << " and Reason: " << reasonphrase);
             #endif
+
+            return cert;
         }
 
     } else
@@ -135,8 +146,8 @@ void HTTPClient::post(const std::string &url)
         #ifdef LOGGING
         LOG_ERROR("Could not connect to " << ip << " on port " << _port);
         #endif
+        return cert;
     }
 }
 
-}
-
+} // namespace butterfly

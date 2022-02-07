@@ -4,10 +4,10 @@
 
 #include <memory>
 
-#include "logger.h"
 #include "tcpSocket.h"
 #include "httpRequest.h"
 #include "httpResponse.h"
+#include "logger.h"
 
 namespace butterfly
 {
@@ -33,6 +33,12 @@ private:
      * @return IP from URL string
      */
     std::string getIpFromUrl(std::string url);
+
+    /**
+     *
+     * @param url
+     */
+    void prepareRequest(const std::string &url);
 
     /**
      * Process the HTTP Response
@@ -75,13 +81,19 @@ public:
      */
     void setFormParam(const std::string &param, const std::string &value);
 
+    /**
+     * Get request to the URL
+     *
+     * @param url: URL string
+     */
     void get(const std::string &url);
 
     /**
+     * Post request to the URL
      *
-     * @param url
+     * @param url: URL string
      */
-    void post(const std::string &url);
+    std::string post(const std::string &url);
 
 };
 
