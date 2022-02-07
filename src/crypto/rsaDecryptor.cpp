@@ -33,6 +33,9 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
 
     std::string rsaek;
     rsaek = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+    #ifdef LOGGING
+    LOG_TRACE("File " << butterfly::RSA_EKIV_FILENAME << " has a length of " << rsaek.length() << " bytes");
+    #endif
 
     // TODO: Get the values dynamically to support other rsa key sizes
     //       cPKey       AESKey      AESIV

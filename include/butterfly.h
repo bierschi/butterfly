@@ -30,6 +30,14 @@ private:
      */
     void initLoggingFramework();
 
+    /**
+     * Loads the encrypted CPrivateRSA.bin file and the RSA.bin and converts the content to hex
+     *
+     * @param cprivateRSAFileHex: string reference to the hex representation of the CPrivateRSA.bin file
+     * @param rsaFileHex : string reference to the hex representation of the RSA.bin file
+     */
+    void loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string &rsaFileHex);
+
 public:
 
     /**

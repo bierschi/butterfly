@@ -35,13 +35,14 @@ private:
     std::string getIpFromUrl(std::string url);
 
     /**
+     * Prepares the Request
      *
-     * @param url
+     * @param url: URL string
      */
     void prepareRequest(const std::string &url);
 
     /**
-     * Process the HTTP Response
+     * Processes the HTTP Response
      *
      * @return True if the statuscode is 200, else False
      */
@@ -54,7 +55,7 @@ public:
      *
      * Usage:
      *      std::shared_ptr<butterfly::HTTPClient> httpClient = std::make_shared<butterfly::HTTPClient>(5000);
-     *      httpClient->post("http://127.0.0.1:5000/decryption/");
+     *      std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/");
      *
      * @param port: Port for the Server
      */

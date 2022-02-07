@@ -59,7 +59,7 @@ void Decryptor::invokeDir(const std::string &dirPath)
 
     if ( _decryptedCPrivateRSA.empty() )
     {
-        throw DecryptorException("Could not start decryption process, because decrypted CPrivateRSA.pem string is empty!");
+        throw DecryptorException("Could not start the decryption process, because decrypted CPrivateRSA.pem string is empty!");
     }
 
     // Decrypt the AESKey.bin file and get AESKey and AESIV
