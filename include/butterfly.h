@@ -23,6 +23,7 @@ class Butterfly
 
 private:
     std::unique_ptr<butterfly::ArgumentParser> _argparse;
+    std::unique_ptr<butterfly::ConnManager> _connManager;
     butterfly::ArgumentParser::Arguments _args;
 
     /**
@@ -37,6 +38,11 @@ private:
      * @param rsaFileHex : string reference to the hex representation of the RSA.bin file
      */
     void loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string &rsaFileHex);
+
+    /**
+     * Checks the internet connection before any remote action
+     */
+    void checkInternetConnection();
 
 public:
 

@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPClient::HTTPClient(unsigned int port) : _port(port), _tcpSocket(std::make_shared<TCPSocket>())
+HTTPClient::HTTPClient(unsigned int port) : _port(port), _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
 {
     #ifdef LOGGING
     LOG_TRACE("Create class HTTPClient");
@@ -91,7 +91,10 @@ bool HTTPClient::processResponse()
     _httpResponse->addHTTPData(httpData);
     _httpResponse->parseIncoming();
 
-    if (_httpResponse->getStatusCode() == 200)
+    statusCode = _httpResponse->getStatusCode();
+    reasonPhrase = _httpResponse->getReasonPhrase();
+
+    if (statusCode == 200)
     {
         return true;
     } else
@@ -121,7 +124,7 @@ std::string HTTPClient::post(const std::string &url)
     if ( _tcpSocket->connect(ip, static_cast<int>(_port)) )
     {
         #ifdef LOGGING
-        LOG_TRACE("Send Post Request to URL " << url);
+        LOG_TRACE("Send post request to url " << url);
         #endif
         _tcpSocket->send(_httpRequest->getHTTPData());
 
@@ -131,22 +134,12 @@ std::string HTTPClient::post(const std::string &url)
             return cert;
         } else
         {
-            size_t statuscode = _httpResponse->getStatusCode();
-            std::string reasonphrase = _httpResponse->getReasonPhrase();
-
-            #ifdef LOGGING
-            LOG_ERROR("Failure on POST Request with StatusCode: " << statuscode << " and Reason: " << reasonphrase);
-            #endif
-
             return cert;
         }
 
     } else
     {
-        #ifdef LOGGING
-        LOG_ERROR("Could not connect to " << ip << " on port " << _port);
-        #endif
-        return cert;
+        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(_port));
     }
 }
 

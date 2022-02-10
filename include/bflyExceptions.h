@@ -165,6 +165,20 @@ public:
     }
 };
 
+/**
+ * Class ConnectionException
+ */
+class ConnectionException : public ButterflyException
+{
+
+public:
+    explicit ConnectionException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "ConnectionException";
+    }
+};
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYEXCEPTIONS_H

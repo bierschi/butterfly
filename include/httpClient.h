@@ -49,6 +49,8 @@ private:
     bool processResponse();
 
 public:
+    size_t statusCode;
+    std::string reasonPhrase;
 
     /**
      * Constructor HTTPClient
