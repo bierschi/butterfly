@@ -75,13 +75,22 @@ int TCPSocket::recv(char *buf, int len) const
 
 }
 
-std::string TCPSocket::recvAll(int chunkSize) const
+std::string TCPSocket::recvAll(int chunkSize, bool blocking) const
 {
     char buffer[chunkSize];
     std::string str;
+    int flags;
+
+    if (blocking)
+    {
+        flags = 0;
+    } else
+    {
+        flags = MSG_DONTWAIT;
+    }
 
     int recvLength;
-    while ( (recvLength = static_cast<int>(::recv(_fd, buffer, sizeof(buffer), MSG_DONTWAIT))) > 0 )
+    while ( (recvLength = static_cast<int>(::recv(_fd, buffer, sizeof(buffer), flags))) > 0 )
     {
         str.append(buffer, static_cast<unsigned long>(recvLength));
     }

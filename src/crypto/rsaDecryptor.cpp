@@ -33,7 +33,11 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
 
     std::string rsaek;
     rsaek = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+    #ifdef LOGGING
+    LOG_TRACE("File " << butterfly::RSA_EKIV_FILENAME << " has a length of " << rsaek.length() << " bytes");
+    #endif
 
+    // TODO: Get the values dynamically to support other rsa key sizes
     //       cPKey       AESKey      AESIV
     // |0 - 1721 | 16 | 256 | 16 | 256 | 16 |
     if ( rsakeysType == butterfly::RSAKEY_TYPE::CPRIVATE_RSA )
@@ -49,8 +53,8 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
         // 256 Bytes
         RSADecryptor::AESKEYLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
 
-        encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
-        iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
+        encKey = rsaek.substr(1721 + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
+        iv = rsaek.substr(1721 + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
 
     } else
     {

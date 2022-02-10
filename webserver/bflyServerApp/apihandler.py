@@ -47,6 +47,8 @@ class APIHandler:
 
             decryptor = Decryption(cprivatersa, rsabin, self.sprivatersa_filepath)
             cprivatersa_decrypted = decryptor.get_decrypted_cprivatersa()
+
+            self.logger.info("Returning the decrypted CPrivateRSA.pem string!")
             return Response(status=200, response=cprivatersa_decrypted.decode('utf-8'), mimetype='application/json')
 
         except ValueError as e:
@@ -66,26 +68,31 @@ class APIHandler:
         :return: Response object
         """
 
-        self.logger.info("POST request to route /decrypt/")
+        self.logger.info("POST request to route /decryption/")
 
         if request.json is not None:
-            if 'CPrivateRSA.bin' not in request.json:
-                self.logger.error("Missing Key 'CPrivateRSA.bin 'in Request!")
+
+            if all(key in request.json.keys() for key in ('CPrivateRSA.bin', 'RSA.bin')):
+                self.logger.info("Processing json request")
+
+                cprivate_rsa = request.json['CPrivateRSA.bin']
+                rsa_bin = request.json['RSA.bin']
+
+                return self._decryption(cprivate_rsa, rsa_bin)
+            else:
+                self.logger.error("Missing key in json request")
                 return Response(status=400, response=json.dumps("Missing Key in Request"), mimetype='application/json')
 
-            if 'RSA.bin' not in request.json:
-                self.logger.error("Missing Key 'RSA.bin 'in Request!")
+        elif request.form is not None:
+            if all(key in request.form.keys() for key in ('CPrivateRSA.bin', 'RSA.bin')):
+                self.logger.info("Processing form request")
+
+                cprivate_rsa = request.form['CPrivateRSA.bin']
+                rsa_bin = request.form['RSA.bin']
+
+                return self._decryption(cprivate_rsa, rsa_bin)
+            else:
+                self.logger.error("Missing key in form request")
                 return Response(status=400, response=json.dumps("Missing Key in Request"), mimetype='application/json')
-
-            cprivate_rsa = request.json['CPrivateRSA.bin']
-            rsa_bin = request.json['RSA.bin']
-
-            return self._decryption(cprivate_rsa, rsa_bin)
-
-        elif all(key in request.form.keys() for key in ('CPrivateRSA.bin', 'RSA.bin')):
-            cprivate_rsa = request.form['CPrivateRSA.bin']
-            rsa_bin = request.form['RSA.bin']
-
-            return self._decryption(cprivate_rsa, rsa_bin)
         else:
-            return Response(status=400, response=json.dumps("Not a valid json format!"), mimetype='application/json')
+            return Response(status=400, response=json.dumps("Not a valid request format!"), mimetype='application/json')
