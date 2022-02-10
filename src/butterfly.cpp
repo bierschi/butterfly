@@ -59,16 +59,16 @@ void Butterfly::loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string 
         } else
         {
             #ifdef LOGGING
-            LOG_ERROR("File not found " << butterfly::RSA_EKIV_FILENAME);
+            LOG_ERROR("File " << butterfly::RSA_EKIV_FILENAME << " not found");
             #endif
-            throw FileNotFoundException("File not found " + butterfly::RSA_EKIV_FILENAME);
+            throw FileNotFoundException("File " + butterfly::RSA_EKIV_FILENAME + " not found");
         }
     } else
     {
         #ifdef LOGGING
-        LOG_ERROR("File not found " << butterfly::ENC_CPRIVATERSA_FILENAME)
+        LOG_ERROR("File " << butterfly::ENC_CPRIVATERSA_FILENAME << " not found")
         #endif
-        throw FileNotFoundException("File not found " + butterfly::ENC_CPRIVATERSA_FILENAME);
+        throw FileNotFoundException("File " + butterfly::ENC_CPRIVATERSA_FILENAME + " not found");
     }
 }
 
