@@ -64,8 +64,8 @@ curl -H "Content-Type: application/x-www-form-urlencoded" -d "CPrivateRSA.bin=4b
 </code></pre>
 
 ## Changelog
-All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/bflyServerApp/CHANGELOG.rst)
+All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/webserver/CHANGELOG.rst)
 
 ## License
-Copyright (c) 2022 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/butterfly/blob/master/bflyServerApp/LICENSE)
+Copyright (c) 2022 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/butterfly/blob/master/webserver/LICENSE)
 for details
