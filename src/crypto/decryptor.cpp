@@ -159,7 +159,7 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
     {
         std::cerr << e.what() << std::endl;
 
-        // If error occured here, check first whether unencrypted AESKeyPair file exists
+        // If error occurred here, check first whether unencrypted AESKeyPair file exists
         if ( !getAESKeyPairFromUnencryptedFile(aeskeypair) )
         {
             throw DecryptorException( "Could not get AESKeyPair from unencrypted File! RSADecryptionException: " + std::string(e.what()));

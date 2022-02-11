@@ -7,9 +7,7 @@ namespace butterfly
 namespace rsa
 {
 
-unsigned long RSADecryptor::cPrivateRSAKeyLength = 0, RSADecryptor::AESKEYLength = 0, RSADecryptor::AESIVLength = 0;
-
-RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key)
+RSADecryptor::RSADecryptor(const std::string &key) : CryptoRSA(key), _cPrivateRSAKeyLength(0), _aesKeyLength(0), _aesIvLength(0)
 {
     #ifdef LOGGING
     LOG_TRACE("Create class RSADecryptor from rsa key string with key size of " << CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()))
@@ -32,29 +30,36 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
 {
 
     std::string rsaek;
-    rsaek = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+    if ( butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+    {
+        rsaek = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+    } else
+    {
+        throw FileNotFoundException("File " + butterfly::RSA_EKIV_FILENAME + " not found");
+    }
+
     #ifdef LOGGING
     LOG_TRACE("File " << butterfly::RSA_EKIV_FILENAME << " has a length of " << rsaek.length() << " bytes");
     #endif
 
-    // TODO: Get the values dynamically to support other rsa key sizes
+    // TODO: Get the values dynamically to support other rsa key sizes. Read the RSA.bin file length and then assign the values to cPrivateRSAKeyLength, _aesKeyLength
     //       cPKey       AESKey      AESIV
     // |0 - 1721 | 16 | 256 | 16 | 256 | 16 |
     if ( rsakeysType == butterfly::RSAKEY_TYPE::CPRIVATE_RSA )
     {
         // 1721 Bytes
-        RSADecryptor::cPrivateRSAKeyLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
+        _cPrivateRSAKeyLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
 
-        encKey = rsaek.substr(0, RSADecryptor::cPrivateRSAKeyLength );
-        iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength, EVP_MAX_IV_LENGTH);
+        encKey = rsaek.substr(0, _cPrivateRSAKeyLength );
+        iv = rsaek.substr(_cPrivateRSAKeyLength, EVP_MAX_IV_LENGTH);
 
     } else if ( rsakeysType == butterfly::RSAKEY_TYPE::AESKEY )
     {
         // 256 Bytes
-        RSADecryptor::AESKEYLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
+        _aesKeyLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
 
-        encKey = rsaek.substr(1721 + EVP_MAX_IV_LENGTH, RSADecryptor::AESKEYLength);
-        iv = rsaek.substr(1721 + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength, EVP_MAX_IV_LENGTH);
+        encKey = rsaek.substr(1721 + EVP_MAX_IV_LENGTH, _aesKeyLength);
+        iv = rsaek.substr(1721 + EVP_MAX_IV_LENGTH + _aesKeyLength, EVP_MAX_IV_LENGTH);
 
     } else
     {
@@ -66,10 +71,10 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
     /*else
     {
         // 256 Bytes
-        RSADecryptor::AESIVLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
+        _aesIvLength = static_cast<unsigned long>(CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()));
 
-        encKey = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + RSADecryptor::AESKEYLength + EVP_MAX_IV_LENGTH,  RSADecryptor::AESIVLength);
-        iv = rsaek.substr(RSADecryptor::cPrivateRSAKeyLength + RSADecryptor::AESKEYLength + RSADecryptor::AESIVLength + (EVP_MAX_IV_LENGTH * 2), EVP_MAX_IV_LENGTH);
+        encKey = rsaek.substr(_cPrivateRSAKeyLength + EVP_MAX_IV_LENGTH + _aesKeyLength + EVP_MAX_IV_LENGTH,  _aesIvLength);
+        iv = rsaek.substr(_cPrivateRSAKeyLength + _aesKeyLength + _aesIvLength + (EVP_MAX_IV_LENGTH * 2), EVP_MAX_IV_LENGTH);
 
     }*/
 
@@ -110,7 +115,7 @@ std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
         #ifdef LOGGING
         LOG_ERROR("Binary File " << filepath << " does not exists!")
         #endif
-        throw RSADecryptionException("Binary File " + filepath + " does not exists!");
+        throw FileNotFoundException("Binary File " + filepath + " does not exists!");
     }
 
 }
