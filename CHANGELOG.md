@@ -15,7 +15,7 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 ## [1.0] - 2021-09-17
 
 ### Added
-- First runnable version with basic encryption/decryption tasks
+- First runnable version with basic encryption/decryption capability
 
 ##  Development Start
 
