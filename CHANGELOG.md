@@ -8,7 +8,7 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Support of over 300 File Extensions
 - Remote decryption capability
 - Webserver bflyServerApp for a secure remote decryption
-- Notes section for encrypting/decryption with the openssl cli
+- Notes section for encryption/decryption with the openssl cli
 - Tools section for common actions
 - Improved argument parser
 
