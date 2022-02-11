@@ -20,7 +20,7 @@ class HTTPMSGSchema
 {
 
 protected:
-    std::string _httpData, _body, _messageType;
+    std::string _httpData, _body, _messageType, _formParam;
     Method _httpMethod;
     Protocol _protocol;
     std::vector< std::pair<std::string, std::string> > _httpHeaders;
@@ -101,11 +101,40 @@ public:
     std::string getHTTPHeader(const std::string &headerName) const;
 
     /**
+     * Add HTTP Header Vector to existing one
+     *
+     * @param headerVec: Vector of header arguments
+     */
+    void addHTTPHeaderVector(std::vector< std::pair<std::string, std::string> > &headerVec);
+
+    /**
      * Getter for the HTTP Header Size
      *
      * @return Number of received Headers
      */
     inline size_t getHTTPHeaderSize() const { return _httpHeaders.size(); }
+
+    /**
+     * Setter for the form parameter and the value
+     *
+     * @param param: form parameter
+     * @param value: value for the parameter
+     */
+    void setFormParam(const std::string &param, const std::string &value);
+
+    /**
+     * Getter for the complete form parameter string
+     *
+     * @return form parameter string
+     */
+    inline std::string getFormParam() const { return _formParam; }
+
+    /**
+     * Add a vector consisting of params and values to the formParam string
+     *
+     * @param formParamVec: vector of params and values
+     */
+    void addFormParamVector(std::vector< std::pair<std::string, std::string> > &formParamVec);
 
     /**
      * Abstract method parseIncoming for subclasses

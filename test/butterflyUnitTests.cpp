@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#define FILTER true
+#define FILTER false
 
 int main(int argc, char **argv)
 {
@@ -25,6 +25,12 @@ int main(int argc, char **argv)
         rc = RUN_ALL_TESTS();
 
         ::testing::GTEST_FLAG(filter) = "RSADecryptorTest.*";
+        rc = RUN_ALL_TESTS();
+
+        ::testing::GTEST_FLAG(filter) = "SocketTest.*";
+        rc = RUN_ALL_TESTS();
+
+        ::testing::GTEST_FLAG(filter) = "TCPSocketTest.*";
         rc = RUN_ALL_TESTS();
 
         return rc;

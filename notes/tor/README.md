@@ -1,7 +1,11 @@
 
 # Tor
 
-Official Tor Repo
+- Embedding the tor binary in the ransomware and extract it on the target system
+- Implement a static `libtorcpp.a` lib and link the library to the application
+
+
+## Official Tor Repo
 <pre><code>
 git clone https://github.com/torproject/tor.git
 cd tor

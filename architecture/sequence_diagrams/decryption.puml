@@ -17,12 +17,12 @@ hnote over CPrivate, CPublic: Client RSA Key pair (**Keysize: 2048**)
 hnote over AESKey: 256-Bit-AESKey/128-Bit-AESIV
 ...
 attacker <- target: target pays ransom
-attacker -> target: attacker sends the **SPrivateRSA.pem** file
+attacker -> target: attacker accepts ransom payment
+attacker <- target: Send **CPrivateRSA.bin** file to bflyServerApp
+attacker -> target: bflyServerApp responds with the decrypted **CPrivateRSA.pem** string
+note right: **CPrivateRSA.pem**
 
-target -> CPrivate: decrypt the **CPrivateRSA.bin**\n with **SPrivateRSA.pem**
-CPrivate -> target: get the decrypted **CPrivateRSA.pem**
-note left: **CPrivateRSA.pem**
-target -> AESKey: decrypt the **AES.bin** with **CPrivateRSA.pem**
+target -> AESKey: decrypt the **AES.bin** with the **CPrivateRSA.pem** string
 note right: **AESKeyPair(AESKey & AESIV)**
 
 loop

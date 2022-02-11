@@ -49,10 +49,18 @@ void Decryptor::setDirPath(const std::string &dirPath)
     _dirPath = dirPath;
 }
 
-void Decryptor::invokeDir(const std::string &pkeyFromServer)
+void Decryptor::setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateRSA)
 {
-    // Decrypt the CPrivateRSA.bin file
-    decryptCPrivateRSA(pkeyFromServer, butterfly::ENC_CPRIVATERSA_FILENAME);
+    _decryptedCPrivateRSA = decryptedCPrivateRSA;
+}
+
+void Decryptor::invokeDir(const std::string &dirPath)
+{
+
+    if ( _decryptedCPrivateRSA.empty() )
+    {
+        throw DecryptorException("Could not start the decryption process, because decrypted CPrivateRSA.pem string is empty!");
+    }
 
     // Decrypt the AESKey.bin file and get AESKey and AESIV
     std::string aeskey, aesiv;
@@ -63,7 +71,7 @@ void Decryptor::invokeDir(const std::string &pkeyFromServer)
     _aesDecryptor->setAESIv(aesiv);
 
     // Get all files from provided directory path
-    auto files = DirectoryIterator::getAllFiles(_dirPath);
+    auto files = DirectoryIterator::getAllFiles(dirPath);
 
     // Iterate over all file paths
     for (auto &file: files)
@@ -106,7 +114,7 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
         _rsaDecryptorCPrivateRSA->decryptEVP(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
         //_rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA);
         #ifdef LOGGING
-        LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA);
+        LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << " with length of " << _decryptedCPrivateRSA.length());
         #endif
         //std::cout << "Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << std::endl;
 
@@ -127,6 +135,7 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
     {
         throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----'");
     }
+
 }
 
 void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV)

@@ -16,7 +16,7 @@ xxd -l 16 -s 32 -p AES.bin.unencrypted
 </code></pre>
 
 ### CPrivateRSA.bin
-RSA encrypted CPrivateRSA.pem string with the embedded `SPublic.pem` File
+RSA encrypted `CPrivateRSA.pem` string with the in application embedded `SPublic.pem` file
 
 ### RSA.bin
 EK and IV for each RSA Encryption are saved in file `RSA.bin`
@@ -36,4 +36,4 @@ IV     = 16 Bytes
 = 272 Bytes
 </code></pre>
 
-Summery: 1737 Bytes + 272 Bytes => 2009 Bytes
+SUM: 1737 Bytes + 272 Bytes => 2009 Bytes
