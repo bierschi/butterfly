@@ -6,6 +6,7 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 ### Added
 
 - Support of over 300 File Extensions
+- Remote decryption capability
 - Webserver bflyServerApp for a secure remote decryption
 - Notes section for encrypting/decryption with the openssl cli
 - Tools section for common actions
@@ -13,9 +14,10 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 
 ## [1.0] - 2021-09-17
 
-- Release Version 1.0
+### Added
+- First runnable version with basic encryption/decryption tasks
 
-## [0.0] - Development Start
+##  Development Start
 
 ### Added
 
@@ -23,3 +25,7 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - RSA Encryption/Decryption
 - AES Encryption/Decryption
 - Hybrid Encryption/Decryption mechanism
+
+
+[1.1]: https://github.com/bierschi/butterfly/compare/v1.0...v1.1
+[1.0]: https://github.com/bierschi/butterfly/releases/tag/v1.0
