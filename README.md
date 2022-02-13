@@ -1,11 +1,11 @@
 # Butterfly
-Butterfly is a cryptographic ransomware that includes the following features
+Butterfly is a cryptographic ransomware with the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
 - Offline Encryption :heavy_check_mark:
 - Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :x:, MacOS :x:)
 - Supports over 300 File Extensions :heavy_check_mark:
-- Webserver [bflyServerApp](https://github.com/bierschi/butterfly/webserver) for secure remote decryption :heavy_check_mark:
+- Webserver [bflyServerApp](https://github.com/bierschi/butterfly/webserver) for a secure remote decryption :heavy_check_mark:
 - Ransom Visualization with HTTPServer :heavy_check_mark: GUI :x: Wallpaper :x:
 - Connection to the TOR Network :x:
 - Bitcoin Payments :x:
