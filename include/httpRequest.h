@@ -41,7 +41,7 @@ public:
      *
      * @param method: HTTP Method
      */
-    void setMethod(Method &method);
+    void setMethod(Method method);
 
     /**
      * Getter for the Method

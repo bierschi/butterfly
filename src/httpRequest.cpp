@@ -9,7 +9,7 @@ HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request")
 
 }
 
-void HTTPRequest::setMethod(Method &method)
+void HTTPRequest::setMethod(Method method)
 {
     _httpMethod = method;
 }

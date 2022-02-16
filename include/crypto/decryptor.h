@@ -49,7 +49,7 @@ public:
      *
      *  Usage:
      *       std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-     *       decryptor->invokeDir("/home/", "SPrivateRSA.pem");
+     *       decryptor->invokeDir("/home/");
      *
      */
     Decryptor();
@@ -67,12 +67,18 @@ public:
     void setDirPath(const std::string &dirPath);
 
     /**
+     * Sets the decpryted CPrivateRSA.pem string
+     *
+     * @param decryptedCPrivateRSA: decrypted string
+     */
+    void setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateRSA);
+
+    /**
      * Invokes the directory to start the decryption process
      *
      * @param dirPath: path to the directory
-     * @param pkeyFromServer: SPrivateRSA.pem from server (corresponds to the embedded SPublicKey.pem)
      */
-    void invokeDir(const std::string &pkeyFromServer);
+    void invokeDir(const std::string &dirPath);
 
     /**
      * Decrypt the CPrivateRSA.bin file

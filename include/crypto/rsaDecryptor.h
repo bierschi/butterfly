@@ -21,7 +21,7 @@ class RSADecryptor : public CryptoRSA
 
 private:
     std::string _decryptedMessage;
-    static unsigned long cPrivateRSAKeyLength, AESKEYLength, AESIVLength;
+    unsigned long _cPrivateRSAKeyLength, _aesKeyLength, _aesIvLength;
 
     /**
      * Validates the length of given string with the RSA key size

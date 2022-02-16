@@ -17,7 +17,7 @@ class Decryption:
 
         self.cprivatersa_str = cprivatersa_str
         self.rsabin_str = rsabin_str
-        self.delimiter = b"-----END RSA PRIVATE KEY-----"
+        self.delimiter = b"-----END RSA PRIVATE KEY-----\n"
 
         if len(rsabin_str) < 2009:
             self.logger.error("Length of the RSA.bin string is smaller then 2009 bytes: {}".format(len(rsabin_str)))
