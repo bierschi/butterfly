@@ -10,7 +10,7 @@ Length of the CPrivateRSA.pem file is max of **1679 Bytes** (`openssl genrsa -ou
 Padding Size for PCKS: **11 Bytes** <br>
 RSA factor: **8** <br>
 
-`RSA Key size = (1679 bytes + 11 bytes) * 8 = 13520`
+`RSA Key size = (1679 bytes + 11 bytes) * 8 = 13520 Bytes`
 
 Create private master key
 <pre><code>openssl genrsa -out SPrivateRSA.pem 13520</code></pre>

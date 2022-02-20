@@ -1,4 +1,4 @@
-## RSA-1024
+## RSA-512
 
 `SPublic.pem`: is embedded in the ransomware application and used to encrypt
 the **CPrivateRSA.pem** with keysize of **RSA-512**
@@ -10,7 +10,7 @@ Length of the CPrivateRSA.pem file is max of **497 Bytes** (`openssl genrsa -out
 Padding Size for PCKS: **11 Bytes** <br>
 RSA factor: **8** <br>
 
-`RSA Key size = (497 bytes + 11 bytes) * 8 = 4064`
+`RSA Key size = (497 bytes + 11 bytes) * 8 = 4064 Bytes`
 
 Create private master key
 <pre><code>openssl genrsa -out SPrivateRSA.pem 4064</code></pre>
