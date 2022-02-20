@@ -88,13 +88,13 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 
     // Get the AESKeyPair(AESKey + AESIV)
     std::string aeskeypair = _aesEncryptor->getAESKeyPair();
+    #ifdef LOGGING
+    LOG_TRACE("Length of AESKEYPair: " << aeskeypair.length() << " with AESKey: " << _aesEncryptor->getAESKey().length() << " and AESIV: " << _aesEncryptor->getAESIv().length());
+    #endif
 
     // If --protected is enabled
     if (protection)
     {
-        #ifdef LOGGING
-        LOG_TRACE("Length of AESKEYPair: " << aeskeypair.length());
-        #endif
         saveUnencryptedAESKeyPair(aeskeypair);
     }
 
