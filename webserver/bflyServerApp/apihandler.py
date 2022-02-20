@@ -4,6 +4,7 @@ import string
 import logging
 from flask import Response, request
 from bflyServerApp import Decryption
+from bflyServerApp.exceptions import RSADecryptionError, AESDecryptionError
 from bflyServerApp import __title__
 
 
@@ -54,6 +55,14 @@ class APIHandler:
         except ValueError as e:
             self.logger.error(e)
             return Response(status=500, response="Internal Server Error at the Decryption Process occurred!", mimetype='application/json')
+
+        except RSADecryptionError as e:
+            self.logger.error(e)
+            return Response(status=500, response="Internal Server Error at the RSA Decryption Process occurred!", mimetype='application/json')
+
+        except AESDecryptionError as e:
+            self.logger.error(e)
+            return Response(status=500, response="Internal Server Error at the AES Decryption Process occurred!", mimetype='application/json')
 
     def index(self):
         """ index page
