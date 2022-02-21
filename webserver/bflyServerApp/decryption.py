@@ -45,8 +45,6 @@ class Decryption:
 
         :return: rsa_ek1, rsa_ek2
         """
-        #rsa_ek1 = self.rsabin_str[0:1721]
-        #rsa_ek2 = self.rsabin_str[1737:1993]
 
         rsa_ek1 = self.rsabin_str[0 : (self.rsabin_str_length - 2*self.iv_length - self.rsa_key_length)]
         rsa_ek2 = self.rsabin_str[(self.rsabin_str_length - self.iv_length - self.rsa_key_length) : (self.rsabin_str_length - self.iv_length)]
@@ -58,8 +56,6 @@ class Decryption:
 
         :return: rsa_iv1, rsa_iv2
         """
-        #rsa_iv1 = self.rsabin_str[1721:1737]
-        #rsa_iv2 = self.rsabin_str[1993:2009]
 
         rsa_iv1 = self.rsabin_str[(self.rsabin_str_length - 2*self.iv_length - self.rsa_key_length) : (self.rsabin_str_length - self.iv_length - self.rsa_key_length)]
         rsa_iv2 = self.rsabin_str[(self.rsabin_str_length - self.iv_length) : self.rsabin_str_length]

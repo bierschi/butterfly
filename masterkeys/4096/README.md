@@ -6,7 +6,7 @@ the **CPrivateRSA.pem** with keysize of **RSA-4096**
 `SPrivateRSA.pem`: is loaded by the **bflyServerApp** on the attacker server and used for the secure remote decryption
 
 
-Length of the CPrivateRSA.pem file is max of 3247 ** Bytes** (`openssl genrsa -out CPrivateRSA.pem 4096` and verify byte size) <br>
+Length of the CPrivateRSA.pem file is max of 3247 **Bytes** (`openssl genrsa -out CPrivateRSA.pem 4096` and verify byte size) <br>
 Padding Size for PCKS: **11 Bytes** <br>
 RSA factor: **8** <br>
 

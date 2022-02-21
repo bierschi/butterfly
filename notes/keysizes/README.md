@@ -1,5 +1,8 @@
 # Keysizes
 
+- First RSA Encryption is for the **CPrivateRSA.pem**
+- Second RSA Encryption is for the **AES Keypair**
+
 ## RSA-4096 (not recommended)
 CPrivateRSA.pem size = 3247 Bytes + 11 Bytes (PCKS Padding) = 3258 Bytes
 
