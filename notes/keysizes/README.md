@@ -90,3 +90,11 @@ ca. 508(EK1) + 16(IV) + 64(EK2) + 16(IV) =  604 Bytes
 64 => Depends on the RSA keysize (512/8)
 
 ## AES
+
+The AES Cipher used is `aes-256-cbc` (32 Bytes). The IV size for most modes is the same as the block size. For AES this is 128 bits (16 Bytes)
+<pre><code>
+AESKey:     32 Bytes
+AESIV:      16 Bytes
+=
+AESKeyPair: 48 Bytes
+</code></pre>
