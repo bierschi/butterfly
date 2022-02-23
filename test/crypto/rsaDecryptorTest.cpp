@@ -29,7 +29,7 @@ protected:
 TEST_F(RSADecryptorTest, rsaDecryption)
 {
 
-    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::ENC_CPRIVATERSA_FILENAME);
+    std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::params::ENC_CPRIVATERSA_FILENAME);
     ASSERT_TRUE( !encCPrivateRSA.empty());
 
     std::string decryptedMessage;
