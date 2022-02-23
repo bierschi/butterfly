@@ -56,7 +56,7 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
     std::cout << "Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
     #endif
 
-    if ( !butterfly::removeFileExtension(const_cast<std::string &>(bflyFileName), butterfly::ENC_BFLY_FILE_ENDING) )
+    if ( !butterfly::removeFileExtension(const_cast<std::string &>(bflyFileName), butterfly::params::ENC_BFLY_FILE_ENDING) )
     {
         #ifdef LOGGING
         LOG_TRACE("Failed to remove bfly extension from file " + bflyFileName);

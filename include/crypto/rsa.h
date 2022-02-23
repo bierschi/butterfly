@@ -10,6 +10,7 @@
 
 #include "logger.h"
 #include "bflyUtils.h"
+#include "bflyExceptions.h"
 
 #define PADDING RSA_PKCS1_OAEP_PADDING
 

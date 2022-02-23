@@ -9,10 +9,10 @@ class Decryption:
     """ class Decryption to decrypt the CPrivateRSA.bin file
 
     USAGE:
-            decryptor = Decryption(cprivatersa_str, rsabin_str, ../../masterkeys/SPrivateRSA.pem)
+            decryptor = Decryption(cprivatersa_str, rsabin_str, ../../masterkeys/SPrivateRSA.pem, 2048)
             cprivatersa_decrypted = decryptor.get_decrypted_cprivatersa()
     """
-    def __init__(self, cprivatersa_str, rsabin_str, sprivatersa_filepath):
+    def __init__(self, cprivatersa_str, rsabin_str, sprivatersa_filepath, rsa_keysize):
         self.logger = logging.getLogger(__title__)
         self.logger.info('Create class Decryption')
 
@@ -23,11 +23,17 @@ class Decryption:
         self.logger.info("Length of CPrivateRSA.bin string is {} bytes".format(len(self.cprivatersa_str)))
         self.logger.info("Length of RSA.bin string is {} bytes".format(len(self.rsabin_str)))
 
-        if len(rsabin_str) < (256 + 16 + 16):
-            self.logger.error("RSA.bin string is smaller than 256+16+16!")
+        if rsa_keysize.isdecimal():
+            self.rsa_key_length = int(int(rsa_keysize)/8)
+            self.logger.info("Setting rsa_key_length to {}".format(self.rsa_key_length))
+        else:
+            self.logger.error("Setting rsa_key_length to 256 as default value!")
+            self.rsa_key_length = 256
+
+        if len(rsabin_str) < (self.rsa_key_length + 16 + 16):
+            self.logger.error("RSA.bin string is smaller than {}+16+16!".format(self.rsa_key_length))
 
         self.rsabin_str_length = len(self.rsabin_str)
-        self.rsa_key_length = 256  # TODO send via post request, depends on the keysize (currently hardcoded 2048 (2048/8 = 256))
         self.iv_length = 16
 
         self.rsa_ek1_bin, self.rsa_ek2_bin = self._get_ekbin_from_rsabin()

