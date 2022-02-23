@@ -55,9 +55,9 @@ bool RSAEncryptor::writeRSAFileToSystem()
     unsigned char* encryptedKey = CryptoRSA::getRSAEncryptedKey();
     unsigned char* iv = CryptoRSA::getRSAIV();
 
-    if ( butterfly::writeBinFile(butterfly::RSA_EKIV_FILENAME, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()), true) )
+    if ( butterfly::writeBinFile(butterfly::params::RSA_EKIV_FILENAME, reinterpret_cast<const char *>(encryptedKey), CryptoRSA::getEvpPkeySize(CryptoRSA::getEvpPkey()), true) )
     {
-        if ( butterfly::writeBinFile(butterfly::RSA_EKIV_FILENAME, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH, true) )
+        if ( butterfly::writeBinFile(butterfly::params::RSA_EKIV_FILENAME, reinterpret_cast<const char *>(iv), EVP_MAX_IV_LENGTH, true) )
         {
             return true;
         } else
@@ -156,9 +156,9 @@ int RSAEncryptor::encryptEVP(EVP_PKEY *pkey, const std::string &decMSG)
     if ( !writeRSAFileToSystem() )
     {
         #ifdef LOGGING
-        LOG_ERROR("Error at writing RSA file" + butterfly::RSA_EKIV_FILENAME + " to System");
+        LOG_ERROR("Error at writing RSA file" + butterfly::params::RSA_EKIV_FILENAME + " to System");
         #endif
-        throw RSAEncryptionException("Error at writing RSA file " + butterfly::RSA_EKIV_FILENAME + " to System");
+        throw RSAEncryptionException("Error at writing RSA file " + butterfly::params::RSA_EKIV_FILENAME + " to System");
     }
 
     return encLen;

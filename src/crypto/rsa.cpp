@@ -21,10 +21,11 @@ CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _pkey(nullptr)
     // Generate the RSA Key
     if ( !generateRSAKey() )
     {
+        std::string rsaKeyError = getOpenSSLError();
         #ifdef LOGGING
-        LOG_ERROR("Error at generating the RSA key!");
+        LOG_ERROR("Error at generating the RSA keysize " << _keysize <<"! " << rsaKeyError);
         #endif
-        throw std::runtime_error("Error at generating the RSA key!");
+        throw RSAEncryptionException("Error at generating the RSA keysize " + std::to_string(_keysize) + "! " + rsaKeyError);
     }
 }
 
