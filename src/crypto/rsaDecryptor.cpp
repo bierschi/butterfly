@@ -30,16 +30,16 @@ void RSADecryptor::readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::st
 {
 
     std::string rsaek;
-    if ( butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+    if ( butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
     {
-        rsaek = butterfly::readBinFile(butterfly::RSA_EKIV_FILENAME);
+        rsaek = butterfly::readBinFile(butterfly::params::RSA_EKIV_FILENAME);
     } else
     {
-        throw FileNotFoundException("File " + butterfly::RSA_EKIV_FILENAME + " not found");
+        throw FileNotFoundException("File " + butterfly::params::RSA_EKIV_FILENAME + " not found");
     }
 
     #ifdef LOGGING
-    LOG_TRACE("File " << butterfly::RSA_EKIV_FILENAME << " has a length of " << rsaek.length() << " bytes");
+    LOG_TRACE("File " << butterfly::params::RSA_EKIV_FILENAME << " has a length of " << rsaek.length() << " bytes");
     #endif
 
     //       cPKey       AESKey

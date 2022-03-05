@@ -45,5 +45,5 @@ TEST_F(RSAEncryptorTest, rsaEncryption)
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     ASSERT_TRUE(!encCPrivateRSA.empty());
 
-    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, encMSGLen);
+    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::params::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, encMSGLen);
 }
