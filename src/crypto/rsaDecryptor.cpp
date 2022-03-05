@@ -127,7 +127,7 @@ std::string RSADecryptor::readEncMSGFromFile(const std::string &filepath)
 
 }
 
-void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG)
+int RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG)
 {
 
     // First check the message size
@@ -169,6 +169,7 @@ void RSADecryptor::decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::strin
 
     decMSG = str;
 
+    return decLen;
 }
 
 int RSADecryptor::decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type)
