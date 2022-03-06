@@ -35,7 +35,7 @@ class TCPSocket
     + accept(): std::shared_ptr<TCPSocket>
     + send(const std::string& s) const: bool
     + recv(char *buf,int len) const: int
-    + recvAll(int chunkSize) const: std::string
+    + recvAll(int chunkSize, bool blocking=false) const: std::string
 }
 
 class UDPSocket <<NOT IMPLEMENTED>>

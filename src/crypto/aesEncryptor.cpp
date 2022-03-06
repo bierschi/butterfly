@@ -55,7 +55,7 @@ void AESEncryptor::encryptFile(const std::string &filename)
     std::cout << "Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
     #endif
 
-    if ( !butterfly::appendFileExtension(filename, butterfly::ENC_BFLY_FILE_ENDING) )
+    if ( !butterfly::appendFileExtension(filename, butterfly::params::ENC_BFLY_FILE_ENDING) )
     {
         #ifdef LOGGING
         LOG_TRACE("Failed to append bfly extension to file " + filename);

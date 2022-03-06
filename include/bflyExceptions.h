@@ -150,6 +150,35 @@ public:
     }
 };
 
+/**
+ * Class FileNotFoundException
+ */
+class FileNotFoundException : public ButterflyException
+{
+
+public:
+    explicit FileNotFoundException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "FileNotFoundException";
+    }
+};
+
+/**
+ * Class ConnectionException
+ */
+class ConnectionException : public ButterflyException
+{
+
+public:
+    explicit ConnectionException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "ConnectionException";
+    }
+};
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYEXCEPTIONS_H

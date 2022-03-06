@@ -62,7 +62,7 @@ public:
      * @param s: std::string
      * @return True if the sending was successful
      */
-    bool send(const std::string& s) const;
+    bool send(const std::string &s) const;
 
     /**
      * Receives the len size from the socket
@@ -77,9 +77,10 @@ public:
      * Receives the complete buffer as chunks from the socket
      *
      * @param chunkSize: Size of the chunks
+     * @param blocking: recv is blocking
      * @return data as std::string
      */
-    std::string recvAll(int chunkSize) const;
+    std::string recvAll(int chunkSize, bool blocking=false) const;
 
 };
 

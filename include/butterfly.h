@@ -8,6 +8,8 @@
 #include "crypto/encryptor.h"
 #include "crypto/decryptor.h"
 #include "httpServer.h"
+#include "httpClient.h"
+#include "connManager.h"
 #include "logger.h"
 
 namespace butterfly
@@ -21,12 +23,26 @@ class Butterfly
 
 private:
     std::unique_ptr<butterfly::ArgumentParser> _argparse;
+    std::unique_ptr<butterfly::ConnManager> _connManager;
     butterfly::ArgumentParser::Arguments _args;
 
     /**
      * Init logging Framework
      */
     void initLoggingFramework();
+
+    /**
+     * Loads the encrypted CPrivateRSA.bin file and the RSA.bin and converts the content to hex
+     *
+     * @param cprivateRSAFileHex: string reference to the hex representation of the CPrivateRSA.bin file
+     * @param rsaFileHex : string reference to the hex representation of the RSA.bin file
+     */
+    void loadEncryptedFiles(std::string &cprivateRSAFileHex, std::string &rsaFileHex);
+
+    /**
+     * Checks the internet connection before any remote action
+     */
+    void checkInternetConnection();
 
 public:
 

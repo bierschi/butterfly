@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#define FILTER false
+#define FILTER true
 
 int main(int argc, char **argv)
 {
