@@ -44,11 +44,6 @@ bool Decryptor::getAESKeyPairFromUnencryptedFile(std::string &aeskeypair)
     }
 }
 
-void Decryptor::setDirPath(const std::string &dirPath)
-{
-    _dirPath = dirPath;
-}
-
 void Decryptor::setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateRSA)
 {
     _decryptedCPrivateRSA = decryptedCPrivateRSA;
