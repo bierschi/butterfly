@@ -110,7 +110,7 @@ class HTTPMSGSchema
     + setFormParam(const std::string &param, const std::string &value): void
     + getFormParam() const: std::string
     + addFormParamVector(std::vector< std::pair<std::string, std::string> > &formParamVec): void
-    
+
     + parseIncoming() = 0: void
     + prepareOutgoing() = 0: void
 }
