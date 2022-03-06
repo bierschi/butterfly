@@ -116,8 +116,8 @@ void Butterfly::run()
 
         // Start decryption
         std::shared_ptr<butterfly::hybrid::Decryptor> decryptor = std::make_shared<butterfly::hybrid::Decryptor>();
-        decryptor->setDirPath(_args.dir);
-        //decryptor->invokeDir("/home/christian/projects/butterfly/masterkeys/SPrivateRSA.pem");
+        //decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
+        decryptor->invokeDir(_args.dir);
     }
     // Start only Encryption
     else if ( !_args.encrypt.empty() )

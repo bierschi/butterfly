@@ -23,7 +23,7 @@ class Decryptor
 {
 
 private:
-    std::string _decryptedCPrivateRSA, _dirPath;
+    std::string _decryptedCPrivateRSA;
     std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA;
@@ -58,13 +58,6 @@ public:
      * Destructor Decryptor
      */
     ~Decryptor() = default;
-
-    /**
-     * Sets the directory path for the decryption procedure
-     *
-     * @param dirPath: path to the directory
-     */
-    void setDirPath(const std::string &dirPath);
 
     /**
      * Sets the decpryted CPrivateRSA.pem string

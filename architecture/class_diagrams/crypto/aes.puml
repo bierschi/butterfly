@@ -11,11 +11,13 @@ class CryptoAES
     - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
     - _aesKeyLength, _aesIvLength: int
 
-    # aesKey, aesIv: unsigned char*
+    # {static} aesKey, aesIv: unsigned char*
+
+    - {static} getOpenSSLError(): std::string
 
     + CryptoAES()
 
-    + initDone(): bool
+    + {static} initDone(): bool
     + generateAESKey(): bool
     + generateAESKeyWithSalt(): bool
 

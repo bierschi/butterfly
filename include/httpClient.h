@@ -23,8 +23,7 @@ private:
     std::shared_ptr<TCPSocket> _tcpSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-    std::vector< std::pair<std::string, std::string> > _httpHeaders;
-    std::vector< std::pair<std::string, std::string> > _formParams;
+    std::vector< std::pair<std::string, std::string> > _httpHeaders, _formParams;
 
     /**
      * Get IP from URL

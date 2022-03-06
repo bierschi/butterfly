@@ -82,8 +82,9 @@ public:
      * @param pkey: EVP_PKEY to decrypt the cipher message string
      * @param encMSG: encrypted message as std::string
      * @param decMSG: decrypted message as std::string
+     * @return size of the decrypted message
      */
-    void decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG);
+    int decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG);
 
     /**
      * Decrypts the given message string with EVP methods
