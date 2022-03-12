@@ -10,6 +10,7 @@
 
 #include "logger.h"
 #include "bflyUtils.h"
+#include "bflyExceptions.h"
 
 #define PADDING RSA_PKCS1_OAEP_PADDING
 
@@ -62,16 +63,6 @@ private:
     * @return boolean: true if key data was successfully loaded from given string, else false
     */
     bool loadKeyFromStr(const std::string &str);
-
-    /**
-     *
-     * Validates the length of given message string with the RSA key size
-     *
-     * @param msg: message as std::string
-     * @param keysize: rsa key size  as int
-     * @return boolean
-     */
-    virtual bool validateStringLengthForRSA(const std::string &msg, const int &keysize) = 0;
 
 protected:
     /**
@@ -132,7 +123,7 @@ public:
      *
      * @return EVP_PKEY*
      */
-    EVP_PKEY *getEvpPkey();
+    EVP_PKEY* getEvpPkey();
 
     /**
      * Get the EVP_PKEY size
@@ -148,21 +139,21 @@ public:
     *
     * @return rsa private key string as char*
     */
-    char *getRSAPrivateKeyStr();
+    char* getRSAPrivateKeyStr();
 
     /**
     * Get the private key string. Starts with -----BEGIN PRIVATE KEY-----
     *
     * @return private key string as char*
     */
-    char *getPrivateKeyStr();
+    char* getPrivateKeyStr();
 
     /**
      * Get the public key string. Starts with -----BEGIN PUBLIC KEY-----
      *
      * @return public key string as char*
      */
-    char *getPublicKeyStr();
+    char* getPublicKeyStr();
 
     /**
     * Encrypt the plaintext with EVP methods

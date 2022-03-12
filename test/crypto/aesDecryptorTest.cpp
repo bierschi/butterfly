@@ -2,6 +2,9 @@
 #include <gtest/gtest.h>
 
 #include "crypto/aesDecryptor.h"
+#include "bflyUtils.h"
+
+#define TESTFILE "../test/crypto/testfile.pdf"
 
 /**
  * Testclass AESDecryptorTest
@@ -10,12 +13,12 @@ class AESDecryptorTest : public ::testing::Test
 {
 
 protected:
-    std::string _aeskey = "0123456789abcefghijklmnopqrstuvw", _aesiv = "0123456789abcefg";
+    std::string aeskeyTest = "0123456789abcefghijklmnopqrstuvw", aesivTest = "0123456789abcefg";
     std::unique_ptr<butterfly::aes::AESDecryptor> aesDecryptor;
 
     void SetUp() override
     {
-        aesDecryptor.reset(new butterfly::aes::AESDecryptor());
+        aesDecryptor = std::unique_ptr<butterfly::aes::AESDecryptor>(new butterfly::aes::AESDecryptor());
     }
 
     void TearDown() override
@@ -25,30 +28,25 @@ protected:
 };
 
 /**
- * Testcase for testing the AES Key/IV Setter/Getter
+ * Testcase for decrypting a file with AES
  */
-TEST_F(AESDecryptorTest, AESKEYPair)
+TEST_F(AESDecryptorTest, decryptFile)
 {
 
-    aesDecryptor->generateAESKeyWithSalt();
-    aesDecryptor->setAESKey(_aeskey);
-    aesDecryptor->setAESIv(_aesiv);
+    aesDecryptor->setAESKey(aeskeyTest);
+    aesDecryptor->setAESIv(aesivTest);
 
-    std::string aeskey = aesDecryptor->getAESKey();
-    std::string aesiv = aesDecryptor->getAESIv();
+    if ( butterfly::existsFile(TESTFILE + butterfly::params::ENC_BFLY_FILE_ENDING) )
+    {
+        aesDecryptor->decryptFile(TESTFILE + butterfly::params::ENC_BFLY_FILE_ENDING);
 
-    EXPECT_TRUE( aeskey == _aeskey);
-    EXPECT_TRUE( aesiv == _aesiv);
-}
+        if ( butterfly::existsFile(TESTFILE) )
+        {
+            butterfly::removeFile(TESTFILE);
+        }
+    } else
+    {
+        std::cerr << "Could not decrypt file " << TESTFILE + butterfly::params::ENC_BFLY_FILE_ENDING << " because file does not exists!" << std::endl;
+    }
 
-/**
- * Testcase for decrypting a file
- */
-TEST_F(AESDecryptorTest, DecryptFile)
-{
-
-    aesDecryptor->setAESKey(_aeskey);
-    aesDecryptor->setAESIv(_aesiv);
-
-    aesDecryptor->decryptFile("../test/crypto/testfile.pdf" + butterfly::ENC_BFLY_FILE_ENDING);
 }

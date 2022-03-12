@@ -21,12 +21,12 @@ class RSADecryptor : public CryptoRSA
 
 private:
     std::string _decryptedMessage;
-    static unsigned long cPrivateRSAKeyLength, AESKEYLength, AESIVLength;
+    unsigned long _cPrivateRSAKeyLength, _aesKeyLength, _aesIvLength;
 
     /**
      * Validates the length of given string with the RSA key size
      */
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize);
 
     /**
      * Reads the RSA file that includes the RSA EK and RSA IV from the host machine
@@ -82,8 +82,9 @@ public:
      * @param pkey: EVP_PKEY to decrypt the cipher message string
      * @param encMSG: encrypted message as std::string
      * @param decMSG: decrypted message as std::string
+     * @return size of the decrypted message
      */
-    void decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG);
+    int decrypt(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG);
 
     /**
      * Decrypts the given message string with EVP methods

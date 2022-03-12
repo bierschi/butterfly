@@ -1,6 +1,0 @@
-- 27.12.2019: Development start
-- 05.09.2020: Added GTest as Unittest Framework
-- 10.01.2021: Finished the RSA Encryption/Decryption
-- 19.08.2021: Finished the AES Encryption/Decryption
-- 06.09.2021: Finished the hybrid Encryption/Decryption mechanism
-- 17.09.2021: Release Version 1.0

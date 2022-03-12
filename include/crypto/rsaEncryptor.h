@@ -25,15 +25,14 @@ private:
     /**
      * Validates the length of given string with the max rsa block size
      */
-    bool validateStringLengthForRSA(const std::string &msg, const int &keysize) override;
+    bool validateStringLengthForRSA(const std::string &msg, const int &keysize);
 
     /**
      * Writes the RSA file that includes the RSA EK and RSA IV to the filesystem
      *
-     * @param type: enum RSAKEY_TYPE
      * @return True if writing was successful
      */
-    bool writeRSAFileToSystem(const RSAKEY_TYPE &type);
+    bool writeRSAFileToSystem();
 
 public:
 
@@ -75,7 +74,7 @@ public:
      * @param ciphertextMsg: message as ciphertext
      * @param ciphertextMsgLength: length of the ciphertext
      */
-    static void writeEncMSGToFile(const std::string &filename, const std::string ciphertextMsg, int ciphertextMsgLength);
+    static void writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength);
 
     /**
      * Encrypts the given message string
@@ -91,10 +90,9 @@ public:
      *
      * @param pkey: EVP_PKEY for the encryption
      * @param decMSG: message to encrypt
-     * @param type: enum RSAKEY_TYPE
      * @return size of the encrypted message
      */
-    int encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RSAKEY_TYPE &type);
+    int encryptEVP(EVP_PKEY *pkey, const std::string &decMSG);
 };
 
 } //namespace rsa

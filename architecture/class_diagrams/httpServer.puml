@@ -35,7 +35,7 @@ class TCPSocket
     + accept(): std::shared_ptr<TCPSocket>
     + send(const std::string& s) const: bool
     + recv(char *buf,int len) const: int
-    + recvAll(int chunkSize) const: std::string
+    + recvAll(int chunkSize, bool blocking=false) const: std::string
 }
 
 
@@ -64,15 +64,32 @@ class HTTPServer
     + stop(): void
 }
 
-class HTTPClient <<NOT IMPLEMENTED>>
+class HTTPClient
 {
+    - _port: unsigned int
+    - _tcpSocket: std::shared_ptr<TCPSocket>
+    - _httpRequest: std::unique_ptr<HTTPRequest>
+    - _httpResponse: std::unique_ptr<HTTPResponse>
+    - _httpHeaders, _formParams: std::vector< std::pair<std::string, std::string> >
 
-    + HTTPClient()
+    + statusCode : size_t
+    + reasonPhrase: std::string
+
+    - getIpFromUrl(std::string url): std::string
+    - prepareRequest(const std::string &url): void
+    - processResponse(): bool
+
+    + HTTPClient(unsigned int port=5000)
+
+    + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
+    + setFormParam(const std::string &param, const std::string &value): void
+    + get(const std::string &url): void
+    + post(const std::string &url): std::string
 }
 
 class HTTPMSGSchema
 {
-    - _data, _body, _messageType: std::string
+    - _httpData, _body, _messageType, _formParam: std::string
     - _httpMethod: Method
     - _protocol: Protocol
     - _httpHeaders: std::vector< std::pair<std::string, std::string> >
@@ -88,7 +105,11 @@ class HTTPMSGSchema
     + getBody() const: std::string
     + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
     + getHTTPHeader(const std::string &headerName) const: std::string
+    + addHTTPHeaderVector(std::vector< std::pair<std::string, std::string> > &headerVec): void
     + getHTTPHeaderSize() const: size_t
+    + setFormParam(const std::string &param, const std::string &value): void
+    + getFormParam() const: std::string
+    + addFormParamVector(std::vector< std::pair<std::string, std::string> > &formParamVec): void
 
     + parseIncoming() = 0: void
     + prepareOutgoing() = 0: void

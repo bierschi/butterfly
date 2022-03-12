@@ -44,6 +44,11 @@ private:
      */
     static void saveUnencryptedAESKeyPair(const std::string &aesKeyPair);
 
+    /**
+     * Checks if bfly encryption files exists (CPrivateRSA.bin, AES.bin, RSA.bin)
+     */
+    static void checkIfEncryptionFilesExists();
+
 public:
     /**
      * Constructor Encryptor
@@ -85,9 +90,8 @@ public:
      * Encrypts the final AES Key and IV with RSA
      *
      * @param aesKeyPair: AES Key and IV String
-     * @param filename: name of the encrypted file
      */
-    void encryptFinalAESKeyWithRSA(const std::string &aesKeyPair, const std::string &filename);
+    void encryptFinalAESKeyWithRSA(const std::string &aesKeyPair);
 
     /**
      * Spawns a new Thread for encrypting the file
