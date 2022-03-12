@@ -18,6 +18,7 @@ protected:
     void SetUp() override
     {
         httpRequest = std::unique_ptr<butterfly::HTTPRequest>(new butterfly::HTTPRequest());
+        // Set http request data
         httpRequest->setURL(url);
         httpRequest->setMethod(butterfly::Method::POST);
         httpRequest->setProtocol(butterfly::Protocol::HTTP1_1);
