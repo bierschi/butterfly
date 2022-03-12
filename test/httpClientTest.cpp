@@ -4,7 +4,7 @@
 #include "httpClient.h"
 
 /**
- * Testclass HTTPClient
+ * Testclass HTTPClientTest
  */
 class HTTPClientTest : public ::testing::Test
 {
