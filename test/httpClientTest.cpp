@@ -1,16 +1,16 @@
 #include <memory>
 #include <gtest/gtest.h>
 
-#include "httpServer.h"
+#include "httpClient.h"
 
 /**
- * Testclass HTTPServerTest
+ * Testclass HTTPClientTest
  */
-class HTTPServerTest : public ::testing::Test
+class HTTPClientTest : public ::testing::Test
 {
 
 protected:
-    std::shared_ptr<butterfly::HTTPServer> httpServer;
+    std::shared_ptr<butterfly::HTTPClient> httpClient;
 
     void SetUp() override
     {
