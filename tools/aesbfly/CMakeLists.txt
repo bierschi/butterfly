@@ -14,6 +14,6 @@ find_package(OpenSSL REQUIRED)
 # Include the header files
 include_directories(include)
 
-add_executable(aesbfly src/main.cpp src/aes.cpp)
+add_executable(aesbfly src/main.cpp src/aes.cpp src/argumentParser.cpp)
 
 target_link_libraries(aesbfly OpenSSL::SSL)
