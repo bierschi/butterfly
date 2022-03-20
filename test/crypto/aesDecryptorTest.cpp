@@ -36,9 +36,9 @@ TEST_F(AESDecryptorTest, decryptFile)
     aesDecryptor->setAESKey(aeskeyTest);
     aesDecryptor->setAESIv(aesivTest);
 
-    if ( butterfly::existsFile(TESTFILE + butterfly::ENC_BFLY_FILE_ENDING) )
+    if ( butterfly::existsFile(TESTFILE + butterfly::params::ENC_BFLY_FILE_ENDING) )
     {
-        aesDecryptor->decryptFile(TESTFILE + butterfly::ENC_BFLY_FILE_ENDING);
+        aesDecryptor->decryptFile(TESTFILE + butterfly::params::ENC_BFLY_FILE_ENDING);
 
         if ( butterfly::existsFile(TESTFILE) )
         {
@@ -46,7 +46,7 @@ TEST_F(AESDecryptorTest, decryptFile)
         }
     } else
     {
-        std::cerr << "Could not decrypt file " << TESTFILE + butterfly::ENC_BFLY_FILE_ENDING << " because file does not exists!" << std::endl;
+        std::cerr << "Could not decrypt file " << TESTFILE + butterfly::params::ENC_BFLY_FILE_ENDING << " because file does not exists!" << std::endl;
     }
 
 }

@@ -62,7 +62,7 @@ public:
      * @param s: std::string
      * @return True if the sending was successful
      */
-    bool send(const std::string& s) const;
+    bool send(const std::string &s) const;
 
     /**
      * Receives the len size from the socket

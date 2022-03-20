@@ -82,6 +82,21 @@ class SocketException
     + getType() const: std::string
 }
 
+class FileNotFoundException
+{
+
+    + FileNotFoundException(const std::string &error)
+
+    + getType() const: std::string
+}
+
+class ConnectionException
+{
+
+    + ConnectionException(const std::string &error)
+
+    + getType() const: std::string
+}
 
 std::exception <|-- ButterflyException
 ButterflyException <|-- EncryptorException
@@ -94,6 +109,8 @@ DecryptorException <|-- AESDecryptionException
 
 ButterflyException <|-- SQLDatabaseException
 ButterflyException <|-- SocketException
+ButterflyException <|-- FileNotFoundException
+ButterflyException <|-- ConnectionException
 
 }
 @enduml

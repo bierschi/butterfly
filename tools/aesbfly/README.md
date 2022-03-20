@@ -43,7 +43,7 @@ openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in ../5357083.pdf -K $(cat
 #### Decrypt with `aesbfly`
 
 <pre><code>
-./aesbfly --decrypt --key AESKeyHex.txt --iv AESIVHex.txt --hex 5357083.pdf.bfly
+./aesbfly --decrypt 5357083.pdf.bfly --key AESKeyHex.txt --iv AESIVHex.txt --hex 
 </code></pre>
 
 ## 3. aesbfly -> aesbfly
@@ -56,11 +56,11 @@ openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in ../5357083.pdf -K $(cat
 #### Decrypt with `aesbfly`
 
 <pre><code>
-./aesbfly --decrypt --key AESKey.txt --iv AESIV.txt 5357083.pdf.bfly
+./aesbfly --decrypt 5357083.pdf.bfly --key AESKey.txt --iv AESIV.txt 
 </code></pre>
 or with hex values
 <pre><code>
-./aesbfly --decrypt --key AESKeyHex.txt --iv AESIVHex.txt --hex 5357083.pdf.bfly
+./aesbfly --decrypt 5357083.pdf.bfly --key AESKeyHex.txt --iv AESIVHex.txt --hex 
 </code></pre>
 
 ## 4. cli -> cli
@@ -85,4 +85,16 @@ openssl enc -aes-256-cbc -e -iter 6 -salt -md sha256 -in ../5357083.pdf -K $(cat
 
 <pre><code>
 openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.pdf.bfly -K $(cat AESKeyHex.txt) -iv $(cat AESIVHex.txt) -out 5357083.dec.pdf
+</code></pre>
+
+
+## 5. butterfly -> aesbfly
+#### Encrypt with butterfly application
+<pre><code>
+./butterfly --encrypt /home/testuser/projects/butterfly/5357083.pdf --protected
+</code></pre>
+
+#### Decrypt with `aesbfly`
+<pre><code>
+./aesbfly --decrypt 5357083.pdf.bfly --pair AES.bin.unencrypted
 </code></pre>

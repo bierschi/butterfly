@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to project [butterfly](https://github.com/bierschi/butterfly) will be documented in this file
 
+
+## [1.2] -
+
+### Added
+
+- TorSocket integration
+- Support of different rsa key sizes
+- Support of different aes key sizes
+- Integration of HTTP Server
+- Open browser with a payment page after encryption
+
 ## [1.1] - 2022-02-11
 
 ### Added
@@ -27,5 +38,6 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Hybrid Encryption/Decryption mechanism
 
 
+[1.2]: https://github.com/bierschi/butterfly/compare/v1.1...v1.2
 [1.1]: https://github.com/bierschi/butterfly/compare/v1.0...v1.1
 [1.0]: https://github.com/bierschi/butterfly/releases/tag/v1.0

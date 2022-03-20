@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <algorithm>
 
+#include "argumentParser.h"
 #include "aes.h"
 #include "utils.h"
 
@@ -15,7 +16,7 @@ void encrypt_with_aes(const std::string &filename)
 {
     std::shared_ptr<tools::CryptoAES> cryptoAES(new tools::CryptoAES());
 
-    std::cout << "Encrypting file " << filename << " with AES..." << std::endl;
+    std::cout << "Encrypting file " << filename << " with AES!" << std::endl;
 
     std::string fileData = readBinFile(filename);
 
@@ -42,7 +43,7 @@ void decrypt_with_aes(const std::string &filename, std::string aeskey, std::stri
 {
     std::shared_ptr<tools::CryptoAES> cryptoAES(new tools::CryptoAES());
 
-    std::cout << "Decrypting file " << filename << " with AES..." << std::endl;
+    std::cout << "Decrypting file " << filename << " with AES!" << std::endl;
 
     std::string fileDataBfly = readBinFile(filename);
 
@@ -68,108 +69,56 @@ void decrypt_with_aes(const std::string &filename, std::string aeskey, std::stri
     std::cout << "Successfully decrypted file " << filename << " with size of " << std::fixed << std::setprecision(2) << getFileSize(filename, false) << " Bytes" << std::endl;
 }
 
-void showUsage()
-{
-    std::cout << "Usage: \n\t"
-                 + std::string("aesbfly") + " --encrypt 5357083.pdf \n\t"
-                 + std::string("aesbfly") + " --decrypt --key AESKey.txt --iv AESIV.txt 5357083.pdf.bfly \n\n"
-
-                 + "Options:\n"
-                 + "\t-enc, --encrypt\t    Encrypts the file with AES\n"
-                 + "\t-dec, --decrypt\t    Decrypts the file with AES\n"
-                 + "\t-k,   --key         Provide the AESKey for the Decryption\n"
-                 + "\t-i,   --iv          Provide the AESIV for the Decryption\n"
-                 + "\t-p,   --pair        Provide the AES Keypair(Key+IV) for the Decryption\n"
-                 + "\t--hex               Provide the AESKey and AESIV as hex numbers\n"
-                 + "\t-h,   --help\t    Show this message and quit"
-
-                 + "\n\nbutterfly homepage at: https://github.com/bierschi/butterfly"
-              << std::endl;
-}
-
 int main (int argc, char* argv[])
 {
+    std::unique_ptr<tools::ArgumentParser> _argparse = std::unique_ptr<tools::ArgumentParser>(new tools::ArgumentParser(argc, argv));
+    tools::ArgumentParser::Arguments args = _argparse->parseArgs();
 
-    if (argc < 2)
+    if ( !args.encrypt.empty() )
     {
-        std::cerr << "No args present, aborting!" << std::endl;
-        exit(1);
-    }
-    for (int i = 1; i < argc; i++)
+
+        if ( existsFile(args.encrypt) )
+        {
+            encrypt_with_aes(args.encrypt);
+        } else
+        {
+            std::cerr << "File " << args.encrypt << " does not exist!" << std::endl;
+        }
+
+    } else if ( !args.decrypt.empty() )
     {
-        std::string arg = argv[i];
 
-        if (arg == "-h" || arg == "--help")
+        if ( existsFile(args.decrypt) )
         {
-            showUsage();
-            exit(1);
-
-        }
-        if (arg == "-enc" || arg == "--encrypt")
-        {
-            std::string filename = argv[i+1];
-            if (existsFile(filename))
+            if ( !args.pair.empty() )
             {
-                encrypt_with_aes(filename);
-            }
-            break;
-        }
-        else if (arg == "-dec" || arg == "--decrypt")
-        {
-            std::string keyFile, ivFile, keypairFile;
-            bool hex = false, pair=false;
-            for (int j=2; j < argc; j++)
-            {
-                std::string arg2 = argv[j];
+                if ( existsFile(args.pair) )
+                {
+                    std::string keypair = readBinFile(args.pair);
+                    if (keypair.length() == 48)
+                    {
+                        std::string key = keypair.substr(0, 32);
+                        std::string iv = keypair.substr(32, 48);
 
-                if (arg2 == "-k" || arg2 == "--key")
-                {
-                    keyFile = argv[j+1];
-                }
-                if (arg2 == "-i" || arg2 == "--iv")
-                {
-                    ivFile = argv[j+1];
-                }
-                if (arg2 == "-p" || arg2 == "--pair")
-                {
-                    keypairFile = argv[j+1];
-                    pair = true;
-                }
-                if (arg2 == "--hex")
-                {
-                    hex  = true;
-                }
-            }
-            std::string filename = argv[argc-1];
-            if (pair)
-            {
-                std::string keypair = readBinFile(keypairFile);
-                if (keypair.length() == 48)
-                {
-                    std::string key = keypair.substr(0, 32);
-                    std::string iv = keypair.substr(32, 48);
-
-                    decrypt_with_aes(filename, key, iv, hex);
+                        decrypt_with_aes(args.decrypt, key, iv, args.hex);
+                    } else
+                    {
+                        std::cerr << "String length of keypair is unequal 48!. Exiting" << std::endl;
+                        exit(1);
+                    }
                 } else
                 {
-                    std::cerr << "String length of keypair is unequal 48!. Exiting" << std::endl;
-                    exit(1);
+                    std::cerr << "File " << args.pair << " does not exist!" << std::endl;
                 }
 
             } else
             {
-                std::string aeskey = readBinFile(keyFile);
-                std::string aesiv  = readBinFile(ivFile);
-
-                decrypt_with_aes(filename, aeskey, aesiv, hex);
+                decrypt_with_aes(args.decrypt, readBinFile(args.key), readBinFile(args.iv), args.hex);
             }
 
-
-            break;
         } else
         {
-            showUsage();
-            exit(1);
+            std::cerr << "File " << args.decrypt << " does not exist" << std::endl;
         }
 
     }
