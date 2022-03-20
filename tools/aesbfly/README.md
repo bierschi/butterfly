@@ -91,7 +91,7 @@ openssl enc -aes-256-cbc -d -iter 6 -salt -md sha256 -in 5357083.pdf.bfly -K $(c
 ## 5. butterfly -> aesbfly
 #### Encrypt with butterfly application
 <pre><code>
---encrypt /home/testuser/projects/butterfly/data/fs --protected
+./butterfly --encrypt /home/testuser/projects/butterfly/5357083.pdf --protected
 </code></pre>
 
 #### Decrypt with `aesbfly`
