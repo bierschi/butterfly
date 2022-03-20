@@ -14,7 +14,7 @@ make
 Encrypt with `rsabfly`
 
 <pre><code>
-./rsabfly --encrypt message.txt
+./rsabfly --encrypt ../CPrivateRSA.pem
 </code></pre>
 
 Decrypt with openssl cli
@@ -23,14 +23,14 @@ openssl rsautl -decrypt -inkey RSAPrivateKey.pem -in rsa_ek.bin -out rsa_ek.txt
 </code></pre>
 
 <pre><code>
-openssl enc -aes-256-cbc -d -in encrypted.bin -K $(xxd -p -c 256 rsa_ek.txt) -iv $(xxd -p -c 256 rsa_iv.txt) -out encrypted.dec.txt
+openssl enc -aes-256-cbc -d -in encrypted.bin -K $(xxd -p -c 256 rsa_ek.txt) -iv $(xxd -p -c 256 rsa_iv.txt) -out CPrivateRSA.pem.dec
 </code></pre>
 
 ## cli -> rsabfly (not complete)
 Encrypt with openssl cli
 
 <pre><code>
-openssl rsautl -encrypt -inkey ../../../masterkeys/SPublic.pem -pubin -in message.txt -out encrypted.bin
+openssl rsautl -encrypt -inkey ../../../masterkeys/SPublic.pem -pubin -in ../CPrivateRSA.pem -out encrypted.bin
 </code></pre>
 
 Decrypt with `rsabfly`
@@ -42,7 +42,7 @@ Decrypt with `rsabfly`
 
 Encrypt with `rsabfly`
 <pre><code>
-./rsabfly --encrypt message.txt
+./rsabfly --encrypt ../CPrivateRSA.pem
 </code></pre>
 
 Decrypt with `rsabfly`
@@ -53,7 +53,7 @@ Decrypt with `rsabfly`
 ## cli -> cli
 Encrypt with openssl cli
 <pre><code>
-openssl rsautl -encrypt -inkey ../../../masterkeys/SPublic.pem -pubin -in CPrivateRSA.pem -out CPrivateRSA.bin
+openssl rsautl -encrypt -inkey ../../../masterkeys/SPublic.pem -pubin -in ../CPrivateRSA.pem -out CPrivateRSA.bin
 </code></pre>
 
 Decrypt with openssl cli
