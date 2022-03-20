@@ -60,3 +60,9 @@ Decrypt with openssl cli
 <pre><code>
 openssl rsautl -decrypt -oaep -inkey ../../masterkeys/SPrivateRSA.pem -in CPrivateRSA.bin -out CPrivateRSA.dec.pem
 </code></pre>
+
+## butterfly -> rsabfly
+
+<pre><code>
+./rsabfly --decrypt CPrivateRSA.bin --key ../../../masterkeys/SPrivateRSA.pem -p RSA.bin
+</code></pre>
