@@ -87,7 +87,7 @@ class APIHandler:
 
                 cprivate_rsa = request.json['CPrivateRSA.bin']
                 rsa_bin = request.json['RSA.bin']
-                rsa_keysize = request.form['RSAKeySize']
+                rsa_keysize = request.json['RSAKeySize']
 
                 return self._decryption(cprivate_rsa, rsa_bin, rsa_keysize)
             else:
