@@ -30,12 +30,15 @@ openssl enc -aes-256-cbc -d -in encrypted.bin -K $(xxd -p -c 256 rsa_ek.txt) -iv
 Encrypt with openssl cli
 
 <pre><code>
-openssl rsautl -encrypt -inkey ../../../masterkeys/SPublic.pem -pubin -in ../CPrivateRSA.pem -out encrypted.bin
+openssl rand 1679 > rsa_ek.txt
+openssl rand 16 > rsa_iv.txt
+openssl enc -aes-256-cbc -e -in ../CPrivateRSA.pem -K $(xxd -p -c 15000 rsa_ek.txt) -iv $(xxd -p -c 256 rsa_iv.txt) -out CPrivateRSA.bin
+openssl rsautl -encrypt -inkey ../../../masterkeys/SPublic.pem -pubin -in rsa_ek.txt -out rsa_ek.bin
 </code></pre>
 
 Decrypt with `rsabfly`
 <pre><code>
-./rsabfly --decrypt encrypted.bin --key ../../../masterkeys/SPrivateRSA.pem --ek rsa_ek.bin --iv rsa_iv.txt
+./rsabfly --decrypt CPrivateRSA.bin --key ../../../masterkeys/SPrivateRSA.pem --ek rsa_ek.bin --iv rsa_iv.txt
 </code></pre>
 
 ## 3. rsabfly -> rsabfly
