@@ -21,14 +21,14 @@ public:
      * TCPSocket Constructor
      *
      * Usage:
-     *      std::shared_ptr<butterfly::TCPSocket> _serverSocket = std::make_shared<butterfly::TCPSocket>();
+     *      std::shared_ptr<tools::TCPSocket> _serverSocket = std::make_shared<tools::TCPSocket>();
      *      _serverSocket->bind(1234);
      *      _serverSocket->listen();
-     *      std::shared_ptr<butterfly::TCPSocket> newSocket = _serverSocket->accept();
+     *      std::shared_ptr<tools::TCPSocket> newSocket = _serverSocket->accept();
      *      std::string s;
      *      newSocket->recv(s, 1024);
      *
-     *      std::shared_ptr<butterfly::TCPSocket> _clientSocket = std::make_shared<butterfly::TCPSocket>();
+     *      std::shared_ptr<tools::TCPSocket> _clientSocket = std::make_shared<tools::TCPSocket>();
      *      if (_clientSocket->connect("127.0.0.1", 8080))
      *      {
      *          _clientSocket->send("Message to server");

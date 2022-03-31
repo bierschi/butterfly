@@ -39,10 +39,10 @@ public:
      * Socket Constructor
      *
      * Usage:
-     *      std::shared_ptr<butterfly::Socket> _socket = std::make_shared<butterfly::Socket>(AF_INET, SOCK_STREAM, 0);
+     *      std::shared_ptr<tools::Socket> _socket = std::make_shared<tools::Socket>(AF_INET, SOCK_STREAM, 0);
      *      _socket->bind(1234);
      *      _socket->listen();
-     *      std::shared_ptr<butterfly::Socket> newSocket = _socket->accept();
+     *      std::shared_ptr<tools::Socket> newSocket = _socket->accept();
      *
      * @param domain: Address families like AF_INET
      * @param type: Types of sockets like SOCK_STREAM or SOCK_DGRAM
@@ -54,10 +54,10 @@ public:
      * Socket Constructor
      *
      * Usage:
-     *      std::shared_ptr<butterfly::Socket> _socket = std::make_shared<butterfly::Socket>(fd, AF_INET, SOCK_STREAM, 0);
+     *      std::shared_ptr<tools::Socket> _socket = std::make_shared<tools::Socket>(fd, AF_INET, SOCK_STREAM, 0);
      *      _socket->bind(1234);
      *      _socket->listen();
-     *      std::shared_ptr<butterfly::Socket> newSocket = _socket->accept();
+     *      std::shared_ptr<tools::Socket> newSocket = _socket->accept();
      *
      * @param fileDescriptor: File Descriptor for the Socket
      * @param domain: Address families like AF_INET
