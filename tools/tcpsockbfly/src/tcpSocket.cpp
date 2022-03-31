@@ -40,10 +40,10 @@ std::shared_ptr<TCPSocket> TCPSocket::accept()
     return newSocket;
 }
 
-bool TCPSocket::send(const std::string &s) const
+bool TCPSocket::send(const std::string &s, int flag) const
 {
 
-    if (::send(_fd, s.c_str(), strlen(s.c_str()), MSG_NOSIGNAL) == -1)
+    if (::send(_fd, s.c_str(), strlen(s.c_str()), flag) == -1)
     {
         return false;
     }
@@ -51,9 +51,22 @@ bool TCPSocket::send(const std::string &s) const
     return true;
 }
 
-int TCPSocket::recv(char *buf, int len) const
+bool TCPSocket::recv(char *buf, int len, int flag) const
 {
-    std::string s;
+    // clear buffer
+    memset(buf, 0, len);
+
+    if ( ::recv(_fd, buf, len, flag) < 0)
+    {
+        return false;
+    } else
+    {
+        return true;
+    }
+}
+
+int TCPSocket::recvNoWait(char *buf, int len) const
+{
     ssize_t size_recv , total_size= 0;
 
     memset(buf , 0 , static_cast<size_t>(len));	//clear the variable
