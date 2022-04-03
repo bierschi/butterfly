@@ -23,15 +23,18 @@ public:
      * Constructor HTTPResponse
      *
      * Usage:
-     *      std::unique_ptr<butterfly::HTTPResponse> _httpResponse(new HTTPResponse());
-     *
-     *      _httpResponse->setProtocol(HTTP1_1);
-     *      _httpResponse->setReasonPhrase(302);
+     *      std::unique_ptr<tools::HTTPResponse> _httpResponse(new tools::HTTPResponse());
+     *      _httpResponse->setProtocol(Protocol::HTTP1_1);
+     *      _httpResponse->setStatusCode(200);
+     *      _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
      *      _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
      *      _httpResponse->addBody("<!DOCTYPE html><html><body><h1>Test Message</h1></body></html>");
      *      _httpResponse->setHTTPHeader("Content-Length", std::to_string(_httpResponse->getBody().length()));
-     *
      *      _httpResponse->prepareOutgoing();
+     *
+     *      std::unique_ptr<tools::HTTPResponse> _httpResponse(new tools::HTTPResponse());
+     *      _httpResponse->parseIncoming();
+     *
      *
      */
     HTTPResponse();

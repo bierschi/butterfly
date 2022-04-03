@@ -9,7 +9,7 @@ HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request")
 
 }
 
-void HTTPRequest::setMethod(Method &method)
+void HTTPRequest::setMethod(Method method)
 {
     _httpMethod = method;
 }
@@ -176,9 +176,14 @@ void HTTPRequest::prepareOutgoing()
 
     _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
 
-    for(auto it = _httpHeaders.begin(); it != _httpHeaders.end(); it++)
+    if ( !_userAgent.empty() )
     {
-        _httpData += it->first + ": " + it->second + CRLF;
+        _httpData += "User-Agent: " + _userAgent + CRLF;
+    }
+
+    for(auto &httpHeader: _httpHeaders)
+    {
+        _httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
     }
 
     _httpData += CRLF;
@@ -187,4 +192,4 @@ void HTTPRequest::prepareOutgoing()
 
 }
 
-}
+} // namespace tools
