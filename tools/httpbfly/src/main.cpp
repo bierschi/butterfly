@@ -41,9 +41,10 @@ int main(int argc, char* argv[])
     httpResponse->addBody("<!DOCTYPE html><html><body><h1>Test Message</h1></body></html>");
     httpResponse->setHTTPHeader("Content-Length", std::to_string(httpResponse->getBodyLength()));
     httpResponse->prepareOutgoing();
+    std::string http = httpResponse->getHTTPData();
 
     httpResponse->print();
-
+    std::cout << "H: " << http << std::endl;
     return 0;
 }
 

@@ -57,23 +57,23 @@ public:
     inline std::string getHTTPData() const { return _httpData; }
 
     /**
-     * Getter for the HTTPData Request size
+     * Getter for the HTTPData size
      *
-     * @return size of the request
+     * @return size of the HTTP data
      */
     inline size_t getHTTPDataSize() const { return _httpData.size(); }
 
     /**
      * Setter for the protocol
      *
-     * @param protocol
+     * @param protocol: HTTP Protocol
      */
     void setProtocol(Protocol protocol);
 
     /**
      * Getter for the protocol
      *
-     * @return Protocol
+     * @return Protocol: HTTP Protocol
      */
     inline Protocol getProtocol() const { return _protocol; }
 
@@ -115,7 +115,7 @@ public:
     std::string getHTTPHeader(const std::string &headerName) const;
 
     /**
-     * Add HTTP Header Vector to existing one
+     * Add HTTP Header Vector to the existing one
      *
      * @param headerVec: Vector of header arguments
      */
@@ -152,7 +152,6 @@ public:
 
     /**
      * Abstract method parseIncoming for subclasses
-     *
      */
     virtual void parseIncoming() = 0;
 

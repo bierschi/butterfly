@@ -8,7 +8,7 @@ namespace tools
 {
 
 /**
- * Class HTTPRequest for incoming HTTP Requests (Client -> Server)
+ * Class HTTPRequest for incoming/outgoing HTTP Requests
  */
 class HTTPRequest: public HTTPMSGSchema
 {

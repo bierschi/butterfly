@@ -72,4 +72,4 @@ void HTTPMSGSchema::addFormParamVector(std::vector<std::pair<std::string, std::s
     }
 }
 
-}
+} // namespace tools
