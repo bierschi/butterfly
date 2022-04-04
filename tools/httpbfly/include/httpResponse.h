@@ -33,6 +33,7 @@ public:
      *      _httpResponse->prepareOutgoing();
      *
      *      std::unique_ptr<tools::HTTPResponse> _httpResponse(new tools::HTTPResponse());
+     *      _httpResponse->addHTTPData(httpData);
      *      _httpResponse->parseIncoming();
      *      _httpResponse->getStatusCode();
      *      _httpResponse->getReasonPhrase();

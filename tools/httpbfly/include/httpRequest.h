@@ -34,7 +34,8 @@ public:
      *      _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBodyLength()));
      *      _httpRequest->prepareOutgoing();
      *
-     *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new HTTPRequest());;
+     *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new HTTPRequest());
+     *      _httpRequest->addHTTPData(httpData);
      *      _httpRequest->parseIncoming();
      *      _httpRequest->getMethod();
      *      _httpRequest->getURL();
