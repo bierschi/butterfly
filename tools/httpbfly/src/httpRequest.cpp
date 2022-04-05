@@ -175,7 +175,13 @@ void HTTPRequest::prepareOutgoing()
             break;
     }
 
-    _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
+    if (_httpMethod == Method::GET)
+    {
+        _httpData += httpMethod + " / " + protocol + CRLF;
+    } else
+    {
+        _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
+    }
 
     if ( !_userAgent.empty() )
     {

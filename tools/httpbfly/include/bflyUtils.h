@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_BFLYUTILS_H
-#define BUTTERFLY_BFLYUTILS_H
+#ifndef HTTPBFLY_BFLYUTILS_H
+#define HTTPBFLY_BFLYUTILS_H
 
 #include <sys/stat.h>
 #include <fstream>
@@ -9,7 +9,7 @@
 #include <cstdio>
 #include <iomanip>
 
-namespace butterfly
+namespace tools
 {
 
 /**
@@ -271,6 +271,6 @@ inline std::string createFormParamStr(std::vector<std::pair<std::string, std::st
     return formParamStr;
 }
 
-} // namespace butterfly
+} // namespace tools
 
-#endif //BUTTERFLY_BFLYUTILS_H
+#endif //HTTPBFLY_BFLYUTILS_H
