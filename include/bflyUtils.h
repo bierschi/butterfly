@@ -221,6 +221,12 @@ inline std::string hex2String(const std::string &in)
     return output;
 }
 
+/**
+ * Get Domain name from provided URL
+ *
+ * @param url: URL address
+ * @return domain as std::string
+ */
 inline std::string getDomainFromUrl(std::string url)
 {
     std::string http = "http://";
@@ -252,6 +258,12 @@ inline std::string getDomainFromUrl(std::string url)
     return url;
 }
 
+/**
+ * Creates a form param string with the content of the vector
+ *
+ * @param formParamVec: Vector of form parameters
+ * @return form parameter string
+ */
 inline std::string createFormParamStr(std::vector<std::pair<std::string, std::string>> &formParamVec)
 {
     std::string formParamStr;

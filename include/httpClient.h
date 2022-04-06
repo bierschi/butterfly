@@ -7,6 +7,7 @@
 #include "tcpSocket.h"
 #include "httpRequest.h"
 #include "httpResponse.h"
+#include "bflyUtils.h"
 #include "logger.h"
 
 namespace butterfly
@@ -19,26 +20,17 @@ class HTTPClient
 {
 
 private:
-    unsigned int _port;
     std::shared_ptr<TCPSocket> _tcpSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-    std::vector< std::pair<std::string, std::string> > _httpHeaders, _formParams;
-
-    /**
-     * Get IP from URL
-     *
-     * @param url: URL string
-     * @return IP from URL string
-     */
-    std::string getIpFromUrl(std::string url);
+    std::vector< std::pair<std::string, std::string> > _httpHeaders;
 
     /**
      * Prepares the Request
      *
      * @param url: URL string
      */
-    void prepareRequest(const std::string &url);
+    void prepareRequest(const std::string &url, Method method, const std::string &data="");
 
     /**
      * Processes the HTTP Response
@@ -55,12 +47,11 @@ public:
      * Constructor HTTPClient
      *
      * Usage:
-     *      std::shared_ptr<butterfly::HTTPClient> httpClient = std::make_shared<butterfly::HTTPClient>(5000);
-     *      std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/");
+     *      std::shared_ptr<butterfly::HTTPClient> httpClient = std::make_shared<butterfly::HTTPClient>();
+     *      std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/", data, 5000);
      *
-     * @param port: Port for the Server
      */
-    explicit HTTPClient(unsigned int port=5000);
+    HTTPClient();
 
     /**
      * Destructor HTTPClient
@@ -76,26 +67,21 @@ public:
     void setHTTPHeader(const std::string &headerName, const std::string &headerContent);
 
     /**
-     * Setter for the form parameter and the value
-     *
-     * @param param: form parameter
-     * @param value: value for the parameter
-     */
-    void setFormParam(const std::string &param, const std::string &value);
-
-    /**
      * Get request to the URL
      *
      * @param url: URL string
+     * @param port: port to connect to
      */
-    void get(const std::string &url);
+    std::string get(const std::string &url, int port=80);
 
     /**
      * Post request to the URL
      *
      * @param url: URL string
+     * @param data: data for the post request
+     * @param port: port to connect to
      */
-    std::string post(const std::string &url);
+    std::string post(const std::string &url, const std::string &data, int port=80);
 
 };
 

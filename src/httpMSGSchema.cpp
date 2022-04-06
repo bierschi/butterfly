@@ -11,7 +11,7 @@ HTTPMSGSchema::HTTPMSGSchema(const std::string &messageType) : _messageType(mess
 
 void HTTPMSGSchema::print() const
 {
-    std::cout << "---HTTP " << _messageType << " Begin---" << std::endl << _httpData << "\n---HTTP " << _messageType << " End---" << std::endl;
+    std::cout << "---HTTP " << _messageType << " Begin---" << std::endl << _httpData << "---HTTP " << _messageType << " End---" << std::endl;
 }
 
 void HTTPMSGSchema::addHTTPData(const std::string &httpData)
