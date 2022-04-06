@@ -6,7 +6,9 @@ namespace butterfly
 
 HTTPClient::HTTPClient() : _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
 {
-
+    #ifdef LOGGING
+    LOG_TRACE("Create class HTTPClient");
+    #endif
 }
 
 HTTPClient::~HTTPClient()
@@ -81,6 +83,9 @@ std::string HTTPClient::post(const std::string &url, const std::string &data, in
     _tcpSocket->hostnameToIP(domain, ip);
     if ( _tcpSocket->connect(ip, port) )
     {
+        #ifdef LOGGING
+        LOG_INFO("Sending post request to url " << url);
+        #endif
         _tcpSocket->send(_httpRequest->getHTTPData());
 
         if ( processResponse() )
@@ -109,7 +114,9 @@ std::string HTTPClient::get(const std::string &url, int port)
     _tcpSocket->hostnameToIP(domain, ip);
     if ( _tcpSocket->connect(ip, port) )
     {
-
+        #ifdef LOGGING
+        LOG_INFO("Sending get request to url " << url);
+        #endif
         _tcpSocket->send(_httpRequest->getHTTPData());
 
         if ( processResponse() )
