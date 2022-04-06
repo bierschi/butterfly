@@ -4,7 +4,7 @@
 namespace tools
 {
 
-HTTPClient::HTTPClient(unsigned int port) : _port(port), _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
+HTTPClient::HTTPClient() : _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
 {
 
 }
@@ -37,7 +37,6 @@ void HTTPClient::prepareRequest(const std::string &url, Method method, const std
     _httpRequest->addBody(data);
     _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBodyLength()));
     _httpRequest->prepareOutgoing();
-    _httpRequest->print();
 }
 
 bool HTTPClient::processResponse()
@@ -71,35 +70,35 @@ void HTTPClient::setHTTPHeader(const std::string &headerName, const std::string 
     _httpHeaders.emplace_back(headerName, headerContent);
 }
 
-std::string HTTPClient::post(const std::string &url, const std::string &data)
+std::string HTTPClient::post(const std::string &url, const std::string &data, int port)
 {
     // Prepare the post request
     prepareRequest(url, Method::POST, data);
 
-    std::string cert, ip;
+    std::string response, ip;
     std::string domain = getDomainFromUrl(url);
 
     _tcpSocket->hostnameToIP(domain, ip);
-    if ( _tcpSocket->connect(ip, static_cast<int>(_port)) )
+    if ( _tcpSocket->connect(ip, port) )
     {
         _tcpSocket->send(_httpRequest->getHTTPData());
 
         if ( processResponse() )
         {
-            cert = _httpResponse->getBody();
-            return cert;
+            response = _httpResponse->getBody();
+            return response;
         } else
         {
-            return cert;
+            return response;
         }
 
     } else
     {
-        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(_port));
+        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
     }
 }
 
-std::string HTTPClient::get(const std::string &url)
+std::string HTTPClient::get(const std::string &url, int port)
 {
     // Prepare the get request
     prepareRequest(url,Method::GET);
@@ -108,8 +107,7 @@ std::string HTTPClient::get(const std::string &url)
     std::string domain = getDomainFromUrl(url);
 
     _tcpSocket->hostnameToIP(domain, ip);
-
-    if ( _tcpSocket->connect(ip, static_cast<int>(_port)) )
+    if ( _tcpSocket->connect(ip, port) )
     {
 
         _tcpSocket->send(_httpRequest->getHTTPData());
@@ -125,7 +123,7 @@ std::string HTTPClient::get(const std::string &url)
 
     } else
     {
-        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(_port));
+        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
     }
 }
 

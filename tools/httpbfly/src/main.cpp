@@ -50,26 +50,31 @@ void response()
     std::cout << "H: " << http << std::endl;
 }
 
+void client()
+{
+    std::vector<std::pair<std::string, std::string>> formParamVec;
+
+    formParamVec.insert(formParamVec.end(), {std::make_pair("CPrivateRSA.bin", v1),
+                                             std::make_pair("RSA.bin", v2),
+                                             std::make_pair("RSAKeySize", "2048")});
+    std::string formParamStr = tools::createFormParamStr(formParamVec);
+
+    std::unique_ptr<tools::HTTPClient> httpClient(new tools::HTTPClient());
+
+    std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/", formParamStr, 5000);
+    std::cout << "Cert: " << cert << std::endl;
+
+    //std::string data = httpClient->get("www.google.de");
+    //std::cout << "Data: " << data << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
 
     std::unique_ptr<tools::ArgumentParser> argparse = std::unique_ptr<tools::ArgumentParser>(new tools::ArgumentParser(argc, argv));
     tools::ArgumentParser::Arguments args = argparse->parseArgs();
 
-    std::vector<std::pair<std::string, std::string>> formParamVec;
 
-    formParamVec.insert(formParamVec.end(), {std::make_pair("CPrivateRSA.bin", v1),
-                                               std::make_pair("RSA.bin", v2),
-                                               std::make_pair("RSAKeySize", "2048")});
-    std::string formParamStr = tools::createFormParamStr(formParamVec);
-
-    std::unique_ptr<tools::HTTPClient> httpClient(new tools::HTTPClient(5000));
-
-    std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/", formParamStr);
-    std::cout << "cert: " << cert << std::endl;
-
-    //std::string data = httpClient->get("www.google.de");
-    //std::cout << "Data: " << data << std::endl;
     return 0;
 }
 
