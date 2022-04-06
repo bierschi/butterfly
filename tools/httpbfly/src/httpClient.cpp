@@ -1,7 +1,7 @@
 
 #include "httpClient.h"
 
-namespace butterfly
+namespace tools
 {
 
 HTTPClient::HTTPClient() : _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
@@ -104,7 +104,7 @@ std::string HTTPClient::get(const std::string &url, int port)
     prepareRequest(url,Method::GET);
 
     std::string response, ip;
-    std::string domain = butterfly::getDomainFromUrl(url);
+    std::string domain = getDomainFromUrl(url);
 
     _tcpSocket->hostnameToIP(domain, ip);
     if ( _tcpSocket->connect(ip, port) )
@@ -127,4 +127,4 @@ std::string HTTPClient::get(const std::string &url, int port)
     }
 }
 
-} // namespace butterfly
+} // namespace tools

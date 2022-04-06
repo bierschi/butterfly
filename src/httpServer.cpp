@@ -4,51 +4,33 @@
 namespace butterfly
 {
 
-HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _TCPSocket(std::make_shared<TCPSocket>()), _newTCPSocket(std::make_shared<TCPSocket>())
+HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _tcpSocket(std::make_shared<TCPSocket>()), _newTCPSocket(std::make_shared<TCPSocket>())
 {
-    #ifdef LOGGING
-    LOG_TRACE("Create class HTTPServer");
-    #endif
-    _TCPSocket->bind(_port);
-    _TCPSocket->listen();
+
+    _tcpSocket->bind(_port);
+    _tcpSocket->listen();
 }
 
 HTTPServer::~HTTPServer()
 {
-    _TCPSocket->disconnect();
-}
-
-void HTTPServer::registerMasterPKeyCB(std::function<void(std::string)> cb)
-{
-    _masterPKeyCB = cb;
+    _tcpSocket->disconnect();
 }
 
 void HTTPServer::run()
 {
-    #ifdef LOGGING
-    LOG_INFO("Running HTTPServer on port " << _port);
-    #endif
+
     _running = true;
 
     while(_running)
     {
 
         // blocking accept call
-        _newTCPSocket = _TCPSocket->accept();
+        _newTCPSocket = _tcpSocket->accept();
 
+        std::thread t(&HTTPServer::handleRequest, this);
+        t.join();
 
-        if(fork() == 0)
-        {
-            if(handleRequest())
-            {
-                exit(-1);
-            }
-
-            exit(0);
-
-        }
-
-        _newTCPSocket->disconnect();
+        // reset pointer before handle new request
         _newTCPSocket.reset();
     }
 
@@ -61,43 +43,25 @@ void HTTPServer::stop()
 
 bool HTTPServer::handleRequest()
 {
-    #ifdef LOGGING
-    LOG_TRACE("Handle new HTTP Request!");
-    #endif
     _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
     // parse incoming data from TCP Socket
-    if ( recvRequest() )
-    {
-        // process the HTTP request
-        processRequest();
-
-        // send the HTTP Response via the TCP Socket
-        return sendResponse();
-
-    } else
-    {
-        return false;
-    }
-
-}
-
-bool HTTPServer::recvRequest()
-{
-
     std::string data = _newTCPSocket->recvAll(1024);
 
     if ( !data.empty() )
     {
         _httpRequest->addHTTPData(data);
-        return true;
+        _httpRequest->parseIncoming();
+
+        // process the HTTP request
+        processRequest();
+
+        // send the HTTP Response via the TCP Socket
+        return sendResponse();
     }
     else
     {
-        #ifdef LOGGING
-        LOG_ERROR("No HTTP Data received!");
-        #endif
         return false;
     }
 
@@ -106,18 +70,13 @@ bool HTTPServer::recvRequest()
 void HTTPServer::processRequest()
 {
 
-    _httpRequest->parseIncoming();
-
-    Method  m = _httpRequest->getMethod();
+    Method m = _httpRequest->getMethod();
     std::string url = _httpRequest->getURL();
 
     if ( m == Method::GET )
     {
         if ( url == "/" )
         {
-            #ifdef LOGGING
-            LOG_TRACE("Prepare Browser Response");
-            #endif
             browserRoute();
         } else
         {
@@ -126,30 +85,9 @@ void HTTPServer::processRequest()
 
     } else if ( m == Method::POST )
     {
-
-        if ( url == "/masterkey" )
-        {
-            #ifdef LOGGING
-            LOG_TRACE("Extracting provided masterkey from HTTP Request");
-            #endif
-            if ( masterKeyRoute() )
-            {
-                successResponse(200);
-            } else
-            {
-                errorResponse(400);
-            }
-
-        } else
-        {
-            errorResponse(404);
-        }
-
+        errorResponse(404);
     } else
     {
-        #ifdef LOGGING
-        LOG_ERROR("Method not supported from HTTP Server!");
-        #endif
         errorResponse(500);
     }
 
@@ -158,40 +96,7 @@ void HTTPServer::processRequest()
 
 bool HTTPServer::sendResponse()
 {
-
     return _newTCPSocket->send(_httpResponse->getHTTPData());
-}
-
-bool HTTPServer::masterKeyRoute()
-{
-    std::string key = _httpRequest->getBody();
-
-    // get the key as value parameter
-    //std::string key = body.substr( body.find('=') + 1, body.length() - body.find('='));
-
-    if ( !key.empty() && ( key.find("-----BEGIN RSA PRIVATE KEY-----") != std::string::npos) )
-    {
-        // If we received a masterkey, invoke the masterPKeyCB callback to start the decrypting procedure
-        if ( _masterPKeyCB)
-        {
-
-            _masterPKeyCB(key);
-
-        } else
-        {
-            #ifdef LOGGING
-            LOG_ERROR("No MasterPrivateKey Callback registered!");
-            #endif
-        }
-        return true;
-    } else
-    {
-        #ifdef LOGGING
-        LOG_ERROR("Invalid Private Key provided on /masterkey Route!")
-        #endif
-        return false;
-    }
-
 }
 
 void HTTPServer::browserRoute()
@@ -226,6 +131,7 @@ void HTTPServer::errorResponse(size_t statusCode)
     _httpResponse->setStatusCode(statusCode);
     _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
     _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
+    _httpResponse->setHTTPHeader("User-Agent", "butterfly");
 
     _httpResponse->prepareOutgoing();
 }

@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_HTTPCLIENT_H
-#define BUTTERFLY_HTTPCLIENT_H
+#ifndef HTTPBFLY_HTTPCLIENT_H
+#define HTTPBFLY_HTTPCLIENT_H
 
 #include <memory>
 
@@ -8,9 +8,8 @@
 #include "httpRequest.h"
 #include "httpResponse.h"
 #include "bflyUtils.h"
-#include "logger.h"
 
-namespace butterfly
+namespace tools
 {
 
 /**
@@ -51,7 +50,7 @@ public:
      *      std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/", data, 5000);
      *
      */
-    HTTPClient();
+     HTTPClient();
 
     /**
      * Destructor HTTPClient
@@ -85,6 +84,6 @@ public:
 
 };
 
-} // namespace butterfly
+} // namespace tools
 
-#endif //BUTTERFLY_HTTPCLIENT_H
+#endif //HTTPBFLY_HTTPCLIENT_H
