@@ -3,23 +3,25 @@ pipeline {
          stages {
                  stage('Build') {
                      steps {
-                         echo 'Build ransomware'
+                         echo 'Build butterfly'
                          sh 'mkdir build'
                          dir ('build') {
-                           sh 'cmake ..'
+                           sh 'cmake ../ -DUNITTESTS=ON'
                            sh 'make'
                          }
                      }
                  }
-                 stage('Test') {
+                 stage('UnitTests') {
                     steps {
                         echo 'Test ransomware'
+                        dir ('bin') {
+                          sh './butterflyUnitTests'
+                        }
                     }
                  }
-                 stage('Deploy') {
+                 stage('Test') {
                     steps {
-                        echo "Deploy ransomware to target server"
-
+                        echo "Test Encryption/Decryption of butterfly"
                     }
                 }
     }
