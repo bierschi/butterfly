@@ -51,7 +51,7 @@ void response()
     std::cout << "H: " << http << std::endl;
 }
 
-void client()
+void http_client(const std::string &url, const int &port)
 {
     std::vector<std::pair<std::string, std::string>> formParamVec;
 
@@ -69,6 +69,14 @@ void client()
     //std::cout << "Data: " << data << std::endl;
 }
 
+void http_server(const int &port)
+{
+
+    std::unique_ptr<tools::HTTPServer> httpServer(new tools::HTTPServer(8080));
+    httpServer->run();
+
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -78,6 +86,16 @@ int main(int argc, char* argv[])
     std::unique_ptr<tools::HTTPServer> httpServer(new tools::HTTPServer(8080));
     httpServer->run();
 
+    if (args.server)
+    {
+        http_server(args.port);
+    } else if (args.client)
+    {
+
+    } else
+    {
+
+    }
 
     return 0;
 }
