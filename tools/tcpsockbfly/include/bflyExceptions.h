@@ -1,6 +1,6 @@
 
-#ifndef HTTPBFLY_BFLYEXCEPTIONS_H
-#define HTTPBFLY_BFLYEXCEPTIONS_H
+#ifndef TCPSOCKBFLY_BFLYEXCEPTIONS_H
+#define TCPSOCKBFLY_BFLYEXCEPTIONS_H
 
 #include <exception>
 #include <iostream>
@@ -182,4 +182,4 @@ public:
 
 } // namespace tools
 
-#endif
+#endif //TCPSOCKBFLY_BFLYEXCEPTIONS_H

@@ -1,6 +1,6 @@
 
-#ifndef HTTPBFLY_TCPSOCKET_H
-#define HTTPBFLY_TCPSOCKET_H
+#ifndef TCPSOCKBFLY_TCPSOCKET_H
+#define TCPSOCKBFLY_TCPSOCKET_H
 
 #include "socket.h"
 
@@ -95,4 +95,4 @@ public:
 
 } // namespace tools
 
-#endif //HTTPBFLY_TCPSOCKET_H
+#endif //TCPSOCKBFLY_TCPSOCKET_H

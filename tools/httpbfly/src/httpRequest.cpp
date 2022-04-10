@@ -9,7 +9,7 @@ HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request")
 
 }
 
-void HTTPRequest::setMethod(Method &method)
+void HTTPRequest::setMethod(Method method)
 {
     _httpMethod = method;
 }
@@ -101,7 +101,8 @@ void HTTPRequest::parseIncoming()
     parseCursorOld++;
 
     // Request Headers start here
-    while(1){
+    while(1)
+    {
         parseCursorNew = _httpData.find_first_of(CRLF, parseCursorOld);
         requestHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew + 1;
@@ -174,11 +175,22 @@ void HTTPRequest::prepareOutgoing()
             break;
     }
 
-    _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
-
-    for(auto it = _httpHeaders.begin(); it != _httpHeaders.end(); it++)
+    if (_httpMethod == Method::GET)
     {
-        _httpData += it->first + ": " + it->second + CRLF;
+        _httpData += httpMethod + " / " + protocol + CRLF;
+    } else
+    {
+        _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
+    }
+
+    if ( !_userAgent.empty() )
+    {
+        _httpData += "User-Agent: " + _userAgent + CRLF;
+    }
+
+    for(auto &httpHeader: _httpHeaders)
+    {
+        _httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
     }
 
     _httpData += CRLF;
@@ -187,4 +199,4 @@ void HTTPRequest::prepareOutgoing()
 
 }
 
-}
+} // namespace tools

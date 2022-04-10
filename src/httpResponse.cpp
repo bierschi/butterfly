@@ -105,7 +105,8 @@ void HTTPResponse::parseIncoming()
     parseCursorOld++;
 
     // Response Headers start here
-    while(1){
+    while(1)
+    {
         parseCursorNew = _httpData.find_first_of(CRLF, parseCursorOld);
         responseHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew+1;
@@ -127,7 +128,7 @@ void HTTPResponse::parseIncoming()
         parseCursorOld++;
 
         // Is there another CRLF?
-        if (_httpData.substr(parseCursorOld, 2) == CRLF)
+        if ( _httpData.substr(parseCursorOld, 2) == CRLF )
             break;
     }
 
@@ -141,7 +142,8 @@ void HTTPResponse::prepareOutgoing()
 
     std::string protocol;
 
-    switch(_protocol){
+    switch(_protocol)
+    {
         case Protocol::HTTP1_0:
             protocol = "HTTP/1.0";
             break;
@@ -155,10 +157,11 @@ void HTTPResponse::prepareOutgoing()
 
     _httpData += protocol + " " + std::to_string(_statusCode) + " " + _reasonPhrase + CRLF;
 
-    for(auto it = _httpHeaders.begin(); it != _httpHeaders.end(); it++)
+    for(auto &httpHeader: _httpHeaders)
     {
-        _httpData += it->first + ": " + it->second + CRLF;
+        _httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
     }
+
     _httpData += CRLF;
 
     _httpData += _body;

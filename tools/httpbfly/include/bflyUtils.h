@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_BFLYUTILS_H
-#define BUTTERFLY_BFLYUTILS_H
+#ifndef HTTPBFLY_BFLYUTILS_H
+#define HTTPBFLY_BFLYUTILS_H
 
 #include <sys/stat.h>
 #include <fstream>
@@ -9,7 +9,7 @@
 #include <cstdio>
 #include <iomanip>
 
-namespace butterfly
+namespace tools
 {
 
 /**
@@ -221,12 +221,6 @@ inline std::string hex2String(const std::string &in)
     return output;
 }
 
-/**
- * Get Domain name from provided URL
- *
- * @param url: URL address
- * @return domain as std::string
- */
 inline std::string getDomainFromUrl(std::string url)
 {
     std::string http = "http://";
@@ -258,12 +252,6 @@ inline std::string getDomainFromUrl(std::string url)
     return url;
 }
 
-/**
- * Creates a form param string with the content of the vector
- *
- * @param formParamVec: Vector of form parameters
- * @return form parameter string
- */
 inline std::string createFormParamStr(std::vector<std::pair<std::string, std::string>> &formParamVec)
 {
     std::string formParamStr;
@@ -283,6 +271,6 @@ inline std::string createFormParamStr(std::vector<std::pair<std::string, std::st
     return formParamStr;
 }
 
-} // namespace butterfly
+} // namespace tools
 
-#endif //BUTTERFLY_BFLYUTILS_H
+#endif //HTTPBFLY_BFLYUTILS_H

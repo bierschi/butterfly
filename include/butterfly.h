@@ -22,6 +22,7 @@ class Butterfly
 {
 
 private:
+    std::vector<std::pair<std::string, std::string>> _formParamVec;
     std::unique_ptr<butterfly::ArgumentParser> _argparse;
     std::unique_ptr<butterfly::ConnManager> _connManager;
     butterfly::ArgumentParser::Arguments _args;
