@@ -26,7 +26,7 @@ private:
     std::shared_ptr<TCPSocket> _tcpSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-
+    std::thread t1;
     /**
      * Handles incoming requests to the http server
      *
@@ -65,6 +65,7 @@ private:
      */
     void errorResponse(size_t statusCode);
 
+    void _run();
 public:
 
     /**
@@ -85,8 +86,10 @@ public:
 
     /**
      * Run method for the HTTP Server
+     *
+     * @param blocking: sets the blocking mode of the run method
      */
-    void run();
+    void run(bool blocking=false);
 
     /**
      * Stop method for the HTTP Server

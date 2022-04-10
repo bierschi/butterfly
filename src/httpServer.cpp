@@ -14,13 +14,11 @@ HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _tcpS
 HTTPServer::~HTTPServer()
 {
     _tcpSocket->disconnect();
+    stop();
 }
 
-void HTTPServer::run()
+void HTTPServer::_run()
 {
-
-    _running = true;
-
     while(_running)
     {
 
@@ -33,7 +31,17 @@ void HTTPServer::run()
         // reset pointer before handle new request
         _newTCPSocket.reset();
     }
+}
 
+void HTTPServer::run(bool blocking)
+{
+    _running = true;
+    t1 = std::thread(&HTTPServer::_run, this);
+
+    if (blocking)
+    {
+        t1.join();
+    }
 }
 
 void HTTPServer::stop()
