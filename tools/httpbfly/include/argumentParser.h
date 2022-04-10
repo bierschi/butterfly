@@ -30,9 +30,9 @@ public:
 
     struct Arguments
     {
-        std::string ip;
+        std::string url;
         int port;
-        bool client, server;
+        bool client, server, get, post;
         Arguments() : client(false), server(false)
         {}
     };

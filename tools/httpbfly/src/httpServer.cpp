@@ -75,6 +75,7 @@ void HTTPServer::processRequest()
 
     if ( m == Method::GET )
     {
+        std::cout << "Handle GET Request" << std::endl;
         if ( url == "/" )
         {
             browserRoute();
@@ -85,6 +86,7 @@ void HTTPServer::processRequest()
 
     } else if ( m == Method::POST )
     {
+        std::cout << "Handle POST Request" << std::endl;
         errorResponse(404);
     } else
     {
