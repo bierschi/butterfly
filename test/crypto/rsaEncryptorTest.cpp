@@ -39,11 +39,11 @@ TEST_F(RSAEncryptorTest, rsaEncryption)
     std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
 
-    int encMSGLen = rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+    int encMSGLen = rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile);
     ASSERT_TRUE(encMSGLen != -1);
 
     std::string encCPrivateRSA = rsaEncryptCPrivateRSA->getEncryptedMessage();
     ASSERT_TRUE(!encCPrivateRSA.empty());
 
-    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, encMSGLen);
+    rsaEncryptCPrivateRSA->writeEncMSGToFile(butterfly::params::ENC_CPRIVATERSA_FILENAME, encCPrivateRSA, encMSGLen);
 }

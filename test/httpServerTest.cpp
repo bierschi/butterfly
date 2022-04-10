@@ -4,13 +4,13 @@
 #include "httpServer.h"
 
 /**
- * Testclass HTTPServer
+ * Testclass HTTPServerTest
  */
-class HTTPServer : public ::testing::Test
+class HTTPServerTest : public ::testing::Test
 {
 
 protected:
-    std::shared_ptr<butterfly::HTTPServer> _httpServer;
+    std::shared_ptr<butterfly::HTTPServer> httpServer;
 
     void SetUp() override
     {

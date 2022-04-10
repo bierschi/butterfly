@@ -10,11 +10,13 @@ package aes #DDDDDD
         - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
         - _aesKeyLength, _aesIvLength: int
 
-        # aesKey, aesIv: unsigned char*
+        # {static} aesKey, aesIv: unsigned char*
+
+        - {static} getOpenSSLError(): std::string
 
         + CryptoAES()
 
-        + initDone(): bool
+        + {static} initDone(): bool
         + generateAESKey(): bool
         + generateAESKeyWithSalt(): bool
 
@@ -58,11 +60,10 @@ package rsa #DDDDDD
         - _encryptedKey, _iv: unsigned char*
         - rsaEncryptContext, rsaDecryptContext: EVP_CIPHER_CTX*
 
-        - getOpenSSLError(): string
+        - {static} getOpenSSLError(): string
         - generateRSAKey(): bool
         - loadKeyFromFile(const std::string &filepath): void
         - loadKeyFromStr(const std::string &str): void
-        - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
 
         # getPaddingSize(): int
 
@@ -80,8 +81,8 @@ package rsa #DDDDDD
 
         + encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): int
         + decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): int
-        + encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int
-        + decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
+        + {static} encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int
+        + {static} decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
     }
 
     class RSAEncryptor
@@ -89,7 +90,7 @@ package rsa #DDDDDD
         - _encryptedMessage: std::string
 
         - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-        - writeRSAFileToSystem(const RSAKEY_TYPE &type): bool
+        - writeRSAFileToSystem(): bool
 
         + RSAEncryptor(int keySize)
         + RSAEncryptor(const std::string &key)
@@ -98,7 +99,7 @@ package rsa #DDDDDD
         + writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
 
         + encrypt(EVP_PKEY *pkey, const std::string &decMSG): int
-        + encryptEVP(EVP_PKEY *pkey, const std::string &decMSG, const RSAKEY_TYPE &type): int
+        + encryptEVP(EVP_PKEY *pkey, const std::string &decMSG): int
     }
 
     class RSADecryptor
@@ -111,8 +112,8 @@ package rsa #DDDDDD
         + RSADecryptor() = delete
         + RSADecryptor(const std::string &key)
 
-        + getDecryptedMessage(): std::string
-        + readEncMSGFromFile(const std::string &filepath): std::string
+        + getDecryptedMessage() const: std::string
+        + {static} readEncMSGFromFile(const std::string &filepath): std::string
 
         + decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
         + decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
@@ -131,7 +132,8 @@ package hybrid #DDDDDD
         - _aesEncryptor: std::unique_ptr<aes::AESEncryptor>
 
         - validateAESKeyLength(): void
-        - static saveUnencryptedAESKeyPair(const std::string &aesKeyPair): void
+        - {static} saveUnencryptedAESKeyPair(const std::string &aesKeyPair): void
+        - {static} checkIfEncryptionFilesExists(): void
 
         + Encryptor(int keySize = 2048)
 
@@ -145,20 +147,21 @@ package hybrid #DDDDDD
 
     class Decryptor
     {
-        - _decryptedCPrivateRSA, _dirPath: std::string
+        - _decryptedCPrivateRSA: std::string
         - _threads: std::vector<std::thread>
         - _rsaDecryptorCPrivateRSA: std::unique_ptr<rsa::RSADecryptor>
         - _aesDecryptor: std::unique_ptr<aes::AESDecryptor>
 
-        - static removeDecryptedFiles(): void
-        - static getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair): bool
+        - {static} removeDecryptedFiles(): void
+        - {static} getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair): bool
 
         + Decryptor()
 
-        + invokeDir(const std::string &dirPath, const std::string &pkeyFromServer): void
+        + setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateRSA): void
+        + invokeDir(const std::string &dirPath): void
         + decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile): void
         + decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV): void
-        + decryptFileWithAES(const std::string &filepath, std::string &aesKey, std::string &aesIV): void
+        + decryptFileWithAES(const std::string &filepath): void
         + spawnThread(const std::string &filepath): void
         + joinThreads(): void
     }

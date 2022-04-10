@@ -34,6 +34,11 @@ void HTTPMSGSchema::setHTTPHeader(const std::string &headerName, const std::stri
     _httpHeaders.emplace_back(headerName, headerContent);
 }
 
+void HTTPMSGSchema::addHTTPHeaderVector(std::vector<std::pair<std::string, std::string>> &headerVec)
+{
+    _httpHeaders.insert(std::end(_httpHeaders), std::begin(headerVec), std::end(headerVec));
+}
+
 std::string HTTPMSGSchema::getHTTPHeader(const std::string &headerName) const
 {
     for(auto &it: _httpHeaders)
@@ -45,6 +50,26 @@ std::string HTTPMSGSchema::getHTTPHeader(const std::string &headerName) const
     }
 
     return "";
+}
+
+void HTTPMSGSchema::setFormParam(const std::string &param, const std::string &value)
+{
+    if ( !_formParam.empty() )
+    {
+        _formParam.append("&");
+    }
+
+    _formParam.append(param);
+    _formParam.append("=");
+    _formParam.append(value);
+}
+
+void HTTPMSGSchema::addFormParamVector(std::vector<std::pair<std::string, std::string>> &formParamVec)
+{
+    for(auto &it: formParamVec)
+    {
+        setFormParam(it.first, it.second);
+    }
 }
 
 } // namespace butterfly

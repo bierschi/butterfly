@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <functional>
+#include <thread>
 
 #include "logger.h"
 #include "tcpSocket.h"
@@ -14,7 +15,7 @@ namespace butterfly
 {
 
 /**
- * Class HTTPServer to support incoming HTTP Requests and outgoing HTTP Responses
+ * Class HTTPServer to process incoming HTTP Requests and send outgoing HTTP Responses
  */
 class HTTPServer
 {
@@ -22,24 +23,16 @@ class HTTPServer
 private:
     unsigned int _port;
     bool _running;
-    std::shared_ptr<TCPSocket> _TCPSocket, _newTCPSocket;
+    std::shared_ptr<TCPSocket> _tcpSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-    std::function<void(std::string)> _masterPKeyCB;
-
+    std::thread t1;
     /**
      * Handles incoming requests to the http server
      *
      * @return True if the request could be handled, else False
      */
     bool handleRequest();
-
-    /**
-     * Receive the actual request from the TCP Socket
-     *
-     * @return True if data is available on the TCP Socket, else False
-     */
-    bool recvRequest();
 
     /**
      * Processes the incoming HTTP requests
@@ -59,13 +52,6 @@ private:
     void browserRoute();
 
     /**
-     * Prepares the HTTP response for the master key route
-     *
-     * @return True if the masterkey was received, else False
-     */
-    bool masterKeyRoute();
-
-    /**
      * Returns the success response to the client
      *
      * @param status code
@@ -79,6 +65,7 @@ private:
      */
     void errorResponse(size_t statusCode);
 
+    void _run();
 public:
 
     /**
@@ -98,16 +85,11 @@ public:
     ~HTTPServer();
 
     /**
-     * Registers the master pkey callback
-     *
-     * @param cb: callback to invoke as soon as the master key is received
-     */
-    void registerMasterPKeyCB(std::function<void(std::string)> cb);
-
-    /**
      * Run method for the HTTP Server
+     *
+     * @param blocking: sets the blocking mode of the run method
      */
-    void run();
+    void run(bool blocking=false);
 
     /**
      * Stop method for the HTTP Server

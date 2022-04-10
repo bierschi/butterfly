@@ -10,6 +10,7 @@
 
 #include "logger.h"
 #include "bflyUtils.h"
+#include "bflyExceptions.h"
 
 #define PADDING RSA_PKCS1_OAEP_PADDING
 
@@ -122,7 +123,7 @@ public:
      *
      * @return EVP_PKEY*
      */
-    EVP_PKEY *getEvpPkey();
+    EVP_PKEY* getEvpPkey();
 
     /**
      * Get the EVP_PKEY size
@@ -138,21 +139,21 @@ public:
     *
     * @return rsa private key string as char*
     */
-    char *getRSAPrivateKeyStr();
+    char* getRSAPrivateKeyStr();
 
     /**
     * Get the private key string. Starts with -----BEGIN PRIVATE KEY-----
     *
     * @return private key string as char*
     */
-    char *getPrivateKeyStr();
+    char* getPrivateKeyStr();
 
     /**
      * Get the public key string. Starts with -----BEGIN PUBLIC KEY-----
      *
      * @return public key string as char*
      */
-    char *getPublicKeyStr();
+    char* getPublicKeyStr();
 
     /**
     * Encrypt the plaintext with EVP methods

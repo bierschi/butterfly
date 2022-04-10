@@ -221,6 +221,68 @@ inline std::string hex2String(const std::string &in)
     return output;
 }
 
+/**
+ * Get Domain name from provided URL
+ *
+ * @param url: URL address
+ * @return domain as std::string
+ */
+inline std::string getDomainFromUrl(std::string url)
+{
+    std::string http = "http://";
+    size_t pos1 = url.find(http);
+    if (pos1 != std::string::npos)
+    {
+        url.erase(pos1, http.length());
+    }
+    std::string https = "https://";
+    size_t pos2 = url.find(https);
+
+    if (pos2 != std::string::npos)
+    {
+        url.erase(pos2, https.length());
+    }
+
+    size_t pos3 = url.find('/');
+    if (pos3 != std::string::npos)
+    {
+        url.erase(pos3, url.length());
+    }
+
+    size_t pos4 = url.find(':');
+    if (pos4 != std::string::npos)
+    {
+        url.erase(pos4, url.length());
+    }
+
+    return url;
+}
+
+/**
+ * Creates a form param string with the content of the vector
+ *
+ * @param formParamVec: Vector of form parameters
+ * @return form parameter string
+ */
+inline std::string createFormParamStr(std::vector<std::pair<std::string, std::string>> &formParamVec)
+{
+    std::string formParamStr;
+
+    for(auto &it: formParamVec)
+    {
+        if( !formParamStr.empty() )
+        {
+            formParamStr.append("&");
+        }
+        formParamStr.append(it.first);
+        formParamStr.append("=");
+        formParamStr.append(it.second);
+
+    }
+
+    return formParamStr;
+}
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYUTILS_H

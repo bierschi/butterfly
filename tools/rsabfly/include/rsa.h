@@ -14,7 +14,7 @@
 #include "utils.h"
 
 #define PADDING RSA_PKCS1_OAEP_PADDING
-#define LOGGING
+//#define LOGGING
 
 namespace tools
 {
