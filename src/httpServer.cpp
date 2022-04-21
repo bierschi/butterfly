@@ -6,6 +6,9 @@ namespace butterfly
 
 HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _tcpSocket(std::make_shared<TCPSocket>()), _newTCPSocket(std::make_shared<TCPSocket>())
 {
+    #ifdef LOGGING
+    LOG_TRACE("Create class HTTPServer");
+    #endif
 
     _tcpSocket->bind(_port);
     _tcpSocket->listen();

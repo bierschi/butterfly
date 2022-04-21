@@ -283,6 +283,13 @@ inline std::string createFormParamStr(std::vector<std::pair<std::string, std::st
     return formParamStr;
 }
 
+/**
+ * Executes a command
+ *
+ * @param cmd: command to execute
+ * @param result: result of the execution
+ * @return boolean
+ */
 inline bool exec(const std::string &cmd, std::string &result)
 {
 
@@ -290,7 +297,7 @@ inline bool exec(const std::string &cmd, std::string &result)
     std::string cmdWithRedirect = cmd + " 2>&1";
     FILE* pipe = popen(cmdWithRedirect.c_str(), "r");
 
-    if ( !pipe)
+    if ( !pipe )
     {
         pclose(pipe);
         return false;

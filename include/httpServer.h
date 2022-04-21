@@ -73,7 +73,7 @@ public:
      *
      * Usage:
      *      std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
-     *      server.run();
+     *      server->run();
      *
      * @param port: Port for the Server
      */
