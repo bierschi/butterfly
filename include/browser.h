@@ -25,14 +25,16 @@ private:
     std::thread _browserThread;
 
     /**
+     * Executes given command
      *
-     * @param cmd
+     * @param cmd: command as std::string
      */
     static void execute(const std::string &cmd);
 
     /**
+     * Private run method for the browser thread
      *
-     * @param url
+     * @param url: url to run
      */
     void run(const std::string &url);
 
@@ -43,7 +45,7 @@ public:
      *
      * Usage:
      *      std::shared_ptr<butterfly::Browser> browser = std::make_shared<butterfly::Browser>("x-www-browser");
-     *      browser->open();
+     *      browser->open("http://127.0.0.1:8080", false);
      *
      * @param terminalCMD: terminal command to open the browser
      */

@@ -65,7 +65,11 @@ private:
      */
     void errorResponse(size_t statusCode);
 
+    /**
+     * Private run method for the HTTP Server
+     */
     void _run();
+
 public:
 
     /**

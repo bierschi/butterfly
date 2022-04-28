@@ -44,6 +44,10 @@ void Browser::run(const std::string &url)
 
 void Browser::open(const std::string &url, bool blocking)
 {
+    #ifdef LOGGING
+    LOG_INFO("Open browser with url " << url);
+    #endif
+
     if (blocking)
     {
         std::string result;
@@ -64,7 +68,6 @@ void Browser::open(const std::string &url, bool blocking)
 
 void Browser::close()
 {
-
     if ( _running )
     {
         _running = false;

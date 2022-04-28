@@ -16,7 +16,6 @@ HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _tcpS
 
 HTTPServer::~HTTPServer()
 {
-    _tcpSocket->disconnect();
     stop();
 }
 
@@ -40,15 +39,22 @@ void HTTPServer::run(bool blocking)
 {
     _running = true;
     t1 = std::thread(&HTTPServer::_run, this);
+    #ifdef LOGGING
+    LOG_INFO("Running HTTPServer on port " << _port);
+    #endif
 
     if (blocking)
     {
         t1.join();
+    } else
+    {
+        t1.detach();
     }
 }
 
 void HTTPServer::stop()
 {
+    _tcpSocket->disconnect();
     _running = false;
 }
 
