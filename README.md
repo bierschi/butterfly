@@ -74,13 +74,23 @@ butterfly homepage at: https://github.com/bierschi/butterfly
 
 Test the full functionalities of `butterfly`
 <pre><code>
+# Run the bflyServerApp for remote decryption
+bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
+
+# Start the butterfly binary
 ./butterfly --dir /home/butterfly/data/
 </code></pre>
 
 Test the encryption + decryption mechanism separately (+ with remote decryption)
 <pre><code>
+# Run the bflyServerApp for remote decryption
+bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
+
+
+# Start only the encryption
 ./butterfly --encrypt /home/butterfly/data
 
+# Start only the decryption
 ./butterfly --decrypt /home/butterfly/data
 </code></pre>
 
