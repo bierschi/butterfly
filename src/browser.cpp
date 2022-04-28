@@ -35,7 +35,9 @@ void Browser::run(const std::string &url)
         } catch ( BrowserException &e )
         {
             _running = false;
+            #ifdef LOGGING
             LOG_ERROR(e.getType() + ": " + e.what());
+            #endif
         }
 
     }
