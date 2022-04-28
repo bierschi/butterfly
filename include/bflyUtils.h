@@ -283,6 +283,35 @@ inline std::string createFormParamStr(std::vector<std::pair<std::string, std::st
     return formParamStr;
 }
 
+/**
+ * Executes a command
+ *
+ * @param cmd: command to execute
+ * @param result: result of the execution
+ * @return boolean
+ */
+inline bool exec(const std::string &cmd, std::string &result)
+{
+
+    char buffer[128];
+    std::string cmdWithRedirect = cmd + " 2>&1";
+    FILE* pipe = popen(cmdWithRedirect.c_str(), "r");
+
+    if ( !pipe )
+    {
+        pclose(pipe);
+        return false;
+    }
+
+    while (fgets(buffer, sizeof buffer, pipe) != nullptr)
+    {
+        result += buffer;
+    }
+    pclose(pipe);
+
+    return true;
+}
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYUTILS_H

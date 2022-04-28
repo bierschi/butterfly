@@ -10,6 +10,7 @@
 #include "httpServer.h"
 #include "httpClient.h"
 #include "connManager.h"
+#include "browser.h"
 #include "logger.h"
 
 namespace butterfly
@@ -48,6 +49,7 @@ private:
 public:
 
     /**
+     * Constructor Butterfly
      *
      *  Usage:
      *       std::unique_ptr<butterfly::Butterfly> blfy(new butterfly::Butterfly(argc, argv));
