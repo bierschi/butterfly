@@ -79,7 +79,7 @@ TEST_F(HTTPRequestTest, getUserAgent)
  */
 TEST_F(HTTPRequestTest, getRequestSize)
 {
-    size_t httpDatasize = httpRequest->getRequestSize();
+    size_t httpDatasize = httpRequest->getHTTPDataSize();
 
     EXPECT_TRUE( httpDatasize > 0);
 }

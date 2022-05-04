@@ -101,7 +101,7 @@ TEST_F(HTTPResponseTest, getHTTPData)
  */
 TEST_F(HTTPResponseTest, getRequestSize)
 {
-    size_t httpDatasize = httpResponse->getResponseSize();
+    size_t httpDatasize = httpResponse->getHTTPDataSize();
 
     EXPECT_TRUE( httpDatasize > 0);
 }

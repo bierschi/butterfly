@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 
 # Set project name and version
-project(butterfly VERSION "1.0")
+project(butterfly VERSION "1.1")
 
 # Add app specific macros
 configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
@@ -68,7 +68,7 @@ endif()
 # Build the executable
 if(Boost_FOUND)
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
-    target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${Boost_LIBRARIES} Threads::Threads)
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads -ldl)
     #target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})
 else()
     message("Boost Libraries not found!")

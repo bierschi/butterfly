@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPClient::HTTPClient(unsigned int port) : _port(port), _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
+HTTPClient::HTTPClient() : _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
 {
     #ifdef LOGGING
     LOG_TRACE("Create class HTTPClient");
@@ -16,41 +16,7 @@ HTTPClient::~HTTPClient()
     _tcpSocket->disconnect();
 }
 
-std::string HTTPClient::getIpFromUrl(std::string url)
-{
-    std::string http = "http://";
-    size_t pos1 = url.find(http);
-    if (pos1 != std::string::npos)
-    {
-        url.erase(pos1, http.length());
-    }
-    std::string https = "https://";
-    size_t pos2 = url.find(https);
-
-    if (pos2 != std::string::npos)
-    {
-        url.erase(pos2, https.length());
-    }
-
-    size_t pos3 = url.find('/');
-    if (pos3 != std::string::npos)
-    {
-        url.erase(pos3, url.length());
-    }
-
-    size_t pos4 = url.find(':');
-    if (pos4 != std::string::npos)
-    {
-        url.erase(pos4, url.length());
-    }
-
-    std::string ip;
-    TCPSocket::hostnameToIP(url, ip);
-
-    return ip;
-}
-
-void HTTPClient::prepareRequest(const std::string &url)
+void HTTPClient::prepareRequest(const std::string &url, Method method, const std::string &data)
 {
     // Create HTTP Request/Response instances
     _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
@@ -58,31 +24,28 @@ void HTTPClient::prepareRequest(const std::string &url)
 
     // Prepare HTTP Request
     _httpRequest->setURL(url);
-    _httpRequest->setMethod(Method::POST);
+    _httpRequest->setMethod(method);
     _httpRequest->setProtocol(Protocol::HTTP1_1);
     _httpRequest->setHTTPHeader("User-Agent", "butterfly");
     _httpRequest->setHTTPHeader("Content-Type", "application/x-www-form-urlencoded");
+    _httpRequest->setHTTPHeader("Host", url);
+    _httpRequest->setHTTPHeader("Connection", "close");
 
     if ( !_httpHeaders.empty() )
     {
         _httpRequest->addHTTPHeaderVector(_httpHeaders);
     }
-    if ( !_formParams.empty() )
-    {
-        _httpRequest->addFormParamVector(_formParams);
-    }
 
-    std::string form = _httpRequest->getFormParam();
-    _httpRequest->addBody(form);
-    _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBody().length()));
+    _httpRequest->addBody(data);
+    _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBodyLength()));
     _httpRequest->prepareOutgoing();
-
 }
 
 bool HTTPClient::processResponse()
 {
 
     std::string httpData = _tcpSocket->recvAll(1024, true);
+
     if ( httpData.empty() )
     {
         return false;
@@ -109,37 +72,65 @@ void HTTPClient::setHTTPHeader(const std::string &headerName, const std::string 
     _httpHeaders.emplace_back(headerName, headerContent);
 }
 
-void HTTPClient::setFormParam(const std::string &param, const std::string &value)
-{
-    _formParams.emplace_back(param, value);
-}
-
-std::string HTTPClient::post(const std::string &url)
+std::string HTTPClient::post(const std::string &url, const std::string &data, int port)
 {
     // Prepare the post request
-    prepareRequest(url);
+    prepareRequest(url, Method::POST, data);
 
-    std::string cert;
-    std::string ip = getIpFromUrl(url);
-    if ( _tcpSocket->connect(ip, static_cast<int>(_port)) )
+    std::string response, ip;
+    std::string domain = getDomainFromUrl(url);
+
+    _tcpSocket->hostnameToIP(domain, ip);
+    if ( _tcpSocket->connect(ip, port) )
     {
         #ifdef LOGGING
-        LOG_TRACE("Send post request to url " << url);
+        LOG_INFO("Sending post request to url " << url);
         #endif
         _tcpSocket->send(_httpRequest->getHTTPData());
 
         if ( processResponse() )
         {
-            cert = _httpResponse->getBody();
-            return cert;
+            response = _httpResponse->getBody();
+            return response;
         } else
         {
-            return cert;
+            return response;
         }
 
     } else
     {
-        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(_port));
+        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
+    }
+}
+
+std::string HTTPClient::get(const std::string &url, int port)
+{
+    // Prepare the get request
+    prepareRequest(url,Method::GET);
+
+    std::string response, ip;
+    std::string domain = butterfly::getDomainFromUrl(url);
+
+    _tcpSocket->hostnameToIP(domain, ip);
+    if ( _tcpSocket->connect(ip, port) )
+    {
+        #ifdef LOGGING
+        LOG_INFO("Sending get request to url " << url);
+        #endif
+        _tcpSocket->send(_httpRequest->getHTTPData());
+
+        if ( processResponse() )
+        {
+            response = _httpResponse->getBody();
+            return response;
+        } else
+        {
+            return response;
+        }
+
+    } else
+    {
+        throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
     }
 }
 

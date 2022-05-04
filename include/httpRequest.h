@@ -8,7 +8,7 @@ namespace butterfly
 {
 
 /**
- * Class HTTPRequest for incoming HTTP Requests (Client -> Server)
+ * Class HTTPRequest for incoming/outgoing HTTP Requests
  */
 class HTTPRequest: public HTTPMSGSchema
 {
@@ -22,8 +22,20 @@ public:
      * Constructor HTTPRequest
      *
      * Usage:
-     *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new HTTPRequest());
-     *      _httpRequest->addHTTPData(data);
+     *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new butterfly::HTTPRequest());
+     *      _httpRequest->setURL(url);
+     *      _httpRequest->setMethod(Method::POST);
+     *      _httpRequest->setProtocol(Protocol::HTTP1_1);
+     *      _httpRequest->setUserAgent("butterfly");
+     *      _httpRequest->setHTTPHeader("Content-Type", "application/x-www-form-urlencoded");
+     *      _httpRequest->setFormParam("form1", "value1");
+     *      _httpRequest->setFormParam("form2", "value2");
+     *      _httpRequest->addBody(_httpRequest->getFormParam());
+     *      _httpRequest->setHTTPHeader("Content-Length", std::to_string(_httpRequest->getBodyLength()));
+     *      _httpRequest->prepareOutgoing();
+     *
+     *      std::unique_ptr<butterfly::HTTPRequest> _httpRequest(new butterfly::HTTPRequest());
+     *      _httpRequest->addHTTPData(httpData);
      *      _httpRequest->parseIncoming();
      *      _httpRequest->getMethod();
      *      _httpRequest->getURL();
@@ -77,13 +89,6 @@ public:
      * @return user agent as std::string
      */
     inline std::string getUserAgent() const { return _userAgent; }
-
-    /**
-     * Getter for the HTTP Request size
-     *
-     * @return size of the request
-     */
-    inline size_t getRequestSize() const { return _httpData.size(); }
 
     /**
      * Method to parse the incoming HTTP Requests
