@@ -38,17 +38,17 @@ void HTTPServer::_run()
 void HTTPServer::run(bool blocking)
 {
     _running = true;
-    t1 = std::thread(&HTTPServer::_run, this);
+    _serverThread = std::thread(&HTTPServer::_run, this);
     #ifdef LOGGING
     LOG_INFO("Running HTTPServer on port " << _port);
     #endif
 
     if (blocking)
     {
-        t1.join();
+        _serverThread.join();
     } else
     {
-        t1.detach();
+        _serverThread.detach();
     }
 }
 

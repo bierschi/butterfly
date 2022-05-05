@@ -42,49 +42,44 @@ class TCPSocket
 class HTTPServer
 {
     - _port: unsigned int port
-    - _running: bool
+    - _running: std::atomic<bool>
     - _TCPSocket, _newTCPSocket: std::shared_ptr<TCPSocket>
     - _httpRequest: std::unique_ptr<HTTPRequest>
     - _httpResponse: std::unique_ptr<HTTPResponse>
-    - _masterPKeyCB: std::function
+    - _serverThread: std::thread
 
     + HTTPServer(unsigned int port)
 
     - handleRequest(): bool
-    - recvRequest(): bool
     - processRequest(): void
     - sendResponse(): bool
     - browserRoute(): void
-    - masterKeyRoute(): bool
     - successResponse(size_t statusCode): void
     - errorResponse((size_t statusCode): void
+    - _run(): void
 
-    + registerMasterPKeyCB(std::function<void(std::string)> cb): void
-    + run(): void
+    + run(bool blocking=false): void
     + stop(): void
 }
 
 class HTTPClient
 {
-    - _port: unsigned int
     - _tcpSocket: std::shared_ptr<TCPSocket>
     - _httpRequest: std::unique_ptr<HTTPRequest>
     - _httpResponse: std::unique_ptr<HTTPResponse>
-    - _httpHeaders, _formParams: std::vector< std::pair<std::string, std::string> >
+    - _httpHeaders: std::vector< std::pair<std::string, std::string> >
 
     + statusCode : size_t
     + reasonPhrase: std::string
 
-    - getIpFromUrl(std::string url): std::string
-    - prepareRequest(const std::string &url): void
+    - prepareRequest(const std::string &url, Method method, const std::string &data=""): void
     - processResponse(): bool
 
-    + HTTPClient(unsigned int port=5000)
+    + HTTPClient()
 
     + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
-    + setFormParam(const std::string &param, const std::string &value): void
-    + get(const std::string &url): void
-    + post(const std::string &url): std::string
+    + get(const std::string &url, int port=80): std::string
+    + post(const std::string &url, const std::string &data, int port=80): std::string
 }
 
 class HTTPMSGSchema
@@ -99,14 +94,16 @@ class HTTPMSGSchema
     + print() const: void
     + addHTTPData(const std::string &data): void
     + getHTTPData() const: std::string
+    + getHTTPDataSize() const: size_t
     + setProtocol(Protocol protocol): void
     + getProtocol() const: Protocol
     + addBody(const std::string &body)
     + getBody() const: std::string
+    + getBodyLength() const: size_t
     + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
     + getHTTPHeader(const std::string &headerName) const: std::string
     + addHTTPHeaderVector(std::vector< std::pair<std::string, std::string> > &headerVec): void
-    + getHTTPHeaderSize() const: size_t
+    + getHTTPHeadersSize() const: size_t
     + setFormParam(const std::string &param, const std::string &value): void
     + getFormParam() const: std::string
     + addFormParamVector(std::vector< std::pair<std::string, std::string> > &formParamVec): void
@@ -127,7 +124,6 @@ class HTTPRequest
     + getURL() const: std::string
     + setUserAgent(const std::string &userAgent): void
     + getUserAgent() const: std::string
-    + getRequestSize() const: size_t
 
     + parseIncoming(): void
     + prepareOutgoing(): void
@@ -144,7 +140,6 @@ class HTTPResponse
     + getStatusCode() const: size_t
     + setReasonPhrase(size_t statusCode): void
     + getReasonPhrase() const: std::string
-    + getResponseSize() const: size_t
 
     + parseIncoming(): void
     + prepareOutgoing(): void

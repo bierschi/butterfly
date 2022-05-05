@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="263px" preserveAspectRatio="none" style="width:446px;height:263px;" version="1.1" viewBox="0 0 446 263" width="446px" zoomAndPan="magnify"><defs><filter height="300%" id="fyn6b5xofbrnv" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--cluster butterfly--><polygon fill="#DDDDDD" filter="url(#fyn6b5xofbrnv)" points="22,24,96,24,103,46.2969,424,46.2969,424,251,22,251,22,24" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="22" x2="103" y1="46.2969" y2="46.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="68" x="26" y="38.9951">butterfly</text><!--class Browser--><rect fill="#FEFECE" filter="url(#fyn6b5xofbrnv)" height="176.0469" id="Browser" style="stroke: #A80036; stroke-width: 1.5;" width="369" x="38.5" y="59"/><ellipse cx="193.75" cy="75" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M196.7188,80.6406 Q196.1406,80.9375 195.5,81.0781 Q194.8594,81.2344 194.1563,81.2344 Q191.6563,81.2344 190.3281,79.5938 Q189.0156,77.9375 189.0156,74.8125 Q189.0156,71.6875 190.3281,70.0313 Q191.6563,68.375 194.1563,68.375 Q194.8594,68.375 195.5,68.5313 Q196.1563,68.6875 196.7188,68.9844 L196.7188,71.7031 Q196.0938,71.125 195.5,70.8594 Q194.9063,70.5781 194.2813,70.5781 Q192.9375,70.5781 192.25,71.6563 Q191.5625,72.7188 191.5625,74.8125 Q191.5625,76.9063 192.25,77.9844 Q192.9375,79.0469 194.2813,79.0469 Q194.9063,79.0469 195.5,78.7813 Q196.0938,78.5 196.7188,77.9219 L196.7188,80.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="50" x="214.25" y="79.1543">Browser</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="39.5" x2="406.5" y1="91" y2="91"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46.5" y="99.9023"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="145" x="58.5" y="105.2104">_terminalCMD: std::string</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46.5" y="112.707"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="163" x="58.5" y="118.0151">_running: std::atomic&lt;bool&gt;</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46.5" y="125.5117"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="164" x="58.5" y="130.8198">_browserThread: std::thread</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="39.5" x2="406.5" y1="137.4141" y2="137.4141"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46.5" y="146.3164"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="215" x="58.5" y="151.6245">execute(const std::string &amp;cmd): void</text><line style="stroke: #000000; stroke-width: 1.0;" x1="58.5" x2="273.5" y1="153.6245" y2="153.6245"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="46.5" y="159.1211"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="181" x="58.5" y="164.4292">run(const std::string &amp;url): void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="62.5" y="177.2339"/><ellipse cx="49.5" cy="187.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="343" x="58.5" y="190.0386">Browser(const std::string &amp;terminalCMD="x-www-browser")</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="62.5" y="202.8433"/><ellipse cx="49.5" cy="213.3398" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="309" x="58.5" y="215.6479">open(const std::string &amp;url, bool blocking=false): void</text><ellipse cx="49.5" cy="226.1445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="69" x="58.5" y="228.4526">close(): void</text><!--
+@startuml
+
+package butterfly #DDDDDD
+{
+
+class Browser
+{
+    - _terminalCMD: std::string
+    - _running: std::atomic<bool>
+    - _browserThread: std::thread
+
+    - {static} execute(const std::string &cmd): void
+    - run(const std::string &url): void
+
+    + Browser(const std::string &terminalCMD="x-www-browser")
+
+    + open(const std::string &url, bool blocking=false): void
+    + close(): void
+}
+
+}
+@enduml
+
+PlantUML version 1.2018.13(Mon Nov 26 18:11:51 CET 2018)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.15+10-Ubuntu-0ubuntu0.20.04.1
+Operating System: Linux
+OS Version: 5.13.0-40-generic
+Default Encoding: UTF-8
+Language: de
+Country: DE
+--></g></svg>
