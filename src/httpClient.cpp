@@ -57,7 +57,7 @@ bool HTTPClient::processResponse()
     statusCode = _httpResponse->getStatusCode();
     reasonPhrase = _httpResponse->getReasonPhrase();
 
-    if (statusCode == 200)
+    if (statusCode == 200 || statusCode == 302)
     {
         return true;
     } else
