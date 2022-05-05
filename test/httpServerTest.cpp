@@ -11,14 +11,14 @@ class HTTPServerTest : public ::testing::Test
 {
 
 protected:
-    std::string localhostURL;
+    std::string localHostURL;
     int port = 8901;
     std::shared_ptr<butterfly::HTTPServer> httpServer;
     std::shared_ptr<butterfly::HTTPClient> httpClient;
 
     void SetUp() override
     {
-        localhostURL = "http://127.0.0.1/";
+        localHostURL = "http://127.0.0.1/";
         httpServer = std::make_shared<butterfly::HTTPServer>(port);
         httpClient = std::make_shared<butterfly::HTTPClient>();
         httpServer->run(false);
@@ -29,3 +29,39 @@ protected:
         httpServer->stop();
     }
 };
+
+/**
+ * Testcase for the browserRoute method
+ */
+TEST_F(HTTPServerTest, browserRoute)
+{
+    std::string response = httpClient->get(localHostURL, port);
+
+    EXPECT_TRUE( !response.empty() );
+    EXPECT_TRUE(httpClient->statusCode == 302);
+}
+
+/**
+ * Error Testcase for the post method
+ */
+TEST_F(HTTPServerTest, errorResponsePost)
+{
+    std::string response = httpClient->post(localHostURL, "data", port);
+
+    EXPECT_TRUE( response.empty() );
+    EXPECT_TRUE(httpClient->statusCode == 404);
+}
+
+/**
+ * Testcase for the ConnectionException
+ */
+TEST_F(HTTPServerTest, ConnectionException)
+{
+
+    EXPECT_THROW({
+
+        httpClient->get("http://127.0.0.5", 80);
+
+        }, butterfly::ConnectionException);
+
+}

@@ -35,18 +35,17 @@ TEST_F(BrowserTest, open)
 {
     // this tests that the expected exception is thrown
     EXPECT_THROW({
-                     try
-                     {
-
-                         browserException->open(url, true);
-                     }
-                     catch( const butterfly::BrowserException &e )
-                     {
-                         // and this tests that it has the correct message
-                         std::string s = "Error at executing command " + terminalCMD.substr(0, terminalCMD.size()-1) + " " + url;
-                         EXPECT_STREQ( s.c_str(), e.what() );
-                         throw;
-                     }
-                 }, butterfly::BrowserException );
+        try
+        {
+            browserException->open(url, true);
+        }
+        catch( const butterfly::BrowserException &e )
+        {
+            // and this tests that it has the correct message
+            std::string s = "Error at executing command " + terminalCMD.substr(0, terminalCMD.size()-1) + " " + url;
+            EXPECT_STREQ( s.c_str(), e.what() );
+            throw;
+        }
+    }, butterfly::BrowserException );
 
 }
