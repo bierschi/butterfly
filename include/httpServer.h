@@ -5,6 +5,7 @@
 #include <memory>
 #include <functional>
 #include <thread>
+#include <atomic>
 
 #include "logger.h"
 #include "tcpSocket.h"
