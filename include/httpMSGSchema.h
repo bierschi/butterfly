@@ -20,7 +20,7 @@ class HTTPMSGSchema
 {
 
 protected:
-    std::string _httpData, _body, _messageType, _formParam;
+    std::string _httpData, _body, _messageType, _formParam;;
     Method _httpMethod;
     Protocol _protocol;
     std::vector< std::pair<std::string, std::string> > _httpHeaders;
@@ -57,16 +57,23 @@ public:
     inline std::string getHTTPData() const { return _httpData; }
 
     /**
+     * Getter for the HTTPData size
+     *
+     * @return size of the HTTP data
+     */
+    inline size_t getHTTPDataSize() const { return _httpData.size(); }
+
+    /**
      * Setter for the protocol
      *
-     * @param protocol
+     * @param protocol: HTTP Protocol
      */
     void setProtocol(Protocol protocol);
 
     /**
      * Getter for the protocol
      *
-     * @return Protocol
+     * @return Protocol: HTTP Protocol
      */
     inline Protocol getProtocol() const { return _protocol; }
 
@@ -85,6 +92,13 @@ public:
     inline std::string getBody() const { return _body; }
 
     /**
+     * Getter for the Body length
+     *
+     * @return length of the body
+     */
+    inline size_t getBodyLength() const { return _body.length(); }
+
+    /**
      * Setter for the HTTP Headers
      *
      * @param headerName: Name of the header
@@ -101,18 +115,18 @@ public:
     std::string getHTTPHeader(const std::string &headerName) const;
 
     /**
-     * Add HTTP Header Vector to existing one
+     * Add HTTP Header Vector to the existing one
      *
      * @param headerVec: Vector of header arguments
      */
     void addHTTPHeaderVector(std::vector< std::pair<std::string, std::string> > &headerVec);
 
     /**
-     * Getter for the HTTP Header Size
+     * Getter for the HTTP Headers Size
      *
      * @return Number of received Headers
      */
-    inline size_t getHTTPHeaderSize() const { return _httpHeaders.size(); }
+    inline size_t getHTTPHeadersSize() const { return _httpHeaders.size(); }
 
     /**
      * Setter for the form parameter and the value
@@ -138,7 +152,6 @@ public:
 
     /**
      * Abstract method parseIncoming for subclasses
-     *
      */
     virtual void parseIncoming() = 0;
 

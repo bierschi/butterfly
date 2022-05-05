@@ -2,15 +2,21 @@
 All notable changes to project [butterfly](https://github.com/bierschi/butterfly) will be documented in this file
 
 
-## [1.2] -
+## [1.3] -
 
 ### Added
 
 - TorSocket integration
+- Improved the browser payment page after encryption
+
+## [1.2] -
+
+### Added
+
 - Support of different rsa key sizes
 - Support of different aes key sizes
-- Integration of HTTP Server
-- Open browser with a payment page after encryption
+- Integration of a HTTP Server/Client
+- Open browser with a simple page after encryption
 
 ## [1.1] - 2022-02-11
 
@@ -21,7 +27,7 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Webserver bflyServerApp for a secure remote decryption
 - Notes section for encryption/decryption with the openssl cli
 - Tools section for common actions
-- Improved argument parser
+- Improved the argument parser
 
 ## [1.0] - 2021-09-17
 

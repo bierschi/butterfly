@@ -2,20 +2,39 @@
 #include <gtest/gtest.h>
 
 #include "httpRequest.h"
+#include "bflyParams.h"
 
-// TODO Replace data with actual http data
 /**
- * Testclass HTTPRequest
+ * Testclass HTTPRequestTest
  */
 class HTTPRequestTest : public ::testing::Test
 {
 
 protected:
+    std::string url = "www.google.de", formParamStr;
+    std::vector< std::pair<std::string, std::string> > formParams;
     std::unique_ptr<butterfly::HTTPRequest> httpRequest;
 
     void SetUp() override
     {
         httpRequest = std::unique_ptr<butterfly::HTTPRequest>(new butterfly::HTTPRequest());
+        // Set http request data
+        httpRequest->setURL(url);
+        httpRequest->setMethod(butterfly::Method::POST);
+        httpRequest->setProtocol(butterfly::Protocol::HTTP1_1);
+        httpRequest->setHTTPHeader("User-Agent", "butterfly");
+        httpRequest->setHTTPHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        formParams.emplace_back(butterfly::params::ENC_CPRIVATERSA_FILENAME, "abcdef123");
+        formParams.emplace_back(butterfly::params::RSA_EKIV_FILENAME, "abcdef123");
+        formParams.emplace_back("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE));
+
+        httpRequest->addFormParamVector(formParams);
+        formParamStr = httpRequest->getFormParam();
+        httpRequest->addBody(formParamStr);
+        httpRequest->setHTTPHeader("Content-Length", std::to_string(httpRequest->getBody().length()));
+
+        httpRequest->prepareOutgoing();
     }
 
     void TearDown() override
@@ -25,51 +44,34 @@ protected:
 };
 
 /**
- * Testcase for testing the setMethod
- */
-TEST_F(HTTPRequestTest, setMethod)
-{
-    butterfly::Method m = butterfly::Method::GET;
-    httpRequest->setMethod(m);
-    butterfly::Method newM = httpRequest->getMethod();
-
-    EXPECT_TRUE(newM == butterfly::Method::GET);
-    EXPECT_FALSE(newM == butterfly::Method::POST);
-}
-
-/**
  * Testcase for testing the getMethod
  */
 TEST_F(HTTPRequestTest, getMethod)
 {
-    butterfly::Method m = butterfly::Method::GET;
-    httpRequest->setMethod(m);
-    butterfly::Method newM = httpRequest->getMethod();
+    butterfly::Method method = httpRequest->getMethod();
 
-    EXPECT_TRUE(newM == butterfly::Method::GET);
+    EXPECT_TRUE(method == butterfly::Method::POST);
 }
 
 /**
- * Testcase for testing the setgetURL
+ * Testcase for testing the getURL
  */
-TEST_F(HTTPRequestTest, setgetURL)
+TEST_F(HTTPRequestTest, getURL)
 {
-    httpRequest->setURL("www.google.de");
     std::string url = httpRequest->getURL();
 
-    EXPECT_TRUE(url == "www.google.de");
+    EXPECT_TRUE(url == url);
 }
 
 /**
- * Testcase for testing the setgetUserAgent
+ * Testcase for testing the getUserAgent
  */
-TEST_F(HTTPRequestTest, setgetUserAgent)
+TEST_F(HTTPRequestTest, getUserAgent)
 {
-    std::string useragent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
-    httpRequest->setUserAgent(useragent);
-    std::string newuseragent = httpRequest->getUserAgent();
+    httpRequest->setUserAgent("butterfly");
+    std::string useragent = httpRequest->getUserAgent();
 
-    EXPECT_TRUE(useragent == newuseragent);
+    EXPECT_TRUE(useragent == "butterfly");
 }
 
 /**
@@ -77,50 +79,50 @@ TEST_F(HTTPRequestTest, setgetUserAgent)
  */
 TEST_F(HTTPRequestTest, getRequestSize)
 {
+    size_t httpDatasize = httpRequest->getHTTPDataSize();
 
+    EXPECT_TRUE( httpDatasize > 0);
 }
 
 /**
- * Testcase for testing the addgetHTTPData
+ * Testcase for testing the getHTTPData
  */
-TEST_F(HTTPRequestTest, addgetHTTPData)
+TEST_F(HTTPRequestTest, getHTTPData)
 {
-    httpRequest->addHTTPData("httpData");
     std::string httpdata = httpRequest->getHTTPData();
 
-    EXPECT_TRUE(httpdata == "httpData");
+    EXPECT_TRUE(!httpdata.empty());
 }
 
 /**
- * Testcase for testing the setgetProtocol
+ * Testcase for testing the getProtocol
  */
-TEST_F(HTTPRequestTest, setgetProtocol)
+TEST_F(HTTPRequestTest, getProtocol)
 {
-    butterfly::Protocol prot = butterfly::Protocol::HTTP1_1;
-    httpRequest->setProtocol(prot);
-    butterfly::Protocol newProt = httpRequest->getProtocol();
 
-    EXPECT_TRUE(prot == newProt);
+    butterfly::Protocol prot = httpRequest->getProtocol();
+
+    EXPECT_TRUE(prot == butterfly::Protocol::HTTP1_1);
 }
 
 /**
- * Testcase for testing the addgetBody
+ * Testcase for testing the getBody
  */
-TEST_F(HTTPRequestTest, addgetBody)
+TEST_F(HTTPRequestTest, getBody)
 {
-    httpRequest->addBody("body");
     std::string body = httpRequest->getBody();
 
-    EXPECT_TRUE(body == "body");
+    EXPECT_TRUE(body == formParamStr);
 }
 
 /**
- * Testcase for testing the setgetHTTPHeader
+ * Testcase for testing the getHTTPHeader
  */
-TEST_F(HTTPRequestTest, setgetHTTPHeader)
+TEST_F(HTTPRequestTest, getHTTPHeader)
 {
-    httpRequest->setHTTPHeader("UserAgent", "userdata");
-    std::string httpheader = httpRequest->getHTTPHeader("UserAgent");
+    std::string httpHeaderUserAgent = httpRequest->getHTTPHeader("User-Agent");
+    std::string httpHeaderContent = httpRequest->getHTTPHeader("Content-Type");
 
-    EXPECT_TRUE(httpheader == "userdata");
+    EXPECT_TRUE(httpHeaderUserAgent == "butterfly");
+    EXPECT_TRUE(httpHeaderContent == "application/x-www-form-urlencoded");
 }

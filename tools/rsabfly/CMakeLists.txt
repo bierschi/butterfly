@@ -14,9 +14,6 @@ find_package(OpenSSL REQUIRED)
 # Include the header files
 include_directories(include)
 
-# Add the source files
-#file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
-
-add_executable(rsabfly src/main.cpp src/rsa.cpp)
+add_executable(rsabfly src/main.cpp src/rsa.cpp src/argumentParser.cpp)
 
 target_link_libraries(rsabfly OpenSSL::SSL)

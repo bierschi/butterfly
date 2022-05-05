@@ -5,7 +5,7 @@ Butterfly is a cryptographic ransomware with the following features
 - Offline Encryption :heavy_check_mark:
 - Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :x:, MacOS :x:)
 - Supports over 300 File Extensions :heavy_check_mark:
-- Webserver [bflyServerApp](https://github.com/bierschi/butterfly/webserver) for a secure remote decryption :heavy_check_mark:
+- Webserver [bflyServerApp](https://github.com/bierschi/butterfly/tree/master/webserver) for a secure remote decryption :heavy_check_mark:
 - Ransom Visualization with HTTPServer :heavy_check_mark: GUI :x: Wallpaper :x:
 - Connection to the TOR Network :x:
 - Bitcoin Payments :x:
@@ -42,22 +42,22 @@ CMake Arguments
 
 ## Usage and Examples
 
-Print the available arguments for Butterfly
+Print the available arguments for butterfly
 <pre><code>
 ./butterfly --help
 </code></pre>
 
 <pre><code>
-Butterfly is a cryptographic ransomware
+butterfly is a cryptographic ransomware
 
 Usage: 
-	butterfly --dir /home/testuser/butterfly/data/
-	butterfly --dir /home/testuser/butterfly/data/ --protected
+	butterfly --dir /home/butterfly/data/
+	butterfly --dir /home/butterfly/data/ --protected
 
-	butterfly --encrypt /home/testuser/butterfly/data/ 
-	butterfly --decrypt /home/testuser/butterfly/data/ 
+	butterfly --encrypt /home/butterfly/data/ 
+	butterfly --decrypt /home/butterfly/data/ 
 
-	butterfly --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem
+	butterfly --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem
 
 Options:
 	-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)
@@ -70,6 +70,28 @@ Options:
 	-h,   --help	    Show this message and quit
 
 butterfly homepage at: https://github.com/bierschi/butterfly
+</code></pre>
+
+Test the full functionalities of `butterfly`
+<pre><code>
+# Run the bflyServerApp for remote decryption
+bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
+
+# Start the butterfly binary
+./butterfly --dir /home/butterfly/data/
+</code></pre>
+
+Test the encryption + decryption mechanism separately (+ with remote decryption)
+<pre><code>
+# Run the bflyServerApp for remote decryption
+bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
+
+
+# Start only the encryption
+./butterfly --encrypt /home/butterfly/data
+
+# Start only the decryption
+./butterfly --decrypt /home/butterfly/data
 </code></pre>
 
 ## Unit Tests
@@ -85,8 +107,13 @@ sudo make
 sudo cp *.a /usr/lib
 </code></pre>
 
+Test the `butterfly` units
+<pre><code>
+./butterflyUnitTests
+</code></pre>
+
 ## Changelog
-All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/CHANGELOG.rst)
+All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/CHANGELOG.md)
 
 ## License
 Copyright (c) 2021 Bierschneider Christian. See [LICENSE](https://github.com/bierschi/butterfly/blob/master/LICENSE)

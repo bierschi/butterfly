@@ -44,7 +44,7 @@ def main():
     usage2 = "bflyServerApp --host 127.0.0.1 --port 8080 --key ../../masterkeys/SPrivateRSA.pem"
     usage3 = "bflyServerApp --help"
 
-    description = "Butterfly Server Application to decrypt the Client's CPrivateRSA.bin File\n\nUsage:\n      {}\n      {}\n      {}".format(usage1, usage2, usage3)
+    description = "Butterfly Server Application for a secure remote Decryption of the Client's CPrivateRSA.bin File\n\nUsage:\n      {}\n      {}\n      {}".format(usage1, usage2, usage3)
 
     # parse arguments
     parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawDescriptionHelpFormatter)
