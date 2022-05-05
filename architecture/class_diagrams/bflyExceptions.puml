@@ -98,6 +98,14 @@ class ConnectionException
     + getType() const: std::string
 }
 
+class BrowserException
+{
+
+    + BrowserException(const std::string &error)
+
+    + getType() const: std::string
+}
+
 std::exception <|-- ButterflyException
 ButterflyException <|-- EncryptorException
 ButterflyException <|-- DecryptorException
@@ -111,6 +119,7 @@ ButterflyException <|-- SQLDatabaseException
 ButterflyException <|-- SocketException
 ButterflyException <|-- FileNotFoundException
 ButterflyException <|-- ConnectionException
+ButterflyException <|-- BrowserException
 
 }
 @enduml
