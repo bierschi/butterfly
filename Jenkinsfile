@@ -25,7 +25,7 @@ pipeline {
                         dir ('webserver') {
                           sh 'pip3 install -r requirements.txt'
                           sh 'python3 setup.py bdist_wheel'
-                          sh 'pip3 install /dist/bflyServerApp-*-py3-none-any.whl'
+                          sh 'sudo pip3 install dist/bflyServerApp-*-py3-none-any.whl'
                         }
                     }
                 }
