@@ -26,6 +26,7 @@ pipeline {
                           sh 'pip3 install -r requirements.txt'
                           sh 'python3 setup.py bdist_wheel'
                           sh 'sudo pip3 install dist/bflyServerApp-*-py3-none-any.whl'
+                          sh 'sudo systemctl restart bflyServerApp.service'
                         }
                     }
                 }
@@ -33,7 +34,7 @@ pipeline {
                     steps {
                         echo "Encrypting with butterfly"
                         dir ('bin') {
-                          //sh './butterfly --encrypt /home/christian/jenkins/butterfly_fs/'
+                          sh './butterfly --encrypt /home/christian/jenkins/butterfly_fs/'
                         }
                     }
                 }
@@ -41,7 +42,7 @@ pipeline {
                     steps {
                         echo "Decrypting with butterfly"
                         dir ('bin') {
-                          //sh './butterfly --decrypt /home/christian/jenkins/butterfly_fs/'
+                          sh './butterfly --decrypt /home/christian/jenkins/butterfly_fs/'
                         }
                     }
                 }
