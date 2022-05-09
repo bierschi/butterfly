@@ -1,0 +1,22 @@
+@startuml
+
+package butterfly #DDDDDD
+{
+
+class Browser
+{
+    - _terminalCMD: std::string
+    - _running: std::atomic<bool>
+    - _browserThread: std::thread
+
+    - {static} execute(const std::string &cmd): void
+    - run(const std::string &url): void
+
+    + Browser(const std::string &terminalCMD="x-www-browser")
+
+    + open(const std::string &url, bool blocking=false): void
+    + close(): void
+}
+
+}
+@enduml

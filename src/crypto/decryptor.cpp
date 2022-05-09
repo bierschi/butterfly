@@ -198,7 +198,6 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
     } catch (AESDecryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        throw DecryptorException(e.what());
     }
 
 }

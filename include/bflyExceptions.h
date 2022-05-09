@@ -179,6 +179,22 @@ public:
         return "ConnectionException";
     }
 };
+
+/**
+ * Class BrowserException
+ */
+class BrowserException : public ButterflyException
+{
+
+public:
+    explicit BrowserException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "BrowserException";
+    }
+};
+
 } // namespace butterfly
 
 #endif //BUTTERFLY_BFLYEXCEPTIONS_H

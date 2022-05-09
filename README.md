@@ -42,22 +42,22 @@ CMake Arguments
 
 ## Usage and Examples
 
-Print the available arguments for Butterfly
+Print the available arguments for butterfly
 <pre><code>
 ./butterfly --help
 </code></pre>
 
 <pre><code>
-Butterfly is a cryptographic ransomware
+butterfly is a cryptographic ransomware
 
 Usage: 
-	butterfly --dir /home/testuser/butterfly/data/
-	butterfly --dir /home/testuser/butterfly/data/ --protected
+	butterfly --dir /home/butterfly/data/
+	butterfly --dir /home/butterfly/data/ --protected
 
-	butterfly --encrypt /home/testuser/butterfly/data/ 
-	butterfly --decrypt /home/testuser/butterfly/data/ 
+	butterfly --encrypt /home/butterfly/data/ 
+	butterfly --decrypt /home/butterfly/data/ 
 
-	butterfly --decrypt /home/testuser/butterfly/data/ --key /home/testuser/butterfly/masterkeys/SPrivateRSA.pem
+	butterfly --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem
 
 Options:
 	-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)
@@ -72,6 +72,28 @@ Options:
 butterfly homepage at: https://github.com/bierschi/butterfly
 </code></pre>
 
+Test the full functionalities of `butterfly`
+<pre><code>
+# Run the bflyServerApp for remote decryption
+bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
+
+# Start the butterfly binary
+./butterfly --dir /home/butterfly/data/
+</code></pre>
+
+Test the encryption + decryption mechanism separately (+ with remote decryption)
+<pre><code>
+# Run the bflyServerApp for remote decryption
+bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
+
+
+# Start only the encryption
+./butterfly --encrypt /home/butterfly/data
+
+# Start only the decryption
+./butterfly --decrypt /home/butterfly/data
+</code></pre>
+
 ## Unit Tests
 
 Install GTest
@@ -83,6 +105,11 @@ sudo make
 
 #copy or symlink libgtest.a and libgtest_main.a to your /usr/lib folder
 sudo cp *.a /usr/lib
+</code></pre>
+
+Test the `butterfly` units
+<pre><code>
+./butterflyUnitTests
 </code></pre>
 
 ## Changelog

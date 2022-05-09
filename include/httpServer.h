@@ -5,6 +5,7 @@
 #include <memory>
 #include <functional>
 #include <thread>
+#include <atomic>
 
 #include "logger.h"
 #include "tcpSocket.h"
@@ -22,11 +23,11 @@ class HTTPServer
 
 private:
     unsigned int _port;
-    bool _running;
+    std::atomic<bool> _running;
     std::shared_ptr<TCPSocket> _tcpSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-
+    std::thread _serverThread;
     /**
      * Handles incoming requests to the http server
      *
@@ -65,6 +66,11 @@ private:
      */
     void errorResponse(size_t statusCode);
 
+    /**
+     * Private run method for the HTTP Server
+     */
+    void _run();
+
 public:
 
     /**
@@ -72,7 +78,7 @@ public:
      *
      * Usage:
      *      std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
-     *      server.run();
+     *      server->run();
      *
      * @param port: Port for the Server
      */
@@ -85,8 +91,10 @@ public:
 
     /**
      * Run method for the HTTP Server
+     *
+     * @param blocking: sets the blocking mode of the run method
      */
-    void run();
+    void run(bool blocking=false);
 
     /**
      * Stop method for the HTTP Server

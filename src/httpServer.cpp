@@ -6,6 +6,9 @@ namespace butterfly
 
 HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _tcpSocket(std::make_shared<TCPSocket>()), _newTCPSocket(std::make_shared<TCPSocket>())
 {
+    #ifdef LOGGING
+    LOG_TRACE("Create class HTTPServer");
+    #endif
 
     _tcpSocket->bind(_port);
     _tcpSocket->listen();
@@ -13,14 +16,11 @@ HTTPServer::HTTPServer(unsigned int port) : _port(port),  _running(false), _tcpS
 
 HTTPServer::~HTTPServer()
 {
-    _tcpSocket->disconnect();
+    stop();
 }
 
-void HTTPServer::run()
+void HTTPServer::_run()
 {
-
-    _running = true;
-
     while(_running)
     {
 
@@ -33,11 +33,28 @@ void HTTPServer::run()
         // reset pointer before handle new request
         _newTCPSocket.reset();
     }
+}
 
+void HTTPServer::run(bool blocking)
+{
+    _running = true;
+    _serverThread = std::thread(&HTTPServer::_run, this);
+    #ifdef LOGGING
+    LOG_INFO("Running HTTPServer on port " << _port);
+    #endif
+
+    if (blocking)
+    {
+        _serverThread.join();
+    } else
+    {
+        _serverThread.detach();
+    }
 }
 
 void HTTPServer::stop()
 {
+    _tcpSocket->disconnect();
     _running = false;
 }
 
