@@ -1,6 +1,6 @@
 
-#ifndef BUTTERFLY_INDEX_H
-#define BUTTERFLY_INDEX_H
+#ifndef BUTTERFLY_INDEXPAGE_H
+#define BUTTERFLY_INDEXPAGE_H
 
 namespace butterfly
 {
@@ -103,4 +103,4 @@ const std::string INDEXPAGE = "<!DOCTYPE html>\n"
                               "</html>";
 } // namespace butterfly
 
-#endif //BUTTERFLY_INDEX_H
+#endif //BUTTERFLY_INDEXPAGE_H
