@@ -11,6 +11,7 @@
 #include "tcpSocket.h"
 #include "httpRequest.h"
 #include "httpResponse.h"
+#include "indexPage.h"
 
 namespace butterfly
 {

@@ -10,14 +10,14 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Improvement of the browser payment page after encryption
 - Prevention of Out-of-Memory errors with huge files
 
-## [1.2] -
+## [1.2] - 2022-06-02
 
 ### Added
 
 - Support of different RSA key sizes
 - Support of different AES key sizes
-- Integration of a HTTP Server/Client
-- Open browser with a simple page after encryption
+- Integration of an HTTP Server/Client
+- Open browser with a basic html page after encryption
 
 ## [1.1] - 2022-02-11
 
