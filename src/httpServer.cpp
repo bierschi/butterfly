@@ -123,7 +123,7 @@ void HTTPServer::browserRoute()
     _httpResponse->setStatusCode(302);
     _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
     _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
-    _httpResponse->addBody("<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>");
+    _httpResponse->addBody(butterfly::INDEXPAGE);
     _httpResponse->setHTTPHeader("Content-Length", std::to_string(_httpResponse->getBody().length()));
 
     _httpResponse->prepareOutgoing();
