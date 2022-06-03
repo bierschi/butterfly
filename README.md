@@ -1,9 +1,7 @@
 # Butterfly
 
-![](images/butterfly_black.png)
-<br>
 <p align="center">
-<img src="images/butterfly_black.png" width="200" height="200">
+<img src="images/butterfly_black.png" width="300" height="300">
 </p>
 Butterfly is a cryptographic ransomware with the following features
 
