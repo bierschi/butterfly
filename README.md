@@ -1,8 +1,9 @@
 # Butterfly
 
 <p align="left">
-<img src="images/butterfly_black.png" width="300" height="300">
+<img src="images/butterfly.png" width="300" height="300">
 </p>
+
 Butterfly is a cryptographic ransomware with the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
