@@ -1,4 +1,9 @@
 # Butterfly
+
+![](images/butterfly_black.png)
+<br>
+<img src="images/butterfly_black.png" width="200" height="200">
+
 Butterfly is a cryptographic ransomware with the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
