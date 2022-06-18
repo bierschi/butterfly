@@ -15,6 +15,13 @@ Butterfly is a cryptographic ransomware with the following features
 - Connection to the TOR Network :x:
 - Bitcoin Payments :x:
 
+## Disclaimer
+
+Butterfly is a full-featured cryptographic ransomware application that irrevocably encrypts your data. The main reason
+for the butterfly development was the knowledge transfer and some security aspects. <br>
+
+**Butterfly was not supposed to harm or threat other computers**
+
 ## Dependencies
 
 Install openssl and boost filesystem libraries
