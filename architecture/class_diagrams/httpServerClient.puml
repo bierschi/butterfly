@@ -1,43 +1,8 @@
 @startuml
+!include sockets.puml
 
 package butterfly #DDDDDD
 {
-
-class Socket
-{
-    - _socketDomain, _socketType, _socketProtocol: int
-    # _fd: int
-    # _addr: sockaddr_in
-
-    + Socket(int domain, int type, int protocol)
-    + Socket(int fileDescriptor, int domain, int type, int protocol)
-
-    + getFileDescriptor() const: int
-    + shutdown() const: bool
-    + setOptions() const: bool
-    + setBlocking() const: bool
-    + setNonBlocking() const: bool
-
-    + bind(unsigned int port): bool
-    + listen() const: bool
-    + accept(): std::shared_ptr<Socket>
-    + connect(const std::string& host, const int port): bool
-    + disconnect() const: bool
-    + hostnameToIP(const std::string &hostname, std::string &ip): int
-}
-
-class TCPSocket
-{
-
-    + TCPSocket()
-    + TCPSocket(int fileDescriptor)
-
-    + accept(): std::shared_ptr<TCPSocket>
-    + send(const std::string& s) const: bool
-    + recv(char *buf,int len) const: int
-    + recvAll(int chunkSize, bool blocking=false) const: std::string
-}
-
 
 class HTTPServer
 {
@@ -150,7 +115,6 @@ together {
     class HTTPClient
 }
 
-Socket            <|-- TCPSocket
 TCPSocket "1..*"  o--  "1" HTTPServer : <<uses>>
 TCPSocket "1..*"  o--  "1" HTTPClient : <<uses>>
 
