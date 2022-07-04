@@ -1,125 +1,9 @@
 @startuml
+!include aes.puml
+!include rsa.puml
 
 package butterfly #AAAAAA
 {
-
-package aes #DDDDDD
-{
-    class CryptoAES
-    {
-        - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
-        - _aesKeyLength, _aesIvLength: int
-
-        # {static} aesKey, aesIv: unsigned char*
-
-        - {static} getOpenSSLError(): std::string
-
-        + CryptoAES()
-
-        + {static} initDone(): bool
-        + generateAESKey(): bool
-        + generateAESKeyWithSalt(): bool
-
-        + setAESKey(std::string &aesKey): void
-        + setAESIv(std::string &aesIv): void
-        + getAESKey() const: std::string
-        + getAESIv() const: std::string
-        + getAESKeyPair() const: std::string
-        + getAESKeyLength() const: int
-        + getAESIVLength() const: int
-
-        + encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
-        + decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
-    }
-
-
-    class AESEncryptor
-    {
-        + AESEncryptor()
-
-        + encryptFile(const std::string &filename): void
-
-    }
-
-    class AESDecryptor
-    {
-        + AESDecryptor()
-
-        + decryptFile(const std::string &bflyFileName): void
-    }
-
-}
-
-package rsa #DDDDDD
-{
-    class CryptoRSA
-    {
-        - _pkey: EVP_PKEY*
-        - _keySize, _paddingSize: int
-        - _rsaPrivateKeyStr, _privateKeyStr, _publicKeyStr: char*
-        - _encryptedKey, _iv: unsigned char*
-        - rsaEncryptContext, rsaDecryptContext: EVP_CIPHER_CTX*
-
-        - {static} getOpenSSLError(): string
-        - generateRSAKey(): bool
-        - loadKeyFromFile(const std::string &filepath): void
-        - loadKeyFromStr(const std::string &str): void
-
-        # getPaddingSize(): int
-
-        + CryptoRSA(int keySize)
-        + CryptoRSA(const std::string &key)
-
-        + getRSAIV() const: unsigned char*
-        + getRSAEncryptedKey() const: unsigned char*
-        + getEvpPkey(): EVP_PKEY*
-        + getEvpPkeySize(EVP_PKEY *key): int
-
-        + getRSAPrivateKeyStr(): char*
-        + getPrivateKeyStr(): char*
-        + getPublicKeyStr(): char*
-
-        + encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): int
-        + decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): int
-        + {static} encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int
-        + {static} decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
-    }
-
-    class RSAEncryptor
-    {
-        - _encryptedMessage: std::string
-
-        - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-        - writeRSAFileToSystem(): bool
-
-        + RSAEncryptor(int keySize)
-        + RSAEncryptor(const std::string &key)
-
-        + getEncryptedMessage() const: std::string
-        + writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
-
-        + encrypt(EVP_PKEY *pkey, const std::string &decMSG): int
-        + encryptEVP(EVP_PKEY *pkey, const std::string &decMSG): int
-    }
-
-    class RSADecryptor
-    {
-        - _decryptedMessage: std::string
-
-        - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-        - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
-
-        + RSADecryptor() = delete
-        + RSADecryptor(const std::string &key)
-
-        + getDecryptedMessage() const: std::string
-        + {static} readEncMSGFromFile(const std::string &filepath): std::string
-
-        + decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
-        + decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
-    }
-
-}
 
 package hybrid #DDDDDD
 {
@@ -183,12 +67,6 @@ together {
   class Encryptor
   class Decryptor
 }
-
-CryptoRSA <|-- RSAEncryptor
-CryptoRSA <|-- RSADecryptor
-
-CryptoAES <|-- AESEncryptor
-CryptoAES <|-- AESDecryptor
 
 RSAEncryptor "1..*" o-- "1" Encryptor: <<encrypting keys>>
 AESEncryptor "1..*" o-- "1" Encryptor: <<encrypting files>>
