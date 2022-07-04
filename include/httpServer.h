@@ -5,11 +5,13 @@
 #include <memory>
 #include <functional>
 #include <thread>
+#include <atomic>
 
 #include "logger.h"
 #include "tcpSocket.h"
 #include "httpRequest.h"
 #include "httpResponse.h"
+#include "indexPage.h"
 
 namespace butterfly
 {

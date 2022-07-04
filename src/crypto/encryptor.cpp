@@ -70,11 +70,16 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Ensure that no encryption files already exists!
     checkIfEncryptionFilesExists();
 
-    // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
-    encryptCPrivateRSA();
-
     // Get all files from provided directory path
     auto files =  DirectoryIterator::getAllFiles(dirPath);
+
+    if ( files.empty() )
+    {
+        throw EncryptorException("Provided Directory Path " + dirPath + " is empty!");
+    }
+
+    // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
+    encryptCPrivateRSA();
 
     if ( !aes::AESEncryptor::initDone() )
     {
