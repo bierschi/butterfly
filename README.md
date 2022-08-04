@@ -17,10 +17,11 @@ Butterfly is a cryptographic ransomware with the following features
 
 ## Disclaimer
 
-Butterfly is a full-featured cryptographic ransomware application that irrevocably encrypts your data. The main reason
-for the butterfly development was the knowledge transfer and some security aspects. <br>
+Butterfly is a full-featured cryptographic ransomware application that irrevocably encrypts your data. This means careless
+use leads to permanent data loss. No liability is accepted. The main reason for the butterfly project is just to build
+knowledge related to ransomwares <br>
 
-**Butterfly was not supposed to harm or threat other computers**
+:exclamation: **Butterfly was not supposed to harm or threat other computers** :exclamation:
 
 ## Dependencies
 
