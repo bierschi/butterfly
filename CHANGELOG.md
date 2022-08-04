@@ -6,8 +6,9 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 
 ### Added
 
+- Added butterfly image
 - Integration of TorSocket class
-- Improvement of the browser payment page after encryption
+- Enhancement of the browser payment page after encryption
 - Prevention of Out-of-Memory errors with huge files
 
 ## [1.2] - 2022-06-02
