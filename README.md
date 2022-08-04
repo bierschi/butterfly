@@ -90,7 +90,7 @@ Test the full functionalities of `butterfly`
 # Run the bflyServerApp for remote decryption
 bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
 
-# Start the butterfly binary
+# Run the butterfly binary with --dir argument
 ./butterfly --dir /home/butterfly/data/
 </code></pre>
 
