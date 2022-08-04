@@ -120,7 +120,17 @@ sudo make
 sudo cp *.a /usr/lib
 </code></pre>
 
-Test the `butterfly` units
+Enable the Unit Tests with 
+<pre><code>
+cmake ../ -DUNITTESTS=ON 
+</code></pre>
+
+List all tests
+<pre><code>
+./butterflyUnitTests --gtest_list_tests
+</code></pre>
+
+Run the `butterfly` units
 <pre><code>
 ./butterflyUnitTests
 </code></pre>
