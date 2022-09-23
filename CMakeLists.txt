@@ -46,9 +46,11 @@ list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/sqlDatabase.cpp ${CMAKE_SO
 
 # Enable Boost Logging
 if(LOGGING)
-    MESSAGE("Enabled LOGGING")
+    MESSAGE("Enabled Boost LOGGING Interface")
     find_package(Boost 1.45.0 COMPONENTS log log_setup REQUIRED)
     add_definitions(-DLOGGING)
+else()
+    MESSAGE(STATUS "Disabled Boost LOGGING Interface")
 endif()
 
 # Enable Unittests and include test folder as a subdirectory
@@ -62,7 +64,7 @@ if(UNITTESTS)
     enable_testing()
     add_subdirectory(test)
 else()
-    MESSAGE("Disabled Unittests")
+    MESSAGE(STATUS "Disabled Unittests")
 endif()
 
 # Build the executable
@@ -71,5 +73,5 @@ if(Boost_FOUND)
     target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads -ldl)
     #target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})
 else()
-    message("Boost Libraries not found!")
+    message(FATAL_ERROR "Boost Library filesystem not found!")
 endif()
