@@ -68,9 +68,9 @@ class APIHandler:
     def index(self):
         """ index page
 
-        :return:
+        :return: string
         """
-        return "hello world"
+        return "Butterfly Server Application for a secure remote Decryption of the Client's CPrivateRSA.bin File"
 
     def route_decrypt(self):
         """ decrypts the CPrivateRSA.bin string
@@ -81,6 +81,7 @@ class APIHandler:
         self.logger.info("POST request to route /decryption/")
 
         if request.form:
+
             if all(key in request.form.keys() for key in ('CPrivateRSA.bin', 'RSA.bin', 'RSAKeySize')):
                 self.logger.info("Processing form request")
 

@@ -7,9 +7,9 @@ class Router:
     """ class Router to add multiple endpoints to the flask application
 
     USAGE:
-            routes = Router(name="TestApp")
-            routes.add_endpoint(endpoint='/', endpoint_name="index", method="GET", handler=<function>)
-            routes.run()
+            router = Router(name="TestApp")
+            router.add_endpoint(endpoint='/', endpoint_name="index", method="GET", handler=<function>)
+            router.run()
     """
 
     def __init__(self, name):
