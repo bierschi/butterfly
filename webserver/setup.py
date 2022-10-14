@@ -11,7 +11,7 @@ with open("README.md", encoding='utf-8') as f:
 setup(
     name=__title__,
     version=__version__,
-    description="Butterfly Server Application to decrypt the Client's CPrivateRSA.bin File",
+    description="Butterfly Server Application for a secure remote Decryption of the Client's CPrivateRSA.bin File",
     long_description=readme,
     long_description_content_type='text/markdown',
     license=__license__,

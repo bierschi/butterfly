@@ -8,7 +8,7 @@ from bflyServerApp import __version__, __title__
 
 
 class BFLYServerApp:
-    """ class BFLYServerApp to setup all instances needed for this application
+    """ class BFLYServerApp to set up all instances needed for this application
 
     USAGE:
             bflyServerApp = BFLYServerApp(sprivatersa_filepath=../../masterkeys/SPrivateRSA.pem)

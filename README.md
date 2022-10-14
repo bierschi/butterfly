@@ -17,10 +17,11 @@ Butterfly is a cryptographic ransomware with the following features
 
 ## Disclaimer
 
-Butterfly is a full-featured cryptographic ransomware application that irrevocably encrypts your data. The main reason
-for the butterfly development was the knowledge transfer and some security aspects. <br>
+Butterfly is a full-featured cryptographic ransomware application that irrevocably encrypts your data. This means careless
+use leads to permanent data loss (No liability is accepted).
+The main purpose for the butterfly project was just to build knowledge related to the increased occurrence of ransomwares. <br>
 
-**Butterfly was not supposed to harm or threat other computers**
+:exclamation: **Butterfly was never supposed to harm or threat other computers** :exclamation:
 
 ## Dependencies
 
@@ -89,7 +90,7 @@ Test the full functionalities of `butterfly`
 # Run the bflyServerApp for remote decryption
 bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
 
-# Start the butterfly binary
+# Run the butterfly binary with --dir argument
 ./butterfly --dir /home/butterfly/data/
 </code></pre>
 
@@ -119,7 +120,17 @@ sudo make
 sudo cp *.a /usr/lib
 </code></pre>
 
-Test the `butterfly` units
+Enable the Unit Tests with 
+<pre><code>
+cmake ../ -DUNITTESTS=ON 
+</code></pre>
+
+List all tests
+<pre><code>
+./butterflyUnitTests --gtest_list_tests
+</code></pre>
+
+Run the `butterfly` units
 <pre><code>
 ./butterflyUnitTests
 </code></pre>

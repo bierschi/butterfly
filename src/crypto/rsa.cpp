@@ -74,7 +74,7 @@ std::string CryptoRSA::getOpenSSLError()
 bool CryptoRSA::generateRSAKey()
 {
 
-    EVP_PKEY_CTX *context = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
+    EVP_PKEY_CTX *context = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, nullptr);
 
     if(EVP_PKEY_keygen_init(context) <= 0)
     {
@@ -189,7 +189,7 @@ char* CryptoRSA::getPrivateKeyStr()
 {
 
     BIO *bioPrivate = BIO_new(BIO_s_mem());
-    PEM_write_bio_PrivateKey(bioPrivate, _pkey, NULL, NULL, 0, 0, NULL);
+    PEM_write_bio_PrivateKey(bioPrivate, _pkey, nullptr, nullptr, 0, 0, nullptr);
 
     BIO_flush(bioPrivate);
     BIO_get_mem_data(bioPrivate, &_privateKeyStr);
