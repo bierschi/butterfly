@@ -1,0 +1,38 @@
+# Download base image debian bullseye
+FROM debian:bullseye
+
+# LABEL
+LABEL maintainer="Bierschneider Christian (@bierschi)"
+LABEL version="0.1"
+LABEL description="This is custom Docker Image to build butterfly on Debian 11"
+
+# Disable Prompt During Packages Installation
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Update Debian Software repository
+RUN apt-get update
+
+# Install standard packages
+RUN apt-get install -y cmake git g++ gcc && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt clean
+
+# Install butterfly dependencies
+RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libboost-log-dev libgtest-dev
+
+# Add ssh key
+RUN mkdir /root/.ssh/
+ADD id_ed25519 /root/.ssh/id_ed25519
+
+# Create known_hosts
+RUN touch /root/.ssh/known_hosts
+# Add github.com key
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+# Clone the butterfly project
+RUN git clone git@github.com:bierschi/butterfly.git /root/butterfly
+
+WORKDIR /root/butterfly
+
+# Build the project
+RUN mkdir build && cd build && cmake ../ -DUNITTESTS=ON -DLOGGING=ON && make
