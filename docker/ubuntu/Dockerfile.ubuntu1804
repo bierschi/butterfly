@@ -30,6 +30,7 @@ RUN cd boost_1_73_0/ && ./bootstrap.sh --prefix=/usr/ > /dev/null && ./b2 > /dev
 # Add ssh key
 RUN mkdir /root/.ssh/
 ADD id_ed25519 /root/.ssh/id_ed25519
+RUN chmod 600 /root/.ssh/id_ed25519
 
 # Create known_hosts
 RUN touch /root/.ssh/known_hosts

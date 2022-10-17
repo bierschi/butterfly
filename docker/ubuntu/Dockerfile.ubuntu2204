@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libb
 # Add ssh key
 RUN mkdir /root/.ssh/
 ADD id_ed25519 /root/.ssh/id_ed25519
+RUN chmod 600 /root/.ssh/id_ed25519
 
 # Create known_hosts
 RUN touch /root/.ssh/known_hosts
