@@ -1,6 +1,6 @@
 ## Docker
 
-- debian
-- ubuntu
-- windows
-- macos
+- Debian
+- Ubuntu
+- Windows
+- MacOS
