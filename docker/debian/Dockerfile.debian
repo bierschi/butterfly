@@ -4,12 +4,12 @@ FROM debian:bullseye
 # LABEL
 LABEL maintainer="Bierschneider Christian (@bierschi)"
 LABEL version="0.1"
-LABEL description="This is custom Docker Image to build butterfly on Ubuntu 2004"
+LABEL description="This is custom Docker Image to build butterfly on Debian 11"
 
 # Disable Prompt During Packages Installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Update Ubuntu Software repository
+# Update Debian Software repository
 RUN apt-get update
 
 # Install standard packages
@@ -36,6 +36,3 @@ WORKDIR /root/butterfly
 
 # Build the project
 RUN mkdir build && cd build && cmake ../ -DUNITTESTS=ON -DLOGGING=ON && make
-
-# Run the binary
-#RUN cd bin && ./butterfly --help
