@@ -13,12 +13,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 
 # Install standard packages
-RUN apt-get install -y cmake git g++ gcc && \
+RUN apt-get install -y cmake git g++ gcc > /dev/null && \
     rm -rf /var/lib/apt/lists/* && \
     apt clean
 
 # Install butterfly dependencies
-RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libboost-log-dev libgtest-dev
+RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libboost-log-dev libgtest-dev > /dev/null
 
 # Add ssh key
 RUN mkdir /root/.ssh/

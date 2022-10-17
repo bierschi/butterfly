@@ -13,19 +13,19 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 
 # Install standard packages
-RUN apt-get install -y cmake git g++ gcc wget build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev libboost-all-dev && \
+RUN apt-get install -y cmake git g++ gcc wget build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev libboost-all-dev > /dev/null && \
     rm -rf /var/lib/apt/lists/* && \
     apt clean
 
 # Install butterfly dependencies
-RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libgtest-dev
+RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libgtest-dev > /dev/null
 
 # Install GTest library
 RUN cd /usr/src/gtest && cmake CMakeLists.txt && make && cp *.a /usr/lib
 
 # Download and install boost log library
-RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz && tar xzvf boost_1_73_0.tar.gz
-RUN cd boost_1_73_0/ && ./bootstrap.sh --prefix=/usr/ && ./b2 && ./b2 install
+RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz > /dev/null && tar xzvf boost_1_73_0.tar.gz > /dev/null
+RUN cd boost_1_73_0/ && ./bootstrap.sh --prefix=/usr/ > /dev/null && ./b2 > /dev/null && ./b2 install > /dev/null
 
 # Add ssh key
 RUN mkdir /root/.ssh/
