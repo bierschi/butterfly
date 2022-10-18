@@ -1,4 +1,6 @@
 # Butterfly
+[![Build Status](https://jenkins.bierschi.com/job/butterfly/job/master/badge/icon?style=plastic)](https://jenkins.bierschi.com/job/butterfly/job/master/badge/icon?style=plastic)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 <p align="left">
 <img src="images/butterfly.png" width="300" height="300">
