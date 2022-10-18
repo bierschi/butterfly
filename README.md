@@ -1,5 +1,5 @@
 # Butterfly
-[![Build Status](https://jenkins.bierschi.com/job/butterfly/job/master/badge/icon)](https://jenkins.bierschi.com/job/butterfly/job/master/)
+[![Build Status](https://jenkins.bierschi.com/buildStatus/icon?job=butterfly%2Fmaster)](https://jenkins.bierschi.com/job/butterfly/job/master/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 <p align="left">
