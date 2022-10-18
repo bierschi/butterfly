@@ -11,7 +11,7 @@ pipeline {
                          }
                          echo 'Build Debian Images'
                          dir ('docker/debian') {
-                           sh 'docker build -t debian11:butterfly -f Dockerfile.debian --build-arg CACHEBUST=$(date +%s) .'
+                           sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) .'
                           }
                      }
                  }
