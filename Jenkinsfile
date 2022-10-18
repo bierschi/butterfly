@@ -5,7 +5,7 @@ pipeline {
                      steps {
                          echo 'Build Ubuntu Images'
                          dir ('docker/ubuntu') {
-                           sh 'docker build -t ubuntu1804:butterfly -f Dockerfile.ubuntu1804 .'
+                           sh 'docker build -t ubuntu1804:butterfly -f Dockerfile.ubuntu1804 --build-arg CACHEBUST=$(date +%s) .'
                            sh 'docker build -t ubuntu2004:butterfly -f Dockerfile.ubuntu2004 .'
                            //sh 'docker build -t ubuntu2204:butterfly -f Dockerfile.ubuntu2204 .'
                          }
