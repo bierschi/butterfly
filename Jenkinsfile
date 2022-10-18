@@ -19,7 +19,7 @@ pipeline {
                           sh 'pip3 install -r requirements.txt'
                           sh 'python3 setup.py bdist_wheel'
                           sh 'sudo pip3 install dist/bflyServerApp-*-py3-none-any.whl'
-                          sh 'sudo systemctl restart bflyServerApp.service'
+                          sh 'sudo systemctl restart b2bierschi-bflyServerApp.service'
                         }
                     }
                 }
