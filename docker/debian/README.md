@@ -2,7 +2,7 @@
 
 Build the debian 11 image
 <pre><code>
-docker build -t debian11:butterfly -f Dockerfile.debian .
+docker build -t debian11:butterfly -f Dockerfile.debian11 .
 </code></pre>
 
 Run docker container 
