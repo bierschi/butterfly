@@ -2,6 +2,7 @@
 [![Build Status](https://jenkins.bierschi.com/buildStatus/icon?job=butterfly%2Fmaster)](https://jenkins.bierschi.com/job/butterfly/job/master/)
 [![GitHub release](https://img.shields.io/github/release/Naereen/StrapDown.js.svg)](https://github.com/bierschi/butterfly/releases/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/bierschi/butterfly/blob/master/LICENSE)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/bierschi/butterfly?color=blue&sort=semver)
 
 <p align="left">
 <img src="images/butterfly.png" width="300" height="300">
