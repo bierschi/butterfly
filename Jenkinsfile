@@ -1,24 +1,21 @@
 pipeline {
          agent any
          stages {
-                 stage('Build') {
+                 stage('Build Docker Images') {
                      steps {
-                         echo 'Build butterfly'
-                         sh 'mkdir build'
-                         dir ('build') {
-                           sh 'cmake ../ -DUNITTESTS=ON'
-                           sh 'make'
+                         echo 'Build Ubuntu Images'
+                         dir ('docker/ubuntu') {
+                           sh 'docker build -t ubuntu1804:butterfly -f Dockerfile.ubuntu1804 --build-arg CACHEBUST=$(date +%s) .'
+                           sh 'docker build -t ubuntu2004:butterfly -f Dockerfile.ubuntu2004 --build-arg CACHEBUST=$(date +%s) .'
+                           //sh 'docker build -t ubuntu2204:butterfly -f Dockerfile.ubuntu2204 --build-arg CACHEBUST=$(date +%s) .'
                          }
+                         echo 'Build Debian Images'
+                         dir ('docker/debian') {
+                           sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) .'
+                          }
                      }
                  }
-                 stage('UnitTests') {
-                    steps {
-                        echo 'Testing butterfly units'
-                        dir ('bin') {
-                          sh './butterflyUnitTests'
-                        }
-                    }
-                 }
+
                  stage('Install bflyServerApp') {
                     steps {
                         echo "Install bflyServerApp python package"
@@ -26,23 +23,7 @@ pipeline {
                           sh 'pip3 install -r requirements.txt'
                           sh 'python3 setup.py bdist_wheel'
                           sh 'sudo pip3 install dist/bflyServerApp-*-py3-none-any.whl'
-                          sh 'sudo systemctl restart bflyServerApp.service'
-                        }
-                    }
-                }
-                 stage('Test Encryption') {
-                    steps {
-                        echo "Encrypting with butterfly"
-                        dir ('bin') {
-                          sh './butterfly --encrypt /home/christian/jenkins/butterfly_fs/'
-                        }
-                    }
-                }
-                 stage('Test Decryption') {
-                    steps {
-                        echo "Decrypting with butterfly"
-                        dir ('bin') {
-                          sh './butterfly --decrypt /home/christian/jenkins/butterfly_fs/'
+                          sh 'sudo systemctl restart b2bierschi-bflyServerApp.service'
                         }
                     }
                 }
