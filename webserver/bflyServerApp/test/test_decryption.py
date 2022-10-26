@@ -1,6 +1,7 @@
 import unittest
 import string
 from bflyServerApp import Decryption
+from bflyServerApp.exceptions import AESDecryptionError, RSADecryptionError
 
 
 class TestDecryption(unittest.TestCase):
@@ -19,6 +20,9 @@ class TestDecryption(unittest.TestCase):
         self.sprivate_rsa_filepath = "../../../masterkeys/SPrivateRSA.pem"
         self.decryptor = Decryption(self.cprivatersa_str, self.rsabin_str, self.sprivate_rsa_filepath, self.rsa_keysize)
 
+    def tearDown(self) -> None:
+        pass
+
     def _is_hex(self, s):
         """ checks if given string is in hex format
 
@@ -28,14 +32,26 @@ class TestDecryption(unittest.TestCase):
         hex_digits = set(string.hexdigits)
         return all(c in hex_digits for c in s)
 
-    def tearDown(self) -> None:
-        pass
+    def test_file_exists(self):
+
+        sprivate_rsa_filepath = "../../../masterkeys/SPrivateRSANotFound.pem"
+        with self.assertRaises(FileExistsError):
+            decryptor = Decryption(self.cprivatersa_str, self.rsabin_str, sprivate_rsa_filepath, self.rsa_keysize)
+            decryptor.decrypt_rsa()
 
     def test_decrypt_rsa(self):
-        pass
+
+        rsa_bin = "353faf"  # too short
+        rsabin_str = bytes.fromhex(rsa_bin)
+
+        decryptor = Decryption(self.cprivatersa_str, rsabin_str, self.sprivate_rsa_filepath, self.rsa_keysize)
+        with self.assertRaises(RSADecryptionError):
+            decryptor.decrypt_rsa()
 
     def test_decrypt_aes(self):
-        pass
+
+        with self.assertRaises(AESDecryptionError):
+            self.decryptor.decrypt_aes(key=b"key", iv=b"iv", enc=b"test")  # key and iv too short
 
     def test_get_decrypted_cprivatersa(self):
 
