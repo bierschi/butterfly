@@ -78,12 +78,12 @@ Usage:
 	butterfly --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem
 
 Options:
-	-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)
-	-enc, --encrypt	    Encrypts all files in provided directory
-	-dec, --decrypt	    Decrypts all files in provided directory, if the request to the Server was successful
-	-k,   --key         Masterkey for the Decryption (Corresponds to the embedded Server Public Key)
-	-p,   --protected   Save all key files to the System
-	-c,   --config	    Logger Config Path
+	-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)
+	-enc, --encrypt	    Encrypts all files in provided directory path and shows the ransom visualization
+	-dec, --decrypt	    Decrypts all files in provided directory path, if the request to the remote server was successful
+	-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)
+	-p,   --protected   Saves all key files to the system (For manual decryption)
+	-c,   --config	    Logger config path
 	-v,   --version	    Show version information and quit
 	-h,   --help	    Show this message and quit
 
