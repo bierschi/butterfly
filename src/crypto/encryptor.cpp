@@ -198,10 +198,24 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
 
 void Encryptor::spawnThread(const std::string &filepath)
 {
-    // Create new instance for each huge file
-    std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+
     // Create dedicated thread for this encryption file
-    std::thread t(&aes::AESEncryptor::encryptFile, *aesEncInstance, filepath);
+    std::thread t([&filepath]()
+    {
+        // Create new instance for each huge file
+        std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+        try
+        {
+            // Encrypt the file with AES
+            aesEncInstance->encryptFile(filepath);
+
+        } catch (AESEncryptionException &e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+
+    });
+
     // Save thread in thread vector
     _threads.push_back(std::move(t));
 }
