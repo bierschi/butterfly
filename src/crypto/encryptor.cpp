@@ -78,6 +78,10 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
         throw EncryptorException("Provided Directory Path " + dirPath + " is empty!");
     }
 
+    #ifdef LOGGING
+        LOG_TRACE("Found " << files.size() << " files in directory " << dirPath);
+    #endif
+
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
 
