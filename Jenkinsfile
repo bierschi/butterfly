@@ -1,9 +1,11 @@
 pipeline {
          agent any
          stages {
-                 stage('Build Docker Images') {
-                    if (env.BRANCH_NAME == 'develop')
-                    {
+                 stage('Build butterfly binary from develop') {
+
+                    when {
+                        expression { env.BRANCH_NAME == 'develop' }
+                     }
                      steps {
                          echo 'Build Ubuntu Images from develop branch'
                          dir ('docker/ubuntu') {
@@ -15,10 +17,14 @@ pipeline {
                          dir ('docker/debian') {
                            sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) .'
                           }
-                         }
-                    }
-                    if (env.BRANCH_NAME == 'master')
-                    {
+                     }
+                 }
+
+                 stage('Build butterfly binary from master') {
+
+                    when {
+                        expression { env.BRANCH_NAME == 'master' }
+                     }
                      steps {
                          echo 'Build Ubuntu Images from master branch'
                          dir ('docker/ubuntu') {
@@ -30,8 +36,7 @@ pipeline {
                          dir ('docker/debian') {
                            sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) .'
                           }
-                         }
-                    }
+                     }
                  }
 
                  stage('Static Code Analysis') {
