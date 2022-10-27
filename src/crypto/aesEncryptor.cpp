@@ -42,7 +42,14 @@ void AESEncryptor::encryptFile(const std::string &filename)
         throw AESEncryptionException("AES Encryption failed with file " + filename);
     }
 
-    butterfly::writeBinFile(filename, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength));
+    if ( !butterfly::writeBinFile(filename, reinterpret_cast<const char *>(encryptedFile), static_cast<long>(encryptedFileLength)) )
+    {
+        #ifdef LOGGING
+        LOG_TRACE("Failed to write binary content to file " + filename);
+        #endif
+        throw AESEncryptionException("Failed to write binary content to file " + filename);
+    }
+
     #ifdef LOGGING
     if ( Logger::isConfigFileAvailable() )
     {

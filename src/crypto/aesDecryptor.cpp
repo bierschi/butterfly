@@ -43,7 +43,14 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
         throw AESDecryptionException("AES Decryption failed with file " + bflyFileName);
     }
 
-    butterfly::writeBinFile(bflyFileName, reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength));
+    if ( !butterfly::writeBinFile(bflyFileName, reinterpret_cast<const char *>(decryptedFile), static_cast<long>(decryptedFileLength)) )
+    {
+        #ifdef LOGGING
+        LOG_ERROR("Failed to write decrypted content to file " + bflyFileName);
+        #endif
+        throw AESDecryptionException("Failed to write decrypted content to file " + bflyFileName);
+    }
+
     #ifdef LOGGING
     if ( Logger::isConfigFileAvailable() )
     {

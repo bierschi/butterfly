@@ -204,7 +204,10 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
 
 void Decryptor::spawnThread(const std::string &filepath)
 {
-    std::thread t(&Decryptor::decryptFileWithAES, this, filepath);
+    // Create dedicated thread for this decryption file
+    std::thread t(&Decryptor::decryptFileWithAES, this, filepath); // Deviating from the encryptor class, using here the same instance for each decryption
+
+    // Save thread in thread vector
     _threads.push_back(std::move(t));
 }
 
