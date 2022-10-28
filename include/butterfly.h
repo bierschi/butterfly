@@ -27,6 +27,7 @@ private:
     std::unique_ptr<butterfly::ArgumentParser> _argparse;
     std::unique_ptr<butterfly::ConnManager> _connManager;
     butterfly::ArgumentParser::Arguments _args;
+    std::string BROWSER_URL_PORT;
 
     /**
      * Init logging Framework

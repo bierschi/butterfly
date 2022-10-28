@@ -1,6 +1,4 @@
 
-#include <memory>
-
 #include "crypto/decryptor.h"
 
 namespace butterfly
