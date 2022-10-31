@@ -124,9 +124,9 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
     }
 
     // Check if decryption was successful
-    if (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos)
+    if ( (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos) || (_decryptedCPrivateRSA.find("-----BEGIN PRIVATE KEY-----") == std::string::npos))
     {
-        throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----'");
+        throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----' or '-----BEGIN PRIVATE KEY-----'");
     }
 
 }
