@@ -73,6 +73,7 @@ TEST_F(CryptoRSATest, getEvpPkeySize)
 /**
  * Testcase for testing the getRSAPrivateKeyStr
  */
+#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
 TEST_F(CryptoRSATest, getRSAPrivateKeyStr)
 {
     std::string rsaPrivateKey = cryptoRSA->getRSAPrivateKeyStr();
@@ -83,6 +84,7 @@ TEST_F(CryptoRSATest, getRSAPrivateKeyStr)
 
     EXPECT_TRUE( fLine == "-----BEGIN RSA PRIVATE KEY-----");
 }
+#endif
 
 /**
  * Testcase for testing the getPrivateKeyStr
