@@ -132,7 +132,7 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
     BIO *bioPrivate = BIO_new(BIO_s_mem());
     BIO_write(bioPrivate, str.c_str(), static_cast<int>(str.length()));
 
-    if (fLine == "-----BEGIN RSA PRIVATE KEY-----")
+    if (fLine == "-----BEGIN RSA PRIVATE KEY-----" || fLine == "-----BEGIN PRIVATE KEY-----")
     {
 
         _pkey = PEM_read_bio_PrivateKey(bioPrivate, nullptr, nullptr, nullptr);
@@ -171,7 +171,7 @@ EVP_PKEY* CryptoRSA::getEvpPkey()
 {
     return _pkey;
 }
-
+#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
 char* CryptoRSA::getRSAPrivateKeyStr()
 {
     RSA *rsaPrivateKey = EVP_PKEY_get0_RSA(_pkey);
@@ -184,6 +184,7 @@ char* CryptoRSA::getRSAPrivateKeyStr()
 
     return _rsaPrivateKeyStr;
 }
+#endif
 
 char* CryptoRSA::getPrivateKeyStr()
 {

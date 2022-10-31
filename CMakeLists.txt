@@ -10,10 +10,9 @@ configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
 set(CMAKE_CXX_STANDARD 11)
 
 # Set compiler flags
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")            # temporary deactivated due to errors for openssl3.0 in ubuntu2204
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")                                       # compiler flag for static linking only
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -fpermissive")
 
 # Add build options
 option(UNITTESTS "Enable Unittests" OFF)

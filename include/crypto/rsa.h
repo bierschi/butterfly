@@ -146,8 +146,9 @@ public:
     *
     * @return private key string as char*
     */
+#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
     char* getPrivateKeyStr();
-
+#endif
     /**
      * Get the public key string. Starts with -----BEGIN PUBLIC KEY-----
      *
