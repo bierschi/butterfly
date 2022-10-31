@@ -37,11 +37,9 @@ protected:
 TEST_F(RSAEncryptorTest, rsaEncryption)
 {
 
-#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
-    std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
+    std::string cprivateRSAKeyFile = rsaEncryptAESKey->getPrivateKeyStr();
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
-#endif
-
+    
     int encMSGLen = rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile);
     ASSERT_TRUE(encMSGLen != -1);
 
