@@ -171,6 +171,7 @@ EVP_PKEY* CryptoRSA::getEvpPkey()
 {
     return _pkey;
 }
+
 #if (OPENSSL_VERSION_NUMBER < 0x30000000L)
 char* CryptoRSA::getRSAPrivateKeyStr()
 {
