@@ -1,17 +1,40 @@
 pipeline {
          agent any
          stages {
-                 stage('Build Docker Images') {
+                 stage('Build butterfly binary from develop') {
+
+                    when {
+                        expression { env.BRANCH_NAME == 'develop' }
+                     }
                      steps {
-                         echo 'Build Ubuntu Images'
+                         echo 'Build Ubuntu Images from develop branch'
                          dir ('docker/ubuntu') {
-                           sh 'docker build -t ubuntu1804:butterfly -f Dockerfile.ubuntu1804 --build-arg CACHEBUST=$(date +%s) .'
-                           sh 'docker build -t ubuntu2004:butterfly -f Dockerfile.ubuntu2004 --build-arg CACHEBUST=$(date +%s) .'
-                           //sh 'docker build -t ubuntu2204:butterfly -f Dockerfile.ubuntu2204 --build-arg CACHEBUST=$(date +%s) .'
+                           sh 'docker build -t ubuntu1804:butterfly -f Dockerfile.ubuntu1804 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=develop .'
+                           sh 'docker build -t ubuntu2004:butterfly -f Dockerfile.ubuntu2004 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=develop .'
+                           sh 'docker build -t ubuntu2204:butterfly -f Dockerfile.ubuntu2204 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=develop .'
                          }
-                         echo 'Build Debian Images'
+                         echo 'Build Debian Images from develop branch'
                          dir ('docker/debian') {
-                           sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) .'
+                           sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=develop .'
+                          }
+                     }
+                 }
+
+                 stage('Build butterfly binary from master') {
+
+                    when {
+                        expression { env.BRANCH_NAME == 'master' }
+                     }
+                     steps {
+                         echo 'Build Ubuntu Images from master branch'
+                         dir ('docker/ubuntu') {
+                           sh 'docker build -t ubuntu1804:butterfly -f Dockerfile.ubuntu1804 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=master .'
+                           sh 'docker build -t ubuntu2004:butterfly -f Dockerfile.ubuntu2004 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=master .'
+                           sh 'docker build -t ubuntu2204:butterfly -f Dockerfile.ubuntu2204 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=master .'
+                         }
+                         echo 'Build Debian Images from master branch'
+                         dir ('docker/debian') {
+                           sh 'docker build -t debian11:butterfly -f Dockerfile.debian11 --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=master .'
                           }
                      }
                  }

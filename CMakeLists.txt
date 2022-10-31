@@ -13,7 +13,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")                                       # compiler flag for static linking only
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra")
 
 # Add build options
 option(UNITTESTS "Enable Unittests" OFF)

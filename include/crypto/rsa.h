@@ -139,8 +139,10 @@ public:
     *
     * @return rsa private key string as char*
     */
+#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
     char* getRSAPrivateKeyStr();
-
+#endif
+    
     /**
     * Get the private key string. Starts with -----BEGIN PRIVATE KEY-----
     *

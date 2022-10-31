@@ -67,11 +67,12 @@ curl -H "Content-Type: application/x-www-form-urlencoded" -d "CPrivateRSA.bin=3c
 </code></pre>
 
 ## Logs
-logs can be found in `/var/log/bflyServerApp`. Add your current user to group ´syslog´, this allows the application
+logs can be found in `/var/log/bflyServerApp`. Add your current user to group `syslog`, this allows the application
 to create a folder in `/var/log`
 <pre><code>
 sudo adduser &lt;user&gt; syslog
 </code></pre>
+
 ## Changelog
 All changes and versioning information can be found in the [CHANGELOG](https://github.com/bierschi/butterfly/blob/master/webserver/CHANGELOG.rst)
 

