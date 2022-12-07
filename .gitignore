@@ -109,3 +109,7 @@ cmake-build-debug/
 bin/
 notes/http_server.txt
 data/
+fs/
+!scripts/data
+*.iso
+*.exe
