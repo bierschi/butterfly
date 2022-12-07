@@ -112,3 +112,4 @@ data/
 fs/
 !scripts/data
 *.iso
+*.exe
