@@ -111,3 +111,4 @@ notes/http_server.txt
 data/
 fs/
 !scripts/data
+*.iso
