@@ -30,6 +30,15 @@ The main purpose for the butterfly project was just to build knowledge related t
 
 ## Dependencies
 
+Install compilers for the toolchain
+<pre><code>
+# GCC on Ubuntu
+sudo apt-get install gcc g++
+
+# Windows cross compiler for Ubuntu
+sudo apt-get install mingw-w64
+</code></pre>
+
 Install openssl and boost filesystem libraries
 <pre><code>
 sudo apt-get install -y libssl-dev libboost-filesystem-dev
@@ -44,11 +53,15 @@ sudo apt-get install -y libboost-log-dev
 
 Build butterfly
 <pre><code>
-git clone https://github.com/bierschi/butterfly.git
-cd butterfly
+# Clone the repo and create the build/ folder
+git clone https://github.com/bierschi/butterfly.git && cd butterfly
 mkdir build && cd build
-cmake ../
-(cmake ../ -DUNITTESTS=ON -DLOGGING=ON)
+
+# Execute cmake with options
+cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake ../
+(cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake -DUNITTESTS=ON -DLOGGING=ON ../)
+
+# Build the binary
 make
 </code></pre>
 
