@@ -22,14 +22,14 @@ option(LOGGING "Enable Logging" OFF)
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    message("Linux")
+# Set OpenSSL and Boost library settings
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 
-    # Set OpenSSL and Boost library settings
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_MULTITHREADED ON)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-    set(OPENSSL_USE_STATIC_LIBS TRUE)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    message("Using the Linux Toolchain")
 
     # Find required OpenSSL and Boost packages
     find_package(OpenSSL REQUIRED)
@@ -79,11 +79,11 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     endif()
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    message("Windows")
+    message("Using the Windows Toolchain")
     add_executable(${CMAKE_PROJECT_NAME} src/os/windows/main.cpp)
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-    message("Darwin")
+    message("Using the Darwin Toolchain")
 
 else()
     message("Platform is not supported!")
