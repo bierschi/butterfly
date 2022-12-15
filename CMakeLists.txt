@@ -43,8 +43,8 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 
     # Add the source files
     file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
-    # Remove SQL Sources for now
-    list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/sqlDatabase.cpp ${CMAKE_SOURCE_DIR}/src/aesKeyDatabase.cpp ${CMAKE_SOURCE_DIR}/src/os/windows/main.cpp)
+    # Remove windows sources for now
+    list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/os/windows/main.cpp)
 
     # Enable Boost Logging
     if(LOGGING)
@@ -73,7 +73,6 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     if(Boost_FOUND)
         add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
         target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads -ldl)
-        #target_link_libraries(${CMAKE_PROJECT_NAME} OpenSSL::SSL ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})
     else()
         message(FATAL_ERROR "Boost Library filesystem not found!")
     endif()
