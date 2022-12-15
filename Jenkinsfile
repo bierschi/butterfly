@@ -43,7 +43,7 @@ pipeline {
                     steps {
                         echo "Run cppcheck for butterfly project"
                         dir ('scripts') {
-                          //sh './cppcheck.sh'
+                          sh './cppcheck.sh --xml --html'
                         }
                     }
                  }
@@ -60,7 +60,10 @@ pipeline {
                  stage('Reports') {
                     steps {
                         echo "Publish cppcheck reports"
-
+                        publishCppcheck (
+                        allowNoReport: true,
+                        pattern: 'reports/cppcheck.xml'
+                        )
                         echo "Build doxygen latex pdf reports"
                         //dir ('reports/doxygen/latex') {
                           //sh 'make > /dev/null 2>&1'
