@@ -140,7 +140,7 @@ void Encryptor::encryptCPrivateRSA()
     try
     {
         // Get the CPrivateRSA.pem file string
-        std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
+        std::string cPrivateRSAStr = _rsaEncryptorAESKey->getPrivateKeyStr();
 
         // Encrypt the CPrivateRSA.pem file string
         int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(_rsaEncryptorCPrivateRSA->getEvpPkey(), cPrivateRSAStr);
