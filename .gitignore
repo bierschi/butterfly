@@ -115,4 +115,7 @@ fs/
 !scripts/data
 *.iso
 *.exe
+
 reports/
+docs/html
+docs/latex
