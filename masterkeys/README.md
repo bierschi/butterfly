@@ -3,7 +3,7 @@
 `SPublic.pem`: is embedded in the butterfly application and used to encrypt 
 the **CPrivateRSA.pem** with keysize of **RSA-2048** (default size)
 
-`SPrivateRSA.pem`: is downloaded by the [bflyServerApp](https://github.com/bierschi/butterfly/tree/master/webserver) from the secure remote attacker server after successful ransom payment 
+`SPrivateRSA.pem`: is loaded by the [bflyServerApp](https://github.com/bierschi/butterfly/tree/master/webserver) on the attacker server and used for the secure remote decryption 
 
 ### Calculate the Masterkey size
 
