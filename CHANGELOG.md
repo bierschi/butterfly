@@ -10,6 +10,10 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Integration of TorSocket class
 - Enhancement of the browser payment page after encryption
 - Prevention of Out-of-Memory errors with huge files
+- Improved CI/CD Pipeline
+- Integration of docker containers
+- Added cppcheck to repository
+- Added toolchain for multiple platforms
 
 ## [1.2] - 2022-06-02
 
