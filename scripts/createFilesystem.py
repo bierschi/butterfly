@@ -14,8 +14,8 @@ def create_fs_folder(folderpath):
     try:
         os.mkdir(folderpath)
     except FileExistsError as error:
-        #print(error)
         pass
+
 
 def download_ubuntu_rootfs(folderpath):
     """ downloads the ubuntu fs tar.gz folder
@@ -87,7 +87,7 @@ def extract_tar_gz(extractpath):
 
 
 def prepare_big_data_folder(folderpath):
-    """ prepares the folderpath for data content
+    """ prepares the folderpath for big data content
 
     """
 
@@ -114,9 +114,8 @@ def prepare_big_data_folder(folderpath):
 
 
 def prepare_small_data_folder(folderpath):
-    """
+    """ prepares the folderpath for small data content
 
-    :return:
     """
     home_dir = folderpath + '/home/butterfly'
     data_dir = home_dir + '/data'
@@ -138,10 +137,10 @@ def prepare_small_data_folder(folderpath):
     for file in glob.glob('../data/*.exe'):
         shutil.copy(file, small_dir)
 
-def create_fs_from_scratch(fs_folder):
-    """
 
-    :return:
+def create_fs_from_scratch(fs_folder):
+    """ creates the filesystem in fs_folder from scratch
+
     """
     print("Creating fs/ folder")
     create_fs_folder(folderpath=fs_folder)
@@ -152,9 +151,9 @@ def create_fs_from_scratch(fs_folder):
 
 
 def remove_folder(folderpath):
-    """ removes the filesystem folder fs/
+    """ removes the folder in folderpath
 
-    :param folderpath: path to the fs/ folder
+    :param folderpath: path to the folder
     """
     try:
         shutil.rmtree(folderpath)
