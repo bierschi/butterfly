@@ -27,7 +27,7 @@ public:
      *      _dirIterator->isDirectory();
      *      _dirIterator->getAllFiles("/home/test/");
      */
-    DirectoryIterator();
+    DirectoryIterator() = default;
 
     /**
      * Destructor DirectoryIterator
@@ -89,6 +89,14 @@ public:
      * @return file extension as std::string
      */
     static std::string getFileExtension(const boost::filesystem::path &p);
+
+    /**
+     * Validate if the given path exists
+     *
+     * @param p: const boost::filesystem::path&
+     * @return boolean: True if path exists
+     */
+    static bool exists(const boost::filesystem::path &p);
 };
 
 } // namespace butterfly
