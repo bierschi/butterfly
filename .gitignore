@@ -110,9 +110,11 @@ cmake-build-linux/
 cmake-build-windows
 bin/
 notes/http_server.txt
-data/
 fs/
-!scripts/data
 *.iso
 *.exe
+data2/
+
 reports/
+docs/html
+docs/latex

@@ -50,9 +50,16 @@ void Decryptor::setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateR
 void Decryptor::invokeDir(const std::string &dirPath)
 {
 
+    // Ensure the decrypted CPrivateRSA string is available
     if ( _decryptedCPrivateRSA.empty() )
     {
         throw DecryptorException("Could not start the decryption process, because decrypted CPrivateRSA.pem string is empty!");
+    }
+
+    // Check if dirPath exists
+    if ( !DirectoryIterator::exists(dirPath) )
+    {
+        throw DecryptorException("Provided Directory Path " + dirPath + " doesn´t exists!");
     }
 
     // Decrypt the AESKey.bin file and get AESKey and AESIV

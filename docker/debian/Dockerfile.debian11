@@ -38,4 +38,4 @@ RUN git clone -b $BRANCH git@github.com:bierschi/butterfly.git /root/butterfly
 WORKDIR /root/butterfly
 
 # Build the project
-RUN mkdir build && cd build && cmake ../ -DUNITTESTS=ON -DLOGGING=ON && make
+RUN mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake -DUNITTESTS=ON -DLOGGING=ON ../ && make

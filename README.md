@@ -2,7 +2,7 @@
 [![Build Status](https://jenkins.bierschi.com/buildStatus/icon?job=butterfly%2Fmaster)](https://jenkins.bierschi.com/job/butterfly/job/master/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/bierschi/butterfly/blob/master/LICENSE)
 [![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
-<!--[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)-->
+[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
 <!--[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)-->
 
 <p align="left">
@@ -13,11 +13,11 @@ Butterfly is a cryptographic ransomware with the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
 - Offline Encryption :heavy_check_mark:
-- Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :x:, MacOS :x:)
+- Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :arrows_counterclockwise:, MacOS :x:)
 - Supports over 300 File Extensions :heavy_check_mark:
 - Webserver [bflyServerApp](https://github.com/bierschi/butterfly/tree/master/webserver) for a secure remote decryption :heavy_check_mark:
 - Ransom Visualization with Browser :heavy_check_mark: GUI :x: Wallpaper :x:
-- Connection to the TOR Network :x:
+- Connection to the TOR Network :arrows_counterclockwise:
 - Bitcoin Payments :x:
 
 ## Disclaimer

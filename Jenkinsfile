@@ -52,7 +52,7 @@ pipeline {
                     steps {
                         echo "Build Doxygen Docu for butterfly project"
                         dir ('docs') {
-                          //sh 'doxygen butterfly > /dev/null 2>&1'
+                          sh 'doxygen butterfly > /dev/null 2>&1'
                         }
                     }
                  }
@@ -65,10 +65,11 @@ pipeline {
                         pattern: 'reports/cppcheck.xml'
                         )
                         echo "Build doxygen latex pdf reports"
-                        //dir ('reports/doxygen/latex') {
-                          //sh 'make > /dev/null 2>&1'
-                          //sh 'mv refman.pdf butterfly.pdf'
-                        //}
+                        dir ('docs/latex') {
+                          sh 'make > /dev/null 2>&1'
+                          sh 'mv refman.pdf butterfly.pdf'
+                          sh 'mv butterfly.pdf ../../reports/'
+                        }
                     }
                  }
 

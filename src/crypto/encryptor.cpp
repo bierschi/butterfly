@@ -70,6 +70,12 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Ensure that no encryption files already exists!
     checkIfEncryptionFilesExists();
 
+    // Check if dirPath exists
+    if ( !DirectoryIterator::exists(dirPath) )
+    {
+        throw EncryptorException("Provided Directory Path " + dirPath + " doesn´t exists!");
+    }
+
     // Get all files from provided directory path
     auto files =  DirectoryIterator::getAllFiles(dirPath);
 

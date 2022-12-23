@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 # LABEL
 LABEL maintainer="Bierschneider Christian (@bierschi)"
 LABEL version="0.1"
-LABEL description="This is custom Docker Image to build butterfly on Ubuntu 2204"
+LABEL description="This is custom Docker Image to build butterfly.exe on Ubuntu 2204"
 
 # Disable Prompt During Packages Installation
 ARG DEBIAN_FRONTEND=noninteractive
@@ -13,12 +13,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 
 # Install standard packages
-RUN apt-get install -y cmake git g++ gcc > /dev/null && \
+RUN apt-get install -y cmake git g++ gcc mingw-w64 > /dev/null && \
     rm -rf /var/lib/apt/lists/* && \
     apt clean
 
 # Install butterfly dependencies
-RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libboost-log-dev libgtest-dev > /dev/null
+RUN apt-get update && apt-get install -y wine > /dev/null
 
 # Add ssh key
 RUN mkdir /root/.ssh/
@@ -38,4 +38,4 @@ RUN git clone -b $BRANCH git@github.com:bierschi/butterfly.git /root/butterfly
 WORKDIR /root/butterfly
 
 # Build the project
-RUN mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake -DUNITTESTS=ON -DLOGGING=ON ../ && make
+RUN mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../windows.cmake -DUNITTESTS=ON -DLOGGING=ON ../ && make
