@@ -25,7 +25,3 @@
 ## ButterflyException
 
 ![](bflyExceptions.svg)
-
-## SQLDatabase & AESKeyDatabase
-
-![](sqlDatabase.svg)
