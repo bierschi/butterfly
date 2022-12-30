@@ -35,7 +35,6 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     find_package(OpenSSL REQUIRED)
     find_package(Boost 1.45.0 COMPONENTS filesystem)
     find_package(Threads REQUIRED)
-    #find_package(SQLite3 REQUIRED)
 
     # Add the header files
     include_directories(include)
