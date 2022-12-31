@@ -45,7 +45,7 @@ protected:
             std::cout << "Copied file successfully" << std::endl;
         } else
         {
-            std::cerr << "Error on copying file!" << std::endl;
+            std::cerr << "Error at copying file!" << std::endl;
         }
     }
 
