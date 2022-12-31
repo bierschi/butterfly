@@ -59,7 +59,25 @@ pipeline {
                           }
                      }
                  }
-                 
+
+                 stage('Butterfly Encryption Test') {
+                    steps {
+                        echo "Encrypting the data folder"
+                        dir ('bin') {
+                          sh './butterfly --encrypt ../data/'
+                        }
+                    }
+                }
+
+                 stage('Butterfly Decryption Test') {
+                    steps {
+                        echo "Decrypting the data folder"
+                        dir ('bin') {
+                          sh './butterfly --decrypt ../data/'
+                        }
+                    }
+                }
+
                  stage('Static Code Analysis') {
                     steps {
                         echo "Run cppcheck for butterfly project"
