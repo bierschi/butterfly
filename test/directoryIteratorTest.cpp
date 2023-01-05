@@ -120,3 +120,16 @@ TEST_F(DirectoryIteratorTest, getFileExtension)
     EXPECT_TRUE(fileExt == ".cpp");
 
 }
+
+/**
+ * Testcase for testing the exists
+ */
+TEST_F(DirectoryIteratorTest, exists)
+{
+
+    bool retFile = directoryIterator->exists(testFile);
+    EXPECT_TRUE(retFile);
+
+    bool retDir = directoryIterator->exists(testDirectory);
+    EXPECT_TRUE(retDir);
+}

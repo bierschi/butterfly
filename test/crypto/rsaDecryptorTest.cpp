@@ -50,13 +50,13 @@ TEST_F(RSADecryptorTest, rsaDecryption)
 {
 
     std::string encCPrivateRSA = rsaDecryptor->readEncMSGFromFile(butterfly::params::ENC_CPRIVATERSA_FILENAME);
-    ASSERT_TRUE( !encCPrivateRSA.empty());
+    ASSERT_TRUE(!encCPrivateRSA.empty());
 
     std::string decryptedMessage;
     int decLen = rsaDecryptor->decryptEVP(rsaDecryptor->getEvpPkey(), encCPrivateRSA, decryptedMessage, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
     ASSERT_TRUE(decLen != -1);
 
-    ASSERT_TRUE( !decryptedMessage.empty());
+    ASSERT_TRUE(!decryptedMessage.empty());
 
     butterfly::writeBinFile(cprivatersaDec, decryptedMessage.c_str(), decLen);
 }

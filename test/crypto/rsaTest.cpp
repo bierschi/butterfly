@@ -40,13 +40,12 @@ class CryptoRSATest : public ::testing::Test
 
 protected:
     int rsaKeysize = 2048;
-    std::string msg_to_encrypt = "abcdef";
-    std::unique_ptr<butterfly::rsa::CryptoRSA> cryptoRSA;
-
+    std::string msgToEncrypt = "abcdef";
     std::string encryptedMessageHex = "c4e4c3c648b2aa0e8671c2fd3eeab962";
     std::string rsaekHex = "149575f33b14e8395b4df38bc4250eb87da447726312774670684685c20a5edc019d640a334a0ac89f60394184358d2156c45d3db95c32b669902ddf28ce57adf030dc0b2c6ee504782cd27b02a77228d051d98b62c05f84cb47d503cf7aff36dc5f36607fc160c55c6f66f6b2bc7dab357239a10d0b06ff4f3654010f2cadb42a5c0d547ca91ef8a0ef0eeeafad725ab1c7cc1f5ce069104ce37add9194dc388376ef5ccb4bed07b3e3bb7d69ef8dc6ba319a448ceb13e302f49c93b8f39841902d2cbcaf63e62d3fbdb2e69505dd9b79199f9fdc3a7f8fe4b0770d05d82f3a2f6e419218206aa786eb609f8d5f4fd5d024b4701d05808c671753619f3d30c1";
     std::string rsaivHex = "5b7165e658874669e3d6a2c7d5a26099";
-    std::unique_ptr<butterfly::rsa::CryptoRSA> cryptoRSADec;
+
+    std::unique_ptr<butterfly::rsa::CryptoRSA> cryptoRSA, cryptoRSADec;
 
     void SetUp() override
     {
@@ -118,28 +117,10 @@ TEST_F(CryptoRSATest, getPublicKeyStr)
 TEST_F(CryptoRSATest, encryptEVP)
 {
     unsigned char *encryptedMessage = nullptr;
-    int encryptedMessageLength = cryptoRSA->encryptEVP(cryptoRSA->getEvpPkey(), (const unsigned char*)msg_to_encrypt.c_str(), msg_to_encrypt.size(), &encryptedMessage);
+    int encryptedMessageLength = cryptoRSA->encryptEVP(cryptoRSA->getEvpPkey(), (const unsigned char*)msgToEncrypt.c_str(), msgToEncrypt.size(), &encryptedMessage);
 
     EXPECT_FALSE(encryptedMessageLength == -1);
     EXPECT_TRUE(encryptedMessage != nullptr);
-
-    /*
-    unsigned char* rsaek = cryptoRSA->getRSAEncryptedKey();
-    unsigned char* rsaiv = cryptoRSA->getRSAIV();
-
-    std::string encMSG(reinterpret_cast<const char *>(encryptedMessage), static_cast<unsigned long>(encryptedMessageLength));
-    std::string rsaekStr(reinterpret_cast<const char *>(rsaek), static_cast<unsigned long>(rsaKeysize / 8));
-    std::string rsaivStr(reinterpret_cast<const char *>(rsaiv), EVP_MAX_IV_LENGTH);
-
-    std::string encMSGHex = butterfly::string2Hex(encMSG);
-    std::string rsaekHex = butterfly::string2Hex(rsaekStr);
-    std::string rsaivHex = butterfly::string2Hex(rsaivStr);
-
-    std::cout << "PRIVKey: " << privateKeyStr << std::endl;
-    std::cout << "ENCMSG: " << butterfly::string2Hex(encMSG) << std::endl;
-    std::cout << "RSAEK: " << butterfly::string2Hex(rsaekStr) << std::endl;
-    std::cout << "RSAIV: " << butterfly::string2Hex(rsaivStr) << std::endl;
-    */
 }
 
 /**
@@ -163,7 +144,6 @@ TEST_F(CryptoRSATest, getRSAEncryptedKey)
 /**
  * Testcase for testing the decryptEVP
  */
-
 TEST_F(CryptoRSATest, decryptEVP)
 {
 
@@ -176,5 +156,5 @@ TEST_F(CryptoRSATest, decryptEVP)
 
     std::string dec(reinterpret_cast<const char *>(decryptedMessage), static_cast<unsigned long>(decryptedMessageLength));
 
-    EXPECT_TRUE(dec == msg_to_encrypt);
+    EXPECT_TRUE(dec == msgToEncrypt);
 }

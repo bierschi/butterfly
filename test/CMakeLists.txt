@@ -19,4 +19,3 @@ add_test(NAME ${CMAKE_PROJECT_NAME}UnitTests COMMAND ${CMAKE_PROJECT_NAME}UnitTe
 
 # Link libs to the target
 target_link_libraries(${CMAKE_PROJECT_NAME}UnitTests bfly gtest gtest_main ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} -ldl)
-#target_link_libraries(${CMAKE_PROJECT_NAME}UnitTests bfly gtest gtest_main OpenSSL::SSL ${CMAKE_THREAD_LIBS_INIT} ${SQLite3_LIBRARIES} ${Boost_LIBRARIES})

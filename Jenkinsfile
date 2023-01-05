@@ -1,7 +1,28 @@
 pipeline {
          agent any
          stages {
-                 stage('Build butterfly binary from develop') {
+
+                 stage('Build') {
+                     steps {
+                         echo 'Build butterfly binary on test server'
+                         sh 'mkdir build'
+                         dir ('build') {
+                           sh 'cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake -DUNITTESTS=ON ../'
+                           sh 'make'
+                         }
+                     }
+                 }
+
+                 stage('UnitTests') {
+                    steps {
+                        echo 'Testing butterfly units'
+                        dir ('bin') {
+                          sh './butterflyUnitTests'
+                        }
+                    }
+                 }
+
+                 stage('Platform builds from develop') {
 
                     when {
                         expression { env.BRANCH_NAME == 'develop' }
@@ -20,7 +41,7 @@ pipeline {
                      }
                  }
 
-                 stage('Build butterfly binary from master') {
+                 stage('Platform builds from master') {
 
                     when {
                         expression { env.BRANCH_NAME == 'master' }
@@ -38,6 +59,24 @@ pipeline {
                           }
                      }
                  }
+
+                 stage('Butterfly Encryption Test') {
+                    steps {
+                        echo "Encrypting the data folder"
+                        dir ('bin') {
+                          sh './butterfly --encrypt ../data/'
+                        }
+                    }
+                }
+
+                 stage('Butterfly Decryption Test') {
+                    steps {
+                        echo "Decrypting the data folder"
+                        dir ('bin') {
+                          sh './butterfly --decrypt ../data/'
+                        }
+                    }
+                }
 
                  stage('Static Code Analysis') {
                     steps {
