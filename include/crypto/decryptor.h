@@ -3,6 +3,7 @@
 #define BUTTERFLY_DECRYPTOR_H
 
 #include <thread>
+#include <memory>
 
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"

@@ -1,0 +1,48 @@
+# Download base image ubuntu 18.04
+FROM ubuntu:18.04
+
+# LABEL
+LABEL maintainer="Bierschneider Christian (@bierschi)"
+LABEL version="0.1"
+LABEL description="This is custom Docker Image to build butterfly on Ubuntu 1804"
+
+# Disable Prompt During Packages Installation
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Update Ubuntu Software repository
+RUN apt-get update
+
+# Install standard packages
+RUN apt-get install -y cmake git g++ gcc wget build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev libboost-all-dev > /dev/null && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt clean
+
+# Install butterfly dependencies
+RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libgtest-dev > /dev/null
+
+# Install GTest library
+RUN cd /usr/src/gtest && cmake CMakeLists.txt && make && cp *.a /usr/lib
+
+# Download and install boost log library
+RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz > /dev/null && tar xzvf boost_1_73_0.tar.gz > /dev/null
+RUN cd boost_1_73_0/ && ./bootstrap.sh --prefix=/usr/ > /dev/null && ./b2 > /dev/null && ./b2 install > /dev/null
+
+# Add ssh key
+RUN mkdir /root/.ssh/
+ADD id_ed25519 /root/.ssh/id_ed25519
+RUN chmod 600 /root/.ssh/id_ed25519
+
+# Create known_hosts
+RUN touch /root/.ssh/known_hosts
+# Add github.com key
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+ARG BRANCH
+ARG CACHEBUST=1
+# Clone the butterfly project
+RUN git clone -b $BRANCH git@github.com:bierschi/butterfly.git /root/butterfly
+
+WORKDIR /root/butterfly
+
+# Build the project
+RUN mkdir build && cd build && cmake ../ -DUNITTESTS=ON && make

@@ -112,6 +112,6 @@ TEST_F(SocketTest, hostnameToIP)
 {
     std::string ip;
     int rc = clientSocket->hostnameToIP("localhost", ip);
-    EXPECT_TRUE( !ip.empty());
+    EXPECT_TRUE(!ip.empty());
     EXPECT_TRUE(rc != -1);
 }

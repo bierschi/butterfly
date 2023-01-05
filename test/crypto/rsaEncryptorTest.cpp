@@ -36,7 +36,8 @@ protected:
  */
 TEST_F(RSAEncryptorTest, rsaEncryption)
 {
-    std::string cprivateRSAKeyFile = rsaEncryptAESKey->getRSAPrivateKeyStr();
+
+    std::string cprivateRSAKeyFile = rsaEncryptAESKey->getPrivateKeyStr();
     ASSERT_TRUE(!cprivateRSAKeyFile.empty());
 
     int encMSGLen = rsaEncryptCPrivateRSA->encryptEVP(rsaEncryptCPrivateRSA->getEvpPkey(), cprivateRSAKeyFile);

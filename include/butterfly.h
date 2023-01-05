@@ -10,6 +10,7 @@
 #include "httpServer.h"
 #include "httpClient.h"
 #include "connManager.h"
+#include "browser.h"
 #include "logger.h"
 
 namespace butterfly
@@ -26,6 +27,7 @@ private:
     std::unique_ptr<butterfly::ArgumentParser> _argparse;
     std::unique_ptr<butterfly::ConnManager> _connManager;
     butterfly::ArgumentParser::Arguments _args;
+    std::string BROWSER_URL_PORT;
 
     /**
      * Init logging Framework
@@ -48,6 +50,7 @@ private:
 public:
 
     /**
+     * Constructor Butterfly
      *
      *  Usage:
      *       std::unique_ptr<butterfly::Butterfly> blfy(new butterfly::Butterfly(argc, argv));

@@ -68,9 +68,9 @@ class APIHandler:
     def index(self):
         """ index page
 
-        :return:
+        :return: string
         """
-        return "hello world"
+        return "Butterfly Server Application for a secure remote Decryption of the Client's CPrivateRSA.bin File"
 
     def route_decrypt(self):
         """ decrypts the CPrivateRSA.bin string
@@ -80,21 +80,7 @@ class APIHandler:
 
         self.logger.info("POST request to route /decryption/")
 
-        if request.json is not None:
-
-            if all(key in request.json.keys() for key in ('CPrivateRSA.bin', 'RSA.bin', 'RSAKeySize')):
-                self.logger.info("Processing json request")
-
-                cprivate_rsa = request.json['CPrivateRSA.bin']
-                rsa_bin = request.json['RSA.bin']
-                rsa_keysize = request.json['RSAKeySize']
-
-                return self._decryption(cprivate_rsa, rsa_bin, rsa_keysize)
-            else:
-                self.logger.error("Missing key in json request")
-                return Response(status=400, response=json.dumps("Missing Key in Request"), mimetype='application/json')
-
-        elif request.form is not None:
+        if request.form:
 
             if all(key in request.form.keys() for key in ('CPrivateRSA.bin', 'RSA.bin', 'RSAKeySize')):
                 self.logger.info("Processing form request")
@@ -106,6 +92,22 @@ class APIHandler:
                 return self._decryption(cprivate_rsa, rsa_bin, rsa_keysize)
             else:
                 self.logger.error("Missing key in form request")
-                return Response(status=400, response=json.dumps("Missing Key in Request"), mimetype='application/json')
+                return Response(status=400, response=json.dumps("Missing Key in Form Request"), mimetype='application/json')
+
+        elif request.json:
+
+            if all(key in request.json.keys() for key in ('CPrivateRSA.bin', 'RSA.bin', 'RSAKeySize')):
+                self.logger.info("Processing json request")
+
+                cprivate_rsa = request.json['CPrivateRSA.bin']
+                rsa_bin = request.json['RSA.bin']
+                rsa_keysize = request.json['RSAKeySize']
+
+                return self._decryption(cprivate_rsa, rsa_bin, rsa_keysize)
+            else:
+                self.logger.error("Missing key in json request")
+                return Response(status=400, response=json.dumps("Missing Key in JSON Request"), mimetype='application/json')
+
         else:
+            self.logger.error("Not a valid reqeust format!")
             return Response(status=400, response=json.dumps("Not a valid request format!"), mimetype='application/json')

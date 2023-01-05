@@ -55,7 +55,7 @@ std::vector<std::string> fileExtensionVec = {
         ".snt", ".sxi", ".sti", ".sldx", ".sldm", ".sldm", ".svg", ".swf", ".sh", ".sch", ".suo", ".sln", ".sql", ".sqlitedb", ".sqlite3",
         ".sxm", ".std", ".sxd", ".slk", ".stc", ".sxc", ".stw", ".sxw", ".sav", ".scr", ".sdf", ".sec", ".seq", ".sps", ".swf",
         // T
-        ".txt", ".tbk", ".tar", ".tgz", ".tif", ".tiff", ".tex", ".taz", ".ttf", ".tga",
+        ".txt", ".tbk", ".tar", ".tgz", ".tif", ".tiff", ".tex", ".taz", ".ttf", ".tga", ".tar.gz",
         // U
         ".uop", ".uot", ".ui", ".ump", ".uos", ".uot", ".ust",
         // V

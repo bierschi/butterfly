@@ -2,9 +2,9 @@
 
 ![](argumentParser.svg)
 
-## HTTPServer
+## HTTPServer/HTTPClient
 
-![](httpServer.svg)
+![](httpServerClient.svg)
 
 ## Sockets
 
@@ -14,10 +14,14 @@
 
 ![](connManager.svg)
 
+## Browser
+
+![](browser.svg)
+
+## DirectoryIterator
+
+![](directoryIterator.svg)
+
 ## ButterflyException
 
 ![](bflyExceptions.svg)
-
-## SQLDatabase & AESKeyDatabase
-
-![](sqlDatabase.svg)

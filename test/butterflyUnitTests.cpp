@@ -42,6 +42,15 @@ int main(int argc, char **argv)
         ::testing::GTEST_FLAG(filter) = "HTTPResponseTest.*";
         rc = RUN_ALL_TESTS();
 
+        ::testing::GTEST_FLAG(filter) = "HTTPServerTest.*";
+        rc = RUN_ALL_TESTS();
+
+        ::testing::GTEST_FLAG(filter) = "HTTPClientTest.*";
+        rc = RUN_ALL_TESTS();
+
+        ::testing::GTEST_FLAG(filter) = "BrowserTest.*";
+        rc = RUN_ALL_TESTS();
+
         return rc;
     } else
     {

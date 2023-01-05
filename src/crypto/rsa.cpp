@@ -74,7 +74,7 @@ std::string CryptoRSA::getOpenSSLError()
 bool CryptoRSA::generateRSAKey()
 {
 
-    EVP_PKEY_CTX *context = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
+    EVP_PKEY_CTX *context = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, nullptr);
 
     if(EVP_PKEY_keygen_init(context) <= 0)
     {
@@ -132,7 +132,7 @@ bool CryptoRSA::loadKeyFromStr(const std::string &str)
     BIO *bioPrivate = BIO_new(BIO_s_mem());
     BIO_write(bioPrivate, str.c_str(), static_cast<int>(str.length()));
 
-    if (fLine == "-----BEGIN RSA PRIVATE KEY-----")
+    if (fLine == "-----BEGIN RSA PRIVATE KEY-----" || fLine == "-----BEGIN PRIVATE KEY-----")
     {
 
         _pkey = PEM_read_bio_PrivateKey(bioPrivate, nullptr, nullptr, nullptr);
@@ -172,6 +172,7 @@ EVP_PKEY* CryptoRSA::getEvpPkey()
     return _pkey;
 }
 
+#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
 char* CryptoRSA::getRSAPrivateKeyStr()
 {
     RSA *rsaPrivateKey = EVP_PKEY_get0_RSA(_pkey);
@@ -184,12 +185,13 @@ char* CryptoRSA::getRSAPrivateKeyStr()
 
     return _rsaPrivateKeyStr;
 }
+#endif
 
 char* CryptoRSA::getPrivateKeyStr()
 {
 
     BIO *bioPrivate = BIO_new(BIO_s_mem());
-    PEM_write_bio_PrivateKey(bioPrivate, _pkey, NULL, NULL, 0, 0, NULL);
+    PEM_write_bio_PrivateKey(bioPrivate, _pkey, nullptr, nullptr, 0, 0, nullptr);
 
     BIO_flush(bioPrivate);
     BIO_get_mem_data(bioPrivate, &_privateKeyStr);

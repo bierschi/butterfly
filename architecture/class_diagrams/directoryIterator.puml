@@ -1,0 +1,21 @@
+@startuml
+
+package butterfly #DDDDDD
+{
+
+class DirectoryIterator
+{
+
+    + DirectoryIterator()
+
+    + {static} isDirectory(const boost::filesystem::path &p): bool
+    + {static} isFile(const boost::filesystem::path &p): bool
+    + {static} getAllFiles(const boost::filesystem::path &p): std::vector<boost::filesystem::path>
+    + {static} getAllDirectories(const boost::filesystem::path &p): std::vector<boost::filesystem::path>
+    + {static} getFilesFromDir(const boost::filesystem::path &p): std::vector<boost::filesystem::path>
+    + {static} getFileSize(const boost::filesystem::path &file): uintmax_t
+    + {static} getFileExtension(const boost::filesystem::path &p): std::string
+}
+
+}
+@enduml
