@@ -64,7 +64,7 @@ void HTTPMSGSchema::setFormParam(const std::string &param, const std::string &va
     _formParam.append(value);
 }
 
-void HTTPMSGSchema::addFormParamVector(std::vector<std::pair<std::string, const std::string>> &formParamVec)
+void HTTPMSGSchema::addFormParamVector(const std::vector<std::pair<std::string, std::string>> &formParamVec)
 {
     for(auto &it: formParamVec)
     {

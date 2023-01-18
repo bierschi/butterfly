@@ -148,7 +148,7 @@ public:
      *
      * @param formParamVec: vector of params and values
      */
-    void addFormParamVector(std::vector< std::pair<std::string, const std::string> > &formParamVec);
+    void addFormParamVector(const std::vector< std::pair<std::string, std::string> > &formParamVec);
 
     /**
      * Abstract method parseIncoming for subclasses
