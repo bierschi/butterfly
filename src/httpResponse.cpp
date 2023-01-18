@@ -68,7 +68,7 @@ void HTTPResponse::parseIncoming()
      */
 
     size_t parseCursorOld = 0, parseCursorNew = 0;
-    size_t headerParseCursorOld, headerParseCursorNew;
+    //size_t headerParseCursorOld, headerParseCursorNew;
     std::string httpProtocol, statusCode, responseHeader;
     std::string responseHeaderName, responseHeaderContent;
 
@@ -111,6 +111,7 @@ void HTTPResponse::parseIncoming()
         responseHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew+1;
 
+        size_t headerParseCursorOld, headerParseCursorNew;
         headerParseCursorOld = headerParseCursorNew = 0;
         // Header Name
         headerParseCursorNew = responseHeader.find_first_of(":", headerParseCursorOld);

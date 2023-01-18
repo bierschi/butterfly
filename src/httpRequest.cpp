@@ -36,7 +36,7 @@ void HTTPRequest::parseIncoming()
      */
 
     size_t parseCursorOld = 0, parseCursorNew = 0;
-    size_t headerParseCursorOld, headerParseCursorNew;
+    //size_t headerParseCursorOld, headerParseCursorNew;
     std::string httpMethod, httpProtocol, requestHeader;
     std::string requestHeaderName, requestHeaderContent;
 
@@ -107,6 +107,7 @@ void HTTPRequest::parseIncoming()
         requestHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew + 1;
 
+        size_t headerParseCursorOld, headerParseCursorNew;
         headerParseCursorOld = headerParseCursorNew = 0;
         // Further parse the request header
         // Header Name

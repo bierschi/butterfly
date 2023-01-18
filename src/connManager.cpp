@@ -16,10 +16,10 @@ ConnManager::~ConnManager()
 
 void ConnManager::run()
 {
-    bool oldState = false, newState = false;
+    bool oldState = false;
     while(_running)
     {
-        newState = isInternetAvailable();
+        bool newState = isInternetAvailable();
 
         if (oldState != newState)
         {
