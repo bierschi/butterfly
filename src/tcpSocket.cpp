@@ -53,7 +53,6 @@ bool TCPSocket::send(const std::string &s) const
 
 int TCPSocket::recv(char *buf, int len) const
 {
-    std::string s;
     ssize_t size_recv , total_size= 0;
 
     memset(buf , 0 , static_cast<size_t>(len));	//clear the variable

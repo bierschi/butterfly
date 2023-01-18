@@ -69,7 +69,7 @@ void HTTPResponse::parseIncoming()
 
     size_t parseCursorOld = 0, parseCursorNew = 0;
     size_t headerParseCursorOld, headerParseCursorNew;
-    std::string httpProtocol, statusCode, reasonPhrase, responseHeader;
+    std::string httpProtocol, statusCode, responseHeader;
     std::string responseHeaderName, responseHeaderContent;
 
     // HTTP Protocol
