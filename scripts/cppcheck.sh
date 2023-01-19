@@ -72,9 +72,9 @@ set_options()
 {
   if [[ "$STD" = true ]]
   then
-    OPTIONS="--enable=all --suppress=missingIncludeSystem --std=c++11 --inline-suppr --verbose"
+    OPTIONS="--enable=all --suppress=missingIncludeSystem --suppressions-list=suppressions.txt --std=c++11 --inline-suppr --verbose"
   else
-    OPTIONS="--enable=all --suppress=missingIncludeSystem --std=c++11 --inline-suppr --verbose --xml --xml-version=2"
+    OPTIONS="--enable=all --suppress=missingIncludeSystem --suppressions-list=suppressions.txt --std=c++11 --inline-suppr --verbose --xml --xml-version=2"
   fi
 }
 

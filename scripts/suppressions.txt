@@ -1,0 +1,14 @@
+unusedFunction:../src/logger.cpp
+unusedFunction:../src/httpMSGSchema.cpp
+unusedFunction:../src/crypto/aes.cpp
+unusedFunction:../src/directoryIterator.cpp
+unusedFunction:../src/socket.cpp
+unusedFunction:../src/crypto/rsa.cpp
+unusedFunction:../src/connManager.cpp
+unusedFunction:../src/httpServer.cpp
+unusedFunction:../src/httpRequest.cpp
+
+unusedPrivateFunction:../include/crypto/aes.h
+unusedPrivateFunction:../include/httpServer.h
+
+unreadVariable:../src/crypto/encryptor.cpp
