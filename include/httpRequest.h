@@ -2,6 +2,8 @@
 #ifndef BUTTERFLY_HTTPREQUEST_H
 #define BUTTERFLY_HTTPREQUEST_H
 
+#include <numeric>
+
 #include "httpMSGSchema.h"
 
 namespace butterfly

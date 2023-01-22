@@ -158,10 +158,10 @@ void HTTPResponse::prepareOutgoing()
 
     _httpData += protocol + " " + std::to_string(_statusCode) + " " + _reasonPhrase + CRLF;
 
-    for(auto &httpHeader: _httpHeaders)
+    _httpData = std::accumulate(_httpHeaders.begin(), _httpHeaders.end(), _httpData,[&](std::string httpData, const std::pair<std::string , std::string> &httpHeader)
     {
-        _httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
-    }
+        return httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
+    });
 
     _httpData += CRLF;
 
