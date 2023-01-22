@@ -41,15 +41,14 @@ void HTTPMSGSchema::addHTTPHeaderVector(std::vector<std::pair<std::string, std::
 
 std::string HTTPMSGSchema::getHTTPHeader(const std::string &headerName) const
 {
-    for(auto &it: _httpHeaders)
-    {
-        if(it.first == headerName)
-        {
-            return it.second;
-        }
-    }
 
-    return "";
+    auto it = std::find_if(std::begin(_httpHeaders), std::end(_httpHeaders), [&](const std::pair<std::string, std::string> &httpHeader)
+    {
+     return headerName == httpHeader.first;
+    });
+
+    return it->second;
+
 }
 
 void HTTPMSGSchema::setFormParam(const std::string &param, const std::string &value)
