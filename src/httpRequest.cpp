@@ -188,7 +188,7 @@ void HTTPRequest::prepareOutgoing()
     {
         _httpData += "User-Agent: " + _userAgent + CRLF;
     }
-    
+
     _httpData = std::accumulate(_httpHeaders.begin(), _httpHeaders.end(), _httpData,[&](std::string httpData, const std::pair<std::string , std::string> &httpHeader)
     {
         return httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
