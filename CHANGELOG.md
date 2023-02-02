@@ -2,18 +2,26 @@
 All notable changes to project [butterfly](https://github.com/bierschi/butterfly) will be documented in this file
 
 
+## [1.4] -
+
+### Added
+
+- Integration of TorSocket class
+- Enhancement of the browser payment page after encryption
+- Prevention of Out-of-Memory errors with huge files
+
 ## [1.3] -
 
 ### Added
 
-- Added butterfly image
-- Integration of TorSocket class
-- Enhancement of the browser payment page after encryption
-- Prevention of Out-of-Memory errors with huge files
+- Added and integrated official butterfly image
 - Improved CI/CD Pipeline
 - Integration of docker containers
-- Added cppcheck to repository
+- Added cppcheck to repository and resolved all errors/warnings
+- Added reports to the repository
 - Added toolchain for multiple platforms
+- Updated the api routes of the bflyServerApp
+- (Create a bfly.ini file and read all params from this file)
 
 ## [1.2] - 2022-06-02
 
