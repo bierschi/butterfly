@@ -17,7 +17,8 @@ class BFLYServerApp:
     def __init__(self, sprivatersa_filepath):
         self.logger = logging.getLogger(__title__)
         self.logger.info('Create class BFLYServerApp')
-
+        self.version = 'v1'
+        self.api_endpoint_str = '/api/' + self.version
         self.sprivatersa_filepath = sprivatersa_filepath
 
         # create the APIHandler instance
@@ -26,7 +27,9 @@ class BFLYServerApp:
         # router instance for specific endpoints
         self.router = Router(name=__title__)
         self.router.add_endpoint('/', 'index', method="GET", handler=self.api.index)
-        self.router.add_endpoint(endpoint='/decryption/', endpoint_name='route_decrypt', method="POST", handler=self.api.route_decrypt)
+        self.router.add_endpoint(endpoint=self.api_endpoint_str + '/decryption/', endpoint_name='decryption', method="POST", handler=self.api.route_decrypt, strict_slashes=False)
+        self.router.add_endpoint(endpoint=self.api_endpoint_str + '/decryption/counter', endpoint_name='decryption_counter', method="GET", handler=self.api.route_decryption_counter, strict_slashes=False)
+        self.router.add_endpoint(endpoint=self.api_endpoint_str + '/version/', endpoint_name='version', method="GET", handler=self.api.route_version, strict_slashes=False)
 
     def run(self, host='0.0.0.0', port=None, debug=None):
         """ runs the BFLYServerApp application on given port

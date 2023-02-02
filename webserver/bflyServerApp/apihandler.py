@@ -5,7 +5,7 @@ import logging
 from flask import Response, request
 from bflyServerApp import Decryption
 from bflyServerApp.exceptions import RSADecryptionError, AESDecryptionError
-from bflyServerApp import __title__
+from bflyServerApp import __title__, __version__
 
 
 class APIHandler:
@@ -18,6 +18,7 @@ class APIHandler:
     def __init__(self, sprivatersa_filepath):
         self.logger = logging.getLogger(__title__)
         self.logger.info('Create class APIHandler')
+        self.decryption_counter = 0
 
         if os.path.isfile(sprivatersa_filepath):
             self.sprivatersa_filepath = sprivatersa_filepath
@@ -78,7 +79,7 @@ class APIHandler:
         :return: Response object
         """
 
-        self.logger.info("POST request to route /decryption/")
+        self.logger.info("{} request to route {}".format(request.method, request.path))
 
         if request.form:
 
@@ -88,6 +89,8 @@ class APIHandler:
                 cprivate_rsa = request.form['CPrivateRSA.bin']
                 rsa_bin = request.form['RSA.bin']
                 rsa_keysize = request.form['RSAKeySize']
+
+                self.decryption_counter += 1
 
                 return self._decryption(cprivate_rsa, rsa_bin, rsa_keysize)
             else:
@@ -103,6 +106,8 @@ class APIHandler:
                 rsa_bin = request.json['RSA.bin']
                 rsa_keysize = request.json['RSAKeySize']
 
+                self.decryption_counter += 1
+
                 return self._decryption(cprivate_rsa, rsa_bin, rsa_keysize)
             else:
                 self.logger.error("Missing key in json request")
@@ -111,3 +116,23 @@ class APIHandler:
         else:
             self.logger.error("Not a valid reqeust format!")
             return Response(status=400, response=json.dumps("Not a valid request format!"), mimetype='application/json')
+
+    def route_decryption_counter(self):
+        """ requesting the decryption counter
+
+        :return: Response object
+        """
+
+        self.logger.info("{} request to route {}".format(request.method, request.path))
+
+        return Response(status=200, response=str(self.decryption_counter), mimetype='text/plain')
+
+    def route_version(self):
+        """ requesting the current version of the app
+
+        :return: Response object
+        """
+
+        self.logger.info("{} request to route {}".format(request.method, request.path))
+
+        return Response(status=200, response=__version__, mimetype='text/plain')
