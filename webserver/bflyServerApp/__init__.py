@@ -1,5 +1,5 @@
 __title__ = "bflyServerApp"
-__version_info__ = ('1', '1', '0')
+__version_info__ = ('1', '1', '1')
 __version__ = ".".join(__version_info__)
 __author__ = "Christian Bierschneider"
 __email__ = "christian.bierschneider@web.de"

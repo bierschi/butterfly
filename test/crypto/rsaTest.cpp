@@ -128,8 +128,9 @@ TEST_F(CryptoRSATest, encryptEVP)
  */
 TEST_F(CryptoRSATest, getRSAIV)
 {
-   std::string rsaiv = reinterpret_cast<const char *>(cryptoRSA->getRSAIV());
-   EXPECT_TRUE(!rsaiv.empty());
+    unsigned char *rsaiv = cryptoRSA->getRSAIV();
+    EXPECT_TRUE(rsaiv == nullptr);
+
 }
 
 /**
@@ -137,8 +138,9 @@ TEST_F(CryptoRSATest, getRSAIV)
  */
 TEST_F(CryptoRSATest, getRSAEncryptedKey)
 {
-   std::string rsaek = reinterpret_cast<const char *>(cryptoRSA->getRSAEncryptedKey());
-   EXPECT_TRUE( !rsaek.empty());
+   unsigned char *rsaek = cryptoRSA->getRSAEncryptedKey();
+    EXPECT_TRUE(rsaek == nullptr);
+
 }
 
 /**

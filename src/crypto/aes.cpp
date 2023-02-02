@@ -78,11 +78,14 @@ bool CryptoAES::generateAESKey()
     #ifdef LOGGING
     LOG_INFO("Create new AES Key/IV pair")
     #endif
-    if(RAND_bytes(CryptoAES::aesKey, _aesKeyLength) == 0) {
+
+    if(RAND_bytes(CryptoAES::aesKey, _aesKeyLength) == 0)
+    {
         return false;
     }
 
-    if(RAND_bytes(CryptoAES::aesIv, _aesIvLength) == 0) {
+    if(RAND_bytes(CryptoAES::aesIv, _aesIvLength) == 0)
+    {
         return false;
     }
 
@@ -94,10 +97,11 @@ bool CryptoAES::generateAESKeyWithSalt()
     #ifdef LOGGING
     LOG_INFO("Create new AES Key/IV pair with Salt")
     #endif
-    auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
-    auto *aesSalt = (unsigned char *) malloc(8);
 
-    if (aesPass == nullptr || aesSalt == nullptr)
+    unsigned char aesSalt[8];
+    auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
+
+    if (aesPass == nullptr)
     {
         return false;
     }
@@ -118,7 +122,6 @@ bool CryptoAES::generateAESKeyWithSalt()
     }
 
     free(aesPass);
-    free(aesSalt);
 
     return true;
 }

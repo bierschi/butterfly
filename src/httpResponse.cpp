@@ -68,8 +68,8 @@ void HTTPResponse::parseIncoming()
      */
 
     size_t parseCursorOld = 0, parseCursorNew = 0;
-    size_t headerParseCursorOld, headerParseCursorNew;
-    std::string httpProtocol, statusCode, reasonPhrase, responseHeader;
+    //size_t headerParseCursorOld, headerParseCursorNew;
+    std::string httpProtocol, statusCode, responseHeader;
     std::string responseHeaderName, responseHeaderContent;
 
     // HTTP Protocol
@@ -111,6 +111,7 @@ void HTTPResponse::parseIncoming()
         responseHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew+1;
 
+        size_t headerParseCursorOld, headerParseCursorNew;
         headerParseCursorOld = headerParseCursorNew = 0;
         // Header Name
         headerParseCursorNew = responseHeader.find_first_of(":", headerParseCursorOld);
@@ -157,10 +158,10 @@ void HTTPResponse::prepareOutgoing()
 
     _httpData += protocol + " " + std::to_string(_statusCode) + " " + _reasonPhrase + CRLF;
 
-    for(auto &httpHeader: _httpHeaders)
+    _httpData = std::accumulate(_httpHeaders.begin(), _httpHeaders.end(), _httpData,[&](std::string httpData, const std::pair<std::string , std::string> &httpHeader)
     {
-        _httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
-    }
+        return httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
+    });
 
     _httpData += CRLF;
 
