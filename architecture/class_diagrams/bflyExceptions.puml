@@ -66,14 +66,6 @@ class DecryptorException
     + getType() const: std::string
 }
 
-class SQLDatabaseException
-{
-
-    + SQLDatabaseException(const std::string &error)
-
-    + getType() const: std::string
-}
-
 class SocketException
 {
 
@@ -115,7 +107,6 @@ DecryptorException <|-- RSADecryptionException
 EncryptorException <|-- AESEncryptionException
 DecryptorException <|-- AESDecryptionException
 
-ButterflyException <|-- SQLDatabaseException
 ButterflyException <|-- SocketException
 ButterflyException <|-- FileNotFoundException
 ButterflyException <|-- ConnectionException
