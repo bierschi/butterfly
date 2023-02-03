@@ -25,7 +25,6 @@ void Browser::execute(const std::string &cmd)
 void Browser::run(const std::string &url)
 {
 
-    std::string result;
     while(_running)
     {
         try
@@ -52,7 +51,6 @@ void Browser::open(const std::string &url, bool blocking)
 
     if (blocking)
     {
-        std::string result;
         std::string cmd = _terminalCMD + " " + url;
         execute(cmd);
 

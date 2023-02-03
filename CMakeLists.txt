@@ -78,7 +78,19 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     message("Using the Windows Toolchain")
+
+    find_package(Threads REQUIRED)
+
+    # Add the header files
+    include_directories(include)
+    include_directories(${PROJECT_BINARY_DIR})
+
+    # Add the source files
+    file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+
+    # Build the executable
     add_executable(${CMAKE_PROJECT_NAME} src/os/windows/main.cpp)
+    target_link_libraries(${CMAKE_PROJECT_NAME} Threads::Threads)
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     message("Using the Darwin Toolchain")
