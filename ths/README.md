@@ -31,8 +31,33 @@ https://check.torproject.org/
 
 ## Deploy bflyServerApp
 
+Install bflyServerApp with pip
 <pre><code>
 pip3 install bflyServerApp-*-py3-none-any.whl
+</code></pre>
+
+Create a systemd service file
+<pre><code>
+[Unit]
+Description=Butterfly Server Web App
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/bflyServerApp --host 127.0.0.1 --port 5000 --key /home/christian/butterfly/masterkeys/SPrivateRSA.pem
+Restart=always
+User=christian
+Group=christian
+UMask=002
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+Start `bflyServerApp.service` file
+<pre><code>
+sudo systemctl start bflyServerApp.service
 </code></pre>
 
 ## Apache Settings (If needed)
