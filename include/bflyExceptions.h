@@ -121,21 +121,6 @@ public:
 };
 
 /**
- * Class SQLDatabaseException
- */
-class SQLDatabaseException : public ButterflyException
-{
-
-public:
-    explicit SQLDatabaseException(const std::string &error) : ButterflyException(error) {}
-
-    std::string getType() const override
-    {
-        return "SQLDatabaseException";
-    }
-};
-
-/**
  * Class SocketException
  */
 class SocketException : public ButterflyException

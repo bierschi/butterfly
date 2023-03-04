@@ -38,15 +38,15 @@ const std::string LOCALHOST_URL                          = "http://127.0.0.1";  
 
 /************************************ Parameters for remote actions ***************************************************/
 // Version of the Endpoint API
-const std::string REMOTE_DECRYPTION_ENDPOINT_API_VERSION = "v1";                                                                                                           // Endpoint API Version
+const std::string REMOTE_DECRYPTION_ENDPOINT_API_VERSION = "v1";                                                                                                                // Endpoint API Version
 // Attacker Server Endpoint API
-const std::string REMOTE_DECRYPTION_ENDPOINT_API         = "/api/" + REMOTE_DECRYPTION_ENDPOINT_API_VERSION + "/decryption/";                                              // Remote Endpoint API
+const std::string REMOTE_DECRYPTION_ENDPOINT_API         = "/api/" + REMOTE_DECRYPTION_ENDPOINT_API_VERSION + "/decryption/";                                                   // Remote Endpoint API
 // Attacker Server Port for the remote decryption
-const int REMOTE_DECRYPTION_URL_PORT                     = 5000;                                                                                                           // Remote Port
+const int REMOTE_DECRYPTION_URL_PORT                     = 5000;                                                                                                                // Remote Port
 // Attacker Server Endpoint
-const std::string REMOTE_DECRYPTION_ENDPOINT             = "http://localhost:";                                                                                            // Remote Endpoint
+const std::string REMOTE_DECRYPTION_ENDPOINT             = "http://localhost";                                                                                                  // Remote Endpoint
 // Attacker Server URL for the remote decryption
-const std::string REMOTE_DECRYPTION_ENDPOINT_URL         = REMOTE_DECRYPTION_ENDPOINT + std::to_string(REMOTE_DECRYPTION_URL_PORT) + REMOTE_DECRYPTION_ENDPOINT_API;   // Remote Endpoint URL
+const std::string REMOTE_DECRYPTION_ENDPOINT_URL         = REMOTE_DECRYPTION_ENDPOINT + ":" +std::to_string(REMOTE_DECRYPTION_URL_PORT) + REMOTE_DECRYPTION_ENDPOINT_API;   // Remote Endpoint URL
 
 } // namespace params
 
