@@ -7,6 +7,9 @@
 namespace tools
 {
 
+/**
+ *  Class TORSocket to create socks connection to the tor network
+ */
 class TORSocket : public Socket
 {
 
@@ -28,19 +31,90 @@ private:
             0x03, // DOMAIN
     };
 
-    static std::string serverResponse(char status);
-    int prepareDomainRequest(const std::string &domain, const int port);
-    int prepareIPRequest(const std::string &domain, const int port);
+    /**
+    * Get Domain name from provided URL
+    *
+    * @param url: URL address
+    * @return domain as std::string
+    */
+    std::string getDomainFromUrl(std::string url);
+
+    /**
+    * Get Route name from provided URL
+    *
+    * @param url: URL address
+    * @return domain as std::string
+    */
+    std::string getRouteFromUrl(std::string url);
+
+    /**
+     *
+     * @param status
+     * @return
+     */
+    static std::string serverStatusResponse(char status);
+
+    /**
+     *
+     * @param url
+     * @param port
+     * @return
+     */
+    int prepareRequest(const std::string &url, int port);
 
 public:
-    TORSocket(std::string ip, int port);
+
+    /**
+     *
+     * @param ip
+     * @param port
+     */
+    TORSocket(const std::string &ip, int port);
+
+    /**
+     *
+     */
     ~TORSocket() override = default;
 
+    /**
+     *
+     * @param s
+     * @param length
+     * @return
+     */
     bool send(const std::string &s, int length) const;
+
+    /**
+     *
+     * @param buf
+     * @param len
+     * @return
+     */
     int recv(char *buf, int len) const;
+
+    /**
+     *
+     * @param chunkSize
+     * @return
+     */
     std::string recvAll(int chunkSize) const; // takes too long
 
-    std::string request(const std::string &domain, const int port=80);
+    /**
+     *
+     * @param url
+     * @param port
+     * @return
+     */
+    std::string get(const std::string &url, int port=80);
+
+    /**
+     *
+     * @param url
+     * @param data
+     * @param port
+     * @return
+     */
+    std::string post(const std::string &url, const std::string &data, int port=80);
 };
 
 } // namespace tools

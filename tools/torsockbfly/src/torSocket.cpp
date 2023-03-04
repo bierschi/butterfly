@@ -4,7 +4,7 @@
 namespace tools
 {
 
-TORSocket::TORSocket(std::string ip, int port) : Socket(AF_INET, SOCK_STREAM, 0), _ip(ip), _port(port)
+TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STREAM, 0), _ip(ip), _port(port)
 {
 
     if ( !connect(_ip, _port) )
@@ -26,12 +26,72 @@ TORSocket::TORSocket(std::string ip, int port) : Socket(AF_INET, SOCK_STREAM, 0)
 
     if (recvAuth[1] != 0x00)
     {
-        throw SocketException("Authentication to the TOR network failed: " + serverResponse(recvAuth[1]));
+        throw SocketException("Authentication to the TOR network failed: " + serverStatusResponse(recvAuth[1]));
     }
     std::cout << "[*] Client Authenticated " << std::endl;
 }
 
-std::string TORSocket::serverResponse(char status)
+std::string TORSocket::getDomainFromUrl(std::string url)
+{
+    std::string http = "http://";
+    size_t pos1 = url.find(http);
+    if (pos1 != std::string::npos)
+    {
+        url.erase(pos1, http.length());
+    }
+    std::string https = "https://";
+    size_t pos2 = url.find(https);
+
+    if (pos2 != std::string::npos)
+    {
+        url.erase(pos2, https.length());
+    }
+
+    size_t pos3 = url.find('/');
+    if (pos3 != std::string::npos)
+    {
+        url.erase(pos3, url.length());
+    }
+
+    size_t pos4 = url.find(':');
+    if (pos4 != std::string::npos)
+    {
+        url.erase(pos4, url.length());
+    }
+
+    return url;
+}
+
+std::string TORSocket::getRouteFromUrl(std::string url)
+{
+    std::string http = "http://";
+    size_t pos1 = url.find(http);
+    if (pos1 != std::string::npos)
+    {
+        url.erase(pos1, http.length());
+    }
+    std::string https = "https://";
+    size_t pos2 = url.find(https);
+
+    if (pos2 != std::string::npos)
+    {
+        url.erase(pos2, https.length());
+    }
+
+    size_t pos3 = url.find('/');
+    if (pos3 != std::string::npos)
+    {
+        url.erase(0, pos3);
+    } else
+    {
+        // not route was included
+        url = "";
+    }
+
+    return url;
+}
+
+std::string TORSocket::serverStatusResponse(char status)
 {
         switch(status)
         {
@@ -58,9 +118,9 @@ std::string TORSocket::serverResponse(char status)
         }
 }
 
-int TORSocket::prepareDomainRequest(const std::string &domain, const int port)
+int TORSocket::prepareRequest(const std::string &url, const int port)
 {
-    char domainLen   = static_cast<char>(domain.length());
+    char domainLen   = static_cast<char>(url.length());
     short domainPort = htons(port);
 
     int connReqSize = 4 + 1 + domainLen + 2;
@@ -68,7 +128,7 @@ int TORSocket::prepareDomainRequest(const std::string &domain, const int port)
 
     std::memcpy(connReq, _connReqDomainBuf, 4);                 // 5, 1, 0, 3
     std::memcpy(connReq + 4, &domainLen, 1);               // Domain Length
-    std::memcpy(connReq + 5, domain.c_str(), domainLen);      // Domain
+    std::memcpy(connReq + 5, url.c_str(), domainLen);      // Domain
     std::memcpy(connReq + 5 + domainLen, &domainPort, 2);  // Port
 
     if ( ::send(_fd, (char*)connReq, connReqSize, MSG_NOSIGNAL) == -1)
@@ -82,14 +142,9 @@ int TORSocket::prepareDomainRequest(const std::string &domain, const int port)
         return -1;
     }
 
-    std::string resp = serverResponse(recvConn[1]);
+    std::string resp = serverStatusResponse(recvConn[1]);
     std::cout << "[*] Connection Response: " << resp << std::endl;
 
-    return 0;
-}
-
-int TORSocket::prepareIPRequest(const std::string &domain, const int port)
-{
     return 0;
 }
 
@@ -131,16 +186,56 @@ std::string TORSocket::recvAll(int chunkSize) const
     return str;
 }
 
-std::string TORSocket::request(const std::string &domain, const int port)
+std::string TORSocket::get(const std::string &url, const int port)
 {
+    std::string domain = getDomainFromUrl(url);
 
-    if (prepareDomainRequest(domain, port) != 0)
+    if (prepareRequest(domain, port) != 0)
     {
-        throw SocketException("Error at domain connection request!");
+        throw SocketException("Error at get connection request!");
     }
     std::cout << "[*] Connected successfully\n" << std::endl;
 
-    std::string request = "GET / HTTP/1.1\r\nHost: " + domain + "\r\nCache-Control: no-cache\r\n\r\n\r\n";
+    std::string route = getRouteFromUrl(url);
+    if (route.empty())
+    {
+        route = "/";
+    }
+    std::string request = "GET " + route + " HTTP/1.1\r\nHost: " + url + "\r\nCache-Control: no-cache\r\n\r\n\r\n";
+
+    if ( !send(request, request.length()) )
+    {
+        throw SocketException("Error at sending the request to the Socket!");
+    }
+
+    char buf[4096];
+    int recvSize = recv(buf, 4096);
+    if ( recvSize == -1)
+    {
+        throw SocketException("Error at receiving the response from the Socket!");
+    }
+
+    std::string s(buf, recvSize);
+
+    return s;
+}
+
+std::string TORSocket::post(const std::string &url, const std::string &data, int port)
+{
+    std::string domain = getDomainFromUrl(url);
+
+    if (prepareRequest(domain, port) != 0)
+    {
+        throw SocketException("Error at post connection request!");
+    }
+    std::cout << "[*] Connected successfully\n" << std::endl;
+
+    std::string route = getRouteFromUrl(url);
+    if (route.empty())
+    {
+        route = "/";
+    }
+    std::string request = "POST " + route + " HTTP/1.1\r\nHost: " + url + "\r\nCache-Control: no-cache\r\n\r\n\r\n";
 
     if ( !send(request, request.length()) )
     {
