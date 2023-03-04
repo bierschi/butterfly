@@ -118,18 +118,18 @@ std::string TORSocket::serverStatusResponse(char status)
         }
 }
 
-int TORSocket::prepareRequest(const std::string &url, const int port)
+int TORSocket::prepareRequest(const std::string &domain, const int port)
 {
-    char domainLen   = static_cast<char>(url.length());
+    char domainLen   = static_cast<char>(domain.length());
     short domainPort = htons(port);
 
     int connReqSize = 4 + 1 + domainLen + 2;
     char* connReq = new char[connReqSize];
 
     std::memcpy(connReq, _connReqDomainBuf, 4);                 // 5, 1, 0, 3
-    std::memcpy(connReq + 4, &domainLen, 1);               // Domain Length
-    std::memcpy(connReq + 5, url.c_str(), domainLen);      // Domain
-    std::memcpy(connReq + 5 + domainLen, &domainPort, 2);  // Port
+    std::memcpy(connReq + 4, &domainLen, 1);                    // Domain Length
+    std::memcpy(connReq + 5, domain.c_str(), domainLen);        // Domain
+    std::memcpy(connReq + 5 + domainLen, &domainPort, 2);       // Port
 
     if ( ::send(_fd, (char*)connReq, connReqSize, MSG_NOSIGNAL) == -1)
     {

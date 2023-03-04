@@ -11,4 +11,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 # Include the header files
 include_directories(include)
 
-add_executable(torsockbfly src/main.cpp src/socket.cpp src/torSocket.cpp)
+# Add the source files
+file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+
+add_executable(torsockbfly ${SOURCE_FILES})
