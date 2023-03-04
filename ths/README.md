@@ -62,19 +62,17 @@ Start `bflyServerApp.service` file
 sudo systemctl start bflyServerApp.service
 </code></pre>
 
-## Apache Settings (If needed)
-
-
 
 
 ## Test your onion service with firefox
 
-### Settings -> Network Settings
+### Firefox -> Settings -> Network Settings
+<p align="left">
+<img src="../images/firefox_tor_settings.png" width="375" height="431">
+</p>
 
-![](../images/firefox_tor_settings.png)
 
-
-### Open your browser and insert the hostname
+### Open your browser and insert the onion url
 
 ![](../images/bflyServerApp_index.png)
 
@@ -82,4 +80,7 @@ sudo systemctl start bflyServerApp.service
 ### Test the api
 
 ![](../images/bflyServerApp_api.png)
+
+
+## Apache Settings (If needed)
 
