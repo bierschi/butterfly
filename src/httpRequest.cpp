@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request")
+HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request"), _route("/")
 {
 
 }
@@ -22,6 +22,11 @@ void HTTPRequest::setURL(const std::string &url)
 void HTTPRequest::setUserAgent(const std::string &userAgent)
 {
     _userAgent = userAgent;
+}
+
+void HTTPRequest::setRoute(const std::string &route)
+{
+    _route = route;
 }
 
 void HTTPRequest::parseIncoming()
@@ -178,7 +183,8 @@ void HTTPRequest::prepareOutgoing()
 
     if (_httpMethod == Method::GET)
     {
-        _httpData += httpMethod + " / " + protocol + CRLF;
+        //_httpData += httpMethod + " / " + protocol + CRLF;
+        _httpData += httpMethod + " " + _route + " " + protocol + CRLF;
     } else
     {
         _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
