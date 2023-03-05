@@ -172,4 +172,26 @@ int Socket::hostnameToIP(const std::string &hostname, std::string &ip)
     return -1;
 }
 
+bool Socket::send(const std::string &s) const
+{
+    std::cout << "in base send" << std::endl;
+    return true;
+}
+
+int Socket::recv(char *buf, int len) const
+{
+    return 0;
+}
+
+std::string Socket::recvAll(int chunkSize, bool blocking) const
+{
+    std::cout << "in base recvall" << std::endl;
+    return "";
+}
+
+Socket::Type Socket::type() const
+{
+    return Type::Socket;
+}
+
 } // namespace tools

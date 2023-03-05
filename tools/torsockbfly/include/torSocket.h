@@ -66,13 +66,13 @@ public:
     ~TORSocket() override = default;
 
     /**
-    * Grant access to the tor network
+    * Connect to the tor network
     *
     * @param domain: domain name
     * @param port: port of the domain
     * @return rc of the action
     */
-    bool grantAccess(const std::string &domain, int port);
+    bool connect(const std::string &domain, int port) override;
 
     /**
      * Sends the string
@@ -81,7 +81,7 @@ public:
      * @param length: length of the string
      * @return True if the sending was successful
      */
-    bool send(const std::string &s) const;
+    bool send(const std::string &s) const override;
 
     /**
      * Receives the len size from the socket
@@ -90,7 +90,7 @@ public:
      * @param len:  length of the buffer
      * @return true if receiving was successful
      */
-    int recv(char *buf, int len) const;
+    int recv(char *buf, int len) const override;
 
     /**
      * Receives the complete buffer as chunks from the socket
@@ -98,8 +98,13 @@ public:
      * @param chunkSize: Size of the chunks
      * @return data as std::string
      */
-    std::string recvAll(int chunkSize, bool blocking=false) const; // takes too long
-    std::string get(const std::string &url, int port=80);
+    std::string recvAll(int chunkSize, bool blocking) const override;
+
+    /**
+     *
+     * @return
+     */
+    Socket::Type type() const override;
 };
 
 } // namespace tools

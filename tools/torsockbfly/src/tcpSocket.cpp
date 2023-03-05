@@ -97,4 +97,9 @@ std::string TCPSocket::recvAll(int chunkSize, bool blocking) const
     return str;
 }
 
+Socket::Type TCPSocket::type() const
+{
+    return Type::TCPSocket;
+}
+
 } // namespace butterfly

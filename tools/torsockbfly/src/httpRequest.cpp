@@ -181,7 +181,6 @@ void HTTPRequest::prepareOutgoing()
             break;
     }
 
-
     _httpData += httpMethod + " " + _route + " " + protocol + CRLF;
 
     if ( !_userAgent.empty() )

@@ -34,6 +34,7 @@ protected:
     sockaddr_in _addr;
 
 public:
+    enum class Type {Socket, TCPSocket, TORSocket};
 
     /**
      * Socket Constructor
@@ -131,7 +132,7 @@ public:
      * @param port: Port to connect to
      * @return True if the connection was successful, else False
      */
-    bool connect(const std::string &host, int port);
+    virtual bool connect(const std::string &host, int port);
 
     /**
      * Disconnect cleanly from a socket
@@ -148,6 +149,11 @@ public:
      * @return Returns 0 on success and -1 on error
      */
     static int hostnameToIP(const std::string &hostname, std::string &ip);
+
+    virtual bool send(const std::string &s) const;
+    virtual int recv(char *buf, int len) const;
+    virtual std::string recvAll(int chunkSize, bool blocking) const;
+    virtual Socket::Type type() const;
 };
 
 } // namespace tools

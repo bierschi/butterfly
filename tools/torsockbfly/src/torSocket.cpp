@@ -7,7 +7,7 @@ namespace tools
 TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STREAM, 0), _ip(ip), _port(port)
 {
 
-    if ( !connect(_ip, _port) )
+    if ( !Socket::connect(_ip, _port) )
     {
         throw SocketException("Error at connecting to " + _ip + " on port " + std::to_string(_port));
     }
@@ -68,7 +68,7 @@ std::string TORSocket::serverStatusResponse(char status)
         }
 }
 
-bool TORSocket::grantAccess(const std::string &domain, const int port)
+bool TORSocket::connect(const std::string &domain, const int port)
 {
     char domainLen   = static_cast<char>(domain.length());
     short domainPort = htons(port);
@@ -83,6 +83,7 @@ bool TORSocket::grantAccess(const std::string &domain, const int port)
 
     if ( ::send(_fd, (char*)connReq, connReqSize, MSG_NOSIGNAL) == -1)
     {
+        std::cout << "return false" << std::endl;
         return false;
     }
 
@@ -145,37 +146,9 @@ std::string TORSocket::recvAll(int chunkSize, bool blocking) const
     return str;
 }
 
-std::string TORSocket::get(const std::string &url, const int port)
+Socket::Type TORSocket::type() const
 {
-    std::string domain = tools::getDomainFromUrl(url);
-
-    if (!grantAccess(domain, port))
-    {
-        throw SocketException("Error at get connection request!");
-    }
-    std::cout << "[*] Connected successfully\n" << std::endl;
-
-    std::string route = tools::getRouteFromUrl(url);
-    if (route.empty())
-    {
-        route = "/";
-    }
-    std::string request = "GET " + route + " HTTP/1.1\r\nHost: " + url + "\r\nCache-Control: no-cache\r\n\r\n\r\n";
-
-    if ( !send(request) )
-    {
-        throw SocketException("Error at sending the request to the Socket!");
-    }
-
-    char buf[4096];
-    int recvSize = recv(buf, 4096);
-    if ( recvSize == -1)
-    {
-        throw SocketException("Error at receiving the response from the Socket!");
-    }
-
-    std::string s(buf, recvSize);
-
-    return s;
+    return Type::TORSocket;
 }
+
 } // namespace tools
