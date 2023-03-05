@@ -10,7 +10,7 @@ HTTPClient::HTTPClient(std::shared_ptr<Socket> socket) : statusCode(0), reasonPh
     LOG_TRACE("Create class HTTPClient");
     #endif
 
-    if(socket->type() == Socket::Type::TCPSocket)
+    if(socket->type() == ISocket::Type::TCPSocket)
     {
         std::cout << "Create tcpsocket" << std::endl;
         _socket = std::dynamic_pointer_cast<TCPSocket>(socket);

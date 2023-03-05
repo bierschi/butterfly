@@ -146,7 +146,7 @@ std::string TORSocket::recvAll(int chunkSize, bool blocking) const
     return str;
 }
 
-Socket::Type TORSocket::type() const
+ISocket::Type TORSocket::type() const
 {
     return Type::TORSocket;
 }

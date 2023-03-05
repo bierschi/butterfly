@@ -14,6 +14,7 @@
 #include <netdb.h>
 
 #include "bflyExceptions.h"
+#include "ISocket.h"
 
 #define MAX_CONNECTIONS 50
 
@@ -34,7 +35,7 @@ protected:
     sockaddr_in _addr;
 
 public:
-    enum class Type {Socket, TCPSocket, TORSocket};
+
 
     /**
      * Socket Constructor
@@ -153,7 +154,7 @@ public:
     virtual bool send(const std::string &s) const;
     virtual int recv(char *buf, int len) const;
     virtual std::string recvAll(int chunkSize, bool blocking) const;
-    virtual Socket::Type type() const;
+    virtual ISocket::Type type() const;
 };
 
 } // namespace tools

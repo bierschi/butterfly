@@ -4,14 +4,14 @@
 
 #include "socket.h"
 #include "bflyUtils.h"
-
+#include "ISocket.h"
 namespace tools
 {
 
 /**
  *  Class TORSocket to create socks connection to the tor network
  */
-class TORSocket : public Socket
+class TORSocket : public Socket, ISocket
 {
 
 private:
@@ -104,7 +104,7 @@ public:
      *
      * @return
      */
-    Socket::Type type() const override;
+    ISocket::Type type() const override;
 };
 
 } // namespace tools

@@ -189,9 +189,9 @@ std::string Socket::recvAll(int chunkSize, bool blocking) const
     return "";
 }
 
-Socket::Type Socket::type() const
+ISocket::Type Socket::type() const
 {
-    return Type::Socket;
+    return ISocket::Type::Socket;
 }
 
 } // namespace tools

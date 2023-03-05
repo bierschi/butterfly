@@ -3,6 +3,7 @@
 #define BUTTERFLY_TCPSOCKET_H
 
 #include "socket.h"
+#include "ISocket.h"
 
 namespace tools
 {
@@ -10,7 +11,7 @@ namespace tools
 /**
  * Class TCPSocket to create a TCP socket
  */
-class TCPSocket : public Socket
+class TCPSocket : public Socket, ISocket
 {
 
 private:
@@ -86,7 +87,7 @@ public:
      *
      * @return
      */
-    Socket::Type type() const override;
+    ISocket::Type type() const override;
 };
 
 } // namespace butterfly
