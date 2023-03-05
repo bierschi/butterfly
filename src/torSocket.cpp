@@ -11,7 +11,9 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     {
         throw SocketException("Error at connecting to " + _ip + " on port " + std::to_string(_port));
     }
-    std::cout << "[*] Connected to " + ip + " on port " + std::to_string(port) << std::endl;
+    #ifdef LOGGING
+    LOG_INFO("[*] Connected to "<< ip << " on port " << std::to_string(port));
+    #endif
 
     if ( !send(_sendAuthBuf, sizeof(_sendAuthBuf)) )
     {
@@ -28,7 +30,10 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     {
         throw SocketException("Authentication to the TOR network failed: " + serverStatusResponse(recvAuth[1]));
     }
-    std::cout << "[*] Client Authenticated " << std::endl;
+
+    #ifdef LOGGING
+    LOG_INFO("[*] Client Authenticated");
+    #endif
 }
 
 std::string TORSocket::serverStatusResponse(char status)
@@ -83,7 +88,9 @@ int TORSocket::prepareRequest(const std::string &domain, const int port)
     }
 
     std::string resp = serverStatusResponse(recvConn[1]);
-    std::cout << "[*] Connection Response: " << resp << std::endl;
+    #ifdef LOGGING
+    LOG_INFO("[*] Connection Response: " << resp);
+    #endif
 
     return 0;
 }

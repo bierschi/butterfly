@@ -3,6 +3,7 @@
 #define BUTTERFLY_TORSOCKET_H
 
 #include "socket.h"
+#include "logger.h"
 
 namespace butterfly
 {

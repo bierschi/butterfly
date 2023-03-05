@@ -181,14 +181,8 @@ void HTTPRequest::prepareOutgoing()
             break;
     }
 
-    if (_httpMethod == Method::GET)
-    {
-        //_httpData += httpMethod + " / " + protocol + CRLF;
-        _httpData += httpMethod + " " + _route + " " + protocol + CRLF;
-    } else
-    {
-        _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
-    }
+
+    _httpData += httpMethod + " " + _route + " " + protocol + CRLF;
 
     if ( !_userAgent.empty() )
     {
