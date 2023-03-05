@@ -16,7 +16,7 @@ class HTTPRequest: public HTTPMSGSchema
 {
 
 private:
-    std::string _url, _userAgent;
+    std::string _url, _userAgent, _route;
 
 public:
 
@@ -91,6 +91,18 @@ public:
      * @return user agent as std::string
      */
     inline std::string getUserAgent() const { return _userAgent; }
+
+    /**
+     * Setter for the route
+     * @param route: route as std::string
+     */
+    void setRoute(const std::string &route);
+
+    /**
+     * Getter for the route
+     * @return route as std::string
+     */
+    inline std::string getRoute() const { return _route; };
 
     /**
      * Method to parse the incoming HTTP Requests
