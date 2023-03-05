@@ -33,14 +33,20 @@ private:
     };
 
     /**
+     *
+     * @param str
+     * @param size
+     * @return
+     */
+    bool authenticate(const std::string &str, int size);
+
+    /**
      * Get the server status response
      *
      * @param status: character
      * @return server status converted to a string
      */
     static std::string serverStatusResponse(char status);
-
-
 
 public:
 
@@ -60,13 +66,22 @@ public:
     ~TORSocket() override = default;
 
     /**
+    * Grant access to the tor network
+    *
+    * @param domain: domain name
+    * @param port: port of the domain
+    * @return rc of the action
+    */
+    bool grantAccess(const std::string &domain, int port);
+
+    /**
      * Sends the string
      *
      * @param s: std::string
      * @param length: length of the string
      * @return True if the sending was successful
      */
-    bool send(const std::string &s, int length) const;
+    bool send(const std::string &s) const;
 
     /**
      * Receives the len size from the socket
@@ -83,35 +98,8 @@ public:
      * @param chunkSize: Size of the chunks
      * @return data as std::string
      */
-    std::string recvAll(int chunkSize) const; // takes too long
-
-    /**
-     * HTTP Get request to the url
-     *
-     * @param url: url to request
-     * @param port: port for the url
-     * @return http response as std::string
-     */
+    std::string recvAll(int chunkSize, bool blocking=false) const; // takes too long
     std::string get(const std::string &url, int port=80);
-
-    /**
-     * HTTP Post request to the url
-     *
-     * @param url: url to request
-     * @param data: data for the post request
-     * @param port: port for the url
-     * @return http response as std::string
-     */
-    std::string post(const std::string &url, const std::string &data, int port=80);
-
-    /**
-    * Prepares the request to the tor network
-    *
-    * @param domain: domain name
-    * @param port: port of the domain
-    * @return rc of the action
-    */
-    int prepareRequest(const std::string &domain, int port);
 };
 
 } // namespace tools

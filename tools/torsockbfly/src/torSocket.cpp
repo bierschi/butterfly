@@ -13,7 +13,7 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     }
     std::cout << "[*] Connected to " + ip + " on port " + std::to_string(port) << std::endl;
 
-    if ( !send(_sendAuthBuf, sizeof(_sendAuthBuf)) )
+    if ( !authenticate(_sendAuthBuf, sizeof(_sendAuthBuf)) )
     {
         throw SocketException("Error at sending the Authentication Request to the Socket!");
     }
@@ -29,6 +29,16 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
         throw SocketException("Authentication to the TOR network failed: " + serverStatusResponse(recvAuth[1]));
     }
     std::cout << "[*] Client Authenticated " << std::endl;
+}
+
+bool TORSocket::authenticate(const std::string &str, int size)
+{
+    if ( ::send(_fd, str.c_str(), size, MSG_NOSIGNAL) == -1)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 std::string TORSocket::serverStatusResponse(char status)
@@ -58,7 +68,7 @@ std::string TORSocket::serverStatusResponse(char status)
         }
 }
 
-int TORSocket::prepareRequest(const std::string &domain, const int port)
+bool TORSocket::grantAccess(const std::string &domain, const int port)
 {
     char domainLen   = static_cast<char>(domain.length());
     short domainPort = htons(port);
@@ -73,25 +83,25 @@ int TORSocket::prepareRequest(const std::string &domain, const int port)
 
     if ( ::send(_fd, (char*)connReq, connReqSize, MSG_NOSIGNAL) == -1)
     {
-        return -1;
+        return false;
     }
 
     char recvConn[10];
     if ( ::recv(_fd, recvConn, 10, 0) == -1 )
     {
-        return -1;
+        return false;
     }
 
     std::string resp = serverStatusResponse(recvConn[1]);
     std::cout << "[*] Connection Response: " << resp << std::endl;
 
-    return 0;
+    return true;
 }
 
-bool TORSocket::send(const std::string &s, int length) const
+bool TORSocket::send(const std::string &s) const
 {
 
-    if ( ::send(_fd, s.c_str(), length, MSG_NOSIGNAL) == -1)
+    if ( ::send(_fd, s.c_str(), strlen(s.c_str()), MSG_NOSIGNAL) == -1)
     {
         return false;
     }
@@ -112,13 +122,22 @@ int TORSocket::recv(char *buf, int len) const
     }
 }
 
-std::string TORSocket::recvAll(int chunkSize) const
+std::string TORSocket::recvAll(int chunkSize, bool blocking) const
 {
     char buffer[chunkSize];
     std::string str;
+    int flags;
+
+    if (blocking)
+    {
+        flags = 0;
+    } else
+    {
+        flags = MSG_WAITALL;
+    }
 
     int recvLength;
-    while ( (recvLength = static_cast<int>(::recv(_fd, buffer, sizeof(buffer), MSG_WAITALL))) > 0 )
+    while ( (recvLength = static_cast<int>(::recv(_fd, buffer, sizeof(buffer), flags))) > 0 )
     {
         str.append(buffer, static_cast<unsigned long>(recvLength));
     }
@@ -130,7 +149,7 @@ std::string TORSocket::get(const std::string &url, const int port)
 {
     std::string domain = tools::getDomainFromUrl(url);
 
-    if (prepareRequest(domain, port) != 0)
+    if (!grantAccess(domain, port))
     {
         throw SocketException("Error at get connection request!");
     }
@@ -143,7 +162,7 @@ std::string TORSocket::get(const std::string &url, const int port)
     }
     std::string request = "GET " + route + " HTTP/1.1\r\nHost: " + url + "\r\nCache-Control: no-cache\r\n\r\n\r\n";
 
-    if ( !send(request, request.length()) )
+    if ( !send(request) )
     {
         throw SocketException("Error at sending the request to the Socket!");
     }
@@ -159,39 +178,4 @@ std::string TORSocket::get(const std::string &url, const int port)
 
     return s;
 }
-
-std::string TORSocket::post(const std::string &url, const std::string &data, int port)
-{
-    std::string domain = getDomainFromUrl(url);
-
-    if (prepareRequest(domain, port) != 0)
-    {
-        throw SocketException("Error at post connection request!");
-    }
-    std::cout << "[*] Connected successfully\n" << std::endl;
-
-    std::string route = getRouteFromUrl(url);
-    if (route.empty())
-    {
-        route = "/";
-    }
-    std::string request = "POST " + route + " HTTP/1.1\r\nHost: " + url + "\r\nCache-Control: no-cache\r\n\r\n\r\n";
-
-    if ( !send(request, request.length()) )
-    {
-        throw SocketException("Error at sending the request to the Socket!");
-    }
-
-    char buf[4096];
-    int recvSize = recv(buf, 4096);
-    if ( recvSize == -1)
-    {
-        throw SocketException("Error at receiving the response from the Socket!");
-    }
-
-    std::string s(buf, recvSize);
-
-    return s;
-}
-
 } // namespace tools

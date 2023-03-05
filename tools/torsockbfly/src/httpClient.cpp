@@ -165,11 +165,11 @@ std::string HTTPClient::getTor(const std::string &url, int port)
 {
     std::string domain = tools::getDomainFromUrl(url);
     // Prepare the get request
-    _torSocket->prepareRequest(domain, port);
+    _torSocket->grantAccess(domain, port);
 
     prepareRequest(url, Method::GET);
 
-    if ( !_torSocket->send(_httpRequest->getHTTPData(), static_cast<int>(_httpRequest->getHTTPData().length())) )
+    if ( !_torSocket->send(_httpRequest->getHTTPData()) )
     {
         throw SocketException("Error at sending the request to the Socket!");
     }
@@ -190,11 +190,11 @@ std::string HTTPClient::postTor(const std::string &url, const std::string &data,
 {
     std::string domain = getDomainFromUrl(url);
     // Prepare the post request
-    _torSocket->prepareRequest(domain, port);
+    _torSocket->grantAccess(domain, port);
 
     prepareRequest(url, Method::POST, data);
 
-    if ( !_torSocket->send(_httpRequest->getHTTPData(), static_cast<int>(_httpRequest->getHTTPData().length())) )
+    if ( !_torSocket->send(_httpRequest->getHTTPData()) )
     {
         throw SocketException("Error at sending the request to the Socket!");
     }
