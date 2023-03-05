@@ -3,6 +3,7 @@
 #define TORSOCKBFLY_TORSOCKET_H
 
 #include "socket.h"
+#include "bflyUtils.h"
 
 namespace tools
 {
@@ -32,22 +33,6 @@ private:
     };
 
     /**
-    * Get Domain name from provided URL
-    *
-    * @param url: URL address
-    * @return domain as std::string
-    */
-    static std::string getDomainFromUrl(std::string url);
-
-    /**
-    * Get Route name from provided URL
-    *
-    * @param url: URL address
-    * @return domain as std::string
-    */
-    static std::string getRouteFromUrl(std::string url);
-
-    /**
      * Get the server status response
      *
      * @param status: character
@@ -55,14 +40,7 @@ private:
      */
     static std::string serverStatusResponse(char status);
 
-    /**
-     * Prepares the request to the tor network
-     *
-     * @param domain: domain name
-     * @param port: port of the domain
-     * @return rc of the action
-     */
-    int prepareRequest(const std::string &domain, int port);
+
 
 public:
 
@@ -125,6 +103,15 @@ public:
      * @return http response as std::string
      */
     std::string post(const std::string &url, const std::string &data, int port=80);
+
+    /**
+    * Prepares the request to the tor network
+    *
+    * @param domain: domain name
+    * @param port: port of the domain
+    * @return rc of the action
+    */
+    int prepareRequest(const std::string &domain, int port);
 };
 
 } // namespace tools

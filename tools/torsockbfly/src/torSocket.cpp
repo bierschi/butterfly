@@ -31,66 +31,6 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     std::cout << "[*] Client Authenticated " << std::endl;
 }
 
-std::string TORSocket::getDomainFromUrl(std::string url)
-{
-    std::string http = "http://";
-    size_t pos1 = url.find(http);
-    if (pos1 != std::string::npos)
-    {
-        url.erase(pos1, http.length());
-    }
-    std::string https = "https://";
-    size_t pos2 = url.find(https);
-
-    if (pos2 != std::string::npos)
-    {
-        url.erase(pos2, https.length());
-    }
-
-    size_t pos3 = url.find('/');
-    if (pos3 != std::string::npos)
-    {
-        url.erase(pos3, url.length());
-    }
-
-    size_t pos4 = url.find(':');
-    if (pos4 != std::string::npos)
-    {
-        url.erase(pos4, url.length());
-    }
-
-    return url;
-}
-
-std::string TORSocket::getRouteFromUrl(std::string url)
-{
-    std::string http = "http://";
-    size_t pos1 = url.find(http);
-    if (pos1 != std::string::npos)
-    {
-        url.erase(pos1, http.length());
-    }
-    std::string https = "https://";
-    size_t pos2 = url.find(https);
-
-    if (pos2 != std::string::npos)
-    {
-        url.erase(pos2, https.length());
-    }
-
-    size_t pos3 = url.find('/');
-    if (pos3 != std::string::npos)
-    {
-        url.erase(0, pos3);
-    } else
-    {
-        // not route was included
-        url = "";
-    }
-
-    return url;
-}
-
 std::string TORSocket::serverStatusResponse(char status)
 {
         switch(status)
@@ -188,7 +128,7 @@ std::string TORSocket::recvAll(int chunkSize) const
 
 std::string TORSocket::get(const std::string &url, const int port)
 {
-    std::string domain = getDomainFromUrl(url);
+    std::string domain = tools::getDomainFromUrl(url);
 
     if (prepareRequest(domain, port) != 0)
     {
@@ -196,7 +136,7 @@ std::string TORSocket::get(const std::string &url, const int port)
     }
     std::cout << "[*] Connected successfully\n" << std::endl;
 
-    std::string route = getRouteFromUrl(url);
+    std::string route = tools::getRouteFromUrl(url);
     if (route.empty())
     {
         route = "/";
