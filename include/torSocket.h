@@ -3,6 +3,8 @@
 #define BUTTERFLY_TORSOCKET_H
 
 #include "socket.h"
+#include "ISocket.h"
+#include "bflyUtils.h"
 #include "logger.h"
 
 namespace butterfly
@@ -11,7 +13,7 @@ namespace butterfly
 /**
  * Class TORSocket to establish a proxy connection to the tor network via the tor binary
  */
-class TORSocket : public Socket
+class TORSocket : public Socket, ISocket
 {
 
 private:
@@ -31,6 +33,15 @@ private:
                     0x00, // RESERVED
                     0x03, // DOMAIN
             };
+
+    /**
+     * Authenticate for the tor network access
+     *
+     * @param str: string
+     * @param size: size of the string
+     * @return True if authentication was successful
+     */
+    bool authenticate(const std::string &str, int size);
 
     /**
      * Get the server status response
@@ -58,13 +69,21 @@ public:
     ~TORSocket() override = default;
 
     /**
+    * Connect to the tor network
+    *
+    * @param domain: domain name
+    * @param port: port of the domain
+    * @return rc of the action
+    */
+    bool connect(const std::string &domain, int port) override;
+
+    /**
      * Sends the string
      *
      * @param s: std::string
-     * @param length: length of the string
      * @return True if the sending was successful
      */
-    bool send(const std::string &s, int length) const;
+    bool send(const std::string &s) const override;
 
     /**
      * Receives the len size from the socket
@@ -73,7 +92,7 @@ public:
      * @param len:  length of the buffer
      * @return true if receiving was successful
      */
-    int recv(char *buf, int len) const;
+    int recv(char *buf, int len) const override;
 
     /**
      * Receives the complete buffer as chunks from the socket
@@ -81,17 +100,13 @@ public:
      * @param chunkSize: Size of the chunks
      * @return data as std::string
      */
-    std::string recvAll(int chunkSize, bool blocking=false) const; // takes too long
+    std::string recvAll(int chunkSize, bool blocking) const override;
 
     /**
-    * Prepares the request to the tor network
-    *
-    * @param domain: domain name
-    * @param port: port of the domain
-    * @return rc of the action
-    */
-    int prepareRequest(const std::string &domain, int port);
-
+     * Get the Type of the socket
+     * @return ISocket::Type enum class
+     */
+    ISocket::Type getType() const override;
 };
 
 } // namespace butterfly

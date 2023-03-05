@@ -4,34 +4,25 @@
 namespace butterfly
 {
 
-HTTPClient::HTTPClient() : _torport(9050), _torSocketFlag(false), statusCode(0), reasonPhrase("Not Implemented")
+HTTPClient::HTTPClient(std::shared_ptr<Socket> socket) : statusCode(0), reasonPhrase("Not Implemented")
 {
     #ifdef LOGGING
     LOG_TRACE("Create class HTTPClient");
     #endif
 
-    _tcpSocket = std::make_shared<TCPSocket>();
+    if(socket->getType() == ISocket::Type::TCPSocket)
+    {
+        _socket = std::dynamic_pointer_cast<TCPSocket>(socket);
+    } else
+    {
+        _socket = std::dynamic_pointer_cast<TORSocket>(socket);
+    }
 
-}
-
-HTTPClient::HTTPClient(const std::string &torip, int torport) : _torip(torip), _torport(torport), _torSocketFlag(true), statusCode(0), reasonPhrase("Not Implemented")
-{
-    #ifdef LOGGING
-    LOG_TRACE("Create class HTTPClient");
-    #endif
-
-    _torSocket = std::make_shared<TORSocket>(_torip, _torport);
 }
 
 HTTPClient::~HTTPClient()
 {
-    if (_torSocketFlag)
-    {
-        _torSocket->disconnect();
-    } else
-    {
-        _tcpSocket->disconnect();
-    }
+    _socket->disconnect();
 }
 
 void HTTPClient::prepareRequest(const std::string &url, Method method, const std::string &data)
@@ -65,13 +56,8 @@ void HTTPClient::prepareRequest(const std::string &url, Method method, const std
 bool HTTPClient::processResponse()
 {
     std::string httpData;
-    if (_torSocketFlag)
-    {
-        httpData = _torSocket->recvAll(1024);
-    } else
-    {
-        httpData = _tcpSocket->recvAll(1024, true);
-    }
+
+    httpData = _socket->recvAll(1024, true);
 
     if ( httpData.empty() )
     {
@@ -89,6 +75,7 @@ bool HTTPClient::processResponse()
         return true;
     } else
     {
+        LOG_ERROR("Error on request: " << reasonPhrase << ": " << _httpResponse->getBody());
         return false;
     }
 
@@ -101,20 +88,16 @@ void HTTPClient::setHTTPHeader(const std::string &headerName, const std::string 
 
 std::string HTTPClient::post(const std::string &url, const std::string &data, int port)
 {
-    // Prepare the post request
-    prepareRequest(url, Method::POST, data);
+    std::string domain = butterfly::getDomainFromUrl(url);
 
-    std::string response, ip;
-    std::string domain = getDomainFromUrl(url);
-
-    _tcpSocket->hostnameToIP(domain, ip);
-    if ( _tcpSocket->connect(ip, port) )
+    if ( _socket->connect(domain, port) )
     {
-        #ifdef LOGGING
-        LOG_INFO("Sending post request to url " << url);
-        #endif
-        _tcpSocket->send(_httpRequest->getHTTPData());
+        // Prepare the post request
+        prepareRequest(url, Method::POST, data);
 
+        _socket->send(_httpRequest->getHTTPData());
+
+        std::string response;
         if ( processResponse() )
         {
             response = _httpResponse->getBody();
@@ -123,7 +106,6 @@ std::string HTTPClient::post(const std::string &url, const std::string &data, in
         {
             return response;
         }
-
     } else
     {
         throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
@@ -132,20 +114,16 @@ std::string HTTPClient::post(const std::string &url, const std::string &data, in
 
 std::string HTTPClient::get(const std::string &url, int port)
 {
-    // Prepare the get request
-    prepareRequest(url, Method::GET);
-
-    std::string response, ip;
     std::string domain = butterfly::getDomainFromUrl(url);
 
-    _tcpSocket->hostnameToIP(domain, ip);
-    if ( _tcpSocket->connect(ip, port) )
+    if ( _socket->connect(domain, port) )
     {
-        #ifdef LOGGING
-        LOG_INFO("Sending get request to url " << url);
-        #endif
-        _tcpSocket->send(_httpRequest->getHTTPData());
+        // Prepare the get request
+        prepareRequest(url, Method::GET);
 
+        _socket->send(_httpRequest->getHTTPData());
+
+        std::string response;
         if ( processResponse() )
         {
             response = _httpResponse->getBody();
@@ -159,56 +137,6 @@ std::string HTTPClient::get(const std::string &url, int port)
     {
         throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
     }
-}
-
-std::string HTTPClient::getTor(const std::string &url, int port)
-{
-    std::string domain = butterfly::getDomainFromUrl(url);
-    // Prepare the get request
-    _torSocket->prepareRequest(domain, port);
-
-    prepareRequest(url, Method::GET);
-
-    if ( !_torSocket->send(_httpRequest->getHTTPData(), static_cast<int>(_httpRequest->getHTTPData().length())) )
-    {
-        throw SocketException("Error at sending the request to the Socket!");
-    }
-
-    std::string response;
-    if ( processResponse() )
-    {
-        response = _httpResponse->getBody();
-        return response;
-    } else
-    {
-        return response;
-    }
-
-}
-
-std::string HTTPClient::postTor(const std::string &url, const std::string &data, int port)
-{
-    std::string domain = getDomainFromUrl(url);
-    // Prepare the post request
-    _torSocket->prepareRequest(domain, port);
-
-    prepareRequest(url, Method::POST, data);
-
-    if ( !_torSocket->send(_httpRequest->getHTTPData(), static_cast<int>(_httpRequest->getHTTPData().length())) )
-    {
-        throw SocketException("Error at sending the request to the Socket!");
-    }
-
-    std::string response;
-    if ( processResponse() )
-    {
-        response = _httpResponse->getBody();
-        return response;
-    } else
-    {
-        return response;
-    }
-
 }
 
 } // namespace butterfly

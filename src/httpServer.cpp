@@ -64,7 +64,7 @@ bool HTTPServer::handleRequest()
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
     // parse incoming data from TCP Socket
-    std::string data = _newTCPSocket->recvAll(1024);
+    std::string data = _newTCPSocket->recvAll(1024, false);
 
     if ( !data.empty() )
     {

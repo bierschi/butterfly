@@ -7,7 +7,7 @@ namespace butterfly
 TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STREAM, 0), _ip(ip), _port(port)
 {
 
-    if ( !connect(_ip, _port) )
+    if ( !Socket::connect(_ip, _port) )
     {
         throw SocketException("Error at connecting to " + _ip + " on port " + std::to_string(_port));
     }
@@ -15,7 +15,7 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     LOG_INFO("[*] Connected to "<< ip << " on port " << std::to_string(port));
     #endif
 
-    if ( !send(_sendAuthBuf, sizeof(_sendAuthBuf)) )
+    if ( !authenticate(_sendAuthBuf, sizeof(_sendAuthBuf)) )
     {
         throw SocketException("Error at sending the Authentication Request to the Socket!");
     }
@@ -34,6 +34,16 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     #ifdef LOGGING
     LOG_INFO("[*] Client Authenticated");
     #endif
+}
+
+bool TORSocket::authenticate(const std::string &str, int size)
+{
+    if (::send(_fd, str.c_str(), static_cast<size_t>(size), MSG_NOSIGNAL) == -1)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 std::string TORSocket::serverStatusResponse(char status)
@@ -63,7 +73,7 @@ std::string TORSocket::serverStatusResponse(char status)
     }
 }
 
-int TORSocket::prepareRequest(const std::string &domain, const int port)
+bool TORSocket::connect(const std::string &domain, int port)
 {
     char domainLen   = static_cast<char>(domain.length());
     auto domainPort = static_cast<short>(htons(static_cast<uint16_t>(port)));
@@ -78,13 +88,13 @@ int TORSocket::prepareRequest(const std::string &domain, const int port)
 
     if (::send(_fd, (char*)connReq, static_cast<size_t>(connReqSize), MSG_NOSIGNAL) == -1)
     {
-        return -1;
+        return false;
     }
 
     char recvConn[10];
     if ( ::recv(_fd, recvConn, 10, 0) == -1 )
     {
-        return -1;
+        return false;
     }
 
     std::string resp = serverStatusResponse(recvConn[1]);
@@ -92,13 +102,13 @@ int TORSocket::prepareRequest(const std::string &domain, const int port)
     LOG_INFO("[*] Connection Response: " << resp);
     #endif
 
-    return 0;
+    return true;
 }
 
-bool TORSocket::send(const std::string &s, int length) const
+bool TORSocket::send(const std::string &s) const
 {
 
-    if (::send(_fd, s.c_str(), static_cast<size_t>(length), MSG_NOSIGNAL) == -1)
+    if (::send(_fd, s.c_str(), strlen(s.c_str()), MSG_NOSIGNAL) == -1)
     {
         return false;
     }
@@ -140,6 +150,11 @@ std::string TORSocket::recvAll(int chunkSize, bool blocking) const
     }
 
     return str;
+}
+
+ISocket::Type TORSocket::getType() const
+{
+    return Type::TORSocket;
 }
 
 } // namespace butterfly

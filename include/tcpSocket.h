@@ -3,6 +3,7 @@
 #define BUTTERFLY_TCPSOCKET_H
 
 #include "socket.h"
+#include "ISocket.h"
 
 namespace butterfly
 {
@@ -10,7 +11,7 @@ namespace butterfly
 /**
  * Class TCPSocket to create a TCP socket
  */
-class TCPSocket : public Socket
+class TCPSocket : public Socket, ISocket
 {
 
 private:
@@ -62,7 +63,7 @@ public:
      * @param s: std::string
      * @return True if the sending was successful
      */
-    bool send(const std::string &s) const;
+    bool send(const std::string &s) const override;
 
     /**
      * Receives the len size from the socket
@@ -71,7 +72,7 @@ public:
      * @param len: length of the buffer
      * @return size of the read data
      */
-    int recv(char *buf, int len) const;
+    int recv(char *buf, int len) const override;
 
     /**
      * Receives the complete buffer as chunks from the socket
@@ -80,8 +81,13 @@ public:
      * @param blocking: recv is blocking
      * @return data as std::string
      */
-    std::string recvAll(int chunkSize, bool blocking=false) const;
+    std::string recvAll(int chunkSize, bool blocking) const override;
 
+    /**
+     * Get the Type of the socket
+     * @return ISocket::Type enum class
+     */
+    ISocket::Type getType() const override;
 };
 
 } // namespace butterfly
