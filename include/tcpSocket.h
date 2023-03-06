@@ -4,6 +4,7 @@
 
 #include "socket.h"
 #include "ISocket.h"
+#include "logger.h"
 
 namespace butterfly
 {

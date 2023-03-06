@@ -6,13 +6,16 @@ namespace butterfly
 
 TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STREAM, 0), _ip(ip), _port(port)
 {
+    #ifdef LOGGING
+    LOG_TRACE("Create class TORSocket");
+    #endif
 
     if ( !Socket::connect(_ip, _port) )
     {
         throw SocketException("TORSocket error while connecting to " + _ip + " on port " + std::to_string(_port));
     }
     #ifdef LOGGING
-    LOG_INFO("[*TOR*] Connected to "<< ip << " on port " << std::to_string(port));
+    LOG_INFO("[*TOR*] TOR Client connected to "<< ip << " on port " << std::to_string(port));
     #endif
 
     if ( !authenticate(_sendAuthBuf, sizeof(_sendAuthBuf)) )
@@ -32,7 +35,7 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
     }
 
     #ifdef LOGGING
-    LOG_INFO("[*TOR*] Client Authenticated");
+    LOG_INFO("[*TOR*] TOR Client Authenticated");
     #endif
 }
 
@@ -99,7 +102,7 @@ bool TORSocket::connect(const std::string &domain, int port)
 
     std::string resp = serverStatusResponse(recvConn[1]);
     #ifdef LOGGING
-    LOG_INFO("[*TOR*] Connection Response: " << resp);
+    LOG_INFO("[*TOR*] TOR Connection Response: " << resp);
     #endif
 
     return true;
