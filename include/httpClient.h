@@ -53,7 +53,7 @@ public:
     *      std::string cert = httpClient->post("http://127.0.0.1:5000/api/v1/decryption/", data, 80);
     *
     */
-    explicit HTTPClient(std::shared_ptr<Socket> socket);
+    explicit HTTPClient(const std::shared_ptr<Socket> &socket);
 
     /**
      * Destructor HTTPClient

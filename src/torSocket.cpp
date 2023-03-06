@@ -9,30 +9,30 @@ TORSocket::TORSocket(const std::string &ip, int port) : Socket(AF_INET, SOCK_STR
 
     if ( !Socket::connect(_ip, _port) )
     {
-        throw SocketException("Error at connecting to " + _ip + " on port " + std::to_string(_port));
+        throw SocketException("TORSocket error while connecting to " + _ip + " on port " + std::to_string(_port));
     }
     #ifdef LOGGING
-    LOG_INFO("[*] Connected to "<< ip << " on port " << std::to_string(port));
+    LOG_INFO("[*TOR*] Connected to "<< ip << " on port " << std::to_string(port));
     #endif
 
     if ( !authenticate(_sendAuthBuf, sizeof(_sendAuthBuf)) )
     {
-        throw SocketException("Error at sending the Authentication Request to the Socket!");
+        throw SocketException("TORSocket error at sending the Authentication Request to the Socket!");
     }
 
     char recvAuth[2];
-    if ( ::recv(_fd, recvAuth, 2, 0) == -1)
+    if ( recv(recvAuth, sizeof(recvAuth)) == -1 )
     {
-        throw SocketException("Error at receiving the Authentication Response from the Socket!");
+        throw SocketException("TORSocket error at receiving the Authentication Response from the Socket!");
     }
 
     if (recvAuth[1] != 0x00)
     {
-        throw SocketException("Authentication to the TOR network failed: " + serverStatusResponse(recvAuth[1]));
+        throw SocketException("TORSocket error, authentication to the TOR network failed: " + serverStatusResponse(recvAuth[1]));
     }
 
     #ifdef LOGGING
-    LOG_INFO("[*] Client Authenticated");
+    LOG_INFO("[*TOR*] Client Authenticated");
     #endif
 }
 
@@ -99,7 +99,7 @@ bool TORSocket::connect(const std::string &domain, int port)
 
     std::string resp = serverStatusResponse(recvConn[1]);
     #ifdef LOGGING
-    LOG_INFO("[*] Connection Response: " << resp);
+    LOG_INFO("[*TOR*] Connection Response: " << resp);
     #endif
 
     return true;

@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPClient::HTTPClient(std::shared_ptr<Socket> socket) : statusCode(0), reasonPhrase("Not Implemented")
+HTTPClient::HTTPClient(const std::shared_ptr<Socket> &socket) : statusCode(0), reasonPhrase("Not Implemented")
 {
     #ifdef LOGGING
     LOG_TRACE("Create class HTTPClient");
@@ -13,9 +13,12 @@ HTTPClient::HTTPClient(std::shared_ptr<Socket> socket) : statusCode(0), reasonPh
     if(socket->getType() == ISocket::Type::TCPSocket)
     {
         _socket = std::dynamic_pointer_cast<TCPSocket>(socket);
-    } else
+    } else if (socket->getType() == ISocket::Type::TORSocket)
     {
         _socket = std::dynamic_pointer_cast<TORSocket>(socket);
+    } else
+    {
+        throw SocketException("Socket type is not supported! Supported types are TCPSocket, TORSocket");
     }
 
 }
@@ -75,7 +78,7 @@ bool HTTPClient::processResponse()
         return true;
     } else
     {
-        LOG_ERROR("Error on request: " << reasonPhrase << ": " << _httpResponse->getBody());
+        LOG_ERROR("Error on http request: " << reasonPhrase << ": " << _httpResponse->getBody());
         return false;
     }
 
