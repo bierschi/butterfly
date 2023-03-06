@@ -172,4 +172,24 @@ int Socket::hostnameToIP(const std::string &hostname, std::string &ip)
     return -1;
 }
 
+bool Socket::send(const std::string&) const
+{
+    return true;
+}
+
+int Socket::recv(char*, int) const
+{
+    return 0;
+}
+
+std::string Socket::recvAll(int, bool) const
+{
+    return "";
+}
+
+ISocket::Type Socket::getType() const
+{
+    return ISocket::Type::Socket;
+}
+
 } // namespace butterfly
