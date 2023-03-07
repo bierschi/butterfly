@@ -88,6 +88,7 @@ Usage:
 
 	butterfly --encrypt /home/butterfly/data/ 
 	butterfly --decrypt /home/butterfly/data/ 
+	butterfly --decrypt /home/butterfly/data/ --tor
 
 	butterfly --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem
 
@@ -95,6 +96,7 @@ Options:
 	-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)
 	-enc, --encrypt	    Encrypts all files in provided directory path and shows the ransom visualization
 	-dec, --decrypt	    Decrypts all files in provided directory path, if the request to the remote server was successful
+	-t,   --tor	    Remote decryption over the TOR network
 	-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)
 	-p,   --protected   Saves all key files to the system (For manual decryption)
 	-c,   --config	    Logger config path

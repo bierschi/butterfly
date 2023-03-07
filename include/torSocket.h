@@ -3,7 +3,7 @@
 #define BUTTERFLY_TORSOCKET_H
 
 #include "socket.h"
-#include "ISocket.h"
+#include "Isocket.h"
 #include "bflyUtils.h"
 #include "logger.h"
 

