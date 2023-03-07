@@ -178,6 +178,7 @@ public:
 
     /**
      * Get the Type of the socket
+     *
      * @return ISocket::Type enum class
      */
     virtual ISocket::Type getType() const;

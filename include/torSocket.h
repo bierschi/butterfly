@@ -104,6 +104,7 @@ public:
 
     /**
      * Get the Type of the socket
+     *
      * @return ISocket::Type enum class
      */
     ISocket::Type getType() const override;
