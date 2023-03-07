@@ -78,7 +78,9 @@ bool HTTPClient::processResponse()
         return true;
     } else
     {
+        #ifdef LOGGING
         LOG_ERROR("Error on http request: " << reasonPhrase << ": " << _httpResponse->getBody());
+        #endif
         return false;
     }
 
