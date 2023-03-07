@@ -3,6 +3,26 @@
 package butterfly #DDDDDD
 {
 
+enum Type
+{
+  Socket
+  TCPSocket
+  TORSocket
+}
+
+Interface ISocket
+{
+
+    + enum Type
+
+    + ISocket()
+
+    + send(const std::string &s) const = 0: bool
+    + recv(char *buf, int len) const = 0: int
+    + recvAll(int chunkSize, bool blocking) const = 0: std::string
+    + getType() const = 0: ISocket::Type
+}
+
 class Socket
 {
     - _socketDomain, _socketType, _socketProtocol: int
@@ -21,9 +41,14 @@ class Socket
     + bind(unsigned int port): bool
     + listen() const: bool
     + accept(): std::shared_ptr<Socket>
-    + connect(const std::string& host, const int port): bool
+    + connect(const std::string& host, int port): bool
     + disconnect() const: bool
-    + hostnameToIP(const std::string &hostname, std::string &ip): int
+    + {static} hostnameToIP(const std::string &hostname, std::string &ip): int
+
+    + send(const std::string &s) const: bool
+    + recv(char *buf, int len) const: int
+    + recvAll(int chunkSize, bool blocking) const: std::string
+    + getType() const: ISocket::Type
 }
 
 class TCPSocket
@@ -33,21 +58,45 @@ class TCPSocket
     + TCPSocket(int fileDescriptor)
 
     + accept(): std::shared_ptr<TCPSocket>
-    + send(const std::string& s) const: bool
-    + recv(char *buf,int len) const: int
-    + recvAll(int chunkSize, bool blocking=false) const: std::string
+    + send(const std::string &s) const: bool
+    + recv(char *buf, int len) const: int
+    + recvAll(int chunkSize, bool blocking) const: std::string
+    + getType() const: ISocket::Type
+}
+
+class TORSocket
+{
+    - _ip: std::string
+    - _port: int
+    - _sendAuthBuf[3], _connReqDomainBuf[4]: char
+
+    + TORSocket(const std::string &ip, int port)
+
+    - authenticate(const std::string &str, int size): bool
+    - {static} serverStatusResponse(char status): std::string
+
+    + connect(const std::string &domain, int port): bool
+    + send(const std::string &s) const: bool
+    + recv(char *buf, int len) const: int
+    + recvAll(int chunkSize, bool blocking) const: std::string
+    + getType() const: ISocket::Type
 }
 
 class UDPSocket <<NOT IMPLEMENTED>>
 {
     + UDPSocket()
+
+    + send(const std::string &s) const: bool
+    + recv(char *buf, int len) const: int
+    + recvAll(int chunkSize, bool blocking) const: std::string
+    + getType() const: ISocket::Type
 }
 
-class TORSocket
-{
 
-    + TORSocket()
-}
+ISocket           <|-- Socket
+ISocket           <|-- TCPSocket
+ISocket           <|-- TORSocket
+ISocket           <|-- UDPSocket
 
 Socket            <|-- TCPSocket
 Socket            <|-- UDPSocket
