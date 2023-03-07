@@ -187,7 +187,7 @@ void Butterfly::run()
         std::unique_ptr<butterfly::HTTPClient> httpClient;
         if (_args.tor)
         {
-            std::shared_ptr<TORSocket> torSocket = std::make_shared<TORSocket>("127.0.0.1", 9050);
+            std::shared_ptr<TORSocket> torSocket = std::make_shared<TORSocket>(butterfly::params::TOR_CLIENT_SOCKS_IP, butterfly::params::TOR_CLIENT_SOCKS_PORT);
             httpClient = std::unique_ptr<butterfly::HTTPClient>(new butterfly::HTTPClient(torSocket));
         } else
         {

