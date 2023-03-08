@@ -29,7 +29,7 @@ class HTTPServer
 
 class HTTPClient
 {
-    - _tcpSocket: std::shared_ptr<TCPSocket>
+    - _socket: std::shared_ptr<Socket>
     - _httpRequest: std::unique_ptr<HTTPRequest>
     - _httpResponse: std::unique_ptr<HTTPResponse>
     - _httpHeaders: std::vector< std::pair<std::string, std::string> >
@@ -40,7 +40,7 @@ class HTTPClient
     - prepareRequest(const std::string &url, Method method, const std::string &data=""): void
     - processResponse(): bool
 
-    + HTTPClient()
+    + HTTPClient(const std::shared_ptr<Socket> &socket)
 
     + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
     + get(const std::string &url, int port=80): std::string
@@ -79,7 +79,7 @@ class HTTPMSGSchema
 
 class HTTPRequest
 {
-    - _url, _userAgent: std::string
+    - _url, _userAgent, _route: std::string
 
     + HTTPRequest()
 
@@ -89,6 +89,8 @@ class HTTPRequest
     + getURL() const: std::string
     + setUserAgent(const std::string &userAgent): void
     + getUserAgent() const: std::string
+    + setRoute(const std::string &route): void
+    + getRoute() const: std::string
 
     + parseIncoming(): void
     + prepareOutgoing(): void
@@ -116,7 +118,7 @@ together {
 }
 
 TCPSocket "1..*"  o--  "1" HTTPServer : <<uses>>
-TCPSocket "1..*"  o--  "1" HTTPClient : <<uses>>
+Socket "1"  o--  "1" HTTPClient : <<uses>>
 
 HTTPServer "1"    --* "1..*" HTTPRequest: <<processes>>
 HTTPServer "1"    --* "1..*" HTTPResponse: <<sends>>

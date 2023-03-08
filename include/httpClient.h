@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "tcpSocket.h"
+#include "torSocket.h"
 #include "httpRequest.h"
 #include "httpResponse.h"
 #include "bflyUtils.h"
@@ -20,7 +21,7 @@ class HTTPClient
 {
 
 private:
-    std::shared_ptr<TCPSocket> _tcpSocket;
+    std::shared_ptr<Socket> _socket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
     std::vector< std::pair<std::string, std::string> > _httpHeaders;
@@ -44,14 +45,15 @@ public:
     std::string reasonPhrase;
 
     /**
-     * Constructor HTTPClient
-     *
-     * Usage:
-     *      std::shared_ptr<butterfly::HTTPClient> httpClient = std::make_shared<butterfly::HTTPClient>();
-     *      std::string cert = httpClient->post("http://127.0.0.1:5000/decryption/", data, 5000);
-     *
-     */
-    HTTPClient();
+    * Constructor HTTPClient
+    *
+    * Usage:
+    *      std::shared_ptr<butterfly::TCPSocket> tcpSocket = std::make_shared<butterfly::TCPSocket>();
+    *      std::shared_ptr<butterfly::HTTPClient> httpClient = std::make_shared<butterfly::HTTPClient>(tcpSocket);
+    *      std::string cert = httpClient->post("http://127.0.0.1:5000/api/v1/decryption/", data, 80);
+    *
+    */
+    explicit HTTPClient(const std::shared_ptr<Socket> &socket);
 
     /**
      * Destructor HTTPClient
@@ -71,6 +73,7 @@ public:
      *
      * @param url: URL string
      * @param port: port to connect to
+     * @return response as std::string
      */
     std::string get(const std::string &url, int port=80);
 
@@ -80,9 +83,9 @@ public:
      * @param url: URL string
      * @param data: data for the post request
      * @param port: port to connect to
+     * @return response as std::string
      */
     std::string post(const std::string &url, const std::string &data, int port=80);
-
 };
 
 } // namespace butterfly

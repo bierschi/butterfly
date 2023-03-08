@@ -1,14 +1,12 @@
 
-#ifndef BUTTERFLY_ARGUMENT_PARSER_H
-#define BUTTERFLY_ARGUMENT_PARSER_H
+#ifndef ARGUMENT_PARSER_H
+#define ARGUMENT_PARSER_H
 
 #include <iostream>
 #include <vector>
 #include <cstring>
 
-#include "app.h"
-
-namespace butterfly
+namespace tools
 {
 
 /**
@@ -20,33 +18,29 @@ class ArgumentParser
 private:
     int _argc;
     char **_argv;
+    std::string _projectName;
     std::vector<std::string> _args;
 
     /**
      * Shows the Application Usage
      */
     void showUsage() const;
-    /**
-     * Shows the version message
-     */
-    void showVersion() const;
 
 public:
 
     struct Arguments
     {
-        std::string dir, encrypt, decrypt, serverpKey, config;
-        bool protection, tor;
-        std::string version;
-
-        Arguments() : protection(false), tor(false), version(PROJECT_VER) {}
+        std::string client, url;
+        int port;
+        Arguments() : port(9050)
+        {}
     };
 
     /**
      * Constructor ArgumentParser
      *
      * Usage:
-     *      std::shared_ptr<butterfly::ArgumentParser> _argparse = std::make_shared<butterfly::ArgumentParser>(argc, argv);
+     *      std::shared_ptr<tools::ArgumentParser> _argparse = std::make_shared<tools::ArgumentParser>(argc, argv);
      *      Arguments args = _argparse->parseArgs();
      *
      * @param argc: number of arguments
@@ -66,6 +60,6 @@ public:
 
 };
 
-} // namespace butterfly
+} // namespace tools
 
-#endif //BUTTERFLY_ARGUMENT_PARSER_H
+#endif //ARGUMENT_PARSER_H

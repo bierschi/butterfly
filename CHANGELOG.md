@@ -6,11 +6,10 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 
 ### Added
 
-- Integration of TorSocket class
 - Enhancement of the browser payment page after encryption
 - Prevention of Out-of-Memory errors with huge files
 
-## [1.3] -
+## [1.3] - 2023-03-08
 
 ### Added
 
@@ -20,8 +19,9 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Added cppcheck to repository and resolved all errors/warnings
 - Added reports to the repository
 - Added toolchain for multiple platforms
-- Updated the api routes of the bflyServerApp
-- (Create a bfly.ini file and read all params from this file)
+- Updated the API routes of the bflyServerApp
+- Integration of TorSocket class (Tor Proxy)
+- Added Tor Hidden Service Support
 
 ## [1.2] - 2022-06-02
 

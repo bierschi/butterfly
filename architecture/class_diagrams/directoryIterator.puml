@@ -15,6 +15,7 @@ class DirectoryIterator
     + {static} getFilesFromDir(const boost::filesystem::path &p): std::vector<boost::filesystem::path>
     + {static} getFileSize(const boost::filesystem::path &file): uintmax_t
     + {static} getFileExtension(const boost::filesystem::path &p): std::string
+    + {static} exists(const boost::filesystem::path &p): bool
 }
 
 }

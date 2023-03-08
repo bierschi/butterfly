@@ -1,7 +1,7 @@
 
 #include "socket.h"
 
-namespace butterfly
+namespace tools
 {
 
 Socket::Socket(int domain, int type, int protocol) : _socketDomain(domain), _socketType(type), _socketProtocol(protocol), _fd(-1)
@@ -172,24 +172,4 @@ int Socket::hostnameToIP(const std::string &hostname, std::string &ip)
     return -1;
 }
 
-bool Socket::send(const std::string&) const
-{
-    return true;
-}
-
-int Socket::recv(char*, int) const
-{
-    return 0;
-}
-
-std::string Socket::recvAll(int, bool) const
-{
-    return "";
-}
-
-ISocket::Type Socket::getType() const
-{
-    return ISocket::Type::Socket;
-}
-
-} // namespace butterfly
+} // namespace tools

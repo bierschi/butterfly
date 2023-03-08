@@ -17,7 +17,8 @@ Butterfly is a cryptographic ransomware with the following features
 - Supports over 300 File Extensions :heavy_check_mark:
 - Webserver [bflyServerApp](https://github.com/bierschi/butterfly/tree/master/webserver) for a secure remote decryption :heavy_check_mark:
 - Ransom Visualization with Browser :heavy_check_mark: GUI :x: Wallpaper :x:
-- Connection to the TOR Network :arrows_counterclockwise:
+- Decryption over a Tor Hidden Service :heavy_check_mark:
+- Connection to the TOR Network :heavy_check_mark:
 - Bitcoin Payments :x:
 
 ## Disclaimer
@@ -87,6 +88,7 @@ Usage:
 
 	butterfly --encrypt /home/butterfly/data/ 
 	butterfly --decrypt /home/butterfly/data/ 
+	butterfly --decrypt /home/butterfly/data/ --tor
 
 	butterfly --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem
 
@@ -94,6 +96,7 @@ Options:
 	-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)
 	-enc, --encrypt	    Encrypts all files in provided directory path and shows the ransom visualization
 	-dec, --decrypt	    Decrypts all files in provided directory path, if the request to the remote server was successful
+	-t,   --tor	    Remote decryption over the TOR network
 	-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)
 	-p,   --protected   Saves all key files to the system (For manual decryption)
 	-c,   --config	    Logger config path

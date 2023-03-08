@@ -13,14 +13,16 @@ class HTTPServerTest : public ::testing::Test
 protected:
     std::string localHostURL;
     int port = 8901;
+    std::shared_ptr<butterfly::TCPSocket> tcpSocket;
     std::shared_ptr<butterfly::HTTPServer> httpServer;
     std::shared_ptr<butterfly::HTTPClient> httpClient;
 
     void SetUp() override
     {
         localHostURL = "http://127.0.0.1/";
+        tcpSocket = std::make_shared<butterfly::TCPSocket>();
         httpServer = std::make_shared<butterfly::HTTPServer>(port);
-        httpClient = std::make_shared<butterfly::HTTPClient>();
+        httpClient = std::make_shared<butterfly::HTTPClient>(tcpSocket);
         httpServer->run(false);
     }
 

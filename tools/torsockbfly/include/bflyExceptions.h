@@ -1,11 +1,11 @@
 
-#ifndef BUTTERFLY_BFLYEXCEPTIONS_H
-#define BUTTERFLY_BFLYEXCEPTIONS_H
+#ifndef TORSOCKBFLY_BFLYEXCEPTIONS_H
+#define TORSOCKBFLY_BFLYEXCEPTIONS_H
 
 #include <exception>
 #include <iostream>
 
-namespace butterfly
+namespace tools
 {
 
 /**
@@ -121,6 +121,21 @@ public:
 };
 
 /**
+ * Class SQLDatabaseException
+ */
+class SQLDatabaseException : public ButterflyException
+{
+
+public:
+    explicit SQLDatabaseException(const std::string &error) : ButterflyException(error) {}
+
+    std::string getType() const override
+    {
+        return "SQLDatabaseException";
+    }
+};
+
+/**
  * Class SocketException
  */
 class SocketException : public ButterflyException
@@ -135,51 +150,6 @@ public:
     }
 };
 
-/**
- * Class FileNotFoundException
- */
-class FileNotFoundException : public ButterflyException
-{
+} // namespace tools
 
-public:
-    explicit FileNotFoundException(const std::string &error) : ButterflyException(error) {}
-
-    std::string getType() const override
-    {
-        return "FileNotFoundException";
-    }
-};
-
-/**
- * Class ConnectionException
- */
-class ConnectionException : public ButterflyException
-{
-
-public:
-    explicit ConnectionException(const std::string &error) : ButterflyException(error) {}
-
-    std::string getType() const override
-    {
-        return "ConnectionException";
-    }
-};
-
-/**
- * Class BrowserException
- */
-class BrowserException : public ButterflyException
-{
-
-public:
-    explicit BrowserException(const std::string &error) : ButterflyException(error) {}
-
-    std::string getType() const override
-    {
-        return "BrowserException";
-    }
-};
-
-} // namespace butterfly
-
-#endif //BUTTERFLY_BFLYEXCEPTIONS_H
+#endif //TORSOCKBFLY_BFLYEXCEPTIONS_H
