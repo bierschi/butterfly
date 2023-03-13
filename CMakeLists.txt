@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 
 # Set project name and version
-project(butterfly VERSION "1.2")
+project(butterfly VERSION "1.3")
 
 # Add app specific macros
 configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)

@@ -9,7 +9,7 @@ All notable changes to project [butterfly](https://github.com/bierschi/butterfly
 - Enhancement of the browser payment page after encryption
 - Prevention of Out-of-Memory errors with huge files
 
-## [1.3] - 2023-03-08
+## [1.3] - 2023-03-13
 
 ### Added
 
