@@ -12,7 +12,7 @@ include_directories(include)
 # Add the stubs source files
 file(GLOB_RECURSE STUBS_SOURCES LIST_DIRECTORIES false *.h *.cpp "${CMAKE_SOURCE_DIR}/test/stubs/*.cpp")
 set(SOURCES ${STUBS_SOURCES})
-list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/torSocket.cpp ${CMAKE_SOURCE_DIR}/src/browser.cpp ${CMAKE_SOURCE_DIR}/src/connManager.cpp)
+list(REMOVE_ITEM SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/torSocket.cpp" "${CMAKE_SOURCE_DIR}/src/browser.cpp" "${CMAKE_SOURCE_DIR}/src/connManager.cpp")
 
 # Add the test source files
 file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp "${CMAKE_SOURCE_DIR}/test/*.cpp" "${CMAKE_SOURCE_DIR}/test/crypto/*.cpp")

@@ -22,3 +22,43 @@ protected:
 
     }
 };
+
+/**
+ * Testcase for testing the registerConnStateChangeCB method
+ */
+TEST_F(ConnManagerTest, registerConnStateChangeCB)
+{
+
+    //EXPECT_NO_THROW(browser->open(url));
+
+}
+
+/**
+ * Testcase for testing the isInternetAvailable method
+ */
+TEST_F(ConnManagerTest, isInternetAvailable)
+{
+
+    //EXPECT_NO_THROW(browser->open(url));
+
+}
+
+/**
+ * Testcase for testing the start method
+ */
+TEST_F(ConnManagerTest, start)
+{
+
+    //EXPECT_NO_THROW(browser->open(url));
+
+}
+
+/**
+ * Testcase for testing the stop method
+ */
+TEST_F(ConnManagerTest, stop)
+{
+
+    //EXPECT_NO_THROW(browser->open(url));
+
+}
