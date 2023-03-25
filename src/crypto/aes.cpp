@@ -21,7 +21,7 @@ CryptoAES::CryptoAES()
     EVP_CIPHER_CTX_init(_aesEncryptContext);
     EVP_CIPHER_CTX_init(_aesDecryptContext);
 
-    EVP_CipherInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, NULL, NULL, 1);
+    EVP_CipherInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), nullptr, nullptr, nullptr, 1);
 
     // Get length from the context
     _aesKeyLength = EVP_CIPHER_CTX_key_length(_aesEncryptContext);
@@ -78,11 +78,14 @@ bool CryptoAES::generateAESKey()
     #ifdef LOGGING
     LOG_INFO("Create new AES Key/IV pair")
     #endif
-    if(RAND_bytes(CryptoAES::aesKey, _aesKeyLength) == 0) {
+
+    if(RAND_bytes(CryptoAES::aesKey, _aesKeyLength) == 0)
+    {
         return false;
     }
 
-    if(RAND_bytes(CryptoAES::aesIv, _aesIvLength) == 0) {
+    if(RAND_bytes(CryptoAES::aesIv, _aesIvLength) == 0)
+    {
         return false;
     }
 
@@ -94,10 +97,11 @@ bool CryptoAES::generateAESKeyWithSalt()
     #ifdef LOGGING
     LOG_INFO("Create new AES Key/IV pair with Salt")
     #endif
-    auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
-    auto *aesSalt = (unsigned char *) malloc(8);
 
-    if (aesPass == nullptr || aesSalt == nullptr)
+    unsigned char aesSalt[8];
+    auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
+
+    if (aesPass == nullptr)
     {
         return false;
     }
@@ -118,7 +122,6 @@ bool CryptoAES::generateAESKeyWithSalt()
     }
 
     free(aesPass);
-    free(aesSalt);
 
     return true;
 }
@@ -180,7 +183,7 @@ size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength
 
     *ciphertext = static_cast<unsigned char *>(malloc(plaintextLength + AES_BLOCK_SIZE));
 
-    if (!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, CryptoAES::aesKey, CryptoAES::aesIv))
+    if (!EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), nullptr, CryptoAES::aesKey, CryptoAES::aesIv))
     {
         #ifdef LOGGING
         LOG_ERROR("Error during EVP_EncryptInit_ex in CryptoAES encrypt: " << getOpenSSLError());
@@ -218,7 +221,7 @@ size_t CryptoAES::decrypt(unsigned char *ciphertext, size_t ciphertextLength, un
 
     *plaintext = static_cast<unsigned char *>(malloc(ciphertextLength));
 
-    if (!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, CryptoAES::aesKey, CryptoAES::aesIv))
+    if (!EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), nullptr, CryptoAES::aesKey, CryptoAES::aesIv))
     {
         #ifdef LOGGING
         LOG_ERROR("Error during EVP_DecryptInit_ex in CryptoAES decrypt: " << getOpenSSLError());

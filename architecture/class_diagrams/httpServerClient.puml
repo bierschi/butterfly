@@ -1,0 +1,133 @@
+@startuml
+!include sockets.puml
+
+package butterfly #DDDDDD
+{
+
+class HTTPServer
+{
+    - _port: unsigned int port
+    - _running: std::atomic<bool>
+    - _TCPSocket, _newTCPSocket: std::shared_ptr<TCPSocket>
+    - _httpRequest: std::unique_ptr<HTTPRequest>
+    - _httpResponse: std::unique_ptr<HTTPResponse>
+    - _serverThread: std::thread
+
+    + HTTPServer(unsigned int port)
+
+    - handleRequest(): bool
+    - processRequest(): void
+    - sendResponse(): bool
+    - browserRoute(): void
+    - successResponse(size_t statusCode): void
+    - errorResponse((size_t statusCode): void
+    - _run(): void
+
+    + run(bool blocking=false): void
+    + stop(): void
+}
+
+class HTTPClient
+{
+    - _socket: std::shared_ptr<Socket>
+    - _httpRequest: std::unique_ptr<HTTPRequest>
+    - _httpResponse: std::unique_ptr<HTTPResponse>
+    - _httpHeaders: std::vector< std::pair<std::string, std::string> >
+
+    + statusCode : size_t
+    + reasonPhrase: std::string
+
+    - prepareRequest(const std::string &url, Method method, const std::string &data=""): void
+    - processResponse(): bool
+
+    + HTTPClient(const std::shared_ptr<Socket> &socket)
+
+    + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
+    + get(const std::string &url, int port=80): std::string
+    + post(const std::string &url, const std::string &data, int port=80): std::string
+}
+
+class HTTPMSGSchema
+{
+    - _httpData, _body, _messageType, _formParam: std::string
+    - _httpMethod: Method
+    - _protocol: Protocol
+    - _httpHeaders: std::vector< std::pair<std::string, std::string> >
+
+    + HTTPMSGSchema(const std::string &messageType)
+
+    + print() const: void
+    + addHTTPData(const std::string &data): void
+    + getHTTPData() const: std::string
+    + getHTTPDataSize() const: size_t
+    + setProtocol(Protocol protocol): void
+    + getProtocol() const: Protocol
+    + addBody(const std::string &body)
+    + getBody() const: std::string
+    + getBodyLength() const: size_t
+    + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
+    + getHTTPHeader(const std::string &headerName) const: std::string
+    + addHTTPHeaderVector(std::vector< std::pair<std::string, std::string> > &headerVec): void
+    + getHTTPHeadersSize() const: size_t
+    + setFormParam(const std::string &param, const std::string &value): void
+    + getFormParam() const: std::string
+    + addFormParamVector(std::vector< std::pair<std::string, std::string> > &formParamVec): void
+
+    + parseIncoming() = 0: void
+    + prepareOutgoing() = 0: void
+}
+
+class HTTPRequest
+{
+    - _url, _userAgent, _route: std::string
+
+    + HTTPRequest()
+
+    + setMethod(Method &method): void
+    + getMethod() const: Method
+    + setURL(const std::string &url): void
+    + getURL() const: std::string
+    + setUserAgent(const std::string &userAgent): void
+    + getUserAgent() const: std::string
+    + setRoute(const std::string &route): void
+    + getRoute() const: std::string
+
+    + parseIncoming(): void
+    + prepareOutgoing(): void
+}
+
+class HTTPResponse
+{
+    - _reasonPhrase: std::string
+    - _statusCode: size_t
+
+    + HTTPResponse()
+
+    + setStatusCode(size_t statusCode): void
+    + getStatusCode() const: size_t
+    + setReasonPhrase(size_t statusCode): void
+    + getReasonPhrase() const: std::string
+
+    + parseIncoming(): void
+    + prepareOutgoing(): void
+}
+
+together {
+    class HTTPServer
+    class HTTPClient
+}
+
+TCPSocket "1..*"  o--  "1" HTTPServer : <<uses>>
+Socket "1"  o--  "1" HTTPClient : <<uses>>
+
+HTTPServer "1"    --* "1..*" HTTPRequest: <<processes>>
+HTTPServer "1"    --* "1..*" HTTPResponse: <<sends>>
+
+HTTPClient "1"    --* "1..*" HTTPRequest: <<sends>>
+HTTPClient "1"    --* "1..*" HTTPResponse: <<processes>>
+
+HTTPMSGSchema <|-- HTTPRequest
+HTTPMSGSchema <|-- HTTPResponse
+
+}
+@enduml

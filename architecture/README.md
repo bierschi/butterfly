@@ -1,5 +1,5 @@
 # Architecture
-This folder contains the sequence and class diagrams for the butterfly project
+This folder contains the class, component and sequence diagrams for the butterfly project
 
 ### Installation
 <pre><code>

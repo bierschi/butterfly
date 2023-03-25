@@ -4,11 +4,6 @@
 namespace butterfly
 {
 
-DirectoryIterator::DirectoryIterator()
-{
-
-}
-
 bool DirectoryIterator::isFile(const boost::filesystem::path &path)
 {
     return boost::filesystem::is_regular_file(path);
@@ -96,6 +91,11 @@ uintmax_t DirectoryIterator::getFileSize(const boost::filesystem::path &file)
 std::string DirectoryIterator::getFileExtension(const boost::filesystem::path &p)
 {
     return p.extension().string();
+}
+
+bool DirectoryIterator::exists(const boost::filesystem::path &p)
+{
+    return boost::filesystem::exists(p);
 }
 
 } // namespace butterfly

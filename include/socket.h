@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 
+#include "Isocket.h"
 #include "bflyExceptions.h"
 
 #define MAX_CONNECTIONS 50
@@ -131,7 +132,7 @@ public:
      * @param port: Port to connect to
      * @return True if the connection was successful, else False
      */
-    bool connect(const std::string &host, int port);
+    virtual bool connect(const std::string &host, int port);
 
     /**
      * Disconnect cleanly from a socket
@@ -148,6 +149,39 @@ public:
      * @return Returns 0 on success and -1 on error
      */
     static int hostnameToIP(const std::string &hostname, std::string &ip);
+
+    /**
+     * Sends the string to the socket
+     *
+     * @param s: std::string
+     * @return True if the sending was successful
+     */
+    virtual bool send(const std::string &s) const;
+
+    /**
+     * Receives the len size from the socket
+     *
+     * @param buf: buffer
+     * @param len: length of the buffer
+     * @return return code as int
+     */
+    virtual int recv(char *buf, int len) const;
+
+    /**
+     * Receives the complete buffer as chunks from the socket
+     *
+     * @param chunkSize: size of the chunks
+     * @param blocking: recv is blocking
+     * @return  data as std::string
+     */
+    virtual std::string recvAll(int chunkSize, bool blocking) const;
+
+    /**
+     * Get the Type of the socket
+     *
+     * @return ISocket::Type enum class
+     */
+    virtual ISocket::Type getType() const;
 };
 
 } // namespace butterfly

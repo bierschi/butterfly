@@ -259,6 +259,41 @@ inline std::string getDomainFromUrl(std::string url)
 }
 
 /**
+* Get Route name from provided URL
+*
+* @param url: URL address
+* @return domain as std::string
+*/
+inline std::string getRouteFromUrl(std::string url)
+{
+    std::string http = "http://";
+    size_t pos1 = url.find(http);
+    if (pos1 != std::string::npos)
+    {
+        url.erase(pos1, http.length());
+    }
+    std::string https = "https://";
+    size_t pos2 = url.find(https);
+
+    if (pos2 != std::string::npos)
+    {
+        url.erase(pos2, https.length());
+    }
+
+    size_t pos3 = url.find('/');
+    if (pos3 != std::string::npos)
+    {
+        url.erase(0, pos3);
+    } else
+    {
+        // not route was included
+        url = "/";
+    }
+
+    return url;
+}
+
+/**
  * Creates a form param string with the content of the vector
  *
  * @param formParamVec: Vector of form parameters

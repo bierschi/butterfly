@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>butterfly</title>
+<script>
+    var timeoutHandle;
+    function countdown(minutes,stat) {
+        var seconds = 60;
+        var mins = minutes;
+
+        if(getCookie("minutes")&&getCookie("seconds")&&stat)
+        {
+            var seconds = getCookie("seconds");
+            var mins = getCookie("minutes");
+        }
+
+        function tick() {
+
+            var counter = document.getElementById("timer");
+            setCookie("minutes",mins,10)
+            setCookie("seconds",seconds,10)
+            var current_minutes = mins-1
+            seconds--;
+            counter.innerHTML =
+                current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+            //save the time in cookie
+
+            if( seconds > 0 ) {
+                timeoutHandle=setTimeout(tick, 1000);
+            } else {
+
+                if(mins > 1){
+                    setTimeout(function () { countdown(parseInt(mins)-1,false); }, 1000);
+
+                }
+            }
+        }
+        tick();
+    }
+    function setCookie(cname,cvalue,exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname+"="+cvalue+"; "+expires;
+    }
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    window.onload = function startingTimer(){
+        //countdown(prompt("Enter how many minutes you want to count down:"),true);
+        countdown(60,true);
+    }
+</script>
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+    }
+</style>
+<body style="background-color: red">
+<h1 style="text-align:center">ALL YOUR FILES HAVE BEEEN ENCRYPTED</h1>
+<p style="color: black; text-align: center">
+    Your important files are encrypted.<br>
+    Many of your documents, photos, videos, databases and other files are no longer accesible because they have been encrypted.
+    Maybe you are busy looking for a way to recover your files, but do not waste your time. <br></p>
+<h3 style="text-align: center;">Nobody can recover your files without our decryption service.</h3>
+
+
+<h1 style="text-align: center">YOUR FILES WILL BE LOST IN</h1>
+
+<div class="center" id="timer" style=" font-size:40px">00:00:00</div>
+
+<h3 style="text-align: center">HOW DO I PAY?</h3>
+<p style="color: black; text-align: center">
+    Payment is accepted in Bitcoin only. Send 300$ worth of bitcoin to this address:<br><br></p>
+<h2 style="text-align: center">12adf3afsadf3sdfgs4aff</h2>
+</body>
+</head>
+</html>

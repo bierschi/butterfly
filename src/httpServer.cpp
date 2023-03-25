@@ -38,17 +38,17 @@ void HTTPServer::_run()
 void HTTPServer::run(bool blocking)
 {
     _running = true;
-    t1 = std::thread(&HTTPServer::_run, this);
+    _serverThread = std::thread(&HTTPServer::_run, this);
     #ifdef LOGGING
     LOG_INFO("Running HTTPServer on port " << _port);
     #endif
 
     if (blocking)
     {
-        t1.join();
+        _serverThread.join();
     } else
     {
-        t1.detach();
+        _serverThread.detach();
     }
 }
 
@@ -64,7 +64,7 @@ bool HTTPServer::handleRequest()
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
     // parse incoming data from TCP Socket
-    std::string data = _newTCPSocket->recvAll(1024);
+    std::string data = _newTCPSocket->recvAll(1024, false);
 
     if ( !data.empty() )
     {
@@ -123,7 +123,7 @@ void HTTPServer::browserRoute()
     _httpResponse->setStatusCode(302);
     _httpResponse->setReasonPhrase(_httpResponse->getStatusCode());
     _httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
-    _httpResponse->addBody("<!DOCTYPE html><html><body><h1>YOU HAVE BEEN HACKED!!!</h1></body></html>");
+    _httpResponse->addBody(butterfly::INDEXPAGE);
     _httpResponse->setHTTPHeader("Content-Length", std::to_string(_httpResponse->getBody().length()));
 
     _httpResponse->prepareOutgoing();

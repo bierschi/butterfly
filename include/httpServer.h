@@ -5,11 +5,13 @@
 #include <memory>
 #include <functional>
 #include <thread>
+#include <atomic>
 
 #include "logger.h"
 #include "tcpSocket.h"
 #include "httpRequest.h"
 #include "httpResponse.h"
+#include "indexPage.h"
 
 namespace butterfly
 {
@@ -22,11 +24,11 @@ class HTTPServer
 
 private:
     unsigned int _port;
-    bool _running;
+    std::atomic<bool> _running;
     std::shared_ptr<TCPSocket> _tcpSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-    std::thread t1;
+    std::thread _serverThread;
     /**
      * Handles incoming requests to the http server
      *

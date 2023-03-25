@@ -1,6 +1,7 @@
 #include <memory>
 #include <gtest/gtest.h>
 
+#include "tcpSocket.h"
 #include "httpClient.h"
 #include "httpServer.h"
 
@@ -13,6 +14,7 @@ class HTTPClientTest : public ::testing::Test
 protected:
     std::string googleURL, localHostURL;
     int port = 8900;
+    std::shared_ptr<butterfly::TCPSocket> tcpSocket;
     std::shared_ptr<butterfly::HTTPClient> httpClient;
     std::shared_ptr<butterfly::HTTPServer> httpServer;
 
@@ -20,7 +22,8 @@ protected:
     {
         googleURL = "www.google.de";
         localHostURL = "http://127.0.0.1/";
-        httpClient = std::make_shared<butterfly::HTTPClient>();
+        tcpSocket = std::make_shared<butterfly::TCPSocket>();
+        httpClient = std::make_shared<butterfly::HTTPClient>(tcpSocket);
         httpServer = std::make_shared<butterfly::HTTPServer>(port);
         httpServer->run(false);
     }

@@ -1,0 +1,14 @@
+@startuml
+
+[Encryption]
+
+[Decryption]
+
+[TOR]
+
+[Bitcoin Payment]
+
+[Visualization]
+
+[bflyServerApp]
+@enduml

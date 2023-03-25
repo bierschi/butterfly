@@ -65,7 +65,7 @@
 .sxc .stw .sxw .sav .scr .sdf .sec .seq .sps .swf
 
 ## T
-.txt .tbk .tar .tgz .tif .tiff .tex .taz .ttf .tga                                                                  # 10
+.txt .tbk .tar .tgz .tif .tiff .tex .taz .ttf .tga .tar.gz                                                          # 11
 
 ## U
 .uop .uot .ui .ump .uos .uot .ust                                                                                   # 7
@@ -86,4 +86,4 @@
 .zip .z .z64                                                                                                        # 3
 
 
-= 330
+= 331

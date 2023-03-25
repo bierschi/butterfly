@@ -95,7 +95,7 @@ TEST_F(TCPSocketTest, recvAll)
     t.join();
 
     std::shared_ptr<butterfly::TCPSocket> newSocket  = serverSocket->accept();
-    std::string s = newSocket->recvAll(1024);
+    std::string s = newSocket->recvAll(1024, false);
 
     EXPECT_TRUE( !s.empty() );
     EXPECT_TRUE(s.length() == 11);

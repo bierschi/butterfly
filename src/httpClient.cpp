@@ -4,16 +4,28 @@
 namespace butterfly
 {
 
-HTTPClient::HTTPClient() : _tcpSocket(std::make_shared<TCPSocket>()), statusCode(0), reasonPhrase("Not Implemented")
+HTTPClient::HTTPClient(const std::shared_ptr<Socket> &socket) : statusCode(0), reasonPhrase("Not Implemented")
 {
     #ifdef LOGGING
     LOG_TRACE("Create class HTTPClient");
     #endif
+
+    if(socket->getType() == ISocket::Type::TCPSocket)
+    {
+        _socket = std::dynamic_pointer_cast<TCPSocket>(socket);
+    } else if (socket->getType() == ISocket::Type::TORSocket)
+    {
+        _socket = std::dynamic_pointer_cast<TORSocket>(socket);
+    } else
+    {
+        throw SocketException("Socket type is not supported! Supported types are TCPSocket, TORSocket");
+    }
+
 }
 
 HTTPClient::~HTTPClient()
 {
-    _tcpSocket->disconnect();
+    _socket->disconnect();
 }
 
 void HTTPClient::prepareRequest(const std::string &url, Method method, const std::string &data)
@@ -22,8 +34,11 @@ void HTTPClient::prepareRequest(const std::string &url, Method method, const std
     _httpRequest  = std::unique_ptr<HTTPRequest>(new HTTPRequest());
     _httpResponse = std::unique_ptr<HTTPResponse>(new HTTPResponse());
 
+    std::string route = butterfly::getRouteFromUrl(url);
+
     // Prepare HTTP Request
     _httpRequest->setURL(url);
+    _httpRequest->setRoute(route);
     _httpRequest->setMethod(method);
     _httpRequest->setProtocol(Protocol::HTTP1_1);
     _httpRequest->setHTTPHeader("User-Agent", "butterfly");
@@ -43,8 +58,9 @@ void HTTPClient::prepareRequest(const std::string &url, Method method, const std
 
 bool HTTPClient::processResponse()
 {
+    std::string httpData;
 
-    std::string httpData = _tcpSocket->recvAll(1024, true);
+    httpData = _socket->recvAll(1024, true);
 
     if ( httpData.empty() )
     {
@@ -62,6 +78,9 @@ bool HTTPClient::processResponse()
         return true;
     } else
     {
+        #ifdef LOGGING
+        LOG_ERROR("Error on http request: " << reasonPhrase << ": " << _httpResponse->getBody());
+        #endif
         return false;
     }
 
@@ -74,20 +93,16 @@ void HTTPClient::setHTTPHeader(const std::string &headerName, const std::string 
 
 std::string HTTPClient::post(const std::string &url, const std::string &data, int port)
 {
-    // Prepare the post request
-    prepareRequest(url, Method::POST, data);
+    std::string domain = butterfly::getDomainFromUrl(url);
 
-    std::string response, ip;
-    std::string domain = getDomainFromUrl(url);
-
-    _tcpSocket->hostnameToIP(domain, ip);
-    if ( _tcpSocket->connect(ip, port) )
+    if ( _socket->connect(domain, port) )
     {
-        #ifdef LOGGING
-        LOG_INFO("Sending post request to url " << url);
-        #endif
-        _tcpSocket->send(_httpRequest->getHTTPData());
+        // Prepare the post request
+        prepareRequest(url, Method::POST, data);
 
+        _socket->send(_httpRequest->getHTTPData());
+
+        std::string response;
         if ( processResponse() )
         {
             response = _httpResponse->getBody();
@@ -96,7 +111,6 @@ std::string HTTPClient::post(const std::string &url, const std::string &data, in
         {
             return response;
         }
-
     } else
     {
         throw ConnectionException("Could not connect to " + url + " on port " + std::to_string(port));
@@ -105,20 +119,16 @@ std::string HTTPClient::post(const std::string &url, const std::string &data, in
 
 std::string HTTPClient::get(const std::string &url, int port)
 {
-    // Prepare the get request
-    prepareRequest(url,Method::GET);
-
-    std::string response, ip;
     std::string domain = butterfly::getDomainFromUrl(url);
 
-    _tcpSocket->hostnameToIP(domain, ip);
-    if ( _tcpSocket->connect(ip, port) )
+    if ( _socket->connect(domain, port) )
     {
-        #ifdef LOGGING
-        LOG_INFO("Sending get request to url " << url);
-        #endif
-        _tcpSocket->send(_httpRequest->getHTTPData());
+        // Prepare the get request
+        prepareRequest(url, Method::GET);
 
+        _socket->send(_httpRequest->getHTTPData());
+
+        std::string response;
         if ( processResponse() )
         {
             response = _httpResponse->getBody();

@@ -1,16 +1,44 @@
 # Butterfly
+[![Build Status](https://jenkins.bierschi.com/buildStatus/icon?job=butterfly%2Fmaster)](https://jenkins.bierschi.com/job/butterfly/job/master/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/bierschi/butterfly/blob/master/LICENSE)
+[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
+[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
+<!--[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)-->
+
+<p align="left">
+<img src="images/butterfly.png" width="300" height="300">
+</p>
+
 Butterfly is a cryptographic ransomware with the following features
 
 - Hybrid Encryption (RSA Asymmetric/AES Symmetric Encryption) :heavy_check_mark:
 - Offline Encryption :heavy_check_mark:
-- Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :x:, MacOS :x:)
+- Supports multiple Operating Systems (Linux :heavy_check_mark:, Windows :arrows_counterclockwise:, MacOS :x:)
 - Supports over 300 File Extensions :heavy_check_mark:
 - Webserver [bflyServerApp](https://github.com/bierschi/butterfly/tree/master/webserver) for a secure remote decryption :heavy_check_mark:
-- Ransom Visualization with HTTPServer :heavy_check_mark: GUI :x: Wallpaper :x:
-- Connection to the TOR Network :x:
+- Ransom Visualization with Browser :heavy_check_mark: GUI :x: Wallpaper :x:
+- Decryption over a Tor Hidden Service :heavy_check_mark:
+- Connection to the TOR Network :heavy_check_mark:
 - Bitcoin Payments :x:
 
+## Disclaimer
+
+Butterfly is a full-featured cryptographic ransomware application that irrevocably encrypts your data. This means careless
+use leads to permanent data loss (No liability is accepted).
+The main purpose for the butterfly project was to build knowledge related to the increased occurrence of ransomwares. <br>
+
+:exclamation: **Butterfly was never supposed to harm or threat other computers** :exclamation:
+
 ## Dependencies
+
+Install compilers for the toolchain
+<pre><code>
+# GCC on Ubuntu
+sudo apt-get install gcc g++
+
+# Windows cross compiler for Ubuntu
+sudo apt-get install mingw-w64
+</code></pre>
 
 Install openssl and boost filesystem libraries
 <pre><code>
@@ -26,11 +54,15 @@ sudo apt-get install -y libboost-log-dev
 
 Build butterfly
 <pre><code>
-git clone https://github.com/bierschi/butterfly.git
-cd butterfly
+# Clone the repo and create the build/ folder
+git clone https://github.com/bierschi/butterfly.git && cd butterfly
 mkdir build && cd build
-cmake ../
-(cmake ../ -DUNITTESTS=ON -DLOGGING=ON)
+
+# Execute cmake with options
+cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake ../
+(cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake -DUNITTESTS=ON -DLOGGING=ON ../)
+
+# Build the binary
 make
 </code></pre>
 
@@ -56,16 +88,18 @@ Usage:
 
 	butterfly --encrypt /home/butterfly/data/ 
 	butterfly --decrypt /home/butterfly/data/ 
+	butterfly --decrypt /home/butterfly/data/ --tor
 
 	butterfly --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem
 
 Options:
-	-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)
-	-enc, --encrypt	    Encrypts all files in provided directory
-	-dec, --decrypt	    Decrypts all files in provided directory, if the request to the Server was successful
-	-k,   --key         Masterkey for the Decryption (Corresponds to the embedded Server Public Key)
-	-p,   --protected   Save all key files to the System
-	-c,   --config	    Logger Config Path
+	-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)
+	-enc, --encrypt	    Encrypts all files in provided directory path and shows the ransom visualization
+	-dec, --decrypt	    Decrypts all files in provided directory path, if the request to the remote server was successful
+	-t,   --tor	    Remote decryption over the TOR network
+	-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)
+	-p,   --protected   Saves all key files to the system (For manual decryption)
+	-c,   --config	    Logger config path
 	-v,   --version	    Show version information and quit
 	-h,   --help	    Show this message and quit
 
@@ -77,7 +111,7 @@ Test the full functionalities of `butterfly`
 # Run the bflyServerApp for remote decryption
 bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
 
-# Start the butterfly binary
+# Run the butterfly binary with --dir argument
 ./butterfly --dir /home/butterfly/data/
 </code></pre>
 
@@ -107,7 +141,17 @@ sudo make
 sudo cp *.a /usr/lib
 </code></pre>
 
-Test the `butterfly` units
+Enable the Unit Tests with 
+<pre><code>
+cmake ../ -DUNITTESTS=ON 
+</code></pre>
+
+List all tests
+<pre><code>
+./butterflyUnitTests --gtest_list_tests
+</code></pre>
+
+Run the `butterfly` units
 <pre><code>
 ./butterflyUnitTests
 </code></pre>

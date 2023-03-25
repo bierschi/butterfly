@@ -4,7 +4,7 @@
 namespace butterfly
 {
 
-HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request")
+HTTPRequest::HTTPRequest() : HTTPMSGSchema("Request"), _route("/")
 {
 
 }
@@ -24,6 +24,11 @@ void HTTPRequest::setUserAgent(const std::string &userAgent)
     _userAgent = userAgent;
 }
 
+void HTTPRequest::setRoute(const std::string &route)
+{
+    _route = route;
+}
+
 void HTTPRequest::parseIncoming()
 {
     /*
@@ -36,7 +41,7 @@ void HTTPRequest::parseIncoming()
      */
 
     size_t parseCursorOld = 0, parseCursorNew = 0;
-    size_t headerParseCursorOld, headerParseCursorNew;
+    //size_t headerParseCursorOld, headerParseCursorNew;
     std::string httpMethod, httpProtocol, requestHeader;
     std::string requestHeaderName, requestHeaderContent;
 
@@ -107,6 +112,7 @@ void HTTPRequest::parseIncoming()
         requestHeader = _httpData.substr(parseCursorOld, parseCursorNew - parseCursorOld);
         parseCursorOld = parseCursorNew + 1;
 
+        size_t headerParseCursorOld, headerParseCursorNew;
         headerParseCursorOld = headerParseCursorNew = 0;
         // Further parse the request header
         // Header Name
@@ -175,23 +181,18 @@ void HTTPRequest::prepareOutgoing()
             break;
     }
 
-    if (_httpMethod == Method::GET)
-    {
-        _httpData += httpMethod + " / " + protocol + CRLF;
-    } else
-    {
-        _httpData += httpMethod + " " + _url + " " + protocol + CRLF;
-    }
+
+    _httpData += httpMethod + " " + _route + " " + protocol + CRLF;
 
     if ( !_userAgent.empty() )
     {
         _httpData += "User-Agent: " + _userAgent + CRLF;
     }
 
-    for(auto &httpHeader: _httpHeaders)
+    _httpData = std::accumulate(_httpHeaders.begin(), _httpHeaders.end(), _httpData,[&](std::string httpData, const std::pair<std::string , std::string> &httpHeader)
     {
-        _httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
-    }
+        return httpData += httpHeader.first + ": " + httpHeader.second + CRLF;
+    });
 
     _httpData += CRLF;
 

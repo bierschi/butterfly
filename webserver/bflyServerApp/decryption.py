@@ -18,17 +18,21 @@ class Decryption:
 
         self.cprivatersa_str = cprivatersa_str
         self.rsabin_str = rsabin_str
-        self.delimiter = b"-----END RSA PRIVATE KEY-----\n"
+        self.rsa_pkey_delimiter = b"-----END RSA PRIVATE KEY-----\n"
+        self.pkey_delimiter = b"-----END PRIVATE KEY-----\n"
 
         self.logger.info("Length of CPrivateRSA.bin string is {} bytes".format(len(self.cprivatersa_str)))
         self.logger.info("Length of RSA.bin string is {} bytes".format(len(self.rsabin_str)))
 
-        if rsa_keysize.isdecimal():
-            self.rsa_key_length = int(int(rsa_keysize)/8)
-            self.logger.info("Setting rsa_key_length to {}".format(self.rsa_key_length))
+        if isinstance(rsa_keysize, str):
+            if rsa_keysize.isdecimal():
+                self.rsa_key_length = int(int(rsa_keysize)/8)
+                self.logger.info("Setting rsa_key_length to {}".format(self.rsa_key_length))
+            else:
+                self.logger.error("Setting rsa_key_length to 256 as default value!")
+                self.rsa_key_length = 256
         else:
-            self.logger.error("Setting rsa_key_length to 256 as default value!")
-            self.rsa_key_length = 256
+            self.rsa_key_length = int(int(rsa_keysize)/8)
 
         if len(rsabin_str) < (self.rsa_key_length + 16 + 16):
             self.logger.error("RSA.bin string is smaller than {}+16+16!".format(self.rsa_key_length))
@@ -109,8 +113,11 @@ class Decryption:
         self.logger.info("Decrypt the CPrivateRSA.bin with AES")
         cprivatersa_decrypted = self.decrypt_aes(rsa_ek1, self.rsa_iv1, self.cprivatersa_str)
 
-        if self.delimiter in cprivatersa_decrypted:
-            cprivatersa_decrypted = cprivatersa_decrypted[:cprivatersa_decrypted.index(self.delimiter) + len(self.delimiter)]
+        if self.rsa_pkey_delimiter in cprivatersa_decrypted:
+            cprivatersa_decrypted = cprivatersa_decrypted[:cprivatersa_decrypted.index(self.rsa_pkey_delimiter) + len(self.rsa_pkey_delimiter)]
+            return cprivatersa_decrypted
+        elif self.pkey_delimiter in cprivatersa_decrypted:
+            cprivatersa_decrypted = cprivatersa_decrypted[:cprivatersa_decrypted.index(self.pkey_delimiter) + len(self.pkey_delimiter)]
             return cprivatersa_decrypted
         else:
             return cprivatersa_decrypted

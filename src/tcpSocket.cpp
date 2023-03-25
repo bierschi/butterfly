@@ -53,14 +53,13 @@ bool TCPSocket::send(const std::string &s) const
 
 int TCPSocket::recv(char *buf, int len) const
 {
-    std::string s;
-    ssize_t size_recv , total_size= 0;
+    ssize_t total_size= 0;
 
     memset(buf , 0 , static_cast<size_t>(len));	//clear the variable
 
     while(1)
     {
-
+        ssize_t size_recv;
         if((size_recv =  ::recv(_fd , buf , static_cast<size_t>(len), MSG_DONTWAIT) ) < 0 )
         {
             break;
@@ -96,6 +95,11 @@ std::string TCPSocket::recvAll(int chunkSize, bool blocking) const
     }
 
     return str;
+}
+
+ISocket::Type TCPSocket::getType() const
+{
+    return Type::TCPSocket;
 }
 
 } // namespace butterfly

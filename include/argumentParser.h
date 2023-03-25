@@ -36,10 +36,10 @@ public:
     struct Arguments
     {
         std::string dir, encrypt, decrypt, serverpKey, config;
-        bool protection;
+        bool protection, tor;
         std::string version;
 
-        Arguments() : protection(false), version(PROJECT_VER) {}
+        Arguments() : protection(false), tor(false), version(PROJECT_VER) {}
     };
 
     /**

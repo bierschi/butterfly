@@ -4,7 +4,7 @@
 namespace tools
 {
 
-ArgumentParser::ArgumentParser(int argc, char *argv[]) : _argc(argc), _argv(argv), _projectName("tcpsockblfy")
+ArgumentParser::ArgumentParser(int argc, char *argv[]) : _argc(argc), _argv(argv), _projectName("tcpsockbfly")
 {
     // Save all arguments in vector
     for(int i = 1; i < _argc; i++)
