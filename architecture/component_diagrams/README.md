@@ -1,1 +1,3 @@
 # Component Diagrams
+
+![](butterfly.svg)

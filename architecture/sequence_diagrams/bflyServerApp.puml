@@ -2,7 +2,7 @@
 'https://plantuml.com/sequence-diagram
 
 actor target
-actor "webserver \n**/decryption/**" as webserver
+actor "webserver \n**/api/v1/decryption/**" as webserver
 
 participant SPrivateRSA.pem
 participant RSADecryption
