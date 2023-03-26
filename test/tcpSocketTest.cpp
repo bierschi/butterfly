@@ -40,7 +40,7 @@ public:
 };
 
 /**
- * Testcase for testing the accept
+ * Testcase for testing the accept method
  */
 TEST_F(TCPSocketTest, accept)
 {
@@ -55,7 +55,7 @@ TEST_F(TCPSocketTest, accept)
 }
 
 /**
- * Testcase for testing the send
+ * Testcase for testing the send method
  */
 TEST_F(TCPSocketTest, send)
 {
@@ -71,7 +71,7 @@ TEST_F(TCPSocketTest, send)
 }
 
 /**
- * Testcase for testing the recv
+ * Testcase for testing the recv method
  */
 TEST_F(TCPSocketTest, recv)
 {
@@ -83,11 +83,11 @@ TEST_F(TCPSocketTest, recv)
     int size = newSocket->recv(s, 1024);
 
     EXPECT_TRUE( size != 0 );
-    EXPECT_TRUE(size == 11);
+    EXPECT_TRUE( size == 11 );
 }
 
 /**
- * Testcase for testing the recvAll
+ * Testcase for testing the recvAll method
  */
 TEST_F(TCPSocketTest, recvAll)
 {
@@ -98,6 +98,17 @@ TEST_F(TCPSocketTest, recvAll)
     std::string s = newSocket->recvAll(1024, false);
 
     EXPECT_TRUE( !s.empty() );
-    EXPECT_TRUE(s.length() == 11);
-    EXPECT_FALSE(s.length() == 10);
+    EXPECT_TRUE( s.length() == 11 );
+    EXPECT_FALSE( s.length() == 10 );
+}
+
+/**
+ * Testcase for testing the getType method
+ */
+TEST_F(TCPSocketTest, getType)
+{
+
+    butterfly::ISocket::Type type = clientSocket->getType();
+    EXPECT_TRUE( type == butterfly::ISocket::Type::TCPSocket );
+
 }

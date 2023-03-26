@@ -35,6 +35,20 @@ protected:
 };
 
 /**
+ * Testcase for the setHTTPHeader method
+ */
+TEST_F(HTTPClientTest, setHTTPHeader)
+{
+
+    std::vector< std::pair<std::string, std::string> > vec1 = httpClient->getHTTPHeader();
+    EXPECT_TRUE(vec1.empty());
+
+    httpClient->setHTTPHeader("User-Agent", "butterfly");
+    std::vector< std::pair<std::string, std::string> > vec2 = httpClient->getHTTPHeader();
+    EXPECT_FALSE(vec2.empty());
+}
+
+/**
  * Testcase for the get method
  */
 TEST_F(HTTPClientTest, get)
@@ -64,7 +78,7 @@ TEST_F(HTTPClientTest, ConnectionException)
 
     EXPECT_THROW({
 
-        httpClient->get("http://127.0.0.5", 80);
+        httpClient->get("http://127.0.0.5", 2564);
         }, butterfly::ConnectionException);
 
 }

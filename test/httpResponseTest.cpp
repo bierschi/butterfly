@@ -10,18 +10,20 @@ class HTTPResponseTest : public ::testing::Test
 {
 
 protected:
+    std::string _userAgent = "butterfly", _contentType = "text/html; charset=utf8", _body = "<!DOCTYPE html><html><body><h1>Test Message</h1></body></html>";
+    butterfly::Protocol _protocol = butterfly::Protocol::HTTP1_1;
     std::unique_ptr<butterfly::HTTPResponse> httpResponse;
 
     void SetUp() override
     {
         httpResponse = std::unique_ptr<butterfly::HTTPResponse>(new butterfly::HTTPResponse());
         // Set http response data
-        httpResponse->setProtocol(butterfly::Protocol::HTTP1_1);
+        httpResponse->setProtocol(_protocol);
         httpResponse->setStatusCode(200);
         httpResponse->setReasonPhrase(200);
-        httpResponse->setHTTPHeader("User-Agent", "butterfly");
-        httpResponse->setHTTPHeader("Content-Type", "text/html; charset=utf8");
-        httpResponse->addBody("<!DOCTYPE html><html><body><h1>Test Message</h1></body></html>");
+        httpResponse->setHTTPHeader("User-Agent", _userAgent);
+        httpResponse->setHTTPHeader("Content-Type", _contentType);
+        httpResponse->addBody(_body);
         httpResponse->setHTTPHeader("Content-Length", std::to_string(httpResponse->getBody().length()));
 
         httpResponse->prepareOutgoing();
@@ -39,9 +41,9 @@ protected:
 TEST_F(HTTPResponseTest, getProtocol)
 {
 
-    butterfly::Protocol prot = httpResponse->getProtocol();
+    butterfly::Protocol protocol = httpResponse->getProtocol();
 
-    EXPECT_TRUE(prot == butterfly::Protocol::HTTP1_1);
+    EXPECT_TRUE(protocol == _protocol);
 }
 
 /**
@@ -70,10 +72,10 @@ TEST_F(HTTPResponseTest, getReasonPhrase)
 TEST_F(HTTPResponseTest, getHTTPHeader)
 {
     std::string httpHeaderUserAgent = httpResponse->getHTTPHeader("User-Agent");
-    std::string httpHeaderContent = httpResponse->getHTTPHeader("Content-Type");
+    std::string httpHeaderContentType = httpResponse->getHTTPHeader("Content-Type");
 
-    EXPECT_TRUE(httpHeaderUserAgent == "butterfly");
-    EXPECT_TRUE(httpHeaderContent == "text/html; charset=utf8");
+    EXPECT_TRUE(httpHeaderUserAgent == _userAgent);
+    EXPECT_TRUE(httpHeaderContentType == _contentType);
 }
 
 /**
@@ -83,7 +85,7 @@ TEST_F(HTTPResponseTest, getBody)
 {
     std::string body = httpResponse->getBody();
 
-    EXPECT_TRUE(body == "<!DOCTYPE html><html><body><h1>Test Message</h1></body></html>");
+    EXPECT_TRUE(body == _body);
 }
 
 /**
@@ -93,7 +95,7 @@ TEST_F(HTTPResponseTest, getHTTPData)
 {
     std::string httpdata = httpResponse->getHTTPData();
 
-    EXPECT_TRUE(!httpdata.empty());
+    EXPECT_TRUE( !httpdata.empty() );
 }
 
 /**
@@ -103,5 +105,5 @@ TEST_F(HTTPResponseTest, getRequestSize)
 {
     size_t httpDatasize = httpResponse->getHTTPDataSize();
 
-    EXPECT_TRUE( httpDatasize > 0);
+    EXPECT_TRUE( httpDatasize > 0 );
 }

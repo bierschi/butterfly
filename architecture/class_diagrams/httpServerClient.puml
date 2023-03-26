@@ -43,6 +43,7 @@ class HTTPClient
     + HTTPClient(const std::shared_ptr<Socket> &socket)
 
     + setHTTPHeader(const std::string &headerName, const std::string &headerContent): void
+    + getHTTPHeader() const: std::vector< std::pair<std::string, std::string> >
     + get(const std::string &url, int port=80): std::string
     + post(const std::string &url, const std::string &data, int port=80): std::string
 }
