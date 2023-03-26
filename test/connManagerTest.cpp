@@ -29,7 +29,8 @@ protected:
 TEST_F(ConnManagerTest, registerConnStateChangeCB)
 {
 
-    //EXPECT_NO_THROW(browser->open(url));
+    std::function<void(bool)> cb;
+    EXPECT_NO_THROW(connManager->registerConnStateChangeCB(cb));
 
 }
 
@@ -39,7 +40,7 @@ TEST_F(ConnManagerTest, registerConnStateChangeCB)
 TEST_F(ConnManagerTest, isInternetAvailable)
 {
 
-    //EXPECT_NO_THROW(browser->open(url));
+    EXPECT_TRUE(connManager->isInternetAvailable());
 
 }
 
@@ -49,7 +50,7 @@ TEST_F(ConnManagerTest, isInternetAvailable)
 TEST_F(ConnManagerTest, start)
 {
 
-    //EXPECT_NO_THROW(browser->open(url));
+    EXPECT_NO_THROW(connManager->start());
 
 }
 
@@ -59,6 +60,6 @@ TEST_F(ConnManagerTest, start)
 TEST_F(ConnManagerTest, stop)
 {
 
-    //EXPECT_NO_THROW(browser->open(url));
+    EXPECT_NO_THROW(connManager->stop());
 
 }
