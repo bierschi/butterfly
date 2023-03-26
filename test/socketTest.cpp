@@ -29,7 +29,7 @@ protected:
 };
 
 /**
- * Testcase for testing the getFileDescriptor
+ * Testcase for testing the getFileDescriptor method
  */
 TEST_F(SocketTest, getFileDescriptor)
 {
@@ -38,7 +38,7 @@ TEST_F(SocketTest, getFileDescriptor)
 }
 
 /**
- * Testcase for testing the shutdown
+ * Testcase for testing the shutdown method
  */
 TEST_F(SocketTest, shutdown)
 {
@@ -55,7 +55,7 @@ TEST_F(SocketTest, shutdown)
 }
 
 /**
- * Testcase for testing the bind
+ * Testcase for testing the bind method
  */
 TEST_F(SocketTest, bind)
 {
@@ -64,7 +64,7 @@ TEST_F(SocketTest, bind)
 }
 
 /**
- * Testcase for testing the listen
+ * Testcase for testing the listen method
  */
 TEST_F(SocketTest, listen)
 {
@@ -73,7 +73,7 @@ TEST_F(SocketTest, listen)
 }
 
 /**
- * Testcase for testing the accept
+ * Testcase for testing the accept method
  */
 TEST_F(SocketTest, accept)
 {
@@ -88,7 +88,7 @@ TEST_F(SocketTest, accept)
 }
 
 /**
- * Testcase for testing the connect
+ * Testcase for testing the connect method
  */
 TEST_F(SocketTest, connect)
 {
@@ -97,7 +97,7 @@ TEST_F(SocketTest, connect)
 }
 
 /**
- * Testcase for testing the disconnect
+ * Testcase for testing the disconnect method
  */
 TEST_F(SocketTest, disconnect)
 {
@@ -106,12 +106,60 @@ TEST_F(SocketTest, disconnect)
 }
 
 /**
- * Testcase for testing the hostnameToIP
+ * Testcase for testing the hostnameToIP method
  */
 TEST_F(SocketTest, hostnameToIP)
 {
     std::string ip;
     int rc = clientSocket->hostnameToIP("localhost", ip);
-    EXPECT_TRUE(!ip.empty());
-    EXPECT_TRUE(rc != -1);
+    EXPECT_TRUE( !ip.empty() );
+    EXPECT_TRUE( rc != -1 );
+}
+
+/**
+ * Testcase for testing the send method
+ */
+TEST_F(SocketTest, send)
+{
+
+    bool response = clientSocket->send("");
+    EXPECT_TRUE( response );
+
+}
+
+/**
+ * Testcase for testing the recv method
+ */
+TEST_F(SocketTest, recv)
+{
+
+    char *buf = nullptr;
+    int len = 0;
+    int rc = clientSocket->recv(buf, len);
+    EXPECT_TRUE( rc == 0 );
+
+}
+
+/**
+ * Testcase for testing the recvAll method
+ */
+TEST_F(SocketTest, recvAll)
+{
+
+    int chunkSize = 0;
+    bool blocking = false;
+    std::string response = clientSocket->recvAll(chunkSize, blocking);
+    EXPECT_TRUE( response.empty() );
+
+}
+
+/**
+ * Testcase for testing the getType method
+ */
+TEST_F(SocketTest, getType)
+{
+
+    butterfly::ISocket::Type type = clientSocket->getType();
+    EXPECT_TRUE( type == butterfly::ISocket::Type::Socket );
+
 }

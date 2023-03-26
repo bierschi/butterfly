@@ -62,7 +62,7 @@ TEST_F(HTTPServerTest, ConnectionException)
 
     EXPECT_THROW({
 
-        httpClient->get("http://127.0.0.5", 80);
+        httpClient->get("http://127.0.0.5", 2565);
 
         }, butterfly::ConnectionException);
 
