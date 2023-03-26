@@ -33,6 +33,9 @@ int main(int argc, char **argv)
         ::testing::GTEST_FLAG(filter) = "TCPSocketTest.*";
         rc = RUN_ALL_TESTS();
 
+        ::testing::GTEST_FLAG(filter) = "TORSocketTest.*";
+        rc = RUN_ALL_TESTS();
+
         ::testing::GTEST_FLAG(filter) = "DirectoryIteratorTest.*";
         rc = RUN_ALL_TESTS();
 
@@ -49,6 +52,9 @@ int main(int argc, char **argv)
         rc = RUN_ALL_TESTS();
 
         ::testing::GTEST_FLAG(filter) = "BrowserTest.*";
+        rc = RUN_ALL_TESTS();
+
+        ::testing::GTEST_FLAG(filter) = "ConnManagerTest.*";
         rc = RUN_ALL_TESTS();
 
         return rc;
