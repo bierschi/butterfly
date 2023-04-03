@@ -21,6 +21,7 @@ RUN apt-get install -y cmake git g++ gcc > /dev/null && \
 RUN apt-get update && apt-get install -y libssl-dev libboost-filesystem-dev libboost-log-dev libgtest-dev > /dev/null
 
 # Create known_hosts
+RUN mkdir /root/.ssh/
 RUN touch /root/.ssh/known_hosts
 # Add github.com key
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
