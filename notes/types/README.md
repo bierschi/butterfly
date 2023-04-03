@@ -2,6 +2,8 @@
 
 # Ransomware Types
 
+https://www.crowdstrike.com/cybersecurity-101/ransomware/ransomware-examples/
+
 - CradleCore (Cradle Ransomware)
 - WannaCry
 - NextCry

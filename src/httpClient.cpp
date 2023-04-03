@@ -91,6 +91,11 @@ void HTTPClient::setHTTPHeader(const std::string &headerName, const std::string 
     _httpHeaders.emplace_back(headerName, headerContent);
 }
 
+std::vector<std::pair<std::string, std::string>> HTTPClient::getHTTPHeader() const
+{
+    return _httpHeaders;
+}
+
 std::string HTTPClient::post(const std::string &url, const std::string &data, int port)
 {
     std::string domain = butterfly::getDomainFromUrl(url);

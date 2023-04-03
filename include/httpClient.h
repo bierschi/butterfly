@@ -69,6 +69,13 @@ public:
     void setHTTPHeader(const std::string &headerName, const std::string &headerContent);
 
     /**
+     * Getter for the HTTP Headers
+     *
+     * @return std::vector< std::pair<std::string, std::string> >
+     */
+    std::vector< std::pair<std::string, std::string> > getHTTPHeader() const;
+
+    /**
      * Get request to the URL
      *
      * @param url: URL string

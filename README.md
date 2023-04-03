@@ -19,7 +19,7 @@ Butterfly is a cryptographic ransomware with the following features
 - Ransom Visualization with Browser :heavy_check_mark: GUI :x: Wallpaper :x:
 - Decryption over a Tor Hidden Service :heavy_check_mark:
 - Connection to the TOR Network :heavy_check_mark:
-- Bitcoin Payments :x:
+- Bitcoin Payments :arrows_counterclockwise:
 
 ## Disclaimer
 
