@@ -27,11 +27,6 @@ RUN cd /usr/src/gtest && cmake CMakeLists.txt && make && cp *.a /usr/lib
 RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz > /dev/null && tar xzvf boost_1_73_0.tar.gz > /dev/null
 RUN cd boost_1_73_0/ && ./bootstrap.sh --prefix=/usr/ > /dev/null && ./b2 > /dev/null && ./b2 install > /dev/null
 
-# Add ssh key
-RUN mkdir /root/.ssh/
-ADD id_ed25519 /root/.ssh/id_ed25519
-RUN chmod 600 /root/.ssh/id_ed25519
-
 # Create known_hosts
 RUN touch /root/.ssh/known_hosts
 # Add github.com key
@@ -40,7 +35,7 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 ARG BRANCH
 ARG CACHEBUST=1
 # Clone the butterfly project
-RUN git clone -b $BRANCH git@github.com:bierschi/butterfly.git /root/butterfly
+RUN git clone -b $BRANCH https://github.com/bierschi/butterfly.git/root/butterfly
 
 WORKDIR /root/butterfly
 
