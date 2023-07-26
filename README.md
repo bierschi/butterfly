@@ -1,8 +1,8 @@
 # Butterfly
 [![Build Status](https://jenkins.bierschi.com/buildStatus/icon?job=butterfly%2Fmaster)](https://jenkins.bierschi.com/job/butterfly/job/master/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/bierschi/butterfly/blob/master/LICENSE)
-[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
-[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
+<!--[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)-->
+<!--[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)-->
 <!--[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)-->
 
 <p align="left">
