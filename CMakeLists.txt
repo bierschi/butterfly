@@ -28,6 +28,11 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(OPENSSL_USE_STATIC_LIBS TRUE)
 
+# Add the generic headers
+include_directories(include)
+# Add the generic Sources Files
+file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     message("Using the Linux Toolchain")
 
@@ -36,14 +41,12 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     find_package(Boost 1.45.0 COMPONENTS filesystem)
     find_package(Threads REQUIRED)
 
-    # Add the header files
-    include_directories(include)
+    # Add the linux header files
+    include_directories(include_linux)
     include_directories(${PROJECT_BINARY_DIR})
 
-    # Add the source files
-    file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
-    # Remove windows sources for now
-    list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/os/windows/main.cpp)
+    # Add the linux source files
+    file(GLOB_RECURSE SOURCE_FILES_LINUX "${CMAKE_SOURCE_DIR}/src_linux/*.cpp")
 
     # Enable Boost Logging
     if(LOGGING)
@@ -60,7 +63,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
         # Set the Library Output Directory
         set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
         # Create library libbfly for UnitTests
-        add_library (bfly ${SOURCE_FILES})
+        add_library (bfly ${SOURCE_FILES} ${SOURCE_FILES_LINUX})
         # Enable the testing
         enable_testing()
         add_subdirectory(test)
@@ -68,9 +71,9 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
         MESSAGE(STATUS "Disabled Unittests")
     endif()
 
-    # Build the executable
+    # Build the linux executable
     if(Boost_FOUND)
-        add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+        add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${SOURCE_FILES_LINUX})
         target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads -ldl)
     else()
         message(FATAL_ERROR "Boost Library filesystem not found!")
@@ -81,15 +84,15 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
     find_package(Threads REQUIRED)
 
-    # Add the header files
-    include_directories(include)
+    # Add the windows header files
+    include_directories(include_windows)
     include_directories(${PROJECT_BINARY_DIR})
 
-    # Add the source files
-    file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+    # Add the windows source files
+    file(GLOB_RECURSE SOURCE_FILES_WINDOWS "${CMAKE_SOURCE_DIR}/src_windows/*.cpp")
 
-    # Build the executable
-    add_executable(${CMAKE_PROJECT_NAME} src/os/windows/main.cpp)
+    # Build the windows executable
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${SOURCE_FILES_WINDOWS})
     target_link_libraries(${CMAKE_PROJECT_NAME} Threads::Threads)
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
