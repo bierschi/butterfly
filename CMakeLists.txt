@@ -29,7 +29,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 set(OPENSSL_USE_STATIC_LIBS TRUE)
 
 # Add the generic headers
-include_directories(include_linux)
+include_directories(include)
 # Add the generic Sources Files
 file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
