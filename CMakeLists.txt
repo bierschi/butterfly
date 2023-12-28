@@ -41,11 +41,11 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     find_package(Boost 1.45.0 COMPONENTS filesystem)
     find_package(Threads REQUIRED)
 
-    # Add the header files
+    # Add the linux header files
     include_directories(include_linux)
     include_directories(${PROJECT_BINARY_DIR})
 
-    # Add the source files
+    # Add the linux source files
     file(GLOB_RECURSE SOURCE_FILES_LINUX "${CMAKE_SOURCE_DIR}/src_linux/*.cpp")
 
     # Enable Boost Logging
@@ -71,7 +71,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
         MESSAGE(STATUS "Disabled Unittests")
     endif()
 
-    # Build the executable
+    # Build the linux executable
     if(Boost_FOUND)
         add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${SOURCE_FILES_LINUX})
         target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads -ldl)
@@ -84,14 +84,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
     find_package(Threads REQUIRED)
 
-    # Add the header files
+    # Add the windows header files
     include_directories(include_windows)
     include_directories(${PROJECT_BINARY_DIR})
 
-    # Add the source files
+    # Add the windows source files
     file(GLOB_RECURSE SOURCE_FILES_WINDOWS "${CMAKE_SOURCE_DIR}/src_windows/*.cpp")
 
-    # Build the executable
+    # Build the windows executable
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${SOURCE_FILES_WINDOWS})
     target_link_libraries(${CMAKE_PROJECT_NAME} Threads::Threads)
 
