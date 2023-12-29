@@ -9,13 +9,14 @@ unsigned char* CryptoAES::aesIv = nullptr;
 
 CryptoAES::CryptoAES()
 {
+
     _aesEncryptContext = EVP_CIPHER_CTX_new();
     _aesDecryptContext = EVP_CIPHER_CTX_new();
 
     EVP_CIPHER_CTX_init(_aesEncryptContext);
     EVP_CIPHER_CTX_init(_aesDecryptContext);
-
     EVP_CipherInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, NULL, NULL, 1);
+    EVP_CipherInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), NULL, NULL, NULL, 0);
 
     // Get length from the context
     _aesKeyLength = EVP_CIPHER_CTX_key_length(_aesEncryptContext);
@@ -38,6 +39,7 @@ CryptoAES::CryptoAES()
     }
 
 }
+
 
 CryptoAES::~CryptoAES()
 {
@@ -161,11 +163,97 @@ std::string CryptoAES::getAESKeyPair() const
     return aeskey;
 }
 
+void CryptoAES::encryptFile(std::ifstream &fin, std::ofstream &fout)
+{
+
+    if (EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), NULL, CryptoAES::aesKey, CryptoAES::aesIv) != 1)
+    {
+        #ifdef LOGGING
+        std::cerr << "Error during EVP_EncryptInit_ex in CryptoAES encryptFile: " << getOpenSSLError() << std::endl;
+        #endif
+    }
+
+    int bytesRead, ciphertextLen;
+    unsigned char plaintext[BUFFERSIZE];
+    unsigned char ciphertext[BUFFERSIZE + AES_BLOCK_SIZE];
+
+    while ((bytesRead = fin.readsome(reinterpret_cast<char *>(plaintext), sizeof(plaintext))) > 0)
+    {
+        if (EVP_EncryptUpdate(_aesEncryptContext, ciphertext, &ciphertextLen, plaintext, bytesRead) != 1)
+        {
+            #ifdef LOGGING
+            std::cerr << "Error during EVP_EncryptUpdate in CryptoAES encryptFile: " << getOpenSSLError() << std::endl;
+            #endif
+        }
+
+        fout.write(reinterpret_cast<const char *>(ciphertext), ciphertextLen);
+    }
+
+    if (EVP_EncryptFinal_ex(_aesEncryptContext, ciphertext, &ciphertextLen) != 1)
+    {
+        #ifdef LOGGING
+        std::cerr << "Error during EVP_EncryptFinal_ex in CryptoAES encryptFile: " << getOpenSSLError() << std::endl;
+        #endif
+    }
+
+    fout.write(reinterpret_cast<const char *>(ciphertext), ciphertextLen);
+
+    fin.close();
+    fout.close();
+}
+
+void CryptoAES::decryptFile(std::ifstream &fin, std::ofstream &fout)
+{
+
+    if (EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), nullptr, CryptoAES::aesKey, CryptoAES::aesIv) != 1)
+    {
+        #ifdef LOGGING
+        std::cerr << "Error during EVP_DecryptInit_ex in CryptoAES decryptFile: " << getOpenSSLError() << std::endl;
+#       endif
+    }
+
+    int blockSize = EVP_CIPHER_CTX_block_size(_aesDecryptContext);
+
+    std::vector<unsigned char> ciphertext(blockSize);
+    std::vector<unsigned char> plaintext(blockSize + EVP_MAX_BLOCK_LENGTH);
+
+    int bytesRead, plaintextLen, finalLen;
+
+    while ((bytesRead = fin.readsome(reinterpret_cast<char *>(ciphertext.data()), ciphertext.size())) > 0)
+    {
+        if (EVP_DecryptUpdate(_aesDecryptContext, plaintext.data(), &plaintextLen, ciphertext.data(), bytesRead) != 1)
+        {
+            #ifdef LOGGING
+            std::cerr << "Error during EVP_DecryptUpdate in CryptoAES decryptFile: " << getOpenSSLError() << std::endl;
+            #endif
+        }
+
+        fout.write(reinterpret_cast<const char *>(plaintext.data()), plaintextLen);
+    }
+
+    if (EVP_DecryptFinal_ex(_aesDecryptContext, plaintext.data() + plaintextLen, &finalLen) != 1)
+    {
+        #ifdef LOGGING
+        std::cerr << "Error during EVP_DecryptFinal_ex in CryptoAES decryptFile: " << getOpenSSLError() << std::endl;
+        #endif
+    }
+
+    fout.write(reinterpret_cast<const char *>(plaintext.data() + plaintextLen), finalLen);
+
+    fin.close();
+    fout.close();
+}
+
+
 size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext)
 {
 
     size_t blockLength = 0;
     size_t ciphertextLength = 0;
+
+    char inbuf [BUFFERSIZE];
+    char outbuf[BUFFERSIZE+AES_BLOCK_SIZE];
+    int inlen = 0,flen=0,outlen =0;
 
     *ciphertext = static_cast<unsigned char *>(malloc(plaintextLength + AES_BLOCK_SIZE));
 
@@ -177,8 +265,8 @@ size_t CryptoAES::encrypt(const unsigned char *plaintext, size_t plaintextLength
         return 0;
     }
 
-    if (!EVP_EncryptUpdate(_aesEncryptContext, *ciphertext, (int *) &blockLength, plaintext,
-                           static_cast<int>(plaintextLength)))
+
+    if (!EVP_EncryptUpdate(_aesEncryptContext, *ciphertext, (int *) &blockLength, plaintext, static_cast<int>(plaintextLength)))
     {
         #ifdef LOGGING
         std::cerr << "Error during EVP_EncryptUpdate in CryptoAES encrypt: " << getOpenSSLError() << std::endl;
