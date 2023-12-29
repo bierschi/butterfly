@@ -73,9 +73,10 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
 
 }
 
-void AESDecryptor::decryptFile2(const std::string &bflyFileName)
+void AESDecryptor::decryptLargeFile(const std::string &bflyFileName)
 {
-    std::string tmpbflyFilename = bflyFileName;
+
+    std::string originalFilename = bflyFileName.substr(0, bflyFileName.size()-5); //TODO Remove the hardcoded -5 to remove the extension
 
     double fileSize = butterfly::getFileSize(bflyFileName);
     #ifdef LOGGING
@@ -83,7 +84,7 @@ void AESDecryptor::decryptFile2(const std::string &bflyFileName)
     #endif
 
     std::ifstream inFile(bflyFileName, std::ios::binary | std::ios::in);
-    std::ofstream outFile(bflyFileName + ".dec", std::ios::binary | std::ios::out);
+    std::ofstream outFile(originalFilename, std::ios::binary | std::ios::out);
 
     size_t decryptedFileLength = CryptoAES::decrypt(inFile, outFile);
     if (decryptedFileLength == 0)
@@ -107,6 +108,10 @@ void AESDecryptor::decryptFile2(const std::string &bflyFileName)
     std::cout << "Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
     #endif
 
+    if (butterfly::existsFile(bflyFileName))
+    {
+        std::remove(bflyFileName.c_str());
+    }
 }
 
 } // namespace aes

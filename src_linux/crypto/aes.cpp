@@ -301,7 +301,6 @@ size_t CryptoAES::encrypt(std::ifstream &fin, std::ofstream &fout)
 
 size_t CryptoAES::decrypt(std::ifstream &fin, std::ofstream &fout)
 {
-
     if (EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), nullptr, CryptoAES::aesKey, CryptoAES::aesIv) != 1)
     {
         #ifdef LOGGING
@@ -337,7 +336,6 @@ size_t CryptoAES::decrypt(std::ifstream &fin, std::ofstream &fout)
         #endif
         return 0;
     }
-
     fout.write(reinterpret_cast<const char *>(plaintext.data() + plaintextLen), finalLen);
 
     fin.close();

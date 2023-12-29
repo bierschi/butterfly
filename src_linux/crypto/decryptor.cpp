@@ -198,7 +198,7 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
     try
     {
         // Decrypt the file with AES
-        _aesDecryptor->decryptFile2(filepath);
+        _aesDecryptor->decryptFile(filepath);
 
     } catch (AESDecryptionException &e)
     {
@@ -210,11 +210,25 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
 void Decryptor::spawnThread(const std::string &filepath)
 {
     // Create dedicated thread for this decryption file
-    std::thread t(&Decryptor::decryptFileWithAES, this, filepath); // Deviating from the encryptor class, using here the same instance for each decryption
+    std::thread t([&filepath]()
+    {
+      // Create new instance for each large file
+      std::unique_ptr<aes::AESDecryptor> aesDecInstance = std::unique_ptr<aes::AESDecryptor>(new aes::AESDecryptor());
+      try
+      {
+          // Decrypt the file with AES
+          aesDecInstance->decryptLargeFile(filepath);
+
+      } catch (AESDecryptionException &e)
+      {
+          std::cerr << e.what() << std::endl;
+      }
+
+    });
 
     // Save thread in thread vector
     _threads.push_back(std::move(t));
-}
+ }
 
 void Decryptor::joinThreads()
 {

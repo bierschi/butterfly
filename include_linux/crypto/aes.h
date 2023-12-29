@@ -148,16 +148,18 @@ public:
     size_t decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext);
 
     /**
+     * Encrypts the input filestream to output filestream
      *
-     * @param fin
-     * @param fout
+     * @param fin: input filestream
+     * @param fout: output filestream
      */
     size_t encrypt(std::ifstream &fin, std::ofstream &fout);
 
     /**
+     * Decrypts the input filestream to output filestream
      *
-     * @param fin
-     * @param fout
+     * @param fin: input filestream
+     * @param fout: output filestream
      */
     size_t decrypt(std::ifstream &fin, std::ofstream &fout);
 };

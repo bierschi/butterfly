@@ -72,7 +72,7 @@ void AESEncryptor::encryptFile(const std::string &filename)
 
 }
 
-void AESEncryptor::encryptFile2(const std::string &filename)
+void AESEncryptor::encryptLargeFile(const std::string &filename)
 {
 
     std::string tmpFilename = filename;
@@ -83,7 +83,6 @@ void AESEncryptor::encryptFile2(const std::string &filename)
     #endif
 
     std::ifstream inFile(filename, std::ios::binary | std::ios::in);
-
     std::ofstream outFile(filename + butterfly::params::ENC_BFLY_FILE_ENDING, std::ios::binary | std::ios::out);
 
     size_t encryptedFileLength = CryptoAES::encrypt(inFile, outFile);
@@ -108,6 +107,10 @@ void AESEncryptor::encryptFile2(const std::string &filename)
     std::cout << "Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
     #endif
 
+    if (butterfly::existsFile(filename))
+    {
+        std::remove(filename.c_str());
+    }
 
 }
 
