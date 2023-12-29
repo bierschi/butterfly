@@ -12,6 +12,7 @@
 #include "logger.h"
 
 #define AES_ROUNDS 6
+#define BUFFERSIZE 4096
 
 namespace butterfly
 {
@@ -146,6 +147,19 @@ public:
      */
     size_t decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext);
 
+    /**
+     *
+     * @param fin
+     * @param fout
+     */
+    size_t encrypt(std::ifstream &fin, std::ofstream &fout);
+
+    /**
+     *
+     * @param fin
+     * @param fout
+     */
+    size_t decrypt(std::ifstream &fin, std::ofstream &fout);
 };
 
 } // namespace aes

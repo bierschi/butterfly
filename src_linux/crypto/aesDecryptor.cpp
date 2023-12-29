@@ -73,6 +73,42 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
 
 }
 
+void AESDecryptor::decryptFile2(const std::string &bflyFileName)
+{
+    std::string tmpbflyFilename = bflyFileName;
+
+    double fileSize = butterfly::getFileSize(bflyFileName);
+    #ifdef LOGGING
+    LOG_TRACE("Decrypting file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
+    #endif
+
+    std::ifstream inFile(bflyFileName, std::ios::binary | std::ios::in);
+    std::ofstream outFile(bflyFileName + ".dec", std::ios::binary | std::ios::out);
+
+    size_t decryptedFileLength = CryptoAES::decrypt(inFile, outFile);
+    if (decryptedFileLength == 0)
+    {
+        #ifdef LOGGING
+        LOG_ERROR("AES Decryption failed with file " << bflyFileName);
+        #endif
+        throw AESDecryptionException("AES Decryption failed with file " + bflyFileName);
+    }
+
+
+    #ifdef LOGGING
+    if ( Logger::isConfigFileAvailable() )
+    {
+        LOG_INFO("Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
+    } else
+    {
+        std::cout << "Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
+    }
+    #else
+    std::cout << "Decrypted successfully file " << bflyFileName << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
+    #endif
+
+}
+
 } // namespace aes
 
 } // namespace butterfly

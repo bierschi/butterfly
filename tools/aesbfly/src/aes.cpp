@@ -209,7 +209,7 @@ void CryptoAES::decryptFile(std::ifstream &fin, std::ofstream &fout)
     {
         #ifdef LOGGING
         std::cerr << "Error during EVP_DecryptInit_ex in CryptoAES decryptFile: " << getOpenSSLError() << std::endl;
-#       endif
+        #endif
     }
 
     int blockSize = EVP_CIPHER_CTX_block_size(_aesDecryptContext);

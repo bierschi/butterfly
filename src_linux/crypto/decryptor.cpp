@@ -198,7 +198,7 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
     try
     {
         // Decrypt the file with AES
-        _aesDecryptor->decryptFile(filepath);
+        _aesDecryptor->decryptFile2(filepath);
 
     } catch (AESDecryptionException &e)
     {

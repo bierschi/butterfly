@@ -72,6 +72,45 @@ void AESEncryptor::encryptFile(const std::string &filename)
 
 }
 
+void AESEncryptor::encryptFile2(const std::string &filename)
+{
+
+    std::string tmpFilename = filename;
+
+    double fileSize = butterfly::getFileSize(filename);
+    #ifdef LOGGING
+    LOG_TRACE("Encrypting file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
+    #endif
+
+    std::ifstream inFile(filename, std::ios::binary | std::ios::in);
+
+    std::ofstream outFile(filename + butterfly::params::ENC_BFLY_FILE_ENDING, std::ios::binary | std::ios::out);
+
+    size_t encryptedFileLength = CryptoAES::encrypt(inFile, outFile);
+
+    if (encryptedFileLength == 0)
+    {
+        #ifdef LOGGING
+        LOG_TRACE("AES Encryption failed with file " << filename);
+        #endif
+        throw AESEncryptionException("AES Encryption failed with file " + filename);
+    }
+
+    #ifdef LOGGING
+    if ( Logger::isConfigFileAvailable() )
+    {
+        LOG_INFO("Encrypted successfully file " << tmpFilename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB");
+    } else
+    {
+        std::cout << "Encrypted successfully file " << tmpFilename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
+    }
+    #else
+    std::cout << "Encrypted successfully file " << filename << " with size of " << std::fixed << std::setprecision(2) << fileSize << " MB" << std::endl;
+    #endif
+
+
+}
+
 } // namespace aes
 
 } // namespace butterfly

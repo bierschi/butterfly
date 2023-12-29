@@ -173,7 +173,7 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
     try
     {
         // Encrypt the file with AES
-        _aesEncryptor->encryptFile(filepath);
+        _aesEncryptor->encryptFile2(filepath);
 
     } catch (AESEncryptionException &e)
     {
@@ -217,7 +217,7 @@ void Encryptor::spawnThread(const std::string &filepath)
         try
         {
             // Encrypt the file with AES
-            aesEncInstance->encryptFile(filepath);
+            aesEncInstance->encryptFile2(filepath);
 
         } catch (AESEncryptionException &e)
         {

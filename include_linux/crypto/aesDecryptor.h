@@ -43,7 +43,7 @@ public:
      * @param bflyFileName: name of the file with bfly extension
      */
     void decryptFile(const std::string &bflyFileName);
-
+    void decryptFile2(const std::string &bflyFileName);
 };
 
 } // namespace aes
