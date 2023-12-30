@@ -3,6 +3,7 @@
 #define BUTTERFLY_AES_H
 
 #include <string>
+#include <fstream>
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
