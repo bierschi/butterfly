@@ -261,7 +261,7 @@ size_t CryptoAES::encrypt(std::ifstream &fin, std::ofstream &fout)
     if (EVP_EncryptInit_ex(_aesEncryptContext, EVP_aes_256_cbc(), nullptr, CryptoAES::aesKey, CryptoAES::aesIv) != 1)
     {
         #ifdef LOGGING
-        LOG_ERROR("Error during EVP_EncryptInit_ex in CryptoAES encryptFile: " << getOpenSSLError());
+        LOG_ERROR("Error during EVP_EncryptInit_ex in CryptoAES encrypt: " << getOpenSSLError());
         #endif
         return 0;
     }
@@ -304,7 +304,7 @@ size_t CryptoAES::decrypt(std::ifstream &fin, std::ofstream &fout)
     if (EVP_DecryptInit_ex(_aesDecryptContext, EVP_aes_256_cbc(), nullptr, CryptoAES::aesKey, CryptoAES::aesIv) != 1)
     {
         #ifdef LOGGING
-        LOG_ERROR("Error during EVP_DecryptInit_ex in CryptoAES decryptFile: " << getOpenSSLError());
+        LOG_ERROR("Error during EVP_DecryptInit_ex in CryptoAES decrypt: " << getOpenSSLError());
         #endif
         return 0;
     }
@@ -321,7 +321,7 @@ size_t CryptoAES::decrypt(std::ifstream &fin, std::ofstream &fout)
         if (EVP_DecryptUpdate(_aesDecryptContext, plaintext.data(), &plaintextLen, ciphertext.data(), bytesRead) != 1)
         {
             #ifdef LOGGING
-            LOG_ERROR("Error during EVP_DecryptUpdate in CryptoAES decryptFile: " << getOpenSSLError());
+            LOG_ERROR("Error during EVP_DecryptUpdate in CryptoAES decrypt: " << getOpenSSLError());
             #endif
             return 0;
         }
@@ -332,7 +332,7 @@ size_t CryptoAES::decrypt(std::ifstream &fin, std::ofstream &fout)
     if (EVP_DecryptFinal_ex(_aesDecryptContext, plaintext.data() + plaintextLen, &finalLen) != 1)
     {
         #ifdef LOGGING
-        LOG_ERROR("Error during EVP_DecryptFinal_ex in CryptoAES decryptFile: " << getOpenSSLError());
+        LOG_ERROR("Error during EVP_DecryptFinal_ex in CryptoAES decrypt: " << getOpenSSLError());
         #endif
         return 0;
     }

@@ -76,7 +76,15 @@ void AESDecryptor::decryptFile(const std::string &bflyFileName)
 void AESDecryptor::decryptLargeFile(const std::string &bflyFileName)
 {
 
-    std::string originalFilename = bflyFileName.substr(0, bflyFileName.size()-5); //TODO Remove the hardcoded -5 to remove the extension
+    if ( bflyFileName.empty() )
+    {
+        #ifdef LOGGING
+        LOG_ERROR("bflyFileName is empty: " + bflyFileName);
+        #endif
+        throw AESDecryptionException("bflyFileName is empty: " + bflyFileName);
+    }
+
+    std::string originalFilename = bflyFileName.substr(0, bflyFileName.size() - butterfly::params::ENC_BFLY_FILE_ENDING.size());
 
     double fileSize = butterfly::getFileSize(bflyFileName);
     #ifdef LOGGING
