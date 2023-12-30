@@ -4,14 +4,20 @@
 
 #include <string>
 #include <iostream>
+#include <unistd.h>
+#include <fcntl.h>
+#include <fstream>
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
+#include <vector>
 
 #define AES_ROUNDS 6
 #define LOGGING
+
+# define BUFFERSIZE 4096
 
 namespace tools
 {
@@ -45,6 +51,9 @@ public:
     std::string getAESKeyPair() const;
     inline int getAESKeyLength() const { return _aesKeyLength; }
     inline int getAESIVLength() const { return _aesIvLength; }
+
+    void encryptFile(std::ifstream &fin, std::ofstream &fout);
+    void decryptFile(std::ifstream &fin, std::ofstream &fout);
 
     size_t encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext);
     size_t decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext);
