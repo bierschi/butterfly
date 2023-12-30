@@ -32,7 +32,7 @@ std::shared_ptr<TCPSocket> TCPSocket::accept()
     int newSockFD = ::accept(_fd, (struct sockaddr *)&new_addr, &addr_size);
     if (newSockFD == -1)
     {
-        throw SocketException("Error on creating a valid socket file descriptor!");
+        throw SocketException("Error on creating a valid socket file descriptor in TCPSocket::accept()!");
     }
 
     std::shared_ptr<TCPSocket> newSocket = std::make_shared<TCPSocket>(newSockFD);

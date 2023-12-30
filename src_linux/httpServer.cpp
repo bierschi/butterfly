@@ -23,12 +23,20 @@ void HTTPServer::_run()
 {
     while(_running)
     {
+        try
+        {
+            // blocking accept call
+            _newTCPSocket = _tcpSocket->accept();
 
-        // blocking accept call
-        _newTCPSocket = _tcpSocket->accept();
+            std::thread t(&HTTPServer::handleRequest, this);
+            t.join();
 
-        std::thread t(&HTTPServer::handleRequest, this);
-        t.join();
+        } catch (SocketException &e)
+        {
+            #ifdef LOGGING
+            LOG_ERROR("Exception in HTTPServer::_run(): " << e.what());
+            #endif
+        }
 
         // reset pointer before handle new request
         _newTCPSocket.reset();
