@@ -4,6 +4,7 @@
 
 #include <string>
 #include <fstream>
+#include <vector>
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
