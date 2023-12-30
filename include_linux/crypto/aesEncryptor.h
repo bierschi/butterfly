@@ -44,6 +44,12 @@ public:
      */
     void encryptFile(const std::string &filename);
 
+    /**
+     * Encrypts large files by given filename
+     *
+     * @param filename: name of the file
+     */
+    void encryptLargeFile(const std::string &filename);
 };
 
 } // namespace aes

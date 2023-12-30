@@ -212,12 +212,12 @@ void Encryptor::spawnThread(const std::string &filepath)
     // Create dedicated thread for this encryption file
     std::thread t([&filepath]()
     {
-        // Create new instance for each huge file
+        // Create new instance for each large file
         std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
         try
         {
             // Encrypt the file with AES
-            aesEncInstance->encryptFile(filepath);
+            aesEncInstance->encryptLargeFile(filepath);
 
         } catch (AESEncryptionException &e)
         {

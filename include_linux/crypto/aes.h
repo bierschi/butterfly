@@ -3,6 +3,8 @@
 #define BUTTERFLY_AES_H
 
 #include <string>
+#include <fstream>
+#include <vector>
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
@@ -12,6 +14,7 @@
 #include "logger.h"
 
 #define AES_ROUNDS 6
+#define BUFFERSIZE 4096
 
 namespace butterfly
 {
@@ -146,6 +149,21 @@ public:
      */
     size_t decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext);
 
+    /**
+     * Encrypts the input filestream to output filestream
+     *
+     * @param fin: input filestream
+     * @param fout: output filestream
+     */
+    size_t encrypt(std::ifstream &fin, std::ofstream &fout);
+
+    /**
+     * Decrypts the input filestream to output filestream
+     *
+     * @param fin: input filestream
+     * @param fout: output filestream
+     */
+    size_t decrypt(std::ifstream &fin, std::ofstream &fout);
 };
 
 } // namespace aes
