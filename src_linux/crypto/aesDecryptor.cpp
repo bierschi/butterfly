@@ -103,7 +103,6 @@ void AESDecryptor::decryptLargeFile(const std::string &bflyFileName)
         throw AESDecryptionException("AES Decryption failed with file " + bflyFileName);
     }
 
-
     #ifdef LOGGING
     if ( Logger::isConfigFileAvailable() )
     {
