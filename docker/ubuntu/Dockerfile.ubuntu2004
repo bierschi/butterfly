@@ -29,6 +29,7 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 ARG BRANCH
 ARG CACHEBUST=1
 # Clone the butterfly project
+RUN git config --global http.version HTTP/1.1
 RUN git clone -b $BRANCH https://github.com/bierschi/butterfly.git /root/butterfly
 
 WORKDIR /root/butterfly
