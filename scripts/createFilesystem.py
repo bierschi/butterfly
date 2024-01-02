@@ -35,12 +35,12 @@ def download_ubuntu_image():
     """ downloads the ubuntu iso image file
 
     """
-    ubuntu_image_url = "https://releases.ubuntu.com/22.04/ubuntu-22.04.1-desktop-amd64.iso"
+    ubuntu_image_url = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-desktop-amd64.iso"
 
     resp = requests.get(ubuntu_image_url, stream=True)
     if resp.status_code == 200:
         print("Downloading large file...")
-        with open("../data/ubuntu-22.04.1-desktop-amd64.iso", 'wb') as f:
+        with open("../data/ubuntu-22.04.3-desktop-amd64.iso", 'wb') as f:
             shutil.copyfileobj(resp.raw, f)
     else:
         print("Received invalid statuscode {} for downloading ubuntu image".format(resp.status_code))
