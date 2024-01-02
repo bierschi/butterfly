@@ -11,7 +11,7 @@ Socket::Socket(int domain, int type, int protocol) : _socketDomain(domain), _soc
     _fd = socket(_socketDomain, _socketType, _socketProtocol);
     if (_fd == -1)
     {
-        throw SocketException("Error on creating a valid socket file descriptor!");
+        throw SocketException("Error on creating a valid socket file descriptorin Socket::Socket!");
     }
 
     _addr.sin_family      = static_cast<sa_family_t>(_socketDomain);     // For IPv4
@@ -108,7 +108,7 @@ std::shared_ptr<Socket> Socket::accept()
     int newSockFD = ::accept(_fd, (struct sockaddr *)&new_addr, &addr_size);
     if (newSockFD == -1)
     {
-        throw SocketException("Error on creating a valid socket file descriptor!");
+        throw SocketException("Error on creating a valid socket file descriptor in Socket::accept()!");
     }
 
     std::shared_ptr<Socket> newSocket = std::make_shared<Socket>(newSockFD, _socketDomain, _socketType, _socketProtocol);

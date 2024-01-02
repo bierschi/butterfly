@@ -132,7 +132,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 
     }
 
-    // Join all threads which were spawned for huge file encryption
+    // Join all threads which were spawned for large file encryption
     joinThreads();
 
     // Save the AESKEY Pair in the final AESKey.bin file
