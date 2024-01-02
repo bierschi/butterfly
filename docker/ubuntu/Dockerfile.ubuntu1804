@@ -27,7 +27,7 @@ RUN cd /usr/src/gtest && cmake CMakeLists.txt && make && cp *.a /usr/lib
 #RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz > /dev/null && tar xzvf boost_1_73_0.tar.gz > /dev/null
 
 ADD boost_1_73_0.zip /root
-RUN cd /root/ && unzip boost_1_73_0.zip
+RUN cd /root/ && unzip boost_1_73_0.zip > /dev/null
 RUN cd /root/boost_1_73_0/ && ./bootstrap.sh --prefix=/usr/ > /dev/null && ./b2 > /dev/null && ./b2 install > /dev/null
 
 # Create known_hosts
@@ -40,8 +40,10 @@ ARG BRANCH
 ARG CACHEBUST=1
 
 # Set git config
+RUN git config --global http.sslVerify false
 RUN git config --global http.version HTTP/1.1
-RUN git config --global http.postBuffer 524288000
+RUN git config --global http.postBuffer 1048576000
+RUN git config --global https.postBuffer 1048576000
 
 # Clone the butterfly project
 RUN git clone -b $BRANCH https://github.com/bierschi/butterfly.git /root/butterfly
