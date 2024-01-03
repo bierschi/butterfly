@@ -2,13 +2,14 @@
 All notable changes to project [butterfly](https://github.com/bierschi/butterfly) will be documented in this file
 
 
-## [1.4] - 2024
+## [1.4] - 2024-01-03
 
 ### Added
 
 - Solved bug with large files during AES Encryption/Decryption
-- Enhancement of the browser payment page after encryption
 - Prevention of Out-of-Memory errors with huge files
+- Restructured project to support multiple platforms
+- Enhancement of the browser payment page after encryption
 
 ## [1.3] - 2023-03-13
 

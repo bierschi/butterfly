@@ -54,7 +54,7 @@ sudo apt-get install -y libboost-log-dev
 
 #### Build butterfly for Linux
 <pre><code>
-# Clone the repo and create the build/ folder
+# Clone the repo and create the build_linux/ folder
 git clone https://github.com/bierschi/butterfly.git && cd butterfly
 mkdir build_linux && cd build_linux
 
@@ -76,7 +76,7 @@ CMake Arguments
 
 <pre><code>
 
-# Clone the repo and create the build/ folder
+# Clone the repo and create the build_windows/ folder
 git clone https://github.com/bierschi/butterfly.git && cd butterfly
 mkdir build_windows && cd build_windows
 
