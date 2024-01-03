@@ -91,6 +91,12 @@ void Butterfly::checkInternetConnection()
         i++;
         sleep(2);
     }
+
+    #ifdef LOGGING
+    LOG_INFO("Internet Connection is available for Decryption");
+    #else
+    std::cout << "Internet Connection is available for Decryption" << std::endl;
+    #endif
 }
 
 void Butterfly::run()

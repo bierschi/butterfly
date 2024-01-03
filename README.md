@@ -52,11 +52,11 @@ sudo apt-get install -y libboost-log-dev
 
 ## Build Butterfly
 
-Build butterfly
+#### Build butterfly for Linux
 <pre><code>
-# Clone the repo and create the build/ folder
+# Clone the repo and create the build_linux/ folder
 git clone https://github.com/bierschi/butterfly.git && cd butterfly
-mkdir build && cd build
+mkdir build_linux && cd build_linux
 
 # Execute cmake with options
 cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake ../
@@ -70,6 +70,21 @@ CMake Arguments
 <pre><code>
 -DUNITTESTS=ON   # Enables the Unit Tests
 -DLOGGING=ON     # Enables the boost logging framework
+</code></pre>
+
+#### Build butterfly for Windows
+
+<pre><code>
+
+# Clone the repo and create the build_windows/ folder
+git clone https://github.com/bierschi/butterfly.git && cd butterfly
+mkdir build_windows && cd build_windows
+
+# Execute cmake with options
+cmake -DCMAKE_TOOLCHAIN_FILE=../windows.cmake ../
+
+# Build the binary
+make
 </code></pre>
 
 ## Usage and Examples
@@ -106,7 +121,9 @@ Options:
 butterfly homepage at: https://github.com/bierschi/butterfly
 </code></pre>
 
-Test the full functionalities of `butterfly`
+
+### Full Features of `butterfly`
+
 <pre><code>
 # Run the bflyServerApp for remote decryption
 bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
@@ -115,18 +132,23 @@ bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
 ./butterfly --dir /home/butterfly/data/
 </code></pre>
 
-Test the encryption + decryption mechanism separately (+ with remote decryption)
+### Encryption Feature of `butterfly`
+
+<pre><code>
+# Use butterfly with the --encrypt argument
+./butterfly --encrypt /home/butterfly/data
+</code></pre>
+
+### Decryption Feature of `butterfly`
+
 <pre><code>
 # Run the bflyServerApp for remote decryption
 bflyServerApp --host 127.0.0.1 --port 8080 --key ../masterkeys/SPrivateRSA.pem
 
-
-# Start only the encryption
-./butterfly --encrypt /home/butterfly/data
-
-# Start only the decryption
+# Use butterfly with the --decypt argument
 ./butterfly --decrypt /home/butterfly/data
 </code></pre>
+
 
 ## Unit Tests
 
@@ -143,7 +165,7 @@ sudo cp *.a /usr/lib
 
 Enable the Unit Tests with 
 <pre><code>
-cmake ../ -DUNITTESTS=ON 
+cmake -DCMAKE_TOOLCHAIN_FILE=../linux.cmake -DUNITTESTS=ON ../
 </code></pre>
 
 List all tests
