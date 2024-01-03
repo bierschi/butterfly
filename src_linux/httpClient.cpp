@@ -100,6 +100,12 @@ std::string HTTPClient::post(const std::string &url, const std::string &data, in
 {
     std::string domain = butterfly::getDomainFromUrl(url);
 
+    #ifdef LOGGING
+    LOG_INFO("Create HTTP POST Request to " << url << " on port " << port);
+    #else
+    std::cout << "Create HTTP POST Request to " << url << " on port " << port << std::endl;
+    #endif
+
     if ( _socket->connect(domain, port) )
     {
         // Prepare the post request
