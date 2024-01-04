@@ -16,8 +16,8 @@ Decryptor::Decryptor(const std::string &decryptedCPrivateRSA) : _decryptedCPriva
 }
 
 Decryptor::Decryptor(const std::string &privateKeyFromServer, const std::string &encCPrivateRSAFile) : _privateKeyFromServer(privateKeyFromServer), _encCPrivateRSAFile(encCPrivateRSAFile),
-                                                                                                 _rsaDecryptorCPrivateRSA(new rsa::RSADecryptor(_privateKeyFromServer)),
-                                                                                                 _aesDecryptor(new aes::AESDecryptor())
+                                                                                                       _rsaDecryptorCPrivateRSA(new rsa::RSADecryptor(_privateKeyFromServer)),
+                                                                                                       _aesDecryptor(new aes::AESDecryptor())
 {
     #ifdef LOGGING
     LOG_TRACE("Create class Decryptor");
@@ -48,7 +48,7 @@ Decryptor::Decryptor(const std::string &privateKeyFromServer, const std::string 
     }
 
     // Check if decryption was successful
-    if ( (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos) || (_decryptedCPrivateRSA.find("-----BEGIN PRIVATE KEY-----") == std::string::npos))
+    if ( (_decryptedCPrivateRSA.find("-----BEGIN PRIVATE KEY-----") == std::string::npos) && (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos) )
     {
         throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----' or '-----BEGIN PRIVATE KEY-----'");
     }

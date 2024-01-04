@@ -241,7 +241,7 @@ void Butterfly::run()
     {
         std::cout << "Start Decryption with provided key " << _args.serverpKey << " from directory " << _args.decrypt << std::endl;
 
-        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor(_args.serverpKey, butterfly::params::ENC_CPRIVATERSA_FILENAME)); //TODO Test and provide full filepath for .bin file
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor(_args.serverpKey, butterfly::params::ENC_CPRIVATERSA_FILENAME));
         decryptor->invokeDir(_args.decrypt);
     }
     else
