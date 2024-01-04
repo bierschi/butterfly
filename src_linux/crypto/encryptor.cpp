@@ -104,7 +104,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
                 #ifdef LOGGING
                 LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
                 #endif
-                spawnThread(file.string());
+                CryptoThread::create(file.string());
             } else
             {
                 encryptFileWithAES(file.string());
@@ -115,7 +115,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     }
 
     // Join all threads which were spawned for large file encryption
-    joinThreads();
+    CryptoThread::joinThreads();
 
     // Save the AESKEY Pair in the final AESKey.bin file
     encryptFinalAESKeyWithRSA(aeskeypair);
@@ -164,6 +164,21 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
+void Encryptor::handleLargeFilesWithAES(const std::string &filepath)
+{
+    // Create new instance for each large file
+    std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+    try
+    {
+        // Encrypt the file with AES
+        aesEncInstance->encryptLargeFile(filepath);
+
+    } catch (AESEncryptionException &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
 void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
 {
 
@@ -186,39 +201,6 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
         saveUnencryptedAESKeyPair(aesKeyPair);
     }
 
-}
-
-void Encryptor::spawnThread(const std::string &filepath)
-{
-
-    // Create dedicated thread for this encryption file
-    std::thread t([&filepath]()
-    {
-        // Create new instance for each large file
-        std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
-        try
-        {
-            // Encrypt the file with AES
-            aesEncInstance->encryptLargeFile(filepath);
-
-        } catch (AESEncryptionException &e)
-        {
-            std::cerr << e.what() << std::endl;
-        }
-
-    });
-
-    // Save thread in thread vector
-    _threads.push_back(std::move(t));
-}
-
-void Encryptor::joinThreads()
-{
-    for (auto &t: _threads)
-    {
-        if ( t.joinable() )
-            t.join();
-    }
 }
 
 } // namespace hybrid

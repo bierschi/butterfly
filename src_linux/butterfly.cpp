@@ -147,8 +147,7 @@ void Butterfly::run()
         if ( httpClient->statusCode == 200 )
         {
             // Decryptor instance to invoke the directory for the decryption process
-            std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-            decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
+            std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor(decryptedCPrivateRSAStr));
             decryptor->invokeDir(_args.dir);
         } else
         {
@@ -225,8 +224,7 @@ void Butterfly::run()
             std::cout << "Successfully decrypted the CPrivateRSA.bin file on the remote server!" << std::endl;
             #endif
             // Decryptor instance to invoke the directory for the decryption process
-            std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-            decryptor->setDecryptedCPrivateRSAStr(decryptedCPrivateRSAStr);
+            std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor(decryptedCPrivateRSAStr));
             decryptor->invokeDir(_args.decrypt);
         } else
         {
@@ -243,8 +241,7 @@ void Butterfly::run()
     {
         std::cout << "Start Decryption with provided key " << _args.serverpKey << " from directory " << _args.decrypt << std::endl;
 
-        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor());
-        decryptor->decryptCPrivateRSA(_args.serverpKey, butterfly::params::ENC_CPRIVATERSA_FILENAME);
+        std::unique_ptr<butterfly::hybrid::Decryptor> decryptor(new butterfly::hybrid::Decryptor(_args.serverpKey, butterfly::params::ENC_CPRIVATERSA_FILENAME)); //TODO Test and provide full filepath for .bin file
         decryptor->invokeDir(_args.decrypt);
     }
     else
