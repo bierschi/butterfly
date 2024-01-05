@@ -17,33 +17,13 @@ Encryptor::Encryptor(int keySize) : _keySize(keySize),
     #endif
 }
 
-void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
-{
-    // 32 Bytes AESKey + 16 Bytes IV
-    if ( !butterfly::writeBinFile(butterfly::params::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
-    {
-        #ifdef LOGGING
-        LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
-        #else
-        std::cerr << "Could not save the unencrypted AESKeyPair File to Filesystem!" << std::endl;
-        #endif
-    }
-
-}
-
-void Encryptor::checkIfEncryptionFilesExists()
-{
-    if ( butterfly::existsFile(butterfly::params::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::params::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
-    {
-        std::cerr << "Aborting encryption because encryption files (" << butterfly::params::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::params::ENC_AESKEY_FILENAME << ", " << butterfly::params::RSA_EKIV_FILENAME <<") already exists!" << std::endl;
-        exit(1);
-    }
-}
-
 void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 {
     // Ensure that no encryption files already exists!
-    checkIfEncryptionFilesExists();
+    if ( CryptoSecurity::areEncryptionFilesAvailable() )
+    {
+        throw EncryptorException("Aborting encryption because encryption files (" + butterfly::params::ENC_CPRIVATERSA_FILENAME + ", " + butterfly::params::ENC_AESKEY_FILENAME + ", " + butterfly::params::RSA_EKIV_FILENAME +") already exists!");
+    }
 
     // Check if dirPath exists
     if ( !DirectoryIterator::exists(dirPath) )
@@ -88,7 +68,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // If --protected is enabled
     if (protection)
     {
-        saveUnencryptedAESKeyPair(aeskeypair);
+        CryptoSecurity::saveUnencryptedAESKeyPair(aeskeypair);
     }
 
     // Iterate over all file paths
@@ -198,7 +178,7 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
     {
         std::cerr << e.what() << std::endl;
         // If error occurred here, save AESKeyPair unencrypted to ensure that files can be decrypted manually
-        saveUnencryptedAESKeyPair(aesKeyPair);
+        CryptoSecurity::saveUnencryptedAESKeyPair(aesKeyPair);
     }
 
 }

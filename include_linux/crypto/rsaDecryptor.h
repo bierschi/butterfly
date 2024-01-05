@@ -40,16 +40,17 @@ private:
 public:
 
     /**
-     * Constructor RSADecryptor
+     * Deleted default Constructor RSADecryptor
      *
-     *  Usage:
-     *       std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor(new butterfly::rsa::RSADecryptor(""));
-     *       rsaDecryptor->getDecryptedMessage();
      */
     RSADecryptor() = delete;
 
     /**
      * Constructor RSADecryptor to init rsa key from key string or file
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::rsa::RSADecryptor> rsaDecryptor(new butterfly::rsa::RSADecryptor(""));
+     *       rsaDecryptor->getDecryptedMessage();
      *
      * @param key: key string or filepath to key
      */
