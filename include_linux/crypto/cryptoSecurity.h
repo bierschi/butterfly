@@ -3,6 +3,7 @@
 #define BUTTERFLY_CRYPTOSECURITY_H
 
 #include <string>
+#include <iostream>
 
 #include "bflyParams.h"
 #include "bflyUtils.h"
