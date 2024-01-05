@@ -56,34 +56,6 @@ Decryptor::Decryptor(const std::string &privateKeyFromServer, const std::string 
     _rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 }
 
-void Decryptor::removeDecryptedFiles()
-{
-
-    butterfly::removeFile(butterfly::params::ENC_CPRIVATERSA_FILENAME);
-    butterfly::removeFile(butterfly::params::ENC_AESKEY_FILENAME);
-    butterfly::removeFile(butterfly::params::RSA_EKIV_FILENAME);
-
-}
-
-bool Decryptor::getAESKeyPairFromUnencryptedFile(std::string &aeskeypair)
-{
-    if ( butterfly::existsFile(butterfly::params::UNENC_AESKEY_FILENAME) )
-    {
-        aeskeypair = butterfly::readBinFile(butterfly::params::UNENC_AESKEY_FILENAME);
-
-        if ( !aeskeypair.empty() )
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
-    } else
-    {
-        return false;
-    }
-}
-
 void Decryptor::invokeDir(const std::string &dirPath)
 {
 
@@ -135,7 +107,7 @@ void Decryptor::invokeDir(const std::string &dirPath)
     CryptoThread::joinThreads();
 
     // Remove decryption helper files
-    removeDecryptedFiles();
+    CryptoSecurity::removeDecryptedFiles();
 }
 
 void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV)
@@ -159,7 +131,7 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
         std::cerr << e.what() << std::endl;
 
         // If error occurred here, check first whether unencrypted AESKeyPair file exists
-        if ( !getAESKeyPairFromUnencryptedFile(aeskeypair) )
+        if ( !CryptoSecurity::getAESKeyPairFromUnencryptedFile(aeskeypair) )
         {
             throw DecryptorException( "Could not get AESKeyPair from unencrypted File! RSADecryptionException: " + std::string(e.what()));
         }
