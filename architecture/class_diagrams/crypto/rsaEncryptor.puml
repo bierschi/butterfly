@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!include rsa.puml
+
+package butterfly #AAAAAA
+{
+
+package rsa #DDDDDD
+{
+
+class RSAEncryptor
+{
+    - _encryptedMessage: std::string
+
+    - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+    - writeRSAFileToSystem(): bool
+
+    + RSAEncryptor(int keySize)
+    + RSAEncryptor(const std::string &key)
+
+    + getEncryptedMessage() const: std::string
+    + writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
+
+    + encrypt(EVP_PKEY *pkey, const std::string &decMSG): int
+    + encryptEVP(EVP_PKEY *pkey, const std::string &decMSG): int
+}
+
+CryptoRSA <|-- RSAEncryptor
+
+}
+
+}
+@enduml

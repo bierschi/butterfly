@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="823px" preserveAspectRatio="none" style="width:1056px;height:823px;" version="1.1" viewBox="0 0 1056 823" width="1056px" zoomAndPan="magnify"><defs><filter height="300%" id="f40wse2s905bq" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[8e789fa2d79d87af7a89a0214c555b42]
+cluster butterfly--><polygon fill="#AAAAAA" filter="url(#f40wse2s905bq)" points="22,24,96,24,103,46.2969,1034,46.2969,1034,811,22,811,22,24" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="22" x2="103" y1="46.2969" y2="46.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="68" x="26" y="38.9951">butterfly</text><!--MD5=[2ecd8032ccbc79e7fc0a9e1475a4a439]
+cluster rsa--><polygon fill="#DDDDDD" filter="url(#f40wse2s905bq)" points="46,67,77,67,84,89.2969,1010,89.2969,1010,787,46,787,46,67" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="46" x2="84" y1="89.2969" y2="89.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="25" x="50" y="81.9951">rsa</text><!--MD5=[8d9dfa2111def7a072c96e2c6573e692]
+class CryptoRSA--><rect fill="#FEFECE" filter="url(#f40wse2s905bq)" height="406.5313" id="CryptoRSA" style="stroke: #A80036; stroke-width: 1.5;" width="932" x="62" y="102"/><ellipse cx="491.75" cy="118" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M494.7188,123.6406 Q494.1406,123.9375 493.5,124.0781 Q492.8594,124.2344 492.1563,124.2344 Q489.6563,124.2344 488.3281,122.5938 Q487.0156,120.9375 487.0156,117.8125 Q487.0156,114.6875 488.3281,113.0313 Q489.6563,111.375 492.1563,111.375 Q492.8594,111.375 493.5,111.5313 Q494.1563,111.6875 494.7188,111.9844 L494.7188,114.7031 Q494.0938,114.125 493.5,113.8594 Q492.9063,113.5781 492.2813,113.5781 Q490.9375,113.5781 490.25,114.6563 Q489.5625,115.7188 489.5625,117.8125 Q489.5625,119.9063 490.25,120.9844 Q490.9375,122.0469 492.2813,122.0469 Q492.9063,122.0469 493.5,121.7813 Q494.0938,121.5 494.7188,120.9219 L494.7188,123.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="64" x="512.25" y="122.1543">CryptoRSA</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="63" x2="993" y1="134" y2="134"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="142"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="101" x="82" y="148.2104">_pkey: EVP_PKEY*</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="154.8047"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="152" x="82" y="161.0151">_keySize, _paddingSize: int</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="167.6094"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="314" x="82" y="173.8198">_rsaPrivateKeyStr, _privateKeyStr, _publicKeyStr: char*</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="180.4141"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="200" x="82" y="186.6245">_encryptedKey, _iv: unsigned char*</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="193.2188"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="326" x="82" y="199.4292">rsaEncryptContext, rsaDecryptContext: EVP_CIPHER_CTX*</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="63" x2="993" y1="206.0234" y2="206.0234"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="214.0234"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="174" x="82" y="220.2339">getOpenSSLError(): std::string</text><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="226.8281"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="133" x="82" y="233.0386">generateRSAKey(): bool</text><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="239.6328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="281" x="82" y="245.8433">loadKeyFromFile(const std::string &amp;filepath): void</text><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="252.4375"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="253" x="82" y="258.6479">loadKeyFromStr(const std::string &amp;str): void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="271.4526"/><polygon fill="#FFFF44" points="73,276.0469,77,280.0469,73,284.0469,69,280.0469" style="stroke: #B38D22; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="151" x="82" y="284.2573">getPaddingSize() const: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="297.062"/><ellipse cx="73" cy="306.6563" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="127" x="82" y="309.8667">CryptoRSA(int keySize)</text><ellipse cx="73" cy="319.4609" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="194" x="82" y="322.6714">CryptoRSA(const std::string &amp;key)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="335.4761"/><ellipse cx="73" cy="345.0703" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="188" x="82" y="348.2808">getRSAIV() const: unsigned char*</text><ellipse cx="73" cy="357.875" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="254" x="82" y="361.0854">getRSAEncryptedKey() const: unsigned char*</text><ellipse cx="73" cy="370.6797" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="141" x="82" y="373.8901">getEvpPkey(): EVP_PKEY*</text><ellipse cx="73" cy="383.4844" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="201" x="82" y="386.6948">getEvpPkeySize(EVP_PKEY *key): int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="399.4995"/><ellipse cx="73" cy="409.0938" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="163" x="82" y="412.3042">getRSAPrivateKeyStr(): char*</text><ellipse cx="73" cy="421.8984" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="141" x="82" y="425.1089">getPrivateKeyStr(): char*</text><ellipse cx="73" cy="434.7031" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="135" x="82" y="437.9136">getPublicKeyStr(): char*</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="450.7183"/><ellipse cx="73" cy="460.3125" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="650" x="82" y="463.5229">encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): int</text><ellipse cx="73" cy="473.1172" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="906" x="82" y="476.3276">decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): int</text><ellipse cx="73" cy="485.9219" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="623" x="82" y="489.1323">encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int</text><ellipse cx="73" cy="498.7266" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="596" x="82" y="501.937">decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int</text><!--MD5=[f330aa9c502bad81d8db271395aa19f1]
+class RSADecryptor--><rect fill="#FEFECE" filter="url(#f40wse2s905bq)" height="201.6563" id="RSADecryptor" style="stroke: #A80036; stroke-width: 1.5;" width="657" x="199.5" y="569"/><ellipse cx="481.25" cy="585" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M484.2188,590.6406 Q483.6406,590.9375 483,591.0781 Q482.3594,591.2344 481.6563,591.2344 Q479.1563,591.2344 477.8281,589.5938 Q476.5156,587.9375 476.5156,584.8125 Q476.5156,581.6875 477.8281,580.0313 Q479.1563,578.375 481.6563,578.375 Q482.3594,578.375 483,578.5313 Q483.6563,578.6875 484.2188,578.9844 L484.2188,581.7031 Q483.5938,581.125 483,580.8594 Q482.4063,580.5781 481.7813,580.5781 Q480.4375,580.5781 479.75,581.6563 Q479.0625,582.7188 479.0625,584.8125 Q479.0625,586.9063 479.75,587.9844 Q480.4375,589.0469 481.7813,589.0469 Q482.4063,589.0469 483,588.7813 Q483.5938,588.5 484.2188,587.9219 L484.2188,590.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="85" x="501.75" y="589.1543">RSADecryptor</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="200.5" x2="855.5" y1="601" y2="601"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="207.5" y="609"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="180" x="219.5" y="615.2104">_decryptedMessage: std::string</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="200.5" x2="855.5" y1="621.8047" y2="621.8047"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="207.5" y="629.8047"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="441" x="219.5" y="636.0151">validateStringLengthForRSA(const std::string &amp;msg, const int &amp;keysize): bool</text><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="207.5" y="642.6094"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="587" x="219.5" y="648.8198">readRSAFileFromSystem(const RSAKEY_TYPE &amp;rsakeysType, std::string &amp;encKey, std::string &amp;iv): void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="223.5" y="661.6245"/><ellipse cx="210.5" cy="671.2188" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="137" x="219.5" y="674.4292">RSADecryptor() = delete</text><ellipse cx="210.5" cy="684.0234" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="212" x="219.5" y="687.2339">RSADecryptor(const std::string &amp;key)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="223.5" y="700.0386"/><ellipse cx="210.5" cy="709.6328" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="236" x="219.5" y="712.8433">getDecryptedMessage() const: std::string</text><ellipse cx="210.5" cy="722.4375" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="345" x="219.5" y="725.6479">readEncMSGFromFile(const std::string &amp;filepath): std::string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="223.5" y="738.4526"/><ellipse cx="210.5" cy="748.0469" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="325" x="219.5" y="751.2573">decrypt(EVP_PKEY *pkey, const std::string &amp;encMSG): int</text><ellipse cx="210.5" cy="760.8516" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="631" x="219.5" y="764.062">decryptEVP(EVP_PKEY *pkey, const std::string &amp;encMSG, std::string &amp;decMSG, const RSAKEY_TYPE &amp;type): int</text><!--MD5=[7bcf5c2aff3c7f26be14b7b093d51c6e]
+reverse link CryptoRSA to RSADecryptor--><path d="M528,529.3 C528,542.88 528,556.13 528,568.72 " fill="none" id="CryptoRSA&lt;-RSADecryptor" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="521,529.21,528,509.21,535,529.21,521,529.21" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[0cc0900943d69c71bcee4f957449ac85]
+@startuml
+
+
+package butterfly #AAAAAA
+{
+
+package rsa #DDDDDD
+{
+
+class CryptoRSA
+{
+    - _pkey: EVP_PKEY*
+    - _keySize, _paddingSize: int
+    - _rsaPrivateKeyStr, _privateKeyStr, _publicKeyStr: char*
+    - _encryptedKey, _iv: unsigned char*
+    - rsaEncryptContext, rsaDecryptContext: EVP_CIPHER_CTX*
+
+    - {static} getOpenSSLError(): std::string
+    - generateRSAKey(): bool
+    - loadKeyFromFile(const std::string &filepath): void
+    - loadKeyFromStr(const std::string &str): void
+
+    # getPaddingSize() const: int
+
+    + CryptoRSA(int keySize)
+    + CryptoRSA(const std::string &key)
+
+    + getRSAIV() const: unsigned char*
+    + getRSAEncryptedKey() const: unsigned char*
+    + getEvpPkey(): EVP_PKEY*
+    + getEvpPkeySize(EVP_PKEY *key): int
+
+    + getRSAPrivateKeyStr(): char*
+    + getPrivateKeyStr(): char*
+    + getPublicKeyStr(): char*
+
+    + encrpytEVP(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): int
+    + decryptEVP(EVP_PKEY *key, unsigned char *ciphertext, size_t ciphertextLength, unsigned char *encryptedKey, unsigned char *iv, unsigned char **plaintext): int
+    + {static} encrypt(EVP_PKEY *key, const unsigned char *plaintext, size_t plaintextLength, unsigned char *ciphertext): int
+    + {static} decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
+}
+
+}
+
+}
+
+package butterfly #AAAAAA
+{
+
+package rsa #DDDDDD
+{
+
+class RSADecryptor
+{
+    - _decryptedMessage: std::string
+
+    - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+    - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
+
+    + RSADecryptor() = delete
+    + RSADecryptor(const std::string &key)
+
+    + getDecryptedMessage() const: std::string
+    + {static} readEncMSGFromFile(const std::string &filepath): std::string
+
+    + decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
+    + decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
+}
+
+CryptoRSA <|- - RSADecryptor
+
+}
+
+}
+
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.21+9-post-Ubuntu-0ubuntu122.04
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

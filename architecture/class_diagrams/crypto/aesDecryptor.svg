@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="668px" preserveAspectRatio="none" style="width:706px;height:668px;" version="1.1" viewBox="0 0 706 668" width="706px" zoomAndPan="magnify"><defs><filter height="300%" id="f1sqlhzek0x7v1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[8e789fa2d79d87af7a89a0214c555b42]
+cluster butterfly--><polygon fill="#AAAAAA" filter="url(#f1sqlhzek0x7v1)" points="22,24,96,24,103,46.2969,684,46.2969,684,656,22,656,22,24" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="22" x2="103" y1="46.2969" y2="46.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="68" x="26" y="38.9951">butterfly</text><!--MD5=[2316bb41a6150af629e39d956b089817]
+cluster aes--><polygon fill="#DDDDDD" filter="url(#f1sqlhzek0x7v1)" points="46,67,80,67,87,89.2969,660,89.2969,660,632,46,632,46,67" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="46" x2="87" y1="89.2969" y2="89.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="28" x="50" y="81.9951">aes</text><!--MD5=[eb359e5886597e786b161bf30047c798]
+class CryptoAES--><rect fill="#FEFECE" filter="url(#f1sqlhzek0x7v1)" height="355.3125" id="CryptoAES" style="stroke: #A80036; stroke-width: 1.5;" width="581" x="62.5" y="102"/><ellipse cx="316.75" cy="118" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M319.7188,123.6406 Q319.1406,123.9375 318.5,124.0781 Q317.8594,124.2344 317.1563,124.2344 Q314.6563,124.2344 313.3281,122.5938 Q312.0156,120.9375 312.0156,117.8125 Q312.0156,114.6875 313.3281,113.0313 Q314.6563,111.375 317.1563,111.375 Q317.8594,111.375 318.5,111.5313 Q319.1563,111.6875 319.7188,111.9844 L319.7188,114.7031 Q319.0938,114.125 318.5,113.8594 Q317.9063,113.5781 317.2813,113.5781 Q315.9375,113.5781 315.25,114.6563 Q314.5625,115.7188 314.5625,117.8125 Q314.5625,119.9063 315.25,120.9844 Q315.9375,122.0469 317.2813,122.0469 Q317.9063,122.0469 318.5,121.7813 Q319.0938,121.5 319.7188,120.9219 L319.7188,123.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="64" x="337.25" y="122.1543">CryptoAES</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="63.5" x2="642.5" y1="134" y2="134"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70.5" y="142"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="342" x="82.5" y="148.2104">_aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70.5" y="154.8047"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="284" x="82.5" y="161.0151">_aesKeyLength, _aesIvLength, _aesSaltLength: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86.5" y="173.8198"/><polygon fill="none" points="73.5,178.4141,77.5,182.4141,73.5,186.4141,69.5,182.4141" style="stroke: #B38D22; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="174" x="82.5" y="186.6245">aesKey, aesIv: unsigned char*</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="63.5" x2="642.5" y1="193.2188" y2="193.2188"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70.5" y="201.2188"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="174" x="82.5" y="207.4292">getOpenSSLError(): std::string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86.5" y="220.2339"/><ellipse cx="73.5" cy="229.8281" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="67" x="82.5" y="233.0386">CryptoAES()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86.5" y="245.8433"/><ellipse cx="73.5" cy="255.4375" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="102" x="82.5" y="258.6479">isInitialized(): bool</text><ellipse cx="73.5" cy="268.2422" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="168" x="82.5" y="271.4526">generateAESKey() const: bool</text><ellipse cx="73.5" cy="281.0469" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="213" x="82.5" y="284.2573">generateAESKeyWithSalt() const: bool</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86.5" y="297.062"/><ellipse cx="73.5" cy="306.6563" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="213" x="82.5" y="309.8667">setAESKey(std::string &amp;aesKey): void</text><ellipse cx="73.5" cy="319.4609" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="191" x="82.5" y="322.6714">setAESIv(std::string &amp;aesIv): void</text><ellipse cx="73.5" cy="332.2656" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="170" x="82.5" y="335.4761">getAESKey() const: std::string</text><ellipse cx="73.5" cy="345.0703" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="159" x="82.5" y="348.2808">getAESIv() const: std::string</text><ellipse cx="73.5" cy="357.875" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="192" x="82.5" y="361.0854">getAESKeyPair() const: std::string</text><ellipse cx="73.5" cy="370.6797" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="163" x="82.5" y="373.8901">getAESKeyLength() const: int</text><ellipse cx="73.5" cy="383.4844" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="153" x="82.5" y="386.6948">getAESIVLength() const: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86.5" y="399.4995"/><ellipse cx="73.5" cy="409.0938" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="555" x="82.5" y="412.3042">encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t</text><ellipse cx="73.5" cy="421.8984" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="528" x="82.5" y="425.1089">decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t</text><ellipse cx="73.5" cy="434.7031" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="314" x="82.5" y="437.9136">encrypt(std::ifstream &amp;fin, std::ofstream &amp;fout): size_t</text><ellipse cx="73.5" cy="447.5078" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="314" x="82.5" y="450.7183">decrypt(std::ifstream &amp;fin, std::ofstream &amp;fout): size_t</text><!--MD5=[f30a1405ec0c95f44855039949e6746e]
+class AESDecryptor--><rect fill="#FEFECE" filter="url(#f1sqlhzek0x7v1)" height="99.2188" id="AESDecryptor" style="stroke: #A80036; stroke-width: 1.5;" width="342" x="182" y="517"/><ellipse cx="306.25" cy="533" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M309.2188,538.6406 Q308.6406,538.9375 308,539.0781 Q307.3594,539.2344 306.6563,539.2344 Q304.1563,539.2344 302.8281,537.5938 Q301.5156,535.9375 301.5156,532.8125 Q301.5156,529.6875 302.8281,528.0313 Q304.1563,526.375 306.6563,526.375 Q307.3594,526.375 308,526.5313 Q308.6563,526.6875 309.2188,526.9844 L309.2188,529.7031 Q308.5938,529.125 308,528.8594 Q307.4063,528.5781 306.7813,528.5781 Q305.4375,528.5781 304.75,529.6563 Q304.0625,530.7188 304.0625,532.8125 Q304.0625,534.9063 304.75,535.9844 Q305.4375,537.0469 306.7813,537.0469 Q307.4063,537.0469 308,536.7813 Q308.5938,536.5 309.2188,535.9219 L309.2188,538.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="85" x="326.75" y="537.1543">AESDecryptor</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="183" x2="523" y1="549" y2="549"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="183" x2="523" y1="557" y2="557"/><ellipse cx="193" cy="568" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="85" x="202" y="571.2104">AESDecryptor()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="206" y="584.0151"/><ellipse cx="193" cy="593.6094" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="280" x="202" y="596.8198">decryptFile(const std::string &amp;bflyFileName): void</text><ellipse cx="193" cy="606.4141" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="316" x="202" y="609.6245">decryptLargeFile (const std::string &amp;bflyFileName): void</text><!--MD5=[cebc2a8dc5e16f51f4a96f51329200ff]
+reverse link CryptoAES to AESDecryptor--><path d="M353,477.77 C353,491.86 353,505.12 353,516.84 " fill="none" id="CryptoAES&lt;-AESDecryptor" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="346,477.35,353,457.35,360,477.35,346,477.35" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[88d07c2946a4bc6389784bb7689f5a36]
+@startuml
+
+
+package butterfly #AAAAAA
+{
+
+package aes #DDDDDD
+{
+
+class CryptoAES
+{
+    - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
+    - _aesKeyLength, _aesIvLength, _aesSaltLength: int
+
+    # {static} aesKey, aesIv: unsigned char*
+
+    - {static} getOpenSSLError(): std::string
+
+    + CryptoAES()
+
+    + {static} isInitialized(): bool
+    + generateAESKey() const: bool
+    + generateAESKeyWithSalt() const: bool
+
+    + setAESKey(std::string &aesKey): void
+    + setAESIv(std::string &aesIv): void
+    + getAESKey() const: std::string
+    + getAESIv() const: std::string
+    + getAESKeyPair() const: std::string
+    + getAESKeyLength() const: int
+    + getAESIVLength() const: int
+
+    + encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
+    + decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
+    + encrypt(std::ifstream &fin, std::ofstream &fout): size_t
+    + decrypt(std::ifstream &fin, std::ofstream &fout): size_t
+}
+
+}
+
+}
+
+
+package butterfly #AAAAAA
+{
+
+package aes #DDDDDD
+{
+
+class AESDecryptor
+{
+    + AESDecryptor()
+
+    + decryptFile(const std::string &bflyFileName): void
+    + decryptLargeFile (const std::string &bflyFileName): void
+}
+
+CryptoAES <|- - AESDecryptor
+
+}
+
+}
+
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.21+9-post-Ubuntu-0ubuntu122.04
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

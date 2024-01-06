@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package butterfly #AAAAAA
+{
+
+package hybrid #DDDDDD
+{
+
+class CryptoProcess
+{
+    - _processIds: std::vector<pid_t>
+    - handleLargeFilesWithAES(const std::string &filepath) = 0: void
+
+    + CryptoProcess()
+
+    + create(const std::string &filepath): void
+    + waitAll(): void
+}
+
+}
+
+}
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!include rsa.puml
+
+package butterfly #AAAAAA
+{
+
+package rsa #DDDDDD
+{
+
+class RSADecryptor
+{
+    - _decryptedMessage: std::string
+
+    - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
+    - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
+
+    + RSADecryptor() = delete
+    + RSADecryptor(const std::string &key)
+
+    + getDecryptedMessage() const: std::string
+    + {static} readEncMSGFromFile(const std::string &filepath): std::string
+
+    + decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
+    + decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
+}
+
+CryptoRSA <|-- RSADecryptor
+
+}
+
+}
+
+@enduml

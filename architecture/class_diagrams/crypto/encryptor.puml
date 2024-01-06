@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!include cryptoThread.puml
+!include cryptoSecurity.puml
+!include rsaEncryptor.puml
+!include aesEncryptor.puml
+
+package butterfly #AAAAAA
+{
+
+package hybrid #DDDDDD
+{
+
+class Encryptor
+{
+    - _keySize: int
+
+    - _rsaEncryptorCPrivateRSA, _rsaEncryptorAESKey: std::unique_ptr<rsa::RSAEncryptor>
+    - _aesEncryptor: std::unique_ptr<aes::AESEncryptor>
+
+    + Encryptor(int keySize = 2048)
+
+    + invokeDir(const std::string &dirPath, bool protection): void
+    + encryptCPrivateRSA(): void
+    + encryptFileWithAES(const std::string &filepath): void
+    + encryptLargeFilesWithAES(const std::string &filepath): void
+    + encryptFinalAESKeyWithRSA(const std::string &aesKeyStr, const std::string &filename): void
+}
+
+CryptoThread   <|-- Encryptor
+CryptoSecurity <|-- Encryptor
+
+RSAEncryptor "1..*" o-- "1" Encryptor: <<encrypting keys>>
+AESEncryptor "1..*" o-- "1" Encryptor: <<encrypting files>>
+
+}
+
+}
+
+@enduml
