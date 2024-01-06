@@ -212,12 +212,15 @@ def main():
         prepare_big_data_folder(folderpath=fs_folder)
 
     elif args.recreate:
-        print("Removing /home/butterfly/data folder")
-        remove_folder(folderpath=fs_folder + '/home/butterfly/data')
+
         if args.small:
+            print("Removing /home/butterfly/data/small folder")
+            remove_folder(folderpath=fs_folder + '/home/butterfly/data/small')
             print("Prepare fs/ with small data content")
             prepare_small_data_folder(fs_folder)
         elif args.big:
+            print("Removing /home/butterfly/data/big folder")
+            remove_folder(folderpath=fs_folder + '/home/butterfly/data/big')
             print("Prepare fs/ with big data content")
             prepare_big_data_folder(fs_folder)
         else:
