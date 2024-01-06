@@ -1,7 +1,0 @@
-@startuml
-'https://plantuml.com/class-diagram
-
-!include encryptor.puml
-!include decryptor.puml
-
-@enduml
