@@ -9,7 +9,7 @@ package aes #DDDDDD
 class CryptoAES
 {
     - _aesEncryptContext, _aesDecryptContext: EVP_CIPHER_CTX*
-    - _aesKeyLength, _aesIvLength: int
+    - _aesKeyLength, _aesIvLength, _aesSaltLength: int
 
     # {static} aesKey, aesIv: unsigned char*
 
@@ -17,9 +17,9 @@ class CryptoAES
 
     + CryptoAES()
 
-    + {static} initDone(): bool
-    + generateAESKey(): bool
-    + generateAESKeyWithSalt(): bool
+    + {static} isInitialized(): bool
+    + generateAESKey() const: bool
+    + generateAESKeyWithSalt() const: bool
 
     + setAESKey(std::string &aesKey): void
     + setAESIv(std::string &aesIv): void
@@ -31,27 +31,12 @@ class CryptoAES
 
     + encrypt(const unsigned char *plaintext, size_t plaintextLength, unsigned char **ciphertext): size_t
     + decrypt(unsigned char *ciphertext, size_t ciphertextLength, unsigned char **plaintext): size_t
+    + encrypt(std::ifstream &fin, std::ofstream &fout): size_t
+    + decrypt(std::ifstream &fin, std::ofstream &fout): size_t
 }
-
-class AESEncryptor
-{
-    + AESEncryptor()
-
-    + encryptFile(const std::string &filename): void
-
-}
-
-class AESDecryptor
-{
-    + AESDecryptor()
-
-    + decryptFile(const std::string &bflyFileName): void
-}
-
-CryptoAES <|-- AESEncryptor
-CryptoAES <|-- AESDecryptor
 
 }
 
 }
+
 @enduml

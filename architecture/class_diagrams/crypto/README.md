@@ -1,7 +1,15 @@
 
 ## Hybrid
 
-![](hybrid.svg)
+![](hybrid2.svg)
+
+## Encryptor
+
+![](encryptor.svg)
+
+## Decryptor
+
+![](decryptor.svg)
 
 ## RSA
 

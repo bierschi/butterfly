@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!include aes.puml
+
+package butterfly #AAAAAA
+{
+
+package aes #DDDDDD
+{
+
+class AESEncryptor
+{
+    + AESEncryptor()
+
+    + encryptFile(const std::string &filename): void
+    + encryptLargeFile (const std::string &filename): void
+}
+
+CryptoAES <|-- AESEncryptor
+
+}
+
+}
+@enduml

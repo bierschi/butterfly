@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!include cryptoThread.puml
+!include cryptoSecurity.puml
+!include rsaDecryptor.puml
+!include aesDecryptor.puml
+
+package butterfly #AAAAAA
+{
+
+package hybrid #DDDDDD
+{
+
+class Decryptor
+{
+    - _decryptedCPrivateRSA: std::string
+
+    - _rsaDecryptorCPrivateRSA, _rsaDecryptorAESKey: std::unique_ptr<rsa::RSADecryptor>
+    - _aesDecryptor: std::unique_ptr<aes::AESDecryptor>
+
+    + Decryptor(const std::string &decryptedCPrivateRSA)
+    + Decryptor(const std::string &privateKeyFromServer, const std::string &encCPrivateRSAFile)
+
+    + invokeDir(const std::string &dirPath): void
+    + decryptFileWithAES(const std::string &filepath): void
+    + handleLargeFilesWithAES(const std::string &filepath): void
+    + decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV): void
+}
+
+CryptoThread   <|-- Decryptor
+CryptoSecurity <|-- Decryptor
+
+RSADecryptor "1..*" o-- "1" Decryptor: <<decrypting keys>>
+AESDecryptor "1..*" o-- "1" Decryptor: <<decrypting files>>
+
+}
+
+}
+
+@enduml
