@@ -14,7 +14,7 @@ class CryptoProcess
 
     + CryptoProcess()
 
-    + create(): void
+    + create(const std::string &filepath): void
     + waitAll(): void
 }
 
