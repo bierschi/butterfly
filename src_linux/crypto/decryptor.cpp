@@ -7,44 +7,53 @@ namespace butterfly
 namespace hybrid
 {
 
-Decryptor::Decryptor() : _aesDecryptor(new aes::AESDecryptor())
+Decryptor::Decryptor(const std::string &decryptedCPrivateRSA) : _decryptedCPrivateRSA(decryptedCPrivateRSA), _rsaDecryptorAESKey(new rsa::RSADecryptor(_decryptedCPrivateRSA)),
+                                                                                                             _aesDecryptor(new aes::AESDecryptor())
 {
     #ifdef LOGGING
     LOG_TRACE("Create class Decryptor");
     #endif
 }
 
-void Decryptor::removeDecryptedFiles()
+Decryptor::Decryptor(const std::string &privateKeyFromServer, const std::string &encCPrivateRSAFile) : _privateKeyFromServer(privateKeyFromServer), _encCPrivateRSAFile(encCPrivateRSAFile),
+                                                                                                       _rsaDecryptorCPrivateRSA(new rsa::RSADecryptor(_privateKeyFromServer)),
+                                                                                                       _aesDecryptor(new aes::AESDecryptor())
 {
+    #ifdef LOGGING
+    LOG_TRACE("Create class Decryptor");
+    #endif
 
-    butterfly::removeFile(butterfly::params::ENC_CPRIVATERSA_FILENAME);
-    butterfly::removeFile(butterfly::params::ENC_AESKEY_FILENAME);
-    butterfly::removeFile(butterfly::params::RSA_EKIV_FILENAME);
-
-}
-
-bool Decryptor::getAESKeyPairFromUnencryptedFile(std::string &aeskeypair)
-{
-    if ( butterfly::existsFile(butterfly::params::UNENC_AESKEY_FILENAME) )
+    try
     {
-        aeskeypair = butterfly::readBinFile(butterfly::params::UNENC_AESKEY_FILENAME);
+        std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->readEncMSGFromFile(_encCPrivateRSAFile);
+        EVP_PKEY *CPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
 
-        if ( !aeskeypair.empty() )
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
-    } else
+        _rsaDecryptorCPrivateRSA->decryptEVP(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
+        //_rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA);
+        #ifdef LOGGING
+        LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << " with length of " << _decryptedCPrivateRSA.length());
+        #endif
+        //std::cout << "Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << std::endl;
+
+    } catch (RSADecryptionException &e)
     {
-        return false;
+        // Throw Decryptor Exception because it makes no sense to continue
+        throw DecryptorException(e.what());
     }
-}
 
-void Decryptor::setDecryptedCPrivateRSAStr(const std::string &decryptedCPrivateRSA)
-{
-    _decryptedCPrivateRSA = decryptedCPrivateRSA;
+    // Check if string is empty
+    if ( _decryptedCPrivateRSA.empty() )
+    {
+        throw DecryptorException("Decrypted CPrivateRSA String is empty!");
+    }
+
+    // Check if decryption was successful
+    if ( (_decryptedCPrivateRSA.find("-----BEGIN PRIVATE KEY-----") == std::string::npos) && (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos) )
+    {
+        throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----' or '-----BEGIN PRIVATE KEY-----'");
+    }
+
+    _rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 }
 
 void Decryptor::invokeDir(const std::string &dirPath)
@@ -85,7 +94,7 @@ void Decryptor::invokeDir(const std::string &dirPath)
                 #ifdef LOGGING
                 LOG_TRACE("Spawn a new decryption thread for file: " << file.string());
                 #endif
-                spawnThread(file.string());
+                CryptoThread::create(file.string());
             } else
             {
                 decryptFileWithAES(file.string());
@@ -94,61 +103,23 @@ void Decryptor::invokeDir(const std::string &dirPath)
 
     }
 
-    // Join all threads which were spawned for huge file decryption
-    joinThreads();
+    // Join all threads which were spawned for large file decryption
+    CryptoThread::joinThreads();
 
     // Remove decryption helper files
-    removeDecryptedFiles();
-}
-
-void Decryptor::decryptCPrivateRSA(const std::string &pkeyFromServer, const std::string &encCPrivateRSAFile)
-{
-
-    _rsaDecryptorCPrivateRSA = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(pkeyFromServer));
-
-    try
-    {
-        std::string encCPrivateRSA = _rsaDecryptorCPrivateRSA->readEncMSGFromFile(encCPrivateRSAFile);
-        EVP_PKEY *CPrivateRSAPKey = _rsaDecryptorCPrivateRSA->getEvpPkey();
-
-        _rsaDecryptorCPrivateRSA->decryptEVP(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA, butterfly::RSAKEY_TYPE::CPRIVATE_RSA);
-        //_rsaDecryptorCPrivateRSA->decrypt(CPrivateRSAPKey, encCPrivateRSA, _decryptedCPrivateRSA);
-        #ifdef LOGGING
-        LOG_TRACE("Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << " with length of " << _decryptedCPrivateRSA.length());
-        #endif
-        //std::cout << "Decrypted CPrivateRSA: " << _decryptedCPrivateRSA << std::endl;
-
-    } catch (RSADecryptionException &e)
-    {
-        // Throw Decryptor Exception because it makes no sense to continue
-        throw DecryptorException(e.what());
-    }
-
-    // Check if string is empty
-    if ( _decryptedCPrivateRSA.empty() )
-    {
-        throw DecryptorException("Decrypted CPrivateRSA String is empty!");
-    }
-
-    // Check if decryption was successful
-    if ( (_decryptedCPrivateRSA.find("-----BEGIN RSA PRIVATE KEY-----") == std::string::npos) || (_decryptedCPrivateRSA.find("-----BEGIN PRIVATE KEY-----") == std::string::npos))
-    {
-        throw DecryptorException("Decrypted CPrivateRSA String does not include '-----BEGIN RSA PRIVATE KEY-----' or '-----BEGIN PRIVATE KEY-----'");
-    }
-
+    CryptoSecurity::removeDecryptedFiles();
 }
 
 void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string &decAESKey,  std::string &decAESIV)
 {
     std::string aeskeypair;
-    std::unique_ptr<rsa::RSADecryptor> rsaDecryptorAESKey = std::unique_ptr<rsa::RSADecryptor>(new rsa::RSADecryptor(_decryptedCPrivateRSA));
 
     try
     {
 
-        std::string encAESKey = rsaDecryptorAESKey->readEncMSGFromFile(filepathAESKey);  // Length of encAESKey = encMSGLen in encrypt
+        std::string encAESKey = _rsaDecryptorAESKey->readEncMSGFromFile(filepathAESKey);  // Length of encAESKey = encMSGLen in encrypt
 
-        rsaDecryptorAESKey->decryptEVP(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair, butterfly::RSAKEY_TYPE::AESKEY);
+        _rsaDecryptorAESKey->decryptEVP(_rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair, butterfly::RSAKEY_TYPE::AESKEY);
         //rsaDecryptorAESKey->decrypt(rsaDecryptorAESKey->getEvpPkey(), encAESKey, aeskeypair);
         #ifdef LOGGING
         LOG_TRACE("Decrypted Content from file " << filepathAESKey << ": " << aeskeypair << " with Length: " << aeskeypair.length());
@@ -160,7 +131,7 @@ void Decryptor::decryptAESKeyPair(const std::string &filepathAESKey, std::string
         std::cerr << e.what() << std::endl;
 
         // If error occurred here, check first whether unencrypted AESKeyPair file exists
-        if ( !getAESKeyPairFromUnencryptedFile(aeskeypair) )
+        if ( !CryptoSecurity::getAESKeyPairFromUnencryptedFile(aeskeypair) )
         {
             throw DecryptorException( "Could not get AESKeyPair from unencrypted File! RSADecryptionException: " + std::string(e.what()));
         }
@@ -207,35 +178,18 @@ void Decryptor::decryptFileWithAES(const std::string &filepath)
 
 }
 
-void Decryptor::spawnThread(const std::string &filepath)
+void Decryptor::handleLargeFilesWithAES(const std::string &filepath)
 {
-    // Create dedicated thread for this decryption file
-    std::thread t([&filepath]()
+    // Create new instance for each large file
+    std::unique_ptr<aes::AESDecryptor> aesDecInstance = std::unique_ptr<aes::AESDecryptor>(new aes::AESDecryptor());
+    try
     {
-      // Create new instance for each large file
-      std::unique_ptr<aes::AESDecryptor> aesDecInstance = std::unique_ptr<aes::AESDecryptor>(new aes::AESDecryptor());
-      try
-      {
-          // Decrypt the file with AES
-          aesDecInstance->decryptLargeFile(filepath);
+        // Decrypt the file with AES
+        aesDecInstance->decryptLargeFile(filepath);
 
-      } catch (AESDecryptionException &e)
-      {
-          std::cerr << e.what() << std::endl;
-      }
-
-    });
-
-    // Save thread in thread vector
-    _threads.push_back(std::move(t));
- }
-
-void Decryptor::joinThreads()
-{
-    for (auto &t: _threads)
+    } catch (AESDecryptionException &e)
     {
-        if (t.joinable())
-            t.join();
+        std::cerr << e.what() << std::endl;
     }
 }
 

@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!include aes.puml
+
+package butterfly #AAAAAA
+{
+
+package aes #DDDDDD
+{
+
+class AESDecryptor
+{
+    + AESDecryptor()
+
+    + decryptFile(const std::string &bflyFileName): void
+    + decryptLargeFile (const std::string &bflyFileName): void
+}
+
+CryptoAES <|-- AESDecryptor
+
+}
+
+}
+
+@enduml

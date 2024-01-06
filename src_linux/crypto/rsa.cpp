@@ -9,7 +9,7 @@ namespace rsa
 
 CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _rsaPrivateKeyStr(nullptr), _privateKeyStr(nullptr), _publicKeyStr(nullptr), _encryptedKey(nullptr), _iv(nullptr), _pkey(nullptr)
 {
-    // Initalize contexts
+    // Initialize contexts
     rsaEncryptContext = EVP_CIPHER_CTX_new();
     rsaDecryptContext = EVP_CIPHER_CTX_new();
 
@@ -31,7 +31,7 @@ CryptoRSA::CryptoRSA(int keysize) :  _keysize(keysize), _rsaPrivateKeyStr(nullpt
 
 CryptoRSA::CryptoRSA(const std::string &key) : _keysize(-1), _rsaPrivateKeyStr(nullptr), _privateKeyStr(nullptr), _publicKeyStr(nullptr), _encryptedKey(nullptr), _iv(nullptr), _pkey(nullptr)
 {
-    // Initalize contexts
+    // Initialize contexts
     rsaEncryptContext = EVP_CIPHER_CTX_new();
     rsaDecryptContext = EVP_CIPHER_CTX_new();
 

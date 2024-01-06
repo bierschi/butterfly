@@ -39,42 +39,6 @@ class CryptoRSA
     + {static} decrypt(EVP_PKEY *key, unsigned char* ciphertext, size_t ciphertextLength, unsigned char* plaintext): int
 }
 
-class RSAEncryptor
-{
-    - _encryptedMessage: std::string
-
-    - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-    - writeRSAFileToSystem(): bool
-
-    + RSAEncryptor(int keySize)
-    + RSAEncryptor(const std::string &key)
-
-    + getEncryptedMessage() const: std::string
-    + writeEncMSGToFile(const std::string &filename, const std::string &ciphertextMsg, int ciphertextMsgLength): void
-
-    + encrypt(EVP_PKEY *pkey, const std::string &decMSG): int
-    + encryptEVP(EVP_PKEY *pkey, const std::string &decMSG): int
-}
-
-class RSADecryptor
-{
-    - _decryptedMessage: std::string
-    - validateStringLengthForRSA(const std::string &msg, const int &keysize): bool
-    - readRSAFileFromSystem(const RSAKEY_TYPE &rsakeysType, std::string &encKey, std::string &iv): void
-
-    + RSADecryptor() = delete
-    + RSADecryptor(const std::string &key)
-
-    + getDecryptedMessage() const: std::string
-    + {static} readEncMSGFromFile(const std::string &filepath): std::string
-
-    + decrypt(EVP_PKEY *pkey, const std::string &encMSG): int
-    + decryptEVP(EVP_PKEY *pkey, const std::string &encMSG, std::string &decMSG, const RSAKEY_TYPE &type): int
-}
-
-CryptoRSA <|-- RSAEncryptor
-CryptoRSA <|-- RSADecryptor
-
 }
 
 }

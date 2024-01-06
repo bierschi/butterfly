@@ -40,7 +40,7 @@ public:
      * Constructor RSAEncryptor
      *
      *  Usage:
-     *       std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptor(new butterfly::rsa::RSAEncryptor(""));
+     *       std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptor(new butterfly::rsa::RSAEncryptor(2048));
      *       rsaEncryptor->getEncryptedMessage();
      *
      * @param keySize: size of the key
@@ -49,6 +49,10 @@ public:
 
     /**
      * Constructor RSAEncryptor to init rsa key from key string or file
+     *
+     *  Usage:
+     *       std::unique_ptr<butterfly::rsa::RSAEncryptor> rsaEncryptor(new butterfly::rsa::RSAEncryptor(""));
+     *       rsaEncryptor->getEncryptedMessage();
      *
      * @param key: key string or filepath to key
      */

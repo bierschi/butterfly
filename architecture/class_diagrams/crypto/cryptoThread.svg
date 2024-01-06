@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="292px" preserveAspectRatio="none" style="width:504px;height:292px;" version="1.1" viewBox="0 0 504 292" width="504px" zoomAndPan="magnify"><defs><filter height="300%" id="f140ky0unvf53m" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[8e789fa2d79d87af7a89a0214c555b42]
+cluster butterfly--><polygon fill="#AAAAAA" filter="url(#f140ky0unvf53m)" points="22,24,96,24,103,46.2969,482,46.2969,482,280,22,280,22,24" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="22" x2="103" y1="46.2969" y2="46.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="68" x="26" y="38.9951">butterfly</text><!--MD5=[c85b91184774f21f9fb19ef777095c59]
+cluster hybrid--><polygon fill="#DDDDDD" filter="url(#f140ky0unvf53m)" points="46,67,102,67,109,89.2969,458,89.2969,458,256,46,256,46,67" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="46" x2="109" y1="89.2969" y2="89.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="50" x="50" y="81.9951">hybrid</text><!--MD5=[0ceb135fd6b0c2b102e82ffe4bb2652f]
+class CryptoThread--><rect fill="#FEFECE" filter="url(#f140ky0unvf53m)" height="137.6328" id="CryptoThread" style="stroke: #A80036; stroke-width: 1.5;" width="380" x="62" y="102"/><ellipse cx="205.75" cy="118" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M208.7188,123.6406 Q208.1406,123.9375 207.5,124.0781 Q206.8594,124.2344 206.1563,124.2344 Q203.6563,124.2344 202.3281,122.5938 Q201.0156,120.9375 201.0156,117.8125 Q201.0156,114.6875 202.3281,113.0313 Q203.6563,111.375 206.1563,111.375 Q206.8594,111.375 207.5,111.5313 Q208.1563,111.6875 208.7188,111.9844 L208.7188,114.7031 Q208.0938,114.125 207.5,113.8594 Q206.9063,113.5781 206.2813,113.5781 Q204.9375,113.5781 204.25,114.6563 Q203.5625,115.7188 203.5625,117.8125 Q203.5625,119.9063 204.25,120.9844 Q204.9375,122.0469 206.2813,122.0469 Q206.9063,122.0469 207.5,121.7813 Q208.0938,121.5 208.7188,120.9219 L208.7188,123.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="84" x="226.25" y="122.1543">CryptoThread</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="63" x2="441" y1="134" y2="134"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="142"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="200" x="82" y="148.2104">_threads: std::vector&lt;std::thread&gt;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="63" x2="441" y1="154.8047" y2="154.8047"/><rect fill="#F24D5C" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="70" y="162.8047"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="354" x="82" y="169.0151">handleLargeFilesWithAES(const std::string &amp;filepath) = 0: void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="181.8198"/><ellipse cx="73" cy="191.4141" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="85" x="82" y="194.6245">CryptoThread()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="86" y="207.4292"/><ellipse cx="73" cy="217.0234" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="225" x="82" y="220.2339">create(const std::string &amp;filepath): void</text><ellipse cx="73" cy="229.8281" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="103" x="82" y="233.0386">jonThreads(): void</text><!--MD5=[a9c26e7ace2053ea4a0e89f57b4ffec8]
+@startuml
+
+package butterfly #AAAAAA
+{
+
+package hybrid #DDDDDD
+{
+
+class CryptoThread
+{
+    - _threads: std::vector<std::thread>
+    - handleLargeFilesWithAES(const std::string &filepath) = 0: void
+
+    + CryptoThread()
+
+    + create(const std::string &filepath): void
+    + jonThreads(): void
+
+}
+
+}
+
+}
+
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.21+9-post-Ubuntu-0ubuntu122.04
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

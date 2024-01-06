@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package butterfly #AAAAAA
+{
+
+package hybrid #DDDDDD
+{
+
+class CryptoThread
+{
+    - _threads: std::vector<std::thread>
+    - handleLargeFilesWithAES(const std::string &filepath) = 0: void
+
+    + CryptoThread()
+
+    + create(const std::string &filepath): void
+    + jonThreads(): void
+
+}
+
+}
+
+}
+
+@enduml

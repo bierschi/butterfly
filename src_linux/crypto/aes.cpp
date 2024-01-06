@@ -28,6 +28,9 @@ CryptoAES::CryptoAES()
     _aesKeyLength = EVP_CIPHER_CTX_key_length(_aesEncryptContext);
     _aesIvLength = EVP_CIPHER_CTX_iv_length(_aesEncryptContext);
 
+    // Length for the Salt
+    _aesSaltLength = 8;
+
     if (CryptoAES::aesKey == nullptr && CryptoAES::aesIv == nullptr)
     {
 
@@ -66,7 +69,7 @@ std::string CryptoAES::getOpenSSLError()
     return err;
 }
 
-bool CryptoAES::initDone()
+bool CryptoAES::isInitialized()
 {
     if ( (CryptoAES::aesKey != nullptr) && (CryptoAES::aesIv != nullptr) )
         return true;
@@ -74,7 +77,7 @@ bool CryptoAES::initDone()
         return false;
 }
 
-bool CryptoAES::generateAESKey()
+bool CryptoAES::generateAESKey() const
 {
     #ifdef LOGGING
     LOG_INFO("Create new AES Key/IV pair")
@@ -93,13 +96,13 @@ bool CryptoAES::generateAESKey()
     return true;
 }
 
-bool CryptoAES::generateAESKeyWithSalt()
+bool CryptoAES::generateAESKeyWithSalt() const
 {
     #ifdef LOGGING
     LOG_INFO("Create new AES Key/IV pair with Salt")
     #endif
 
-    unsigned char aesSalt[8];
+    unsigned char aesSalt[_aesSaltLength];
     auto *aesPass = (unsigned char *) malloc(static_cast<size_t>(_aesKeyLength));
 
     if (aesPass == nullptr)
@@ -112,7 +115,7 @@ bool CryptoAES::generateAESKeyWithSalt()
         return false;
     }
 
-    if (RAND_bytes(aesSalt, 8) == 0)
+    if (RAND_bytes(aesSalt, _aesSaltLength) == 0)
     {
         return false;
     }

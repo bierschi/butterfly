@@ -7,12 +7,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <fstream>
+#include <vector>
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
-#include <vector>
+
 
 #define AES_ROUNDS 6
 #define LOGGING
