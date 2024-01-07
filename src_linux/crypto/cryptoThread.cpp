@@ -16,13 +16,7 @@ CryptoThread::CryptoThread()
 
 CryptoThread::~CryptoThread()
 {
-    for (std::thread &thread : _threads)
-    {
-        if ( thread.joinable() )
-        {
-            thread.join();
-        }
-    }
+    joinThreads();
 }
 
 void CryptoThread::create(const std::string &filepath)

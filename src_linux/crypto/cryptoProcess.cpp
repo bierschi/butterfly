@@ -16,10 +16,7 @@ CryptoProcess::CryptoProcess()
 
 CryptoProcess::~CryptoProcess()
 {
-    for (pid_t pid : _processIds)
-    {
-        waitpid(pid, nullptr, 0);
-    }
+    waitAll();
 }
 
 void CryptoProcess::create(const std::string &filepath)
