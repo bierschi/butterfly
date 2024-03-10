@@ -105,9 +105,7 @@ venv.bak/
 
 #project
 .idea/
-cmake-build-debug/
-cmake-build-linux/
-cmake-build-windows
+cmake-build-*/
 bin/
 notes/http_server.txt
 fs/
