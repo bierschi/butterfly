@@ -17,7 +17,7 @@ cat /proc/sys/kernel/core_pattern
 Change path with
 
 <pre><code>
-sudo sysctl -w kernel.core_pattern=/home/christian/coredumps/core-%e-%s-%u-%g-%p-%t
+sudo sysctl -w kernel.core_pattern=/home/christian/projects/butterfly/bin/coredumps/core-%e-%s-%u-%g-%p-%t
 </code></pre>
 
 Analyze the generated core dump file
