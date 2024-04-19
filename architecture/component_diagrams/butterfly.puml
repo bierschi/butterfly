@@ -3,6 +3,8 @@
 actor target
 actor attacker
 
+component Butterfly {
+
 component Encryption
 component Decryption
 
@@ -13,15 +15,17 @@ component Webserver
 component TorProxy
 component TorHiddenService
 
-attacker -> Encryption
+attacker -u-> Encryption
 Encryption -u-> Visualization
 
-target -> Payment
+target -d-> Payment
 Payment -d-> Visualization
 
 Visualization -> TorProxy
 TorProxy -> TorHiddenService
 TorHiddenService -> Webserver
+
 Webserver -d-> Decryption
 
+}
 @enduml
