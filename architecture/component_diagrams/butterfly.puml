@@ -1,14 +1,31 @@
 @startuml
 
-[Encryption]
+actor target
+actor attacker
 
-[Decryption]
+component Butterfly {
 
-[TOR]
+component Encryption
+component Decryption
 
-[Bitcoin Payment]
+component Payment
+component Visualization
+component Webserver
 
-[Visualization]
+component TorProxy
+component TorHiddenService
 
-[bflyServerApp]
+attacker -u-> Encryption
+Encryption -u-> Visualization
+
+target -d-> Payment
+Payment -d-> Visualization
+
+Visualization -> TorProxy
+TorProxy -> TorHiddenService
+TorHiddenService -> Webserver
+
+Webserver -d-> Decryption
+
+}
 @enduml
