@@ -10,22 +10,27 @@ component Decryption
 
 component Payment
 component Visualization
-component Webserver
+component HTTP
 
 component TorProxy
-component TorHiddenService
 
 attacker -u-> Encryption
-Encryption -u-> Visualization
+Encryption -u-> HTTP
 
 target -d-> Payment
-Payment -d-> Visualization
+Payment -d-> HTTP
 
-Visualization -> TorProxy
-TorProxy -> TorHiddenService
-TorHiddenService -> Webserver
+HTTP -> TorProxy
 
-Webserver -d-> Decryption
+HTTP -l-> Visualization
 
+HTTP -d-> Decryption
 }
+
+component TorHiddenService
+component Webserver
+
+TorProxy -> TorHiddenService
+TorHiddenService -d-> Webserver
+
 @enduml
