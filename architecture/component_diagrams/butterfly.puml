@@ -3,7 +3,7 @@
 actor target
 actor attacker
 
-component Butterfly {
+component Butterfly  as "                    Butterfly" {
 
 component Encryption
 component Decryption
@@ -11,8 +11,9 @@ component Decryption
 component Payment
 component Visualization
 component HTTP
-
 component TorProxy
+
+portout Ext
 
 attacker -u-> Encryption
 Encryption -u-> HTTP
@@ -30,7 +31,9 @@ HTTP -d-> Decryption
 component TorHiddenService
 component Webserver
 
-TorProxy -> TorHiddenService
+TorProxy -r- Ext
+Ext -r0)- TorHiddenService
+
 TorHiddenService -d-> Webserver
 
 @enduml
