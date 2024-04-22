@@ -61,7 +61,7 @@ void Browser::open(const std::string &url, bool blocking)
             _running = true;
         }
 
-        _browserThread = std::thread(&Browser::run, this, url);
+        _browserThread = ThreadWrapper(&Browser::run, this, url);
     }
 
 }

@@ -26,7 +26,8 @@ void CryptoThread::create(const std::string &filepath)
 
 void CryptoThread::joinThreads()
 {
-    for (std::thread &thread : _threads)
+
+    for (ThreadWrapper &thread: _threads)
     {
         if ( thread.joinable() )
         {
