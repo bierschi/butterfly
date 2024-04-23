@@ -28,7 +28,7 @@ void HTTPServer::_run()
             // blocking accept call
             _newTCPSocket = _tcpSocket->accept();
 
-            std::thread t(&HTTPServer::handleRequest, this);
+            ThreadWrapper t(&HTTPServer::handleRequest, this);
             t.join();
 
         } catch (SocketException &e)
@@ -46,7 +46,7 @@ void HTTPServer::_run()
 void HTTPServer::run(bool blocking)
 {
     _running = true;
-    _serverThread = std::thread(&HTTPServer::_run, this);
+    _serverThread = ThreadWrapper(&HTTPServer::_run, this);
     #ifdef LOGGING
     LOG_INFO("Running HTTPServer on port " << _port);
     #endif

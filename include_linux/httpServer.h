@@ -4,7 +4,6 @@
 
 #include <memory>
 #include <functional>
-#include <thread>
 #include <atomic>
 
 #include "logger.h"
@@ -12,6 +11,7 @@
 #include "httpRequest.h"
 #include "httpResponse.h"
 #include "indexPage.h"
+#include "threadWrapper.h"
 
 namespace butterfly
 {
@@ -28,7 +28,8 @@ private:
     std::shared_ptr<TCPSocket> _tcpSocket, _newTCPSocket;
     std::unique_ptr<HTTPRequest> _httpRequest;
     std::unique_ptr<HTTPResponse> _httpResponse;
-    std::thread _serverThread;
+    ThreadWrapper _serverThread;
+
     /**
      * Handles incoming requests to the http server
      *

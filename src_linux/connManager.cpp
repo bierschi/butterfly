@@ -50,7 +50,7 @@ bool ConnManager::isInternetAvailable()
 void ConnManager::start()
 {
     _running = true;
-    _thread = std::thread(&ConnManager::run, this);
+    _thread = ThreadWrapper(&ConnManager::run, this);
     _thread.detach();
 }
 
