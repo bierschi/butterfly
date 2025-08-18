@@ -1,6 +1,6 @@
 
 # Set C++11 as standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Find and include GTest
 find_package(GTest REQUIRED)

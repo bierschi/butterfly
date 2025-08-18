@@ -7,7 +7,7 @@ project(butterfly VERSION "1.4")
 configure_file(${CMAKE_SOURCE_DIR}/config/app.h.in app.h)
 
 # Set C++11 as standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wconversion")

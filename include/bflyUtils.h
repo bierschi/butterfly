@@ -8,6 +8,7 @@
 #include <vector>
 #include <cstdio>
 #include <iomanip>
+#include <cstdint>
 
 namespace butterfly
 {
