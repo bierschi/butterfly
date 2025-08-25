@@ -3,9 +3,9 @@
 #define BUTTERFLY_BROWSER_H
 
 #include <string>
-#include <thread>
 #include <atomic>
 
+#include "threadWrapper.h"
 #include "bflyUtils.h"
 #include "bflyExceptions.h"
 #include "logger.h"
@@ -22,7 +22,7 @@ class Browser
 private:
     std::string _terminalCMD;
     std::atomic<bool> _running;
-    std::thread _browserThread;
+    ThreadWrapper _browserThread;
 
     /**
      * Executes given command

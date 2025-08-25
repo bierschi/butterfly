@@ -2,10 +2,10 @@
 #ifndef BUTTERFLY_CONNMANAGER_H
 #define BUTTERFLY_CONNMANAGER_H
 
-#include <thread>
 #include <functional>
 
 #include "tcpSocket.h"
+#include "threadWrapper.h"
 
 namespace butterfly
 {
@@ -21,7 +21,7 @@ private:
     std::string _queryHostname;
     int _queryPort;
     unsigned int _queryTime;
-    std::thread _thread;
+    ThreadWrapper _thread;
     std::function<void(bool)> _connStateChangeCB;
     std::unique_ptr<TCPSocket> _tcpSocket;
 

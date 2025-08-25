@@ -2,11 +2,12 @@
 #ifndef BUTTERFLY_CRYPTOTHREAD_H
 #define BUTTERFLY_CRYPTOTHREAD_H
 
-#include <thread>
 #include <vector>
 #include <string>
 
+#include "threadWrapper.h"
 #include "logger.h"
+
 
 namespace butterfly
 {
@@ -21,7 +22,7 @@ class CryptoThread
 {
 
 private:
-    std::vector<std::thread> _threads;
+    std::vector<ThreadWrapper> _threads;
 
     /**
      * pure virtual method for the sub classes to implement
